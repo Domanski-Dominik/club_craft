@@ -4,11 +4,10 @@ import { prisma } from "@/prisma/prisma";
 export const POST = async (req:Request) => {
 
     const { name,dayOfWeek, timeS, timeE, locationId } = await req.json();
-    const locationIdNum = parseInt(locationId, 10)
-    console.log(name,dayOfWeek, timeS, timeE, locationIdNum)
+    console.log(name,dayOfWeek, timeS, timeE, locationId)
     try {
         const findLoc = await prisma.locations.findUnique({
-            where:{id:locationIdNum}
+            where:{id:locationId}
            });
 
             if(!findLoc){
@@ -29,7 +28,7 @@ export const POST = async (req:Request) => {
         const newSchedule = await prisma.locationSchedule.create({
             data:{
                 location: {
-                    connect: { id: locationIdNum }
+                    connect: { id: locationId }
                 },
                 group: {
                     connect: { id: newGroup.id }

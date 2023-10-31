@@ -24,7 +24,7 @@ import {plPL} from '@mui/x-date-pickers/locales'
 
 interface Props {
     params: {
-        id:number
+        id:string
     }
 }
 interface Data {
@@ -56,13 +56,14 @@ const daysOfWeekOptions = [
 
 const CreateGroups = ({params}: Props) => {
     const [events, setEvents] = useState([])
+    const locationIdNum = parseInt(params.id, 10)
     const [groups, setGroups] = useState<Group[]>([{
     id: null,
     name: '',
     dayOfWeek: 1,
     timeS: `16:00` ,
     timeE: `17:00`,
-    locationId: params.id,
+    locationId: locationIdNum,
     }]);
      const [newGroup, setNewGroup] = useState<Group>({
     id: null,
@@ -70,7 +71,7 @@ const CreateGroups = ({params}: Props) => {
     dayOfWeek: 1,
     timeS: `16:00` ,
     timeE: `17:00`,
-    locationId: params.id,
+    locationId: locationIdNum,
   });
 
   useEffect(()=>{
@@ -119,7 +120,7 @@ const CreateGroups = ({params}: Props) => {
       dayOfWeek: 1,
       timeS: '06:00',
       timeE: `07:00`,
-      locationId: params.id,
+      locationId: locationIdNum,
     });
   };
   const handleDelete = async (e:React.FormEvent) => {
