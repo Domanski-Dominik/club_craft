@@ -1,47 +1,57 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import  CredentialsProvider  from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
-import type {NextAuthOptions} from "next-auth"
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import type { NextAuthOptions } from "next-auth";
 
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "Nazwa użytkownika" },
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "Nazwa użytkownika",
+        },
         password: { label: "Password", type: "password" },
-        email: { label: "Email", type: "email"}
+        email: { label: "Email", type: "email" },
       },
       async authorize(credentials) {
-        if(credentials === undefined){
-          return null
+        if (credentials === undefined) {
+          console.log("credential:undefinied");
+          return null;
         }
         // Sprawdzenie czy mail i hasło są poprawne
         if (!credentials.email || !credentials.password) {
+          console.log("!credentials.email ...");
           return null;
-        } 
+        }
         // Sprawdzenie czy użytkownik istnieje
         const user = await prisma.user.findUnique({
           where: {
-              email: credentials.email
-          }
+            email: credentials.email,
+          },
         });
 
-        if(!user) {
+        if (!user) {
+          console.log("User = null");
           return null;
         }
-        
-        // Sprawdzenie czy hasło jest poprawne
-        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
 
-        if(!passwordMatch) {
+        // Sprawdzenie czy hasło jest poprawne
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!passwordMatch) {
+          console.log("hasło sie nie zgadza");
           return null;
         }
 
@@ -55,19 +65,18 @@ export const authOptions: NextAuthOptions = {
     })*/
   ],
   callbacks: {
-    async session({session, token}) {
-      //const sessionUser = await 
-      return session
-    }
+    async session({ session, token }) {
+      //const sessionUser = await
+      return session;
+    },
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 *60 * 60,
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV ==="development",
-  
-}
+  debug: process.env.NODE_ENV === "development",
+};
 
 /*const handler = NextAuth({
   providers: [
@@ -116,4 +125,4 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
