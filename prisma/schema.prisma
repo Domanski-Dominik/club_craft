@@ -13,9 +13,10 @@ datasource db {
 }
 
 model Locations {
-  id                 Int   @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
   name               String   
   addres             String
+  club               String    @default("guest")
   schedule           LocationSchedule[]
 }
 
@@ -71,6 +72,8 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   password      String
+  club          String    @default("guest")
+  role          String    @default("guest")
   accounts      Account[]
   sessions      Session[]
 }

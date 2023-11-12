@@ -30,11 +30,10 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = ['Klub', 'Informacje', 'Coś tam'];
 
 export default function TopNav(props: Props) {
 
-  const [auth, setAuth] = React.useState(true);
   const { data: session,status }= useSession();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { window } = props;
@@ -61,10 +60,6 @@ export default function TopNav(props: Props) {
       </List>
     </Box>
   );
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -94,7 +89,7 @@ export default function TopNav(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            Sportify
           </Typography>
          
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -131,8 +126,8 @@ export default function TopNav(props: Props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>Profil</MenuItem>
+                <MenuItem onClick={handleClose}>Jakaś opcja</MenuItem>
                 <MenuItem onClick={() => {signOut()}}>Wyloguj się</MenuItem>
 
               </Menu>

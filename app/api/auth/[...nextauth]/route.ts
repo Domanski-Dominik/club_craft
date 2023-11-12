@@ -9,7 +9,7 @@ import type { NextAuthOptions } from "next-auth";
 const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  //adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -65,9 +65,41 @@ export const authOptions: NextAuthOptions = {
     })*/
   ],
   callbacks: {
-    async session({ session, token }) {
+    async jwt({token, user, session, trigger}) {
+        if(trigger === "update" && session?.name) {
+          token.name = session.name;
+        }
+        if(trigger === "update" && session?.role) {
+          token.role = session.role;
+        }
+        if(trigger === "update" && session?.club) {
+          token.club = session.club;
+        }
+
+        if(user && user.role && user.club) {
+          return {
+            ...token,
+            id: user.id,
+            role: user.role,
+            club: user.club,
+          };
+        }
+        //console.log("jwt callback",{token, user, session})
+        return token;
+    },
+    async session({ session, token, user }) {
       //const sessionUser = await
-      return session;
+      //console.log("session callback",{ session, token, user })
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id:token.id,
+          name: token.name,
+          role:token.role,
+          club:token.club,
+        },
+      };
     },
   },
   session: {
