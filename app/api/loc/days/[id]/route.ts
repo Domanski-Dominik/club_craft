@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: Props) {
 	const locationIdNum = parseInt(locationId, 10);
 	console.log("To są id: ", locationId, locationIdNum);
 	try {
-		const groups = await prisma.locationSchedule.findMany({
+		const schedule = await prisma.locationSchedule.findMany({
 			where: {
 				locationId: locationIdNum,
 			},
@@ -20,11 +20,20 @@ export async function GET(req: Request, { params }: Props) {
 				group: true,
 			},
 		});
-		if (!groups) {
+		if (!schedule) {
 			return new Response("Dana lokalizacja nie ma jeszcze grup", {
 				status: 200,
 			});
 		}
+		const groups = schedule.map((schedule) => {
+			return {
+				id: schedule.group.id,
+				name: schedule.group.name,
+				dayOfWeek: schedule.group.dayOfWeek,
+				timeS: schedule.group.timeS,
+				timeE: schedule.group.timeE,
+			};
+		});
 		return new Response(JSON.stringify(groups), { status: 201 });
 	} catch (error) {
 		console.error("Błąd podczas pobierania nazw grup:", error);

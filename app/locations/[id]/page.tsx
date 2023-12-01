@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import Box from "@mui/material/Box";
+import Grid from "@mui/material/Unstable_Grid2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ interface Props {
 	};
 }
 export default function Days({ params }: Props) {
-	const [groups, setGroups] = useState<Group[] | []>([]);
+	const [groups, setGroups] = useState({});
 	const router = useRouter();
 	const locId = params.id;
 	const { status, data: session } = useSession({
@@ -31,8 +31,18 @@ export default function Days({ params }: Props) {
 					method: "GET",
 				});
 				const data: Group[] = await response.json();
-				console.log(data);
-				setGroups(data);
+				//console.log(data);
+				const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
+				data.forEach((group) => {
+					const { dayOfWeek } = group;
+
+					if (!groupsByDay[dayOfWeek]) {
+						groupsByDay[dayOfWeek] = [];
+					}
+					groupsByDay[dayOfWeek].push(group);
+				});
+				console.log(groupsByDay);
+				setGroups(groupsByDay);
 			} catch (error) {
 				console.log("Error", error);
 			}
@@ -40,7 +50,14 @@ export default function Days({ params }: Props) {
 		fetchLoc(locId);
 	}, [session]);
 
+	const handleDayClick = (id: string | number) => {};
+
 	if (status === "loading") return <Loading />;
 
-	return <>{params?.id}</>;
+	return (
+		<DaysCard
+			gr={groups}
+			handleClick={handleDayClick}
+		/>
+	);
 }
