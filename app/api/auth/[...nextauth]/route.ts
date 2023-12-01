@@ -14,15 +14,11 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Nazwa użytkownika",
-        },
         password: { label: "Password", type: "password" },
         email: { label: "Email", type: "email" },
       },
       async authorize(credentials) {
+        console.log("Wszedłem do authorize");
         if (credentials === undefined) {
           console.log("credential:undefinied");
           return null;
@@ -65,27 +61,27 @@ export const authOptions: NextAuthOptions = {
     })*/
   ],
   callbacks: {
-    async jwt({token, user, session, trigger}) {
-        if(trigger === "update" && session?.name) {
-          token.name = session.name;
-        }
-        if(trigger === "update" && session?.role) {
-          token.role = session.role;
-        }
-        if(trigger === "update" && session?.club) {
-          token.club = session.club;
-        }
+    async jwt({ token, user, session, trigger }) {
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+      }
+      if (trigger === "update" && session?.role) {
+        token.role = session.role;
+      }
+      if (trigger === "update" && session?.club) {
+        token.club = session.club;
+      }
 
-        if(user && user.role && user.club) {
-          return {
-            ...token,
-            id: user.id,
-            role: user.role,
-            club: user.club,
-          };
-        }
-        //console.log("jwt callback",{token, user, session})
-        return token;
+      if (user && user.role && user.club) {
+        return {
+          ...token,
+          id: user.id,
+          role: user.role,
+          club: user.club,
+        };
+      }
+      //console.log("jwt callback",{token, user, session})
+      return token;
     },
     async session({ session, token, user }) {
       //const sessionUser = await
@@ -94,10 +90,10 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
-          id:token.id,
+          id: token.id,
           name: token.name,
-          role:token.role,
-          club:token.club,
+          role: token.role,
+          club: token.club,
         },
       };
     },

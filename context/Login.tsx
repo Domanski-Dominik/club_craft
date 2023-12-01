@@ -23,16 +23,19 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const session = useSession();
   const { status } = useSession();
   if (status === "authenticated") redirect("/locations");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("wszedłem  do funkcji", data);
-    signIn("credentials", {
+    const result = await signIn("credentials", {
       ...data,
       redirect: false,
     });
+    console.log(result);
+    console.log(session);
   };
   return (
     <Container component="main" maxWidth="xs">
