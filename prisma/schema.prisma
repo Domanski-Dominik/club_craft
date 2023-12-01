@@ -26,6 +26,7 @@ model Group {
   dayOfWeek          Int
   timeS              String
   timeE              String
+  club               String    @default("guest")
   schedule           LocationSchedule[]
 }
 model LocationSchedule {
