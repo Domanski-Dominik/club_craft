@@ -1,144 +1,218 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Loading from "@/context/Loading";
 import {
-  FormControl,
-  TextField,
-  InputLabel,
-  Typography,
-  Container,
-  FormLabel,
-  Button,
-  Box,
+	FormControl,
+	TextField,
+	Typography,
+	Container,
+	Button,
+	Box,
+	FormHelperText,
 } from "@mui/material";
-
 import Grid from "@mui/material/Unstable_Grid2";
+import { useRouter, redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
+
 const LocForm = () => {
-  const [newLoc, setNewLoc] = useState({
-    name: "",
-    street: "",
-    city: "",
-    postalCode: "",
-    streetNr: "",
-  });
-  const handleSubmit = () => {};
-  return (
-    <>
-      <Container>
-        <Typography
-          variant="h2"
-          align="center"
-          color="secondary"
-          sx={{
-            marginBottom: "1rem",
-          }}>
-          Utwórz Lokalizacje
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          sx={{ marginBottom: "2rem" }}>
-          Dodaj nową lokalizację do swojego klubu!
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid
-            container
-            spacing={2}
-            direction={"row"}
-            sx={{ justifyContent: "center" }}>
-            <Grid xs={11} md={15}>
-              <FormControl fullWidth>
-                <TextField
-                  id={"outlined-basic"}
-                  type="text"
-                  value={newLoc.name}
-                  onChange={(e) =>
-                    setNewLoc({ ...newLoc, name: e.target.value })
-                  }
-                  label="Nazwa Lokalizacji"
-                  variant="outlined"
-                  required
-                />
-              </FormControl>
-            </Grid>
-            <Grid xs={8}>
-              <FormControl fullWidth>
-                <TextField
-                  id={"outlined-basic"}
-                  type="text"
-                  value={newLoc.street}
-                  onChange={(e) =>
-                    setNewLoc({ ...newLoc, street: e.target.value })
-                  }
-                  label="Ulica"
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            <Grid xs={3}>
-              <FormControl fullWidth>
-                <TextField
-                  id={"outlined-basic"}
-                  type="text"
-                  value={newLoc.streetNr}
-                  onChange={(e) =>
-                    setNewLoc({ ...newLoc, streetNr: e.target.value })
-                  }
-                  label="Numer"
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            <Grid xs={6}>
-              <FormControl fullWidth>
-                <TextField
-                  id={"outlined-basic"}
-                  type="text"
-                  value={newLoc.city}
-                  onChange={(e) =>
-                    setNewLoc({ ...newLoc, city: e.target.value })
-                  }
-                  label="Miasto"
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            <Grid xs={5}>
-              <FormControl fullWidth>
-                <TextField
-                  id={"outlined-basic"}
-                  type="text"
-                  value={newLoc.postalCode}
-                  onChange={(e) =>
-                    setNewLoc({ ...newLoc, postalCode: e.target.value })
-                  }
-                  label="Kod pocztowy"
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            sx={{ marginTop: "2rem", justifyContent: "center" }}
-            columnSpacing={3}>
-            <Grid>
-              <Button variant="outlined" color="error" size="large">
-                Analuj
-              </Button>
-            </Grid>
-            <Grid>
-              <Button
-                variant="outlined"
-                type="submit"
-                color="success"
-                size="large">
-                Dodaj
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Container>
-    </>
-  );
+	const router = useRouter();
+	const [postalCode, setPostalCode] = useState("");
+	const [newLoc, setNewLoc] = useState({
+		name: "",
+		street: "",
+		city: "",
+		postalCode: "",
+		streetNr: "",
+		club: "",
+	});
+	const { status, data: session } = useSession({
+		required: true,
+		onUnauthenticated() {
+			redirect("/login");
+		},
+	});
+	const [validFormat, setValidFormat] = useState(true);
+	const handlePostalCodeChange = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const value = event.target.value;
+		// Sprawdzenie czy wartość wprowadzona spełnia wymagania formatu kodu pocztowego
+		const isValidFormat = /^\d{2}-\d{3}$/.test(value) || value === "";
+		setValidFormat(isValidFormat);
+
+		if (isValidFormat || value === "") {
+			setNewLoc({ ...newLoc, postalCode: event.target.value });
+		}
+		setPostalCode(value);
+		//console.log("pomocnicza: ", value, "   newLoc: ", newLoc.postalCode);
+	};
+	const handleSubmit = async (event: React.FormEvent) => {
+		event.preventDefault();
+		if (validFormat && newLoc.name !== "") {
+			// Obsługa przesłania formularza
+			console.log("Formularz został przesłany.");
+			try {
+				const response = await fetch("/api/loc", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(newLoc),
+				});
+				if (response.ok) {
+					const data = await response.json();
+					console.log("Utworzno lokalizacje: ", data);
+					router.push(`/locations/new/${data.id}`);
+				} else {
+					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
+				}
+			} catch (error) {
+				console.error("Wystąpił błąd podczas wykonywania żądania: ", error);
+			}
+		} else {
+			console.log('Kod pocztowy lub pole "name" jest niepoprawne.');
+		}
+	};
+	if (status === "loading") return <Loading />;
+	useEffect(() => {
+		if (session?.user.club !== undefined) {
+			setNewLoc({ ...newLoc, club: session?.user.club });
+		} else {
+			setNewLoc({ ...newLoc, club: "guest" });
+		}
+	}, [session]);
+
+	return (
+		<>
+			<Container>
+				<Typography
+					variant='h2'
+					align='center'
+					color='secondary'
+					sx={{
+						marginBottom: "1rem",
+					}}>
+					Utwórz Lokalizacje
+				</Typography>
+				<Typography
+					variant='subtitle1'
+					align='center'
+					sx={{ marginBottom: "2rem" }}>
+					Dodaj nową lokalizację do swojego klubu!
+				</Typography>
+				<Box
+					component='form'
+					onSubmit={handleSubmit}>
+					<Grid
+						container
+						spacing={2}
+						direction={"row"}
+						sx={{ justifyContent: "center" }}>
+						<Grid
+							xs={11}
+							md={15}>
+							<FormControl fullWidth>
+								<TextField
+									id={"outlined-basic"}
+									type='text'
+									value={newLoc.name}
+									onChange={(e) =>
+										setNewLoc({ ...newLoc, name: e.target.value })
+									}
+									label='Nazwa Lokalizacji'
+									variant='outlined'
+									required
+									focused
+									placeholder='Nazwa lokalizacji'
+								/>
+							</FormControl>
+						</Grid>
+						<Grid xs={8}>
+							<FormControl fullWidth>
+								<TextField
+									id={"outlined-basic"}
+									type='text'
+									value={newLoc.street}
+									onChange={(e) =>
+										setNewLoc({ ...newLoc, street: e.target.value })
+									}
+									label='Ulica'
+									variant='outlined'
+									placeholder='Ulica'
+								/>
+							</FormControl>
+						</Grid>
+						<Grid xs={3}>
+							<FormControl fullWidth>
+								<TextField
+									id={"outlined-basic"}
+									type='text'
+									value={newLoc.streetNr}
+									onChange={(e) =>
+										setNewLoc({ ...newLoc, streetNr: e.target.value })
+									}
+									label='Numer'
+									variant='outlined'
+									placeholder='Numer'
+								/>
+							</FormControl>
+						</Grid>
+						<Grid xs={6}>
+							<FormControl fullWidth>
+								<TextField
+									id={"outlined-basic"}
+									type='text'
+									value={newLoc.city}
+									onChange={(e) =>
+										setNewLoc({ ...newLoc, city: e.target.value })
+									}
+									label='Miasto'
+									variant='outlined'
+									placeholder='Miasto'
+								/>
+							</FormControl>
+						</Grid>
+						<Grid xs={5}>
+							<FormControl fullWidth>
+								<TextField
+									id={"outlined-basic"}
+									value={postalCode}
+									onChange={handlePostalCodeChange}
+									label='Kod pocztowy'
+									variant='outlined'
+								/>
+								{!validFormat && (
+									<FormHelperText error>W formacie XX-YYY</FormHelperText>
+								)}
+							</FormControl>
+						</Grid>
+					</Grid>
+					<Grid
+						container
+						sx={{ marginTop: "2rem", justifyContent: "center" }}
+						columnSpacing={3}>
+						<Grid>
+							<Button
+								variant='outlined'
+								color='warning'
+								size='large'>
+								Anuluj
+							</Button>
+						</Grid>
+						<Grid>
+							<Button
+								variant='outlined'
+								type='submit'
+								color='success'
+								size='large'
+								disabled={!validFormat || newLoc.name === ""}>
+								Dodaj
+							</Button>
+						</Grid>
+					</Grid>
+				</Box>
+			</Container>
+		</>
+	);
 };
 
 export default LocForm;

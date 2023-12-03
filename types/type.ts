@@ -1,7 +1,10 @@
 export type Location = {
 	id: number | string;
 	name: string;
-	addres: string;
+	street: string;
+	city: string;
+	postalCode: string;
+	streetNr: string;
 	club: string;
 };
 export type Group = {

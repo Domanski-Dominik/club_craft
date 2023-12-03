@@ -9,52 +9,52 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { useRouter } from "next/navigation";
 export default function BottomNav() {
-  const [value, setValue] = React.useState("locations");
-  const router = useRouter();
+	const [value, setValue] = React.useState("locations");
+	const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-    router.push(`/${newValue}`);
-  };
+	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+		setValue(newValue);
+		router.push(`/${newValue}`);
+	};
 
-  return (
-    <BottomNavigation
-      value={value}
-      onChange={handleChange}
-      sx={{
-        width: "100vw",
-        position: "fixed",
-        bottom: 0,
-        zIndex: 50,
-        height: "80px",
-        paddingBottom: 2,
-      }}
-      color={"primary"}>
-      <BottomNavigationAction
-        label="Klub"
-        value="home"
-        icon={<HomeOutlinedIcon />}
-      />
-      <BottomNavigationAction
-        label="Uczestnicy"
-        value="participants"
-        icon={<PeopleAltOutlinedIcon />}
-      />
-      <BottomNavigationAction
-        label="Nowy"
-        value="add"
-        icon={<AddCircleOutlineOutlinedIcon />}
-      />
-      <BottomNavigationAction
-        label="Obecność"
-        value="locations"
-        icon={<HowToRegSharpIcon />}
-      />
-      <BottomNavigationAction
-        label="Płatności"
-        value="payments"
-        icon={<PaidOutlinedIcon />}
-      />
-    </BottomNavigation>
-  );
+	return (
+		<BottomNavigation
+			value={value}
+			onChange={handleChange}
+			sx={{
+				width: "100vw",
+				position: "fixed",
+				bottom: 0,
+				zIndex: 50,
+				height: "80px",
+				paddingBottom: 2,
+			}}
+			color={"primary"}>
+			<BottomNavigationAction
+				label='Klub'
+				value='home'
+				icon={<HomeOutlinedIcon />}
+			/>
+			<BottomNavigationAction
+				label='Uczestnicy'
+				value='participants'
+				icon={<PeopleAltOutlinedIcon />}
+			/>
+			<BottomNavigationAction
+				label='Nowy'
+				value='add'
+				icon={<AddCircleOutlineOutlinedIcon />}
+			/>
+			<BottomNavigationAction
+				label='Obecność'
+				value='locations'
+				icon={<HowToRegSharpIcon />}
+			/>
+			<BottomNavigationAction
+				label='Płatności'
+				value='payments'
+				icon={<PaidOutlinedIcon />}
+			/>
+		</BottomNavigation>
+	);
 }

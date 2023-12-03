@@ -13,13 +13,17 @@ export const GET = async () => {
 
 export const POST = async (req: Request) => {
 	try {
-		const { name, addres } = await req.json();
-		console.log("Route js: " + name, addres);
+		const { name, street, streetNr, city, postalCode, club } = await req.json();
+		console.log("Route ts: " + name, street, streetNr, city, postalCode, club);
 
 		const newLoc = await prisma.locations.create({
 			data: {
 				name: name,
-				addres: addres,
+				street: street,
+				streetNr: streetNr,
+				city: city,
+				postalCode: postalCode,
+				club: club,
 			},
 		});
 

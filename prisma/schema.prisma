@@ -15,7 +15,10 @@ datasource db {
 model Locations {
   id                 Int       @id @default(autoincrement())
   name               String   
-  addres             String
+  city               String
+  street             String
+  streetNr           String
+  postalCode         String
   club               String    @default("guest")
   schedule           LocationSchedule[]
 }

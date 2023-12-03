@@ -211,8 +211,8 @@ const CreateGroups = ({ params }: Props) => {
 					container
 					spacing={2}
 					justifyContent='center'
-					direction={"row"}
-					className='mb-3'>
+					sx={{ marginBottom: "1rem" }}
+					direction={"row"}>
 					<Grid
 						item
 						xs={10}
@@ -326,7 +326,7 @@ const CreateGroups = ({ params }: Props) => {
 				<Grid
 					container
 					justifyContent={"space-around"}
-					className='mb-3'>
+					sx={{ marginBottom: "1rem" }}>
 					<Button
 						variant='outlined'
 						onClick={handleDelete}
@@ -341,9 +341,7 @@ const CreateGroups = ({ params }: Props) => {
 					</Button>
 				</Grid>
 			</form>
-			<div
-				style={{ minWidth: "350px" }}
-				className='border w-[95%]'>
+			<Box sx={{ borderWidth: "1px", width: "95%", minWidth: "350px" }}>
 				<FullCalendar
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					initialView='timeGridWeek'
@@ -375,7 +373,7 @@ const CreateGroups = ({ params }: Props) => {
 					eventRemove={function () {}}
 					eventClick={handleEventClick}
 				/>
-			</div>
+			</Box>
 		</>
 	);
 };

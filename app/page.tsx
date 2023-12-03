@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 const Home = () => {
@@ -7,7 +7,11 @@ const Home = () => {
 	return (
 		<>
 			<Box sx={{ textAlign: "center", marginBottom: "2.5rem" }}>
-				<span className='blue_gradient head_text'>Witaj w systemie!</span>
+				<Typography
+					variant='h1'
+					color='indigo'>
+					Witaj w systemie!
+				</Typography>
 			</Box>
 			<Button
 				onClick={() => router.push("/login")}
