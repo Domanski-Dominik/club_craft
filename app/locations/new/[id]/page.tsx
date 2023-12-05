@@ -6,17 +6,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import plLocale from "@fullcalendar/core/locales/pl";
 import React, { useEffect, useState } from "react";
-import {
-	EventApi,
-	DateSelectArg,
-	EventClickArg,
-	EventContentArg,
-	formatDate,
-} from "@fullcalendar/core";
+import { EventApi, EventClickArg, EventInput } from "@fullcalendar/core";
 
 import {
 	FormControl,
-	Input,
 	TextField,
 	Grid,
 	Button,
@@ -30,20 +23,15 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { plPL } from "@mui/x-date-pickers/locales";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { group } from "console";
 
 interface Props {
 	params: {
 		id: string;
 	};
 }
-interface Data {
-	id: number | null;
-	name: string;
-	dayOfWeek: number;
-	timeS: string;
-	timeE: string;
-}
-
 interface Group {
 	id: number | null;
 	name: string;
@@ -51,6 +39,7 @@ interface Group {
 	timeS: string;
 	timeE: string;
 	locationId: number;
+	club: string;
 }
 
 const daysOfWeekOptions = [
@@ -64,25 +53,24 @@ const daysOfWeekOptions = [
 ];
 
 const CreateGroups = ({ params }: Props) => {
-	const [events, setEvents] = useState([]);
+	const [events, setEvents] = useState<EventInput[]>([]);
 	const locationIdNum = parseInt(params.id, 10);
-	const [groups, setGroups] = useState<Group[]>([
-		{
-			id: null,
-			name: "",
-			dayOfWeek: 1,
-			timeS: `16:00`,
-			timeE: `17:00`,
-			locationId: locationIdNum,
+	const [isClicked, setIsClicked] = useState(false);
+	const [club, setClub] = useState("guest");
+	const { status, data: session } = useSession({
+		required: true,
+		onUnauthenticated() {
+			redirect("/login");
 		},
-	]);
+	});
 	const [newGroup, setNewGroup] = useState<Group>({
 		id: null,
 		name: "",
 		dayOfWeek: 1,
-		timeS: `16:00`,
-		timeE: `17:00`,
+		timeS: "16:00",
+		timeE: "17:00",
 		locationId: locationIdNum,
+		club: club,
 	});
 
 	useEffect(() => {
@@ -92,9 +80,8 @@ const CreateGroups = ({ params }: Props) => {
 					method: "GET",
 				});
 				const data = await response.json();
-				console.log(data);
-				console.log(groups);
-				const formattedEvents = data.map((group: Group) => ({
+				//console.log(data);
+				const formattedEvents: EventInput[] = data.map((group: Group) => ({
 					id: `${group.id}`,
 					title: group.name,
 					daysOfWeek: [group.dayOfWeek],
@@ -102,7 +89,7 @@ const CreateGroups = ({ params }: Props) => {
 					endTime: `${group.timeE}:00`,
 					allDay: false,
 				}));
-				console.log("Formatted events: ", formattedEvents);
+				//console.log("Formatted events: ", formattedEvents);
 
 				setEvents(formattedEvents);
 			} catch (error) {
@@ -114,6 +101,7 @@ const CreateGroups = ({ params }: Props) => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+
 		try {
 			const response = await fetch("/api/loc/gr", {
 				method: "POST",
@@ -121,21 +109,33 @@ const CreateGroups = ({ params }: Props) => {
 			});
 			const data = await response.json();
 			console.log("Nowa grupa dodana: ", data);
+			if (response.ok) {
+				const formattedNewGroup: EventInput = {
+					id: `${data.id}`,
+					title: data.name,
+					daysOfWeek: [data.dayOfWeek],
+					startTime: `${data.timeS}:00`,
+					endTime: `${data.timeE}:00`,
+					allDay: false,
+				};
+				setEvents([...events, formattedNewGroup]);
+			}
 		} catch (error) {
 			console.error("Błąd podczas dodawania grupy: ", error);
 		}
-		setGroups([...groups, newGroup]);
+		//setGroups([...groups, newGroup]);
+
 		setNewGroup({
+			...newGroup,
 			id: null,
 			name: "",
-			dayOfWeek: 1,
-			timeS: "06:00",
-			timeE: `07:00`,
-			locationId: locationIdNum,
+			timeS: "16:00",
+			timeE: "17:00",
 		});
 	};
 	const handleDelete = async (e: React.FormEvent) => {
 		e.preventDefault();
+		console.log(newGroup);
 		try {
 			const response = await fetch("/api/loc/gr", {
 				method: "DELETE",
@@ -146,10 +146,66 @@ const CreateGroups = ({ params }: Props) => {
 		} catch (error) {
 			console.error("Błąd podczas usuwania grupy: ", error);
 		}
+		const idToDelete = `${newGroup.id}`;
+		const updatedEvents = events.filter((event) => event.id !== idToDelete);
+
+		setEvents(updatedEvents);
+		console.log(updatedEvents);
+		setNewGroup({
+			...newGroup,
+			id: null,
+			name: "",
+			dayOfWeek: 1,
+			timeS: "16:00",
+			timeE: "17:00",
+			club: club,
+		});
+		setIsClicked(false);
+	};
+	const handleEdit = async (e: React.FormEvent) => {
+		console.log(newGroup);
+		try {
+			const response = await fetch("/api/loc/gr", {
+				method: "PUT",
+				body: JSON.stringify(newGroup),
+			});
+			const data = await response.json();
+			console.log("Grupa edytowana: ", data);
+			if (response.ok) {
+				const updatedEvents = events.map((event) => {
+					if (event.id === `${data.id}`) {
+						return {
+							...event,
+							id: `${data.id}`,
+							title: data.name,
+							daysOfWeek: [data.dayOfWeek],
+							startTime: `${data.timeS}:00`,
+							endTime: `${data.timeE}:00`,
+							allDay: false,
+						};
+					}
+					return event;
+				});
+				setEvents(updatedEvents);
+				console.log(updatedEvents);
+			}
+		} catch (error) {
+			console.error("Błąd podczas edytowania grupy: ", error);
+		}
+		setNewGroup({
+			...newGroup,
+			id: null,
+			name: "",
+			dayOfWeek: 1,
+			timeS: "16:00",
+			timeE: "17:00",
+			club: club,
+		});
+		setIsClicked(false);
 	};
 
 	const handleEventClick = (clickInfo: EventClickArg) => {
-		console.log(clickInfo);
+		//console.log(clickInfo);
 
 		const clickedEventDate = clickInfo.event.startStr;
 		const dayOfWeek = new Date(clickedEventDate).getDay();
@@ -181,7 +237,7 @@ const CreateGroups = ({ params }: Props) => {
 				dayName = 1;
 		}
 		const dateStringS = clickInfo.event.startStr;
-		console.log(clickInfo.event.startStr);
+		//console.log(clickInfo.event.startStr);
 
 		const dateS = new Date(dateStringS);
 		const hourS = ("0" + dateS.getHours()).slice(-2); // Dodaje zero przed jednocyfrowymi godzinami
@@ -193,20 +249,34 @@ const CreateGroups = ({ params }: Props) => {
 		const hourE = ("0" + dateE.getHours()).slice(-2); // Dodaje zero przed jednocyfrowymi godzinami
 		const minutesE = ("0" + dateE.getMinutes()).slice(-2); // Dodaje zero przed jednocyfrowymi minutami
 
+		console.log(clickInfo.event.id);
+		const clickedId = parseInt(clickInfo.event.id);
+
 		setNewGroup({
-			id: null,
+			id: clickedId,
 			name: clickInfo.event.title,
 			dayOfWeek: dayName,
 			timeS: `${hourS}:${minutesS}`,
 			timeE: `${hourE}:${minutesE}`,
 			locationId: locationIdNum,
+			club: club,
 		});
+		setIsClicked(true);
 	};
 
-	const handleEvents = (events: EventApi[]) => {};
+	useEffect(() => {
+		if (session?.user.club !== undefined) {
+			setClub(session?.user.club);
+			setNewGroup({ ...newGroup, club: session?.user.club });
+		} else {
+			setClub("guest");
+		}
+	}, [session]);
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
+			<form
+				onSubmit={handleSubmit}
+				id='formId'>
 				<Grid
 					container
 					spacing={2}
@@ -272,16 +342,20 @@ const CreateGroups = ({ params }: Props) => {
 									value={new Date(`2000-01-01T${newGroup.timeS}:00`)}
 									onChange={(newValue) => {
 										if (newValue !== null && newValue !== undefined) {
-											setNewGroup({
-												...newGroup,
-												timeS: ` ${newValue
-													.getHours()
-													.toString()
-													.padStart(2, "0")}:${newValue
-													.getMinutes()
-													.toString()
-													.padStart(2, "0")}`,
-											});
+											const hours = newValue
+												.getHours()
+												.toString()
+												.padStart(2, "0");
+											const minutes = newValue
+												.getMinutes()
+												.toString()
+												.padStart(2, "0");
+											const newTimeS = `${hours}:${minutes}`;
+
+											setNewGroup((prevGroup) => ({
+												...prevGroup,
+												timeS: newTimeS,
+											}));
 										}
 									}}
 								/>
@@ -305,17 +379,20 @@ const CreateGroups = ({ params }: Props) => {
 									value={new Date(`2000-01-01T${newGroup.timeE}:00`)}
 									onChange={(newValue) => {
 										if (newValue !== null && newValue !== undefined) {
-											setNewGroup({
-												...newGroup,
-												timeE: `${newValue
-													.getHours()
-													.toString()
-													.padStart(2, "0")}:${newValue
-													.getMinutes()
-													.toString()
-													.padStart(2, "0")}
-                            `,
-											});
+											const hours = newValue
+												.getHours()
+												.toString()
+												.padStart(2, "0");
+											const minutes = newValue
+												.getMinutes()
+												.toString()
+												.padStart(2, "0");
+											const newTimeE = `${hours}:${minutes}`;
+
+											setNewGroup((prevGroup) => ({
+												...prevGroup,
+												timeE: newTimeE,
+											}));
 										}
 									}}
 								/>
@@ -330,18 +407,35 @@ const CreateGroups = ({ params }: Props) => {
 					<Button
 						variant='outlined'
 						onClick={handleDelete}
-						color='error'>
+						disabled={!isClicked}
+						color='error'
+						type='button'>
 						Usuń
 					</Button>
 					<Button
 						variant='outlined'
+						onClick={handleEdit}
+						disabled={!isClicked}
+						color='warning'
+						type='button'>
+						Zapisz zmiany
+					</Button>
+					<Button
+						variant='outlined'
 						type='submit'
-						color='success'>
+						color='success'
+						form='formId'>
 						Dodaj
 					</Button>
 				</Grid>
 			</form>
-			<Box sx={{ borderWidth: "1px", width: "95%", minWidth: "350px" }}>
+			<Box
+				sx={{
+					borderWidth: "0.5px",
+					width: "95%",
+					minWidth: "350px",
+					borderColor: "white",
+				}}>
 				<FullCalendar
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					initialView='timeGridWeek'
@@ -351,7 +445,7 @@ const CreateGroups = ({ params }: Props) => {
 					slotMinTime={"06:00"}
 					headerToolbar={false}
 					scrollTime={"16:00"}
-					slotDuration={"00:15:00"}
+					slotDuration={"00:20:00"}
 					height={300}
 					locale={plLocale}
 					allDaySlot={false}
@@ -363,7 +457,7 @@ const CreateGroups = ({ params }: Props) => {
             startTime: group.timeS,
             endTime: group.timeE,
           }))}*/
-					eventsSet={handleEvents}
+
 					// called after events are initialized/added/changed/removed
 					//you can update a remote database when these fire:
 					eventAdd={function () {

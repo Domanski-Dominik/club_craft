@@ -1,5 +1,3 @@
-"use client";
-
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -19,6 +17,8 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 	};
 	const getPolishDayName = (dayOfWeek: number): string => {
 		switch (dayOfWeek) {
+			case 0:
+				return "Niedziela";
 			case 1:
 				return "Poniedziałek";
 			case 2:
@@ -31,12 +31,18 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 				return "Piątek";
 			case 6:
 				return "Sobota";
-			case 7:
-				return "Niedziela";
 			default:
 				return "Nieznany dzień";
 		}
 	};
+
+	const sortedDaysOfWeek = Object.keys(gr)
+		.map((day) => parseInt(day, 10))
+		.sort((a, b) => {
+			if (a === 0) return 1;
+			if (b === 0) return -1;
+			return a - b;
+		});
 
 	return (
 		<>
@@ -44,28 +50,27 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 				container
 				columns={2}
 				spacing={0.5}>
-				{Object.keys(gr).map((dayOfWeek) => {
-					const day = parseInt(dayOfWeek, 10);
+				{sortedDaysOfWeek.map((day) => {
 					const groupsForDay = gr[day];
 
 					return (
-						<Grid xs={1}>
+						<Grid
+							xs={1}
+							key={day}>
 							<Card
 								variant='outlined'
-								onClick={() => handleDayClick(day)}>
+								onClick={() => handleDayClick(day)}
+								sx={{ minWidth: "174px" }}>
 								<CardContent>
 									<Typography
 										variant='h5'
 										component='div'
-										sx={{ marginBottom: 1 }}>
+										sx={{ marginBottom: 1, textAlign: "center" }}>
 										{getPolishDayName(day)}
 									</Typography>
 
 									<Typography variant='body2'>
-										{groupsForDay.map(
-											(group) => `
-											${group.name},`
-										)}
+										{groupsForDay.map((group) => `${group.name},`)}
 									</Typography>
 								</CardContent>
 							</Card>

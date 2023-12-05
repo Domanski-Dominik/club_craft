@@ -101,7 +101,8 @@ const LocForm = () => {
 				</Typography>
 				<Box
 					component='form'
-					onSubmit={handleSubmit}>
+					onSubmit={handleSubmit}
+					id='formId'>
 					<Grid
 						container
 						spacing={2}
@@ -193,8 +194,10 @@ const LocForm = () => {
 						<Grid>
 							<Button
 								variant='outlined'
+								onClick={() => router.push("/locations")}
 								color='warning'
-								size='large'>
+								size='large'
+								type='button'>
 								Anuluj
 							</Button>
 						</Grid>
@@ -204,6 +207,7 @@ const LocForm = () => {
 								type='submit'
 								color='success'
 								size='large'
+								form='formId'
 								disabled={!validFormat || newLoc.name === ""}>
 								Dodaj
 							</Button>

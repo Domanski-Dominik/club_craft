@@ -5,7 +5,7 @@ interface Props {
 		id: string;
 	};
 }
-export const GET = async ({ params }: Props) => {
+export const GET = async (req: Request, { params }: Props) => {
 	console.log("Wszedłem do funkcji", params);
 	const locationId = params.id;
 	const locationIdNum = parseInt(locationId, 10);
@@ -19,7 +19,7 @@ export const GET = async ({ params }: Props) => {
 				group: true,
 			},
 		});
-		//console.log(schedules)
+		//console.log(schedules);
 
 		if (!schedules) {
 			return new Response("Dana lokalizacja nie ma jeszcze grup", {

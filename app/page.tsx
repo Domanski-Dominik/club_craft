@@ -9,7 +9,7 @@ const Home = () => {
 			<Box sx={{ textAlign: "center", marginBottom: "2.5rem" }}>
 				<Typography
 					variant='h1'
-					color='indigo'>
+					color='secondary'>
 					Witaj w systemie!
 				</Typography>
 			</Box>
