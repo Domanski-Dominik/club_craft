@@ -52,6 +52,19 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 				spacing={0.5}>
 				{sortedDaysOfWeek.map((day) => {
 					const groupsForDay = gr[day];
+					// Sortuj grupy według timeS
+					groupsForDay.sort((a, b) => {
+						// Zakładam, że timeS to string w formacie HH:mm
+						const timeSArr = a.timeS.split(":");
+						const timeSValueA =
+							parseInt(timeSArr[0]) * 60 + parseInt(timeSArr[1]);
+
+						const timeSArrB = b.timeS.split(":");
+						const timeSValueB =
+							parseInt(timeSArrB[0]) * 60 + parseInt(timeSArrB[1]);
+
+						return timeSValueA - timeSValueB;
+					});
 
 					return (
 						<Grid

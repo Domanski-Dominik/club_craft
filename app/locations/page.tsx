@@ -8,6 +8,7 @@ import Loading from "@/context/Loading";
 import LocCard from "@/components/cards/LocCard";
 import { Location } from "@/types/type";
 import { Card, CardContent, Typography } from "@mui/material";
+import MobileNavigation from "@/components/navigation/BreadCrumbs";
 
 type LocCardListProps = {
 	data: Location[] | [];
@@ -34,6 +35,13 @@ export default function LocationList() {
 	const [locs, setLocs] = useState<Location[] | []>([]);
 	const router = useRouter();
 	const [isOwner, setIsOwner] = useState(false);
+	const pages = [
+		{
+			id: 1,
+			title: "Lokalizacje",
+			path: "/locations",
+		},
+	];
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -47,7 +55,11 @@ export default function LocationList() {
 			const data: Location[] = await response.json();
 			console.log(session.user);
 			console.log(data);
-			if (session.user.role === "owner" || session.user.role === "admin") {
+			if (
+				session.user.role === "owner" ||
+				session.user.role === "admin" ||
+				session.user.role === "guest"
+			) {
 				setIsOwner(true);
 			}
 			const filteredData: Location[] | [] = data.filter(
@@ -73,6 +85,7 @@ export default function LocationList() {
 
 	return (
 		<>
+			<MobileNavigation pages={pages} />
 			<LocCardList
 				data={locs}
 				handleClick={handleClick}

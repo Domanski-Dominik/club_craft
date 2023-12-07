@@ -23,19 +23,27 @@ const Login = () => {
 		email: "",
 		password: "",
 	});
+	const [error, setError] = useState("");
 	const session = useSession();
 	const { status } = useSession();
 	if (status === "authenticated") redirect("/locations");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("wszedłem  do funkcji", data);
-		const result = await signIn("credentials", {
-			...data,
-			redirect: false,
-		});
-		console.log(result);
-		console.log(session);
+		try {
+			console.log("wszedłem  do funkcji", data);
+			const result = await signIn("credentials", {
+				...data,
+				redirect: false,
+			});
+			console.log(result);
+			console.log(session);
+			if (result?.error) {
+				throw new Error(result.error as string); // Użycie asercji typów
+			}
+		} catch (error: any) {
+			setError(error.message); // Ustaw błąd, jeśli wystąpił podczas logowania
+		}
 	};
 	return (
 		<Container
@@ -83,6 +91,7 @@ const Login = () => {
 						autoComplete='current-password'
 						onChange={(e) => setData({ ...data, password: e.target.value })}
 					/>
+					{error && <Typography color='error'>{error}</Typography>}
 					{/*<FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"

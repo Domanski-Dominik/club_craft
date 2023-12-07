@@ -7,6 +7,7 @@ import { redirect, useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
 import DaysCard from "@/components/cards/DaysCard";
 import { Group } from "@/types/type";
+import MobileNavigation from "@/components/navigation/BreadCrumbs";
 
 interface Props {
 	params: {
@@ -16,6 +17,9 @@ interface Props {
 export default function Days({ params }: Props) {
 	const [groups, setGroups] = useState({});
 	const router = useRouter();
+	const [pages, setPages] = useState([
+		{ id: 1, title: "Lokalizacje", path: "/locations" },
+	]);
 	const locId = params.id;
 	const { status, data: session } = useSession({
 		required: true,
@@ -24,6 +28,28 @@ export default function Days({ params }: Props) {
 		},
 	});
 
+	useEffect(() => {
+		const loadName = async (locId: string) => {
+			try {
+				const response = await fetch(`/api/loc/${locId}`, { method: "GET" });
+				if (response.ok) {
+					const locName = await response.json();
+					console.log(locName);
+					setPages([
+						...pages,
+						{
+							id: 2,
+							title: `${locName.name}`,
+							path: `/locations/${locName.id}`,
+						},
+					]);
+				}
+			} catch (error) {
+				console.log("Error", error);
+			}
+		};
+		loadName(locId);
+	}, []);
 	useEffect(() => {
 		const fetchLoc = async (locId: string) => {
 			try {
@@ -41,7 +67,7 @@ export default function Days({ params }: Props) {
 					}
 					groupsByDay[dayOfWeek].push(group);
 				});
-				console.log(groupsByDay);
+				//console.log(groupsByDay);
 				setGroups(groupsByDay);
 			} catch (error) {
 				console.log("Error", error);
@@ -55,9 +81,12 @@ export default function Days({ params }: Props) {
 	if (status === "loading") return <Loading />;
 
 	return (
-		<DaysCard
-			gr={groups}
-			handleClick={handleDayClick}
-		/>
+		<>
+			<MobileNavigation pages={pages} />
+			<DaysCard
+				gr={groups}
+				handleClick={handleDayClick}
+			/>
+		</>
 	);
 }

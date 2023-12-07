@@ -7,10 +7,10 @@ interface Props {
 }
 
 export async function GET(req: Request, { params }: Props) {
-	console.log("Wszedłem do funkcji", params);
+	//console.log("Wszedłem do funkcji", params);
 	const locationId = params.id;
 	const locationIdNum = parseInt(locationId, 10);
-	console.log("To są id: ", locationId, locationIdNum);
+	//console.log("To są id: ", locationId, locationIdNum);
 	try {
 		const schedule = await prisma.locationSchedule.findMany({
 			where: {

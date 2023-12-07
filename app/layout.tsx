@@ -1,8 +1,8 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import TopNav from "@/components/Nav";
+import TopNav from "@/components/navigation/Nav";
 import Provider from "@/context/Provider";
-import BottomNav from "@/components/BottomNav";
+import BottomNav from "@/components/navigation/BottomNav";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { Container } from "@mui/material";
 
