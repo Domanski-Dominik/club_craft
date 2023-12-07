@@ -2,7 +2,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Group } from "@/types/type";
-import { useEffect } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 
 type DaysCardProps = {
@@ -12,7 +11,7 @@ type DaysCardProps = {
 
 const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 	const handleDayClick = (id: number) => {
-		//handleClick(day); //Przekazuje ID klikniętej karty do funkcji handleClick
+		handleClick(id); //Przekazuje ID klikniętej karty do funkcji handleClick
 		console.log(id);
 	};
 	const getPolishDayName = (dayOfWeek: number): string => {
@@ -49,7 +48,9 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 			<Grid
 				container
 				columns={2}
-				spacing={0.5}>
+				rowSpacing={2}
+				columnSpacing={0.5}
+				justifyContent={"center"}>
 				{sortedDaysOfWeek.map((day) => {
 					const groupsForDay = gr[day];
 					// Sortuj grupy według timeS

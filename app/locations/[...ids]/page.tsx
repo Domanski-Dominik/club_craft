@@ -5,29 +5,53 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
-import DaysCard from "@/components/cards/DaysCard";
+import GrCard from "@/components/cards/GrCard";
 import { Group } from "@/types/type";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 
+const getPolishDayName = (dayOfWeek: number): string => {
+	switch (dayOfWeek) {
+		case 0:
+			return "Niedziela";
+		case 1:
+			return "Poniedziałek";
+		case 2:
+			return "Wtorek";
+		case 3:
+			return "Środa";
+		case 4:
+			return "Czwartek";
+		case 5:
+			return "Piątek";
+		case 6:
+			return "Sobota";
+		default:
+			return "Nieznany dzień";
+	}
+};
 interface Props {
 	params: {
-		id: string;
+		ids: [string, string];
 	};
 }
-export default function Days({ params }: Props) {
-	const [groups, setGroups] = useState({});
+export default function Grups({ params }: Props) {
+	const [groups, setGroups] = useState<Group[]>([]);
 	const router = useRouter();
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
 	]);
-	const locId = params.id;
+	const locId = params.ids[0];
+	const day = params.ids[1];
+	const dayNum = parseInt(day, 10);
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
 			redirect("/login");
 		},
 	});
-
+	const handleGroupClick = (id: string | number) => {
+		console.log(id);
+	};
 	useEffect(() => {
 		const loadName = async (locId: string) => {
 			try {
@@ -35,12 +59,18 @@ export default function Days({ params }: Props) {
 				if (response.ok) {
 					const locName = await response.json();
 					console.log(locName);
+					const dayName = getPolishDayName(dayNum);
 					setPages([
 						...pages,
 						{
 							id: 2,
 							title: `${locName.name}`,
 							path: `/locations/${locName.id}`,
+						},
+						{
+							id: 3,
+							title: `${dayName}`,
+							path: `locations/${locName.id}/${dayNum}`,
 						},
 					]);
 				}
@@ -58,17 +88,24 @@ export default function Days({ params }: Props) {
 				});
 				const data: Group[] = await response.json();
 				//console.log(data);
-				const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
-				data.forEach((group) => {
-					const { dayOfWeek } = group;
+				const selectedGroups: Group[] = data.filter(
+					(group) => group.dayOfWeek === dayNum
+				);
+				selectedGroups.sort((a, b) => {
+					// Porównanie czasu w formacie HH:mm
+					const timeA = a.timeS.split(":").map(Number);
+					const timeB = b.timeS.split(":").map(Number);
 
-					if (!groupsByDay[dayOfWeek]) {
-						groupsByDay[dayOfWeek] = [];
+					if (timeA[0] !== timeB[0]) {
+						return timeA[0] - timeB[0]; // Sortowanie wg. godzin
+					} else {
+						return timeA[1] - timeB[1]; // Sortowanie wg. minut
 					}
-					groupsByDay[dayOfWeek].push(group);
 				});
-				//console.log(groupsByDay);
-				setGroups(groupsByDay);
+				if (selectedGroups && selectedGroups.length > 0) {
+					setGroups(selectedGroups);
+				}
+				console.log(selectedGroups);
 			} catch (error) {
 				console.log("Error", error);
 			}
@@ -76,18 +113,14 @@ export default function Days({ params }: Props) {
 		fetchLoc(locId);
 	}, [session]);
 
-	const handleDayClick = (id: string | number) => {
-		router.push(`/locations/${locId}/${id}`);
-	};
-
 	if (status === "loading") return <Loading />;
 
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			<DaysCard
-				gr={groups}
-				handleClick={handleDayClick}
+			<GrCard
+				groups={groups}
+				handleClick={handleGroupClick}
 			/>
 		</>
 	);
