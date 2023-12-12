@@ -8,27 +8,8 @@ import Loading from "@/context/Loading";
 import GrCard from "@/components/cards/GrCard";
 import { Group } from "@/types/type";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
+import PolishDayName from "@/context/PolishDayName";
 
-const getPolishDayName = (dayOfWeek: number): string => {
-	switch (dayOfWeek) {
-		case 0:
-			return "Niedziela";
-		case 1:
-			return "Poniedziałek";
-		case 2:
-			return "Wtorek";
-		case 3:
-			return "Środa";
-		case 4:
-			return "Czwartek";
-		case 5:
-			return "Piątek";
-		case 6:
-			return "Sobota";
-		default:
-			return "Nieznany dzień";
-	}
-};
 interface Props {
 	params: {
 		ids: [string, string];
@@ -51,6 +32,7 @@ export default function Grups({ params }: Props) {
 	});
 	const handleGroupClick = (id: string | number) => {
 		console.log(id);
+		router.push(`/group/${id}`);
 	};
 	useEffect(() => {
 		const loadName = async (locId: string) => {
@@ -59,7 +41,7 @@ export default function Grups({ params }: Props) {
 				if (response.ok) {
 					const locName = await response.json();
 					console.log(locName);
-					const dayName = getPolishDayName(dayNum);
+					const dayName = PolishDayName(dayNum);
 					setPages([
 						...pages,
 						{

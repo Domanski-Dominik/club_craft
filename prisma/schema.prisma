@@ -1,47 +1,127 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-
 }
 
-model Locations {
-  id                 Int       @id @default(autoincrement())
-  name               String   
-  city               String
-  street             String
-  streetNr           String
-  postalCode         String
-  club               String    @default("guest")
-  schedule           LocationSchedule[]
+
+model group {
+  id               Int                @id @default(autoincrement())
+  name             String
+  dayOfWeek        Int
+  timeS            String
+  timeE            String
+  club             String             @default("guest")
+  locationschedule locationschedule[]
 }
 
-model Group {
-  id                 Int       @id @default(autoincrement())
-  name               String
-  dayOfWeek          Int
-  timeS              String
-  timeE              String
-  club               String    @default("guest")
-  schedule           LocationSchedule[]
-}
-model LocationSchedule {
-  id                 Int       @id @default(autoincrement())
-  location           Locations  @relation(fields: [locationId], references: [id])
-  locationId         Int
-  group              Group     @relation(fields: [groupId], references: [id])
-  groupId            Int
+model locations {
+  id               Int                @id @default(autoincrement())
+  name             String
+  club             String             @default("guest")
+  city             String
+  postalCode       String
+  street           String
+  streetNr         String
+  locationschedule locationschedule[]
 }
 
-model Account {
-  id                 String    @id @default(cuid())
+model locationschedule {
+  id         Int       @id @default(autoincrement())
+  locationId Int
+  groupId    Int
+  group      group     @relation(fields: [groupId], references: [id])
+  locations  locations @relation(fields: [locationId], references: [id])
+
+  @@index([groupId])
+  @@index([locationId])
+}
+
+model participant {
+  id                         Int                          @id @default(autoincrement())
+  firstName                  String
+  lastName                   String
+  club                       String
+  email                      String?
+  phoneNumber                String?
+  attendance                 attendance[]
+  paymentparticipantrelation paymentparticipantrelation[]
+  payment                    payment[]                    @relation("paymentparticipants")
+}
+
+model payment {
+  id                         Int                          @id @default(autoincrement())
+  amount                     Int
+  date                       DateTime
+  paymentparticipantrelation paymentparticipantrelation[]
+  participant                participant[]                @relation("paymentparticipants")
+}
+
+model paymentparticipantrelation {
+  paymentId     Int
+  participantId Int
+  participant   participant @relation(fields: [participantId], references: [id])
+  payment       payment     @relation(fields: [paymentId], references: [id])
+
+  @@id([paymentId, participantId])
+  @@index([participantId])
+}
+model attendance {
+  id            Int         @id @default(autoincrement())
+  date          DateTime
+  groupId       Int
+  participantId Int
+  participant   participant @relation(fields: [participantId], references: [id])
+
+  @@index([participantId])
+  
+}
+
+
+model user {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime
+  password      String
+  club          String    @default("guest")
+  role          String    @default("guest")
+  surname       String?
+  account       account[]
+  session       session[]
+}
+
+model verificationrequest {
+  id         String   @id  @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+
+  @@unique([identifier, token])
+}
+
+model session {
+  id           String   @id  @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  user         user     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+model account {
+  id                 String    @id  @default(cuid())
   userId             String
   providerType       String
   providerId         String
@@ -50,46 +130,9 @@ model Account {
   accessToken        String?
   accessTokenExpires DateTime?
   createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  user               User      @relation(fields: [userId], references: [id])
+  updatedAt          DateTime
+  user               user      @relation(fields: [userId], references: [id])
 
   @@unique([providerId, providerAccountId])
-}
-
-model Session {
-  id                 String   @id @default(cuid())
-  userId             String   
-  expires            DateTime
-  sessionToken       String   @unique
-  accessToken        String   @unique
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  user               User     @relation(fields: [userId], references: [id])
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  surname       String?    
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  password      String
-  club          String    @default("guest")
-  role          String    @default("guest")
-  accounts      Account[]
-  sessions      Session[]
-}
-
-model VerificationRequest {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([identifier, token])
+  @@index([userId])
 }

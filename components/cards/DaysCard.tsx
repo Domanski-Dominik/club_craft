@@ -3,6 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Group } from "@/types/type";
 import Grid from "@mui/material/Unstable_Grid2";
+import PolishDayName from "@/context/PolishDayName";
 
 type DaysCardProps = {
 	gr: { [dayOfWeek: number]: Group[] };
@@ -13,26 +14,6 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 	const handleDayClick = (id: number) => {
 		handleClick(id); //Przekazuje ID klikniętej karty do funkcji handleClick
 		console.log(id);
-	};
-	const getPolishDayName = (dayOfWeek: number): string => {
-		switch (dayOfWeek) {
-			case 0:
-				return "Niedziela";
-			case 1:
-				return "Poniedziałek";
-			case 2:
-				return "Wtorek";
-			case 3:
-				return "Środa";
-			case 4:
-				return "Czwartek";
-			case 5:
-				return "Piątek";
-			case 6:
-				return "Sobota";
-			default:
-				return "Nieznany dzień";
-		}
 	};
 
 	const sortedDaysOfWeek = Object.keys(gr)
@@ -80,7 +61,7 @@ const DaysCard = ({ gr, handleClick }: DaysCardProps) => {
 										variant='h5'
 										component='div'
 										sx={{ marginBottom: 1, textAlign: "center" }}>
-										{getPolishDayName(day)}
+										{PolishDayName(day)}
 									</Typography>
 
 									<Typography variant='body2'>

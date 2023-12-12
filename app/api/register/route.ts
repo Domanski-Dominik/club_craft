@@ -2,11 +2,19 @@ import bcrypt from "bcrypt";
 import { prisma } from "@/prisma/prisma";
 import { NextResponse } from "next/server";
 
+interface Body {
+	email: string;
+	password: string;
+	name: string;
+	surname: string;
+	club: string;
+	role: string;
+}
 export async function POST(req: Request, res: Response) {
 	try {
 		const body = await req.json();
 		//console.log(body);
-		const { email, password, name, surname, club, role } = body.formData;
+		const { email, password, name, surname, club, role } = body;
 		console.log(email, password, name, surname, club, role);
 
 		if (!email || !password) {
