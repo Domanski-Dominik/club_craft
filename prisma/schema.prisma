@@ -15,6 +15,8 @@ model group {
   timeE     String
   club      String @default("guest")
   locationschedule locationschedule[]
+  participantgroup participantgroup[]
+  
 }
 
 model locations {
@@ -38,7 +40,6 @@ model locationschedule {
   @@index([groupId])
   @@index([locationId])
 }
-
 model participant {
   id          Int       @id @default(autoincrement())
   firstName   String
@@ -46,7 +47,8 @@ model participant {
   club        String
   email       String?
   phoneNumber String?
-  attendance                 attendance[]
+  participantgroup   participantgroup[]  
+  attendace   attendance[] 
   paymentparticipantrelation paymentparticipantrelation[]
   payment     payment[] @relation("paymentparticipants")
 }
@@ -67,6 +69,17 @@ model paymentparticipantrelation {
 
   @@id([paymentId, participantId])
   @@index([participantId])
+}
+
+model participantgroup {
+  id          Int @id @default(autoincrement())
+  groupId     Int
+  participantId Int
+  participant   participant @relation(fields: [participantId], references: [id])
+  group      group     @relation(fields: [groupId], references: [id])
+
+  @@index([participantId])
+  @@index([groupId])
 }
 
 model attendance {

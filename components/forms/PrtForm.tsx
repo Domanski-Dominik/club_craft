@@ -17,6 +17,10 @@ import {
 	MenuItem,
 	FormControl,
 	InputLabel,
+	List,
+	ListItem,
+	ListItemText,
+	ListItemButton,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -29,6 +33,21 @@ import { ReversePolishName } from "@/context/PolishDayName";
 import { Console, group } from "console";
 type LocWithGroups = Location & {
 	locationschedule: { group: Group }[] | [];
+};
+type NGroup = {
+	locId: string | number;
+	locName: string;
+	groupName: string;
+	groupId: string | number;
+	dayOfWeek: string;
+};
+type FormData = {
+	email: string;
+	name: string;
+	surname: string;
+	club: string;
+	tel: string;
+	groups: (number | string)[];
 };
 
 const ParticipantForm = () => {
@@ -47,8 +66,9 @@ const ParticipantForm = () => {
 	const [days, setDays] = useState<string[]>([]);
 	const [groups, setGroups] = useState<{ group: Group }[] | null>();
 	const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string>(""); // Wybrany dzień tygodnia
+	const [selectedGroups, setSelectedGroups] = useState<NGroup[]>([]);
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<FormData>({
 		email: "",
 		name: "",
 		surname: "",
@@ -62,16 +82,22 @@ const ParticipantForm = () => {
 		name: "",
 		surname: "",
 		serverError: "",
+		group: "",
 	});
 	const fetchLocAndGroups = async () => {
-		if (session?.user) {
-			const response = await fetch(`/api/form/${session?.user.club}`);
-			if (response.ok) {
-				const data: LocWithGroups[] = await response.json();
-				setLocWithGroups(data);
-				console.log(data);
+		try {
+			if (session?.user) {
+				setFormData({ ...formData, club: session.user.club });
+				const response = await fetch(`/api/form/${session?.user.club}`);
+				if (response.ok) {
+					const data: LocWithGroups[] = await response.json();
+					setLocWithGroups(data);
+					//console.log(data);
+				}
+				//console.log(session?.user.club);
 			}
-			console.log(session?.user.club);
+		} catch (error) {
+			setErrors({ ...errors, serverError: "Najpier stwórz lokalizacje" });
 		}
 	};
 	useEffect(() => {
@@ -83,14 +109,14 @@ const ParticipantForm = () => {
 		const newErrors = { ...errors };
 
 		if (formData.name.trim() === "") {
-			newErrors.name = "Podaj swoje imię";
+			newErrors.name = "Podaj imię uczestnika";
 			valid = false;
-		} else {
+		} else if (formData.name !== "") {
 			newErrors.name = "";
 		}
 
 		if (formData.surname.trim() === "") {
-			newErrors.surname = "Podaj swoje nazwisko";
+			newErrors.surname = "Podaj nazwisko uczestnika";
 			valid = false;
 		} else {
 			newErrors.surname = "";
@@ -106,8 +132,14 @@ const ParticipantForm = () => {
 			} else {
 				newErrors.tel = "";
 			}
-		} else {
+		} else if (formData.tel === "") {
 			newErrors.tel = "";
+		}
+		if (formData.groups.length === 0) {
+			newErrors.group = "Wybierz co najmniej jedną grupę";
+			valid = false;
+		} else if (formData.groups.length > 0) {
+			newErrors.group = "";
 		}
 
 		// Walidacja pola email za pomocą wyrażenia regularnego
@@ -129,10 +161,11 @@ const ParticipantForm = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		const isOk = validateForm();
 		console.log(formData);
-		if (validateForm()) {
+		if (isOk) {
 			try {
-				const response = await fetch("/api/participants", {
+				const response = await fetch("/api/participant", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -145,7 +178,11 @@ const ParticipantForm = () => {
 				console.log(errorData);
 				if (!response.ok) {
 					setErrors({
-						...errors,
+						email: "",
+						tel: "",
+						name: "",
+						surname: "",
+						group: "",
 						serverError: `${errorData.error}`,
 					});
 				} else {
@@ -154,8 +191,12 @@ const ParticipantForm = () => {
 			} catch (error) {
 				console.error(error);
 				setErrors({
-					...errors,
-					serverError: "Wystąpił błąd podczas rejestracji",
+					email: "",
+					tel: "",
+					name: "",
+					surname: "",
+					group: "",
+					serverError: "Wystąpił błąd podczas dodawania uczestnika",
 				});
 			}
 		} else {
@@ -200,10 +241,10 @@ const ParticipantForm = () => {
 	const handleDayOfWeekChange = (
 		event: React.ChangeEvent<{ value: string }>
 	) => {
-		console.log(event.target.value);
+		//console.log(event.target.value);
 		setSelectedDayOfWeek(event.target.value);
 		const dayId = ReversePolishName(event.target.value);
-		console.log(dayId);
+		//console.log(dayId);
 		const groupsInLoc = selectedLocation?.locationschedule.filter(
 			(group) => group.group.dayOfWeek === dayId
 		);
@@ -216,14 +257,61 @@ const ParticipantForm = () => {
 				return Number(timeA[1]) - Number(timeB[1]);
 			}
 		});
-		console.log(groupsInLoc);
+		//console.log(groupsInLoc);
 		setGroups(groupsInLoc);
 		setSelectedGroupId("");
 	};
 
 	const handleGroupChange = (event: React.ChangeEvent<{ value: string }>) => {
-		console.log(event.target.value);
+		//console.log(event.target.value);
 		setSelectedGroupId(event.target.value);
+	};
+	const addGroup = (group: NGroup) => {
+		if (selectedGroups.find((gr) => gr.groupId === group.groupId)) {
+			setErrors({ ...errors, group: "Wybierz nową grupę" });
+		} else {
+			setSelectedGroups([...selectedGroups, group]);
+			console.log(group);
+			const id = [group.groupId];
+			setFormData((prevData) => ({
+				...prevData,
+				groups: [...prevData.groups, ...id],
+			}));
+
+			setErrors({ ...errors, group: "" });
+		}
+	};
+	const removeGroup = (groupId: string | number) => {
+		const updatedGroups = selectedGroups.filter(
+			(group) => group.groupId !== groupId
+		);
+		const ids = updatedGroups.map((group) => group.groupId);
+		console.log(formData, updatedGroups, ids);
+		setFormData({ ...formData, groups: ids });
+		setSelectedGroups(updatedGroups);
+	};
+	const handleFormClean = () => {
+		setFormData({
+			...formData,
+			email: "",
+			name: "",
+			surname: "",
+			tel: "",
+			groups: [],
+		});
+		setErrors({
+			email: "",
+			tel: "",
+			name: "",
+			surname: "",
+			serverError: "",
+			group: "",
+		});
+		setSelectedDayOfWeek("");
+		setSelectedGroups([]);
+		setSelectedGroupId("");
+		setSelectedLocation(null);
+		setSucces(false);
 	};
 	return (
 		<Container
@@ -236,12 +324,11 @@ const ParticipantForm = () => {
 					timeout={1000}>
 					<Box
 						sx={{
-							marginTop: 1,
 							display: "flex",
 							flexDirection: "column",
 							alignItems: "center",
 						}}>
-						<Avatar sx={{ m: 2, bgcolor: "secondary.main" }}>
+						<Avatar sx={{ m: "0.5", bgcolor: "secondary.main" }}>
 							<PersonIcon />
 						</Avatar>
 						<Typography
@@ -254,19 +341,19 @@ const ParticipantForm = () => {
 							component='form'
 							noValidate
 							onSubmit={handleSubmit}
-							sx={{ mt: 3 }}>
+							sx={{ mt: 2 }}>
 							<Grid
 								container
 								spacing={2}>
 								<Grid
 									item
-									xs={12}
+									xs={6}
 									sm={12}>
 									<TextField
-										autoComplete='given-name'
 										name='name'
 										required
 										fullWidth
+										autoComplete='off'
 										id='name'
 										label='Imię'
 										onChange={handleInputChange}
@@ -275,35 +362,25 @@ const ParticipantForm = () => {
 								</Grid>
 								<Grid
 									item
-									xs={12}
+									xs={6}
 									sm={12}>
 									<TextField
 										required
 										fullWidth
+										autoComplete='off'
 										id='surname'
 										label='Nazwisko'
 										name='surname'
-										autoComplete='family-name'
 										onChange={handleInputChange}
 									/>
 									<Typography color='error'>{errors.surname}</Typography>
 								</Grid>
 								<Grid
 									item
-									xs={12}>
-									<TextField
+									xs={6}>
+									<FormControl
 										fullWidth
-										id='tel'
-										label='Numer Telefonu'
-										name='tel'
-										onChange={handleInputChange}
-									/>
-									<Typography color='error'>{errors.tel}</Typography>
-								</Grid>
-								<Grid
-									item
-									xs={12}>
-									<FormControl>
+										size='small'>
 										<InputLabel id='loc'>Lokalizacja</InputLabel>
 										<Select
 											labelId='loc'
@@ -322,8 +399,14 @@ const ParticipantForm = () => {
 												))}
 										</Select>
 									</FormControl>
-									{selectedLocation && (
-										<FormControl>
+								</Grid>
+								{selectedLocation && (
+									<Grid
+										item
+										xs={6}>
+										<FormControl
+											fullWidth
+											size='small'>
 											<InputLabel id='day'>Dzień tygodnia</InputLabel>
 											<Select
 												labelId='day'
@@ -341,9 +424,16 @@ const ParticipantForm = () => {
 												))}
 											</Select>
 										</FormControl>
-									)}
-									{selectedDayOfWeek && (
-										<FormControl>
+									</Grid>
+								)}
+
+								{selectedDayOfWeek && (
+									<Grid
+										item
+										xs={6}>
+										<FormControl
+											fullWidth
+											size='small'>
 											<InputLabel id='group'>Grupa</InputLabel>
 											<Select
 												labelId='group'
@@ -363,27 +453,109 @@ const ParticipantForm = () => {
 													))}
 											</Select>
 										</FormControl>
-									)}
-									<Typography color='error'>{errors.email}</Typography>
+									</Grid>
+								)}
+
+								{selectedGroupId !== "" && (
+									<Grid
+										item
+										xs={6}>
+										<Button
+											fullWidth
+											size='medium'
+											variant='outlined'
+											sx={{ height: 36 }}
+											onClick={() => {
+												if (selectedLocation) {
+													const foundGroup =
+														selectedLocation?.locationschedule.find(
+															(group) => group.group.id === selectedGroupId
+														);
+													if (foundGroup) {
+														addGroup({
+															locName: selectedLocation?.name,
+															locId: selectedLocation?.id,
+															dayOfWeek: selectedDayOfWeek,
+															groupId: selectedGroupId,
+															groupName: foundGroup.group.name,
+														});
+													}
+												}
+											}}>
+											Dodaj grupę
+										</Button>
+									</Grid>
+								)}
+								{errors.group !== "" && (
+									<Grid item>
+										<Typography color='error'>{errors.group}</Typography>
+									</Grid>
+								)}
+								{selectedGroups.length > 0 && (
+									<Fade
+										timeout={1000}
+										in={true}>
+										<Grid
+											item
+											xs={12}>
+											<List
+												sx={{
+													border: 1,
+													borderColor: "blueviolet",
+													borderRadius: 2,
+												}}>
+												{selectedGroups.map((group) => (
+													<ListItem
+														key={group.groupId}
+														sx={{ justifyContent: "space-between" }}>
+														<Typography variant='subtitle1'>
+															{`${group.locName} ${group.dayOfWeek} ${group.groupName}`}
+														</Typography>
+														<Button
+															size='small'
+															color='error'
+															onClick={() => removeGroup(group.groupId)}>
+															Usuń
+														</Button>
+													</ListItem>
+												))}
+											</List>
+										</Grid>
+									</Fade>
+								)}
+
+								<Grid
+									item
+									xs={12}>
+									<TextField
+										fullWidth
+										autoComplete='off'
+										id='tel'
+										label='Numer Telefonu'
+										name='tel'
+										onChange={handleInputChange}
+									/>
+									<Typography color='error'>{errors.tel}</Typography>
 								</Grid>
 								<Grid
 									item
 									xs={12}>
 									<TextField
 										fullWidth
+										autoComplete='off'
 										id='email'
 										label='Adres Email'
 										name='email'
-										autoComplete='email'
 										onChange={handleInputChange}
 									/>
+
 									<Typography color='error'>{errors.email}</Typography>
 								</Grid>
 							</Grid>
 							<Grid
 								container
 								justifyContent={"space-around"}
-								sx={{ marginY: "3rem" }}>
+								sx={{ marginY: "1rem" }}>
 								<Button
 									variant='contained'
 									onClick={() => router.push("/locations")}
@@ -421,9 +593,9 @@ const ParticipantForm = () => {
 						<Button
 							fullWidth
 							variant='contained'
-							onClick={() => router.push("/locations")}
+							onClick={handleFormClean}
 							sx={{ mt: 6, mb: 2 }}>
-							Przejdź do strony logowania
+							Dodaj następnego uczestnika
 						</Button>
 					</Box>
 				</Fade>

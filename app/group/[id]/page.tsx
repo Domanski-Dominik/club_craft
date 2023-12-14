@@ -35,7 +35,18 @@ const Group = ({ params }: Props) => {
 	});
 
 	useEffect(() => {
-		const fetchParticipants = async () => {};
+		const fetchParticipants = async () => {
+			try {
+				const response = await fetch(`/api/participant/${params.id}`, {
+					method: "GET",
+				});
+				if (response.ok) {
+					console.log(response);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
 
 		if (params?.id) fetchParticipants();
 	}, [params.id]);
@@ -79,7 +90,7 @@ const Group = ({ params }: Props) => {
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			<Box sx={{ position: "absolute", top: "7rem", minWidth: "95vw" }}>
+			<Box sx={{ position: "absolute", top: "8rem", minWidth: "95vw" }}>
 				<DataGrid
 					columns={[
 						{

@@ -12,12 +12,12 @@ export const GET = async (req: Request, { params }: Props) => {
 	console.log("Id Groupy to " + groupIdNum);
 
 	try {
-		const schedule = await prisma.locationSchedule.findFirst({
+		const schedule = await prisma.locationschedule.findFirst({
 			where: {
 				groupId: groupIdNum,
 			},
 			include: {
-				location: true,
+				locations: true,
 				group: true,
 			},
 		});
@@ -34,7 +34,7 @@ export const GET = async (req: Request, { params }: Props) => {
 			dayOfWeek: schedule.group.dayOfWeek,
 			timeS: schedule.group.timeS,
 			timeE: schedule.group.timeE,
-			locationName: schedule.location.name,
+			locationName: schedule.locations.name,
 			locationId: schedule.locationId,
 			club: schedule.group.club,
 		};

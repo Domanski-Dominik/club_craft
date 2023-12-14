@@ -26,9 +26,9 @@ export const POST = async (req: Request) => {
 			},
 		});
 
-		const newSchedule = await prisma.locationSchedule.create({
+		const newSchedule = await prisma.locationschedule.create({
 			data: {
-				location: {
+				locations: {
 					connect: { id: locationId },
 				},
 				group: {
@@ -54,7 +54,7 @@ export const DELETE = async (req: Request) => {
 	console.log("Id grupy to " + id);
 	try {
 		if (id !== null && id !== undefined) {
-			const deleteSchedule = await prisma.locationSchedule.deleteMany({
+			const deleteSchedule = await prisma.locationschedule.deleteMany({
 				where: { group: { id: id } },
 			});
 

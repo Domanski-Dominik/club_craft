@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: Props) {
 	const locationIdNum = parseInt(locationId, 10);
 	//console.log("To są id: ", locationId, locationIdNum);
 	try {
-		const schedule = await prisma.locationSchedule.findMany({
+		const schedule = await prisma.locationschedule.findMany({
 			where: {
 				locationId: locationIdNum,
 			},
