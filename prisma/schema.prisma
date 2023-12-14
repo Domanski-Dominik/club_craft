@@ -7,30 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model group {
-  id               Int                @id @default(autoincrement())
-  name             String
-  dayOfWeek        Int
-  timeS            String
-  timeE            String
-  club             String             @default("guest")
+  id        Int    @id @default(autoincrement())
+  name      String
+  dayOfWeek Int
+  timeS     String
+  timeE     String
+  club      String @default("guest")
   locationschedule locationschedule[]
 }
 
 model locations {
-  id               Int                @id @default(autoincrement())
-  name             String
-  club             String             @default("guest")
-  city             String
-  postalCode       String
-  street           String
-  streetNr         String
+  id         Int    @id @default(autoincrement())
+  name       String
+  club       String @default("guest")
+  city       String
+  postalCode String
+  street     String
+  streetNr   String
   locationschedule locationschedule[]
 }
 
 model locationschedule {
-  id         Int       @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   locationId Int
   groupId    Int
   group      group     @relation(fields: [groupId], references: [id])
@@ -41,23 +40,23 @@ model locationschedule {
 }
 
 model participant {
-  id                         Int                          @id @default(autoincrement())
-  firstName                  String
-  lastName                   String
-  club                       String
-  email                      String?
-  phoneNumber                String?
+  id          Int       @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  club        String
+  email       String?
+  phoneNumber String?
   attendance                 attendance[]
   paymentparticipantrelation paymentparticipantrelation[]
-  payment                    payment[]                    @relation("paymentparticipants")
+  payment     payment[] @relation("paymentparticipants")
 }
 
 model payment {
-  id                         Int                          @id @default(autoincrement())
-  amount                     Int
-  date                       DateTime
+  id          Int           @id @default(autoincrement())
+  amount      Int
+  date        DateTime
   paymentparticipantrelation paymentparticipantrelation[]
-  participant                participant[]                @relation("paymentparticipants")
+  participant participant[] @relation("paymentparticipants")
 }
 
 model paymentparticipantrelation {
@@ -69,17 +68,16 @@ model paymentparticipantrelation {
   @@id([paymentId, participantId])
   @@index([participantId])
 }
+
 model attendance {
-  id            Int         @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   date          DateTime
   groupId       Int
   participantId Int
   participant   participant @relation(fields: [participantId], references: [id])
 
   @@index([participantId])
-  
 }
-
 
 model user {
   id            String    @id @default(uuid())
@@ -88,7 +86,7 @@ model user {
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime?
   password      String
   club          String    @default("guest")
   role          String    @default("guest")
@@ -98,7 +96,7 @@ model user {
 }
 
 model verificationrequest {
-  id         String   @id  @default(cuid())
+  id         String   @id @default(cuid())
   identifier String
   token      String   @unique
   expires    DateTime
@@ -109,7 +107,7 @@ model verificationrequest {
 }
 
 model session {
-  id           String   @id  @default(cuid())
+  id           String   @id @default(cuid())
   userId       String
   expires      DateTime
   sessionToken String   @unique
@@ -120,8 +118,9 @@ model session {
 
   @@index([userId])
 }
+
 model account {
-  id                 String    @id  @default(cuid())
+  id                 String    @id @default(cuid())
   userId             String
   providerType       String
   providerId         String
