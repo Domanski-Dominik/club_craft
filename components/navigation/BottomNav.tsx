@@ -25,7 +25,7 @@ export default function BottomNav() {
 				width: "100vw",
 				position: "fixed",
 				bottom: 0,
-				zIndex: 50,
+				zIndex: 20,
 				height: "80px",
 				paddingBottom: 2,
 			}}

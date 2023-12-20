@@ -51,7 +51,7 @@ export default function LocationList() {
 
 	const fetchLoc = async () => {
 		if (session?.user || status === "authenticated") {
-			const response = await fetch("/api/loc");
+			const response = await fetch(`/api/loc/club/${session.user.club}`);
 			const data: Location[] = await response.json();
 			console.log(session.user);
 			console.log(data);
@@ -62,10 +62,7 @@ export default function LocationList() {
 			) {
 				setIsOwner(true);
 			}
-			const filteredData: Location[] | [] = data.filter(
-				(loc) => loc.club === session.user.club
-			);
-			setLocs(filteredData);
+			setLocs(data);
 		}
 	};
 

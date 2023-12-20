@@ -11,7 +11,7 @@ export const GET = async (req: Request, { params }: Props) => {
 	const locationIdNum = parseInt(locationId, 10);
 	//console.log("Id lokalizacji to "+ locationIdNum);
 	try {
-		const schedules = await prisma.locationSchedule.findMany({
+		const schedules = await prisma.locationschedule.findMany({
 			where: {
 				locationId: locationIdNum,
 			},
@@ -22,9 +22,12 @@ export const GET = async (req: Request, { params }: Props) => {
 		//console.log(schedules);
 
 		if (!schedules) {
-			return new Response("Dana lokalizacja nie ma jeszcze grup", {
-				status: 200,
-			});
+			return Response.json(
+				{ error: "Dana lokalizacja nie ma jeszcze grup" },
+				{
+					status: 404,
+				}
+			);
 		}
 		const groups = schedules.map((schedule) => {
 			return {
@@ -37,7 +40,7 @@ export const GET = async (req: Request, { params }: Props) => {
 		});
 		//console.log(groups)
 		return new Response(JSON.stringify(groups), { status: 200 });
-	} catch (error) {
-		console.error("Błąd podczas pobierania relacji: ", error);
+	} catch (error: any) {
+		return Response.json({ error: error.message }, { status: error.code });
 	}
 };

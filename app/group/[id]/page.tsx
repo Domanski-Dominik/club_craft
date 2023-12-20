@@ -6,14 +6,13 @@ import { redirect } from "next/navigation";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
-import { DataGrid, plPL, GridApi, GridFooter } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import ParticipantList from "@/components/participants/ParticipantList";
+import type { Participant } from "@/types/type";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import pl from "date-fns/locale/pl";
 
-const rows = [
-	{ id: 1, firstname: "John", lastName: "Doe" },
-	{ id: 2, firstname: "Jane", lastName: "Smith" },
-	{ id: 3, firstname: "Tom", lastName: "Brown" },
-];
 interface Props {
 	params: {
 		id: string;
@@ -21,9 +20,9 @@ interface Props {
 }
 
 const Group = ({ params }: Props) => {
-	const [selectedDate, setSelectedDate] = useState(new Date());
-	const [list, setList] = useState(null);
-	const [allLocs, setAllLocs] = useState();
+	const [participants, setParticipants] = useState<Participant[]>([]);
+	const [error, setError] = useState("");
+	const [date, setDate] = useState<Date | null>(new Date());
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
 	]);
@@ -40,8 +39,12 @@ const Group = ({ params }: Props) => {
 				const response = await fetch(`/api/participant/${params.id}`, {
 					method: "GET",
 				});
-				if (response.ok) {
-					console.log(response);
+				const data: Participant[] | { error: string } = await response.json();
+				if (Array.isArray(data)) {
+					//console.log(data);
+					setParticipants(data);
+				} else {
+					setError(data.error);
 				}
 			} catch (error) {
 				console.log(error);
@@ -57,7 +60,7 @@ const Group = ({ params }: Props) => {
 				const response = await fetch(`/api/gr/${grId}`, { method: "GET" });
 				if (response.ok) {
 					const group = await response.json();
-					console.log(group);
+					//console.log(group);
 					const dayName = PolishDayName(group.dayOfWeek);
 					setPages([
 						...pages,
@@ -90,28 +93,26 @@ const Group = ({ params }: Props) => {
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			<Box sx={{ position: "absolute", top: "8rem", minWidth: "95vw" }}>
-				<DataGrid
-					columns={[
-						{
-							field: "lastName",
-							headerName: "Nazwisko",
-							minWidth: 130,
-							maxWidth: 150,
-						},
-						{ field: "firstName", headerName: "Imię", minWidth: 120 },
-						{ field: "presence", headerName: "Obecność" },
-					]}
-					rows={rows}
-					autoHeight
-					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-					autoPageSize
-					disableColumnMenu
-					hideFooterPagination
-				/>
+			<Box
+				sx={{
+					minWidth: "95vw",
+					minHeight: "68vh",
+					maxWidth: "98vw",
+				}}>
+				{participants.length > 0 && (
+					<ParticipantList participants={participants} />
+				)}
+				{error !== "" && (
+					<Typography
+						variant='h5'
+						color='error'>
+						{error}
+					</Typography>
+				)}
 			</Box>
 		</>
 	);
 };
 
 export default Group;
+//

@@ -430,7 +430,8 @@ const ParticipantForm = () => {
 								{selectedDayOfWeek && (
 									<Grid
 										item
-										xs={6}>
+										xs={6}
+										sx={{ maxWidth: 170 }}>
 										<FormControl
 											fullWidth
 											size='small'>
@@ -509,7 +510,17 @@ const ParticipantForm = () => {
 														key={group.groupId}
 														sx={{ justifyContent: "space-between" }}>
 														<Typography variant='subtitle1'>
-															{`${group.locName} ${group.dayOfWeek} ${group.groupName}`}
+															{group.locName}
+														</Typography>
+														<Typography
+															variant='subtitle1'
+															color='#455a64'>
+															{group.dayOfWeek}
+														</Typography>
+														<Typography
+															variant='subtitle1'
+															color='#78909c'>
+															{group.groupName}
 														</Typography>
 														<Button
 															size='small'

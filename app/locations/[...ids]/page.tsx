@@ -21,6 +21,7 @@ export default function Grups({ params }: Props) {
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
 	]);
+	const [cols, setCols] = useState(1);
 	const locId = params.ids[0];
 	const day = params.ids[1];
 	const dayNum = parseInt(day, 10);
@@ -86,6 +87,7 @@ export default function Grups({ params }: Props) {
 				});
 				if (selectedGroups && selectedGroups.length > 0) {
 					setGroups(selectedGroups);
+					if (selectedGroups.length > 3) setCols(2);
 				}
 				console.log(selectedGroups);
 			} catch (error) {
@@ -102,6 +104,7 @@ export default function Grups({ params }: Props) {
 			<MobileNavigation pages={pages} />
 			<GrCard
 				groups={groups}
+				cols={cols}
 				handleClick={handleGroupClick}
 			/>
 		</>

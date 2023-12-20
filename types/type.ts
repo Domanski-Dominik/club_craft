@@ -26,6 +26,7 @@ export type GroupL = {
 	club: string;
 };
 export type Participant = {
+	id: number;
 	firstName: string;
 	lastName: string;
 	club: string;

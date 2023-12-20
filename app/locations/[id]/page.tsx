@@ -17,6 +17,7 @@ interface Props {
 export default function Days({ params }: Props) {
 	const [groups, setGroups] = useState({});
 	const router = useRouter();
+	const [cols, setCols] = useState(1);
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
 	]);
@@ -34,7 +35,7 @@ export default function Days({ params }: Props) {
 				const response = await fetch(`/api/loc/${locId}`, { method: "GET" });
 				if (response.ok) {
 					const locName = await response.json();
-					console.log(locName);
+					//console.log(locName);
 					setPages([
 						...pages,
 						{
@@ -68,6 +69,10 @@ export default function Days({ params }: Props) {
 					groupsByDay[dayOfWeek].push(group);
 				});
 				//console.log(groupsByDay);
+				const uniqueDaysOfWeek = Object.keys(groupsByDay);
+				const daysCount = uniqueDaysOfWeek.length;
+				if (daysCount > 3) setCols(2);
+
 				setGroups(groupsByDay);
 			} catch (error) {
 				console.log("Error", error);
@@ -87,6 +92,7 @@ export default function Days({ params }: Props) {
 			<MobileNavigation pages={pages} />
 			<DaysCard
 				gr={groups}
+				cols={cols}
 				handleClick={handleDayClick}
 			/>
 		</>
