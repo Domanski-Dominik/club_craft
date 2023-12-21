@@ -48,7 +48,7 @@ model participant {
   email       String?
   phoneNumber String?
   participantgroup   participantgroup[]  
-  attendace   attendance[] 
+  attendance   attendance[] 
   paymentparticipantrelation paymentparticipantrelation[]
   payment     payment[] @relation("paymentparticipants")
 }
@@ -84,7 +84,7 @@ model participantgroup {
 
 model attendance {
   id            Int      @id @default(autoincrement())
-  date          DateTime
+  date          String
   groupId       Int
   participantId Int
   participant   participant @relation(fields: [participantId], references: [id])

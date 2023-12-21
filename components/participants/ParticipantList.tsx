@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	DataGrid,
 	plPL,
@@ -24,8 +24,9 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	Checkbox,
 } from "@mui/material";
-import type { Participant } from "@/types/type";
+import type { Attendance, Participant } from "@/types/type";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -35,17 +36,23 @@ import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import pl from "date-fns/locale/pl";
+import format from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 type Props = {
 	participants: Participant[];
+	groupId: number;
 };
+
 export interface DialogD {
 	open: boolean;
 	row: GridRowModel | null;
 	onClose: (value: string) => void;
 }
-const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
+const sortAndAddNumbers = (
+	rows: (Participant | GridValidRowModel)[],
+	groupId: number
+) => {
 	const sortedRows = [...rows];
 	sortedRows.sort((a, b) => {
 		if (a.lastName === b.lastName) {
@@ -56,13 +63,15 @@ const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
 
 	// Dodaj numery do posortowanych uczestników
 	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return { ...row, num: index + 1 };
+		return { ...row, num: index + 1, groupId: groupId };
 	});
 
 	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
 	return rowsWithNumbers;
 };
-
+const formatDate = (date: Date) => {
+	return format(date, "dd-MM-yyyy");
+};
 function DialogD(props: DialogD) {
 	const { onClose, open, row } = props;
 
@@ -90,16 +99,16 @@ function DialogD(props: DialogD) {
 	);
 }
 
-const ParticipantList = ({ participants }: Props) => {
+const ParticipantList = ({ participants, groupId }: Props) => {
 	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
 		null
 	);
 	const gridRef = useGridApiRef();
 	const [dialogOpen, setDialogOpen] = React.useState(false);
 	const [edit, setEdit] = useState(false);
-	const [date, setDate] = useState<Date | null>(new Date());
+	const [date, setDate] = useState<Date>(new Date());
 	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
-		sortAndAddNumbers(participants)
+		sortAndAddNumbers(participants, groupId)
 	);
 	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
 		{}
@@ -204,7 +213,7 @@ const ParticipantList = ({ participants }: Props) => {
 						children: message.message,
 						severity: "success",
 					});
-					setRows(sortAndAddNumbers(updatedRows));
+					setRows(sortAndAddNumbers(updatedRows, groupId));
 					return updatedRow;
 				} else {
 					console.log(message);
@@ -265,7 +274,12 @@ const ParticipantList = ({ participants }: Props) => {
 								label='Wybierz dzień'
 								value={date}
 								disableFuture
-								onChange={(newDate) => setDate(newDate)}
+								onChange={(newDate) => {
+									if (newDate) {
+										setDate(newDate);
+										console.log(newDate);
+									}
+								}}
 								sx={{ width: 100 }}
 								slotProps={{ textField: { size: "small" } }}
 							/>
@@ -370,11 +384,82 @@ const ParticipantList = ({ participants }: Props) => {
 			sortable: false,
 		},
 		{
-			field: "presence",
+			field: "attendance",
 			headerName: "Obecność",
-			type: "boolean",
+			renderCell: (params) => {
+				const participantAttendance = params.row.attendance;
+
+				const isPresent = participantAttendance.find(
+					(item: Attendance) => item.date === formatDate(date)
+				);
+
+				const handlePresenceChange = async (event: any) => {
+					console.log(event.target.checked);
+					const isChecked = event.target.checked;
+
+					try {
+						const response = await fetch(
+							`/api/presence/${params.row.groupId}/${params.row.id}`,
+							{
+								method: "PUT",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify({
+									date: formatDate(date),
+									isChecked: isChecked,
+								}), // Przekaż zaktualizowane dane uczestnika
+							}
+						);
+						const message = await response.json();
+						if (response.ok) {
+							console.log(message);
+							// Skopiuj aktualny stan rows
+							const updatedRows = [...rows];
+
+							// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
+							const rowIndex = updatedRows.findIndex(
+								(row) => row.id === params.row.id
+							);
+
+							if (isChecked) {
+								// Jeśli isChecked to true, dodaj nowy obiekt Attendance
+								updatedRows[rowIndex].attendance.push({
+									date: formatDate(date),
+								});
+							} else {
+								// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
+								updatedRows[rowIndex].attendance = updatedRows[
+									rowIndex
+								].attendance.filter(
+									(item: Attendance) => item.date !== formatDate(date)
+								);
+							}
+							setSnackbar({
+								children: message.message,
+								severity: "success",
+							});
+						} else {
+							console.log(message);
+							setSnackbar({ children: message.error, severity: "error" });
+						}
+					} catch (error) {
+						console.error("Błąd podczas aktualizacji danych:", error);
+						setSnackbar({
+							children: "Wystąpił bład podczas komunikacją z bazą danych",
+							severity: "error",
+						});
+					}
+				};
+
+				return (
+					<Checkbox
+						checked={!!isPresent}
+						onChange={(event) => handlePresenceChange(event)}
+					/>
+				);
+			},
 			maxWidth: 100,
-			editable: false,
 			sortable: false,
 		},
 	];

@@ -11,7 +11,7 @@ interface Body {
 }
 export async function POST(req: Request, res: Response) {
 	try {
-		const body = await req.json();
+		const body: Body = await req.json();
 		//console.log(body);
 		const { email, tel, name, surname, club, groups } = body;
 		console.log(email, tel, name, surname, club, groups);

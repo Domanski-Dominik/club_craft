@@ -41,7 +41,8 @@ export type Payment = {
 	participant: Participant;
 };
 export type Attendance = {
-	date: Date;
+	id: Number;
+	date: String;
 	groupId: Number;
 	participant: Participant;
 };

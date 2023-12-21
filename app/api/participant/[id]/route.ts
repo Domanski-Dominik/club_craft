@@ -16,7 +16,9 @@ export const GET = async (req: Request, { params }: Props) => {
 				groupId: groupIdNum,
 			},
 			include: {
-				participant: true,
+				participant: {
+					include: { attendance: true },
+				},
 			},
 		});
 		if (!schedule) {

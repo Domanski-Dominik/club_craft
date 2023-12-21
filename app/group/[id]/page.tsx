@@ -7,11 +7,8 @@ import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
 import { Box, Typography } from "@mui/material";
-import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import ParticipantList from "@/components/participants/ParticipantList";
 import type { Participant } from "@/types/type";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import pl from "date-fns/locale/pl";
 
 interface Props {
 	params: {
@@ -22,7 +19,6 @@ interface Props {
 const Group = ({ params }: Props) => {
 	const [participants, setParticipants] = useState<Participant[]>([]);
 	const [error, setError] = useState("");
-	const [date, setDate] = useState<Date | null>(new Date());
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
 	]);
@@ -32,6 +28,7 @@ const Group = ({ params }: Props) => {
 			redirect("/login");
 		},
 	});
+	const groupId = parseInt(params.id, 10);
 
 	useEffect(() => {
 		const fetchParticipants = async () => {
@@ -100,7 +97,10 @@ const Group = ({ params }: Props) => {
 					maxWidth: "98vw",
 				}}>
 				{participants.length > 0 && (
-					<ParticipantList participants={participants} />
+					<ParticipantList
+						participants={participants}
+						groupId={groupId}
+					/>
 				)}
 				{error !== "" && (
 					<Typography
