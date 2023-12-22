@@ -38,7 +38,7 @@ const Group = ({ params }: Props) => {
 				});
 				const data: Participant[] | { error: string } = await response.json();
 				if (Array.isArray(data)) {
-					//console.log(data);
+					console.log(data);
 					setParticipants(data);
 				} else {
 					setError(data.error);

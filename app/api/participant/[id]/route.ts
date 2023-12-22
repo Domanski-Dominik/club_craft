@@ -17,7 +17,7 @@ export const GET = async (req: Request, { params }: Props) => {
 			},
 			include: {
 				participant: {
-					include: { attendance: true },
+					include: { attendance: true, payments: true },
 				},
 			},
 		});

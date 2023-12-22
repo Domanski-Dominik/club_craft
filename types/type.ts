@@ -1,3 +1,4 @@
+import { GridRowModel } from "@mui/x-data-grid";
 export type Location = {
 	id: number | string;
 	name: string;
@@ -36,9 +37,12 @@ export type Participant = {
 	payment?: [Payment];
 };
 export type Payment = {
+	id: number;
 	amount: number;
-	date: Date;
-	participant: Participant;
+	paymentDate: String;
+	paymentMethod: String;
+	month: String;
+	description?: string;
 };
 export type Attendance = {
 	id: Number;
@@ -46,3 +50,14 @@ export type Attendance = {
 	groupId: Number;
 	participant: Participant;
 };
+
+export interface DialogPayType {
+	open: boolean;
+	row: GridRowModel | null;
+	onClose: (paymentData: {}) => void;
+}
+export interface DialogDeleteType {
+	open: boolean;
+	row: GridRowModel | null;
+	onClose: (value: string) => void;
+}

@@ -25,30 +25,33 @@ import {
 	DialogContent,
 	DialogTitle,
 	Checkbox,
+	TextField,
+	InputLabel,
+	FormControl,
+	Select,
+	MenuItem,
+	Grid,
 } from "@mui/material";
-import type { Attendance, Participant } from "@/types/type";
-import { useState } from "react";
+import type { Attendance, Participant, Payment } from "@/types/type";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCardIcon from "@mui/icons-material/AddCard";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import pl from "date-fns/locale/pl";
 import format from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import DialogPay from "../dialogs/DialogPay";
+import DialogDelete from "../dialogs/DialogDelete";
 
 type Props = {
 	participants: Participant[];
 	groupId: number;
 };
 
-export interface DialogD {
-	open: boolean;
-	row: GridRowModel | null;
-	onClose: (value: string) => void;
-}
 const sortAndAddNumbers = (
 	rows: (Participant | GridValidRowModel)[],
 	groupId: number
@@ -72,32 +75,6 @@ const sortAndAddNumbers = (
 const formatDate = (date: Date) => {
 	return format(date, "dd-MM-yyyy");
 };
-function DialogD(props: DialogD) {
-	const { onClose, open, row } = props;
-
-	const handleClose = () => {
-		onClose("no");
-	};
-	const handleOptionClick = (value: string) => {
-		onClose(value);
-	};
-	if (row === null) {
-		return null;
-	}
-	return (
-		<Dialog
-			open={open}
-			onClose={handleClose}>
-			<DialogTitle>Czy chcesz usunąć uczestnika?</DialogTitle>
-			<DialogContent
-				dividers>{`Usuń ${row.firstName} ${row.lastName} z bazy danych`}</DialogContent>
-			<DialogActions>
-				<Button onClick={() => handleOptionClick("no")}>No</Button>
-				<Button onClick={() => handleOptionClick("yes")}>Yes</Button>
-			</DialogActions>
-		</Dialog>
-	);
-}
 
 const ParticipantList = ({ participants, groupId }: Props) => {
 	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
@@ -105,8 +82,9 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	);
 	const gridRef = useGridApiRef();
 	const [dialogOpen, setDialogOpen] = React.useState(false);
-	const [edit, setEdit] = useState(false);
-	const [date, setDate] = useState<Date>(new Date());
+	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
+	const [edit, setEdit] = React.useState(false);
+	const [date, setDate] = React.useState<Date>(new Date());
 	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants, groupId)
 	);
@@ -114,9 +92,10 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		{}
 	);
 	const [columnVisibilityModel, setColumnVisibilityModel] =
-		useState<GridColumnVisibilityModel>({
+		React.useState<GridColumnVisibilityModel>({
 			phoneNumber: false,
 			actions: false,
+			payment: false,
 		});
 	const [snackbar, setSnackbar] = React.useState<Pick<
 		AlertProps,
@@ -139,8 +118,18 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	const handleSaveClick = (id: GridRowId) => () => {
 		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 	};
+	const handlePayDialogOpen = (row: GridRowModel) => () => {
+		setSelectedRow(row);
+		setPayDialogOpen(true);
+	};
 
-	const handleDeleteClick = (id: GridRowId, row: GridRowModel) => () => {
+	const handleAddPayment = (form: {}) => {
+		// Tutaj możesz dodać logikę obsługi dodawania płatności
+		console.log(form);
+
+		setPayDialogOpen(false);
+	};
+	const handleDeleteClick = (row: GridRowModel) => () => {
 		setSelectedRow(row);
 		setDialogOpen(true);
 		//setRows(rows.filter((row) => row.id !== id));
@@ -248,7 +237,11 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 							sx={{ marginLeft: 1, marginRight: 1 }}
 							onClick={() => {
 								setEdit(true);
-								setColumnVisibilityModel({ phoneNumber: true, actions: true });
+								setColumnVisibilityModel({
+									phoneNumber: true,
+									actions: true,
+									payment: true,
+								});
 							}}>
 							<EditIcon />
 							Edytuj
@@ -261,6 +254,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 								setColumnVisibilityModel((prev) => ({
 									...prev,
 									phoneNumber: !prev.phoneNumber,
+									payment: !prev.payment,
 								}));
 								gridRef.current.scroll({ left: 0 });
 							}}>
@@ -297,6 +291,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 									setColumnVisibilityModel({
 										actions: false,
 										phoneNumber: false,
+										payment: false,
 									});
 							}}>
 							<CheckIcon />
@@ -347,7 +342,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 					<GridActionsCellItem
 						icon={<DeleteIcon />}
 						label='Delete'
-						onClick={handleDeleteClick(id, row)}
+						onClick={handleDeleteClick(row)}
 						color='inherit'
 					/>,
 					<GridActionsCellItem
@@ -373,6 +368,33 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			minWidth: 100,
 			editable: edit,
 			flex: 1,
+		},
+		{
+			field: "payment",
+			headerName: "Płatność",
+			minWidth: 100,
+			hideable: true,
+			editable: false,
+			sortable: false,
+			renderCell: (params) => {
+				const paymentPrt = params.row.payments;
+
+				const Payed: Payment = paymentPrt.find(
+					(p: Payment) => (p.month = formatDate(date))
+				);
+
+				return (
+					<>
+						{Payed ? Payed.amount : "0"}
+						<GridActionsCellItem
+							icon={<AddCardIcon />}
+							label='Dodaj płatność'
+							onClick={handlePayDialogOpen(params.row)}
+							color='inherit'
+						/>
+					</>
+				);
+			},
 		},
 		{
 			field: "phoneNumber",
@@ -480,6 +502,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						columnVisibilityModel: {
 							phoneNumber: false,
 							actions: false,
+							payment: false,
 						},
 					},
 				}}
@@ -502,10 +525,17 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				</Snackbar>
 			)}
 			{selectedRow && (
-				<DialogD
+				<DialogDelete
 					open={dialogOpen}
 					row={selectedRow}
 					onClose={handleChoice}
+				/>
+			)}
+			{selectedRow && (
+				<DialogPay
+					open={payDialogOpen}
+					row={selectedRow}
+					onClose={handleAddPayment}
 				/>
 			)}
 		</>
