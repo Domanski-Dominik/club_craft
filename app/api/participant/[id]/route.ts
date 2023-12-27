@@ -17,7 +17,23 @@ export const GET = async (req: Request, { params }: Props) => {
 			},
 			include: {
 				participant: {
-					include: { attendance: true, payments: true },
+					include: {
+						attendance: true,
+						payments: {
+							include: {
+								payment: {
+									select: {
+										id: true,
+										amount: true,
+										description: true,
+										paymentDate: true,
+										paymentMethod: true,
+										month: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		});
@@ -29,7 +45,23 @@ export const GET = async (req: Request, { params }: Props) => {
 				}
 			);
 		}
-		const participants = schedule.map((object) => object.participant);
+		/*const participants = schedule.map((object) => object.participant);*/
+		const participants = schedule.map((object) => {
+			const paymentsArray = object.participant.payments.map(
+				(paymentParticipant) => ({
+					id: paymentParticipant.payment.id,
+					amount: paymentParticipant.payment.amount,
+					description: paymentParticipant.payment.description,
+					paymentDate: paymentParticipant.payment.paymentDate,
+					paymentMethod: paymentParticipant.payment.paymentMethod,
+					month: paymentParticipant.payment.month,
+				})
+			);
+			return {
+				...object.participant,
+				payments: paymentsArray,
+			};
+		});
 		if (participants.length > 0) {
 			return Response.json(participants);
 		} else {
@@ -54,6 +86,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 				firstName: prtUpdate.firstName,
 				lastName: prtUpdate.lastName,
 				phoneNumber: prtUpdate.phoneNumber,
+				note: prtUpdate.note,
 			},
 		});
 		if (!update) {

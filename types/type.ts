@@ -33,8 +33,9 @@ export type Participant = {
 	club: string;
 	email?: string;
 	tel?: string;
+	note?: string;
 	attendance?: [Attendance];
-	payment?: [Payment];
+	payments?: [Payment];
 };
 export type Payment = {
 	id: number;
@@ -44,17 +45,25 @@ export type Payment = {
 	month: String;
 	description?: string;
 };
+
 export type Attendance = {
 	id: Number;
 	date: String;
 	groupId: Number;
 	participant: Participant;
 };
+export type FormPay = {
+	amount: string;
+	description: string;
+	paymentMethod: string;
+	selectedMonth: string;
+	paymentDate: string;
+};
 
 export interface DialogPayType {
 	open: boolean;
 	row: GridRowModel | null;
-	onClose: (paymentData: {}) => void;
+	onClose: (paymentData: FormPay | null, row: GridRowModel | null) => void;
 }
 export interface DialogDeleteType {
 	open: boolean;

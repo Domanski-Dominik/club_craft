@@ -21,7 +21,7 @@ import {
 	Typography,
 	InputAdornment,
 } from "@mui/material";
-import { DialogPayType } from "@/types/type";
+import { DialogPayType, Payment } from "@/types/type";
 
 const formatDate = (date: Date) => {
 	return format(date, "dd-MM-yyyy");
@@ -30,6 +30,9 @@ const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
 const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
+	if (row === null) {
+		return null;
+	}
 	const [paymentData, setPaymentData] = React.useState({
 		amount: "",
 		description: "",
@@ -40,6 +43,22 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 	const [errors, setErrors] = React.useState({
 		amount: "",
 	});
+	React.useEffect(() => {
+		// Aktualizuj dane formularza, gdy obiekt `row` zostanie dostarczony
+		if (row && paymentData.selectedMonth) {
+			const selectedRowPayment = row?.payments.find(
+				(payment: any) =>
+					payment.month === formatDateMonth(paymentData.selectedMonth)
+			);
+			setPaymentData({
+				...paymentData,
+				amount: `${selectedRowPayment?.amount}` || "",
+				description: selectedRowPayment?.description || "",
+				paymentMethod: selectedRowPayment?.paymentMethod || "cash",
+				selectedMonth: paymentData.selectedMonth,
+			});
+		}
+	}, [row]);
 	const validateForm = () => {
 		let valid = true;
 		const newErrors = { ...errors };
@@ -68,7 +87,19 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 		setPaymentData({ ...paymentData, [name]: event.target.value });
 	};
 	const handleDateChange = (date: Date | null) => {
-		if (date !== null) setPaymentData({ ...paymentData, selectedMonth: date });
+		if (date !== null) {
+			const selectedRowPayment = row?.payments.find(
+				(payment: Payment) => payment.month === formatDateMonth(date)
+			);
+
+			setPaymentData({
+				amount: `${selectedRowPayment?.amount}` || "",
+				description: selectedRowPayment?.description || "",
+				paymentMethod: selectedRowPayment?.paymentMethod || "cash",
+				selectedMonth: date,
+				paymentDate: formatDate(date),
+			});
+		}
 	};
 	const handleClose = () => {
 		setPaymentData({
@@ -78,7 +109,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 			selectedMonth: new Date(),
 			paymentDate: formatDate(new Date()),
 		});
-		onClose({});
+		onClose(null, null);
 	};
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -87,7 +118,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 				...paymentData,
 				selectedMonth: formatDateMonth(paymentData.selectedMonth),
 			};
-			onClose(formattedData);
+			onClose(formattedData, row);
 			setPaymentData({
 				amount: "",
 				description: "",
@@ -97,9 +128,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 			});
 		}
 	};
-	if (row === null) {
-		return null;
-	}
+
 	return (
 		<Dialog
 			open={open}

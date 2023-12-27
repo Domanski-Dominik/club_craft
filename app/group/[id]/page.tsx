@@ -90,26 +90,28 @@ const Group = ({ params }: Props) => {
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			<Box
-				sx={{
-					minWidth: "95vw",
-					minHeight: "68vh",
-					maxWidth: "98vw",
-				}}>
-				{participants.length > 0 && (
+			{participants.length > 0 && (
+				<Box
+					sx={{
+						minWidth: "95vw",
+						minHeight: "68vh",
+						maxWidth: "98vw",
+					}}>
 					<ParticipantList
 						participants={participants}
 						groupId={groupId}
 					/>
-				)}
-				{error !== "" && (
-					<Typography
-						variant='h5'
-						color='error'>
-						{error}
-					</Typography>
-				)}
-			</Box>
+				</Box>
+			)}
+
+			{error !== "" && (
+				<Typography
+					align='center'
+					variant='h4'
+					color='error'>
+					{error}
+				</Typography>
+			)}
 		</>
 	);
 };

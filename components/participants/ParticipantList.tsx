@@ -32,7 +32,8 @@ import {
 	MenuItem,
 	Grid,
 } from "@mui/material";
-import type { Attendance, Participant, Payment } from "@/types/type";
+import type { Attendance, Participant, Payment, FormPay } from "@/types/type";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SaveIcon from "@mui/icons-material/Save";
@@ -75,6 +76,9 @@ const sortAndAddNumbers = (
 const formatDate = (date: Date) => {
 	return format(date, "dd-MM-yyyy");
 };
+const formatDateMonth = (date: Date) => {
+	return format(date, "MM-yyyy");
+};
 
 const ParticipantList = ({ participants, groupId }: Props) => {
 	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
@@ -84,6 +88,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	const [dialogOpen, setDialogOpen] = React.useState(false);
 	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
 	const [edit, setEdit] = React.useState(false);
+	const [more, setMore] = React.useState(false);
 	const [date, setDate] = React.useState<Date>(new Date());
 	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants, groupId)
@@ -96,6 +101,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			phoneNumber: false,
 			actions: false,
 			payment: false,
+			note: false,
 		});
 	const [snackbar, setSnackbar] = React.useState<Pick<
 		AlertProps,
@@ -123,11 +129,94 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		setPayDialogOpen(true);
 	};
 
-	const handleAddPayment = (form: {}) => {
+	const handleAddPayment = async (
+		form: FormPay | null,
+		row: GridRowModel | null
+	) => {
 		// Tutaj możesz dodać logikę obsługi dodawania płatności
-		console.log(form);
+		//console.log(form, row);
+		if (form !== null && row !== null) {
+			try {
+				if (selectedRow) {
+					const response = await fetch(`/api/payment/${selectedRow.id}`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							form,
+						}), // Przekaż zaktualizowane dane uczestnika
+					});
+					const message = await response.json();
+					if (response.ok) {
+						//console.log(message);
+						setSnackbar({
+							children: message.message,
+							severity: "success",
+						});
 
+						const updatedRows = rows.map((row) => {
+							if (row.id === selectedRow.id) {
+								// Sprawdź, czy istnieje płatność dla danego miesiąca
+								const existingPayment = row.payments.find(
+									(payment: Payment) => payment.month === form.selectedMonth
+								);
+
+								if (existingPayment) {
+									// Jeśli płatność istnieje, zaktualizuj jej dane
+									const updatedPayments = row.payments.map((payment: Payment) =>
+										payment.month === form.selectedMonth
+											? {
+													...payment,
+													amount: form.amount,
+													description: form.description,
+													paymentDate: form.paymentDate,
+													paymentMethod: form.paymentMethod,
+													// ... inne zaktualizowane pola
+											  }
+											: payment
+									);
+
+									return {
+										...row,
+										payments: updatedPayments,
+									};
+								} else {
+									// Jeśli płatność nie istnieje, dodaj nowy obiekt płatności
+									const newPayment = {
+										month: form.selectedMonth,
+										amount: form.amount,
+										description: form.description,
+										paymentDate: form.paymentDate,
+										paymentMethod: form.paymentMethod,
+										// ... inne pola dla nowej płatności
+									};
+
+									return {
+										...row,
+										payments: [...row.payments, newPayment],
+									};
+								}
+							}
+							return row;
+						});
+						console.log(updatedRows);
+						setRows(updatedRows);
+					} else {
+						console.log(message);
+						setSnackbar({ children: message.error, severity: "error" });
+					}
+				}
+			} catch (error) {
+				console.error("Błąd podczas aktualizacji płatności:", error);
+				setSnackbar({
+					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					severity: "error",
+				});
+			}
+		}
 		setPayDialogOpen(false);
+		setSelectedRow(null);
 	};
 	const handleDeleteClick = (row: GridRowModel) => () => {
 		setSelectedRow(row);
@@ -241,6 +330,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 									phoneNumber: true,
 									actions: true,
 									payment: true,
+									note: true,
 								});
 							}}>
 							<EditIcon />
@@ -255,11 +345,13 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 									...prev,
 									phoneNumber: !prev.phoneNumber,
 									payment: !prev.payment,
+									note: !prev.note,
 								}));
 								gridRef.current.scroll({ left: 0 });
+								setMore((prev) => !prev);
 							}}>
 							<MoreVertIcon />
-							Więcej
+							{more ? "Mniej" : "Więcej"}
 						</Button>
 						<LocalizationProvider
 							dateAdapter={AdapterDateFns}
@@ -271,7 +363,6 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 								onChange={(newDate) => {
 									if (newDate) {
 										setDate(newDate);
-										console.log(newDate);
 									}
 								}}
 								sx={{ width: 100 }}
@@ -292,7 +383,10 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 										actions: false,
 										phoneNumber: false,
 										payment: false,
+										note: false,
 									});
+								setMore(false);
+								gridRef.current.scroll({ left: 0 });
 							}}>
 							<CheckIcon />
 							Zakończ edycje
@@ -379,19 +473,28 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			renderCell: (params) => {
 				const paymentPrt = params.row.payments;
 
-				const Payed: Payment = paymentPrt.find(
-					(p: Payment) => (p.month = formatDate(date))
+				const Payed = paymentPrt.find(
+					(p: any) => p.month === formatDateMonth(date)
 				);
-
+				//console.log(paymentPrt, Payed);
 				return (
 					<>
-						{Payed ? Payed.amount : "0"}
-						<GridActionsCellItem
-							icon={<AddCardIcon />}
-							label='Dodaj płatność'
-							onClick={handlePayDialogOpen(params.row)}
-							color='inherit'
-						/>
+						{Payed ? Payed.amount : 0}
+						{Payed ? (
+							<GridActionsCellItem
+								icon={<CreditCardIcon />}
+								label='Dodaj płatność'
+								onClick={handlePayDialogOpen(params.row)}
+								color='inherit'
+							/>
+						) : (
+							<GridActionsCellItem
+								icon={<AddCardIcon />}
+								label='Dodaj płatność'
+								onClick={handlePayDialogOpen(params.row)}
+								color='inherit'
+							/>
+						)}
 					</>
 				);
 			},
@@ -435,7 +538,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						);
 						const message = await response.json();
 						if (response.ok) {
-							console.log(message);
+							//console.log(message);
 							// Skopiuj aktualny stan rows
 							const updatedRows = [...rows];
 
@@ -481,7 +584,16 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 					/>
 				);
 			},
-			maxWidth: 100,
+			maxWidth: 80,
+			sortable: false,
+		},
+		{
+			field: "note",
+			headerName: "Notatka",
+			minWidth: 300,
+			editable: edit,
+			hideable: true,
+			flex: 1,
 			sortable: false,
 		},
 	];
@@ -503,6 +615,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 							phoneNumber: false,
 							actions: false,
 							payment: false,
+							note: false,
 						},
 					},
 				}}
