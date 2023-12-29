@@ -19,13 +19,13 @@ import {
 	Box,
 } from "@mui/material";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { useRouter } from "next/navigation";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { plPL } from "@mui/x-date-pickers/locales";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { group } from "console";
+import Loading from "@/context/Loading";
 
 interface Props {
 	params: {
@@ -57,6 +57,7 @@ const CreateGroups = ({ params }: Props) => {
 	const locationIdNum = parseInt(params.id, 10);
 	const [isClicked, setIsClicked] = useState(false);
 	const [club, setClub] = useState("guest");
+	const router = useRouter();
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -135,7 +136,7 @@ const CreateGroups = ({ params }: Props) => {
 	};
 	const handleDelete = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log(newGroup);
+		//console.log(newGroup);
 		try {
 			const response = await fetch("/api/loc/gr", {
 				method: "DELETE",
@@ -150,7 +151,7 @@ const CreateGroups = ({ params }: Props) => {
 		const updatedEvents = events.filter((event) => event.id !== idToDelete);
 
 		setEvents(updatedEvents);
-		console.log(updatedEvents);
+		//console.log(updatedEvents);
 		setNewGroup({
 			...newGroup,
 			id: null,
@@ -163,14 +164,14 @@ const CreateGroups = ({ params }: Props) => {
 		setIsClicked(false);
 	};
 	const handleEdit = async (e: React.FormEvent) => {
-		console.log(newGroup);
+		//console.log(newGroup);
 		try {
 			const response = await fetch("/api/loc/gr", {
 				method: "PUT",
 				body: JSON.stringify(newGroup),
 			});
 			const data = await response.json();
-			console.log("Grupa edytowana: ", data);
+			//console.log("Grupa edytowana: ", data);
 			if (response.ok) {
 				const updatedEvents = events.map((event) => {
 					if (event.id === `${data.id}`) {
@@ -187,11 +188,23 @@ const CreateGroups = ({ params }: Props) => {
 					return event;
 				});
 				setEvents(updatedEvents);
-				console.log(updatedEvents);
+				//console.log(updatedEvents);
 			}
 		} catch (error) {
 			console.error("Błąd podczas edytowania grupy: ", error);
 		}
+		setNewGroup({
+			...newGroup,
+			id: null,
+			name: "",
+			dayOfWeek: 1,
+			timeS: "16:00",
+			timeE: "17:00",
+			club: club,
+		});
+		setIsClicked(false);
+	};
+	const handleDiscard = async (e: React.FormEvent) => {
 		setNewGroup({
 			...newGroup,
 			id: null,
@@ -249,7 +262,7 @@ const CreateGroups = ({ params }: Props) => {
 		const hourE = ("0" + dateE.getHours()).slice(-2); // Dodaje zero przed jednocyfrowymi godzinami
 		const minutesE = ("0" + dateE.getMinutes()).slice(-2); // Dodaje zero przed jednocyfrowymi minutami
 
-		console.log(clickInfo.event.id);
+		//console.log(clickInfo.event.id);
 		const clickedId = parseInt(clickInfo.event.id);
 
 		setNewGroup({
@@ -272,6 +285,8 @@ const CreateGroups = ({ params }: Props) => {
 			setClub("guest");
 		}
 	}, [session]);
+
+	if (status === "loading") return <Loading />;
 	return (
 		<>
 			<form
@@ -297,6 +312,7 @@ const CreateGroups = ({ params }: Props) => {
 								}
 								label='Nazwa Grupy'
 								variant='outlined'
+								size='small'
 								required
 							/>
 						</FormControl>
@@ -309,6 +325,7 @@ const CreateGroups = ({ params }: Props) => {
 								id='dayOfWeek'
 								value={newGroup.dayOfWeek}
 								label='Dzień Tygodnia'
+								size='small'
 								onChange={(e) =>
 									setNewGroup({
 										...newGroup,
@@ -339,6 +356,7 @@ const CreateGroups = ({ params }: Props) => {
 									minTime={new Date("2000-01-01T06:00")}
 									label='Początek'
 									ampm={false}
+									slotProps={{ textField: { size: "small" } }}
 									value={new Date(`2000-01-01T${newGroup.timeS}:00`)}
 									onChange={(newValue) => {
 										if (newValue !== null && newValue !== undefined) {
@@ -376,6 +394,7 @@ const CreateGroups = ({ params }: Props) => {
 									minTime={new Date("2000-01-01T06:00")}
 									label='Koniec'
 									ampm={false}
+									slotProps={{ textField: { size: "small" } }}
 									value={new Date(`2000-01-01T${newGroup.timeE}:00`)}
 									onChange={(newValue) => {
 										if (newValue !== null && newValue !== undefined) {
@@ -416,17 +435,27 @@ const CreateGroups = ({ params }: Props) => {
 						variant='outlined'
 						onClick={handleEdit}
 						disabled={!isClicked}
-						color='warning'
+						color='info'
 						type='button'>
 						Zapisz zmiany
 					</Button>
-					<Button
-						variant='outlined'
-						type='submit'
-						color='success'
-						form='formId'>
-						Dodaj
-					</Button>
+					{isClicked ? (
+						<Button
+							variant='outlined'
+							onClick={handleDiscard}
+							color='warning'
+							type='button'>
+							Anuluj
+						</Button>
+					) : (
+						<Button
+							variant='outlined'
+							type='submit'
+							color='success'
+							form='formId'>
+							Dodaj
+						</Button>
+					)}
 				</Grid>
 			</form>
 			<Box
@@ -468,6 +497,13 @@ const CreateGroups = ({ params }: Props) => {
 					eventClick={handleEventClick}
 				/>
 			</Box>
+			<Button
+				variant='contained'
+				fullWidth
+				sx={{ marginTop: "1rem" }}
+				onClick={() => router.push("/locations")}>
+				Zakończ edycje grup
+			</Button>
 		</>
 	);
 };

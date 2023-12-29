@@ -1,6 +1,5 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import {
@@ -19,21 +18,16 @@ import {
 	InputLabel,
 	List,
 	ListItem,
-	ListItemText,
-	ListItemButton,
+	SelectChangeEvent,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import type { Location, Group } from "@/types/type";
+import type { Group, LocWithGroups } from "@/types/type";
 import PolishDayName from "@/context/PolishDayName";
 import { ReversePolishName } from "@/context/PolishDayName";
-import { Console, group } from "console";
-type LocWithGroups = Location & {
-	locationschedule: { group: Group }[] | [];
-};
+
 type NGroup = {
 	locId: string | number;
 	locName: string;

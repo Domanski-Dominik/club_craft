@@ -70,3 +70,12 @@ export interface DialogDeleteType {
 	row: GridRowModel | null;
 	onClose: (value: string) => void;
 }
+export interface DialogGroupsType {
+	open: boolean;
+	row: GridRowModel | null;
+	onClose: (value: string) => void;
+	locWithGroups: LocWithGroups[];
+}
+export type LocWithGroups = Location & {
+	locationschedule: { group: Group }[] | [];
+};

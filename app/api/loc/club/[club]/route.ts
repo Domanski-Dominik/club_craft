@@ -8,7 +8,7 @@ interface Props {
 
 export const GET = async (req: Request, { params }: Props) => {
 	const club = params.club;
-	console.log("To jest nazwa klubu: ", club);
+	//console.log("To jest nazwa klubu: ", club);
 	try {
 		let Loc = await prisma.locations.findMany({
 			where: { club: club },

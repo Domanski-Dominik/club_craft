@@ -108,7 +108,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 };
 export const DELETE = async (req: Request) => {
 	const prtDel = await req.json();
-	console.log("Id uczestnika to ", prtDel.id);
+	//console.log("Id uczestnika to ", prtDel.id);
 	try {
 		if (prtDel.id !== null && prtDel.id !== undefined) {
 			const deleteSchedule = await prisma.participantgroup.deleteMany({

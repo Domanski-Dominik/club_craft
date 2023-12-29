@@ -2,7 +2,7 @@ import { prisma } from "@/prisma/prisma";
 
 export const POST = async (req: Request) => {
 	const { name, dayOfWeek, timeS, timeE, locationId, club } = await req.json();
-	console.log(name, dayOfWeek, timeS, timeE, locationId, club);
+	//console.log(name, dayOfWeek, timeS, timeE, locationId, club);
 
 	if (!name || !timeS || !timeE || !locationId) {
 		return new Response("Brak wymaganych danych", { status: 400 });
@@ -51,7 +51,7 @@ export const POST = async (req: Request) => {
 };
 export const DELETE = async (req: Request) => {
 	const { id } = await req.json();
-	console.log("Id grupy to " + id);
+	//console.log("Id grupy to " + id);
 	try {
 		if (id !== null && id !== undefined) {
 			const deleteSchedule = await prisma.locationschedule.deleteMany({
@@ -60,6 +60,14 @@ export const DELETE = async (req: Request) => {
 
 			if (!deleteSchedule) {
 				return new Response("Nie udało się usunąć relacji z lokalizacją:", {
+					status: 404,
+				});
+			}
+			const deleteParticipants = await prisma.participantgroup.deleteMany({
+				where: { groupId: id },
+			});
+			if (!deleteParticipants) {
+				return new Response("Nie udało się usunąć relacji z uczestnikami:", {
 					status: 404,
 				});
 			}
@@ -87,7 +95,7 @@ export const DELETE = async (req: Request) => {
 export const PUT = async (req: Request) => {
 	const { name, dayOfWeek, timeS, timeE, locationId, id } = await req.json();
 	//console.log("Wszedłem w edytowanie");
-	console.log(id, name, dayOfWeek, timeS, timeE, locationId);
+	//console.log(id, name, dayOfWeek, timeS, timeE, locationId);
 	if (!name || !timeS || !timeE || !locationId) {
 		return new Response("Brak wymaganych danych", { status: 400 });
 	}

@@ -9,7 +9,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 	const { date, isChecked } = await req.json();
 	const groupId = parseInt(params.ids[0], 10);
 	const participantId = parseInt(params.ids[1], 10);
-	console.log("group: ", groupId, " participant: ", participantId, date);
+	//console.log("group: ", groupId, " participant: ", participantId, date);
 	try {
 		const existingAttendance = await prisma.attendance.findFirst({
 			where: {

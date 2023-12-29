@@ -14,7 +14,7 @@ export async function POST(req: Request, res: Response) {
 		const body: Body = await req.json();
 		//console.log(body);
 		const { email, tel, name, surname, club, groups } = body;
-		console.log(email, tel, name, surname, club, groups);
+		//console.log(email, tel, name, surname, club, groups);
 
 		if (!name || !surname || !groups) {
 			return NextResponse.json(
@@ -30,7 +30,7 @@ export async function POST(req: Request, res: Response) {
 				club: club,
 			},
 		});
-		console.log(exist);
+		//console.log(exist);
 		if (exist) {
 			return NextResponse.json(
 				{ error: "Uczestnik o danym nazwisku i imieniu już istnieje" },

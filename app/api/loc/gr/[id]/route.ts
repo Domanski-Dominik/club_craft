@@ -6,7 +6,7 @@ interface Props {
 	};
 }
 export const GET = async (req: Request, { params }: Props) => {
-	console.log("Wszedłem do funkcji", params);
+	//console.log("Wszedłem do funkcji", params);
 	const locationId = params.id;
 	const locationIdNum = parseInt(locationId, 10);
 	//console.log("Id lokalizacji to "+ locationIdNum);

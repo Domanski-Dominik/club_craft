@@ -1,10 +1,10 @@
 "use client";
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import DaysCard from "@/components/cards/DaysCard";
 import { Group } from "@/types/type";
+import { Card, CardContent, Typography } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 
@@ -81,6 +81,9 @@ export default function Days({ params }: Props) {
 		router.push(`/locations/${locId}/${id}`);
 	};
 
+	const handleAddGroup = () => {
+		router.push(`/locations/new/${locId}`);
+	};
 	if (status === "loading" || loading)
 		return (
 			<>
@@ -97,6 +100,16 @@ export default function Days({ params }: Props) {
 				cols={1}
 				handleClick={handleDayClick}
 			/>
+			{session.user.role === "owner" && (
+				<Card
+					variant='outlined'
+					onClick={handleAddGroup}
+					sx={{ marginTop: "1rem" }}>
+					<CardContent>
+						<Typography variant='h6'>Dodaj/Usuń grupy</Typography>
+					</CardContent>
+				</Card>
+			)}
 		</>
 	);
 }
