@@ -14,7 +14,7 @@ type DaysCardProps = {
 const DaysCard = ({ gr, handleClick, cols }: DaysCardProps) => {
 	const handleDayClick = (id: number) => {
 		handleClick(id); //Przekazuje ID klikniętej karty do funkcji handleClick
-		console.log(id);
+		//console.log(id);
 	};
 	const sortedDaysOfWeek = Object.keys(gr)
 		.map((day) => parseInt(day, 10))

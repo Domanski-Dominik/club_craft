@@ -9,7 +9,7 @@ export type Location = {
 	club: string;
 };
 export type Group = {
-	id: string | number;
+	id: number;
 	name: string;
 	dayOfWeek: number;
 	timeS: string;
@@ -77,5 +77,5 @@ export interface DialogGroupsType {
 	locWithGroups: LocWithGroups[];
 }
 export type LocWithGroups = Location & {
-	locationschedule: { group: Group }[] | [];
+	locationschedule: Group[] | [];
 };

@@ -10,12 +10,15 @@ declare module "next-auth" {
 			/** The user's postal address. */
 			role: string;
 			club: string;
+			id: string;
+			coachedGroups: [];
 		} & DefaultSession["user"];
 	}
 
 	interface User extends DefaultUser {
 		role: string;
 		club: string;
+		coachedGroups?: Group[];
 	}
 }
 

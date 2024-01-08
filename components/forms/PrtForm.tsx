@@ -58,7 +58,7 @@ const ParticipantForm = () => {
 		LocWithGroups | null | undefined
 	>(null); // Wybrana lokalizacja
 	const [days, setDays] = useState<string[]>([]);
-	const [groups, setGroups] = useState<{ group: Group }[] | null>();
+	const [groups, setGroups] = useState<Group[] | null>();
 	const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string>(""); // Wybrany dzień tygodnia
 	const [selectedGroups, setSelectedGroups] = useState<NGroup[]>([]);
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
@@ -212,7 +212,7 @@ const ParticipantForm = () => {
 		//console.log(selectedLocationData);
 		setSelectedLocation(selectedLocationData);
 		const daysOfWeek = selectedLocationData?.locationschedule.map(
-			(schedule) => schedule.group.dayOfWeek
+			(schedule) => schedule.dayOfWeek
 		);
 		if (daysOfWeek) {
 			const sortedDaysOfWeek = daysOfWeek.slice().sort((a, b) => {
@@ -240,11 +240,11 @@ const ParticipantForm = () => {
 		const dayId = ReversePolishName(event.target.value);
 		//console.log(dayId);
 		const groupsInLoc = selectedLocation?.locationschedule.filter(
-			(group) => group.group.dayOfWeek === dayId
+			(group) => group.dayOfWeek === dayId
 		);
 		groupsInLoc?.sort((a, b) => {
-			const timeA = a.group.timeS.split(":").map(Number); // Konwersja czasu z formatu HH:mm na tablicę liczb (godzina, minuta)
-			const timeB = b.group.timeS.split(":").map(Number);
+			const timeA = a.timeS.split(":").map(Number); // Konwersja czasu z formatu HH:mm na tablicę liczb (godzina, minuta)
+			const timeB = b.timeS.split(":").map(Number);
 			if (timeA[0] !== timeB[0]) {
 				return Number(timeA[0]) - Number(timeB[0]);
 			} else {
@@ -441,9 +441,9 @@ const ParticipantForm = () => {
 													groups !== null &&
 													groups.map((group) => (
 														<MenuItem
-															key={group.group.timeS}
-															value={group.group.id}>
-															{group.group.name}
+															key={group.timeS}
+															value={group.id}>
+															{group.name}
 														</MenuItem>
 													))}
 											</Select>
@@ -464,7 +464,7 @@ const ParticipantForm = () => {
 												if (selectedLocation) {
 													const foundGroup =
 														selectedLocation?.locationschedule.find(
-															(group) => group.group.id === selectedGroupId
+															(group) => group.id === Number(selectedGroupId)
 														);
 													if (foundGroup) {
 														addGroup({
@@ -472,7 +472,7 @@ const ParticipantForm = () => {
 															locId: selectedLocation?.id,
 															dayOfWeek: selectedDayOfWeek,
 															groupId: selectedGroupId,
-															groupName: foundGroup.group.name,
+															groupName: foundGroup.name,
 														});
 													}
 												}

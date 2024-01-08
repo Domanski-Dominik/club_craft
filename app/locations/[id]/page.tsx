@@ -7,6 +7,7 @@ import { Group } from "@/types/type";
 import { Card, CardContent, Typography } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 interface Props {
 	params: {
@@ -15,6 +16,7 @@ interface Props {
 }
 export default function Days({ params }: Props) {
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 	const [groups, setGroups] = useState({});
 	const router = useRouter();
 	const [pages, setPages] = useState([
@@ -52,26 +54,67 @@ export default function Days({ params }: Props) {
 	}, []);
 	useEffect(() => {
 		const fetchLoc = async (locId: string) => {
-			try {
-				const response = await fetch(`/api/loc/days/${locId}`, {
-					method: "GET",
-				});
-				const data: Group[] = await response.json();
-				//console.log(data);
-				const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
-				data.forEach((group) => {
-					const { dayOfWeek } = group;
+			if (session?.user || status === "authenticated") {
+				//console.log(session.user);
+				if (session.user.role === "owner" || session.user.role === "admin") {
+					const response = await fetch(`/api/loc/days/${locId}`, {
+						method: "GET",
+					});
+					const data: Group[] | { error: string } = await response.json();
+					if (Array.isArray(data)) {
+						const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
+						data.forEach((group) => {
+							const { dayOfWeek } = group;
 
-					if (!groupsByDay[dayOfWeek]) {
-						groupsByDay[dayOfWeek] = [];
+							if (!groupsByDay[dayOfWeek]) {
+								groupsByDay[dayOfWeek] = [];
+							}
+							groupsByDay[dayOfWeek].push(group);
+						});
+						setGroups(groupsByDay);
+						setLoading(false);
+						setError("");
+					} else {
+						setError(error);
+						setLoading(false);
 					}
-					groupsByDay[dayOfWeek].push(group);
-				});
-				//console.log(groupsByDay);
-				setGroups(groupsByDay);
-				setLoading(false);
-			} catch (error) {
-				console.log("Error", error);
+				}
+				if (session.user.role === "coach") {
+					const response = await fetch(
+						`/api/coaches/groups/${session.user.id}`,
+						{ method: "GET" }
+					);
+					const data: number[] | { error: string } = await response.json();
+					if (Array.isArray(data)) {
+						const response2 = await fetch(`/api/loc/days/${locId}`, {
+							method: "GET",
+						});
+						const data2: Group[] | { error: string } = await response2.json();
+						if (Array.isArray(data2)) {
+							const filteredGroups = data2.filter((group) =>
+								data.includes(group.id)
+							);
+							const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
+							filteredGroups.forEach((group) => {
+								const { dayOfWeek } = group;
+
+								if (!groupsByDay[dayOfWeek]) {
+									groupsByDay[dayOfWeek] = [];
+								}
+								groupsByDay[dayOfWeek].push(group);
+							});
+							setGroups(groupsByDay);
+							setLoading(false);
+							setError("");
+						} else {
+							setError(data2.error);
+							setLoading(false);
+						}
+					} else {
+						setError(data.error);
+						setLoading(false);
+					}
+				}
 			}
 		};
 		fetchLoc(locId);
@@ -91,7 +134,21 @@ export default function Days({ params }: Props) {
 				<CardsSkeleton />
 			</>
 		);
-
+	if (error !== "")
+		return (
+			<>
+				<WarningAmberIcon
+					color='error'
+					sx={{ width: 100, height: 100, m: 5 }}
+				/>
+				<Typography
+					variant='h5'
+					align='center'
+					color='red'>
+					{error}
+				</Typography>
+			</>
+		);
 	return (
 		<>
 			<MobileNavigation pages={pages} />

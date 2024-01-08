@@ -3,18 +3,22 @@ import { prisma } from "@/prisma/prisma";
 import { NextResponse } from "next/server";
 
 interface Body {
-	email: string;
-	password: string;
-	name: string;
-	surname: string;
-	club: string;
-	role: string;
+	formData: {
+		email: string;
+		password: string;
+		name: string;
+		surname: string;
+		club: string;
+		role: string;
+		newClub: boolean;
+	};
 }
 export async function POST(req: Request, res: Response) {
 	try {
-		const body = await req.json();
+		const body: Body = await req.json();
 		//console.log(body);
-		const { email, password, name, surname, club, role } = body.formData;
+		const { email, password, name, surname, club, role, newClub } =
+			body.formData;
 		//console.log(email, password, name, surname, club, role);
 
 		if (!email || !password) {
@@ -36,18 +40,19 @@ export async function POST(req: Request, res: Response) {
 				{ status: 409 }
 			);
 		}
-		const existingUserWithClub = await prisma.user.findFirst({
-			where: {
-				club: club,
-			},
-		});
-		if (existingUserWithClub) {
-			return NextResponse.json(
-				{ error: "Ta nazwa klubu jest już w bazie danych" },
-				{ status: 409 }
-			);
+		if (newClub) {
+			const existingUserWithClub = await prisma.user.findFirst({
+				where: {
+					club: club,
+				},
+			});
+			if (existingUserWithClub) {
+				return NextResponse.json(
+					{ error: "Ta nazwa klubu jest już w bazie danych" },
+					{ status: 409 }
+				);
+			}
 		}
-
 		const hashedPassword = await bcrypt.hash(password, 10);
 
 		const user = await prisma.user.create({

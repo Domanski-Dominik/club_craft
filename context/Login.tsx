@@ -26,7 +26,7 @@ const Login = () => {
 	const [error, setError] = useState("");
 	const session = useSession();
 	const { status } = useSession();
-	if (status === "authenticated") redirect("/locations");
+	if (status === "authenticated") redirect("/home");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();

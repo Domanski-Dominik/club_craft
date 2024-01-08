@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
-import Loading from "@/context/Loading";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import LocCard from "@/components/cards/LocCard";
 import { Location } from "@/types/type";
 import { Card, CardContent, Typography } from "@mui/material";
@@ -34,6 +34,7 @@ const LocCardList = ({ data, handleClick, isOwner }: LocCardListProps) => {
 
 export default function LocationList() {
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 	const [locs, setLocs] = useState<Location[] | []>([]);
 	const router = useRouter();
 	const [isOwner, setIsOwner] = useState(false);
@@ -53,19 +54,39 @@ export default function LocationList() {
 
 	const fetchLoc = async () => {
 		if (session?.user || status === "authenticated") {
-			const response = await fetch(`/api/loc/club/${session.user.club}`);
-			const data: Location[] = await response.json();
 			console.log(session.user);
-			console.log(data);
-			if (
-				session.user.role === "owner" ||
-				session.user.role === "admin" ||
-				session.user.role === "guest"
-			) {
-				setIsOwner(true);
+			if (session.user.role === "owner") {
+				const response = await fetch(
+					`/api/loc/club/${session.user.club}/owner`
+				);
+				const data: Location[] | { error: string } = await response.json();
+				if (Array.isArray(data)) {
+					setIsOwner(true);
+					setLocs(data);
+					setLoading(false);
+					setError("");
+				} else {
+					setError(data.error);
+					setLoading(false);
+				}
 			}
-			setLocs(data);
-			setLoading(false);
+			if (session.user.role === "coach") {
+				const response = await fetch(
+					`/api/loc/club/${session.user.club}/coach/${session.user.id}`
+				);
+				const data: Location[] | { error: string } = await response.json();
+				if (Array.isArray(data)) {
+					setLocs(data);
+					setLoading(false);
+					setError("");
+				} else {
+					setError(data.error);
+					setLoading(false);
+				}
+			}
+
+			if (session.user.role === "admin") {
+			}
 		}
 	};
 
@@ -74,7 +95,7 @@ export default function LocationList() {
 	}, [session]);
 
 	const handleClick = (clickedId: String | Number) => {
-		console.log("Kliknięte ID:", clickedId);
+		//console.log("Kliknięte ID:", clickedId);
 		router.push(`/locations/${clickedId}`);
 	};
 
@@ -100,6 +121,20 @@ export default function LocationList() {
 					handleClick={handleClick}
 					isOwner={isOwner}
 				/>
+			)}
+			{error !== "" && (
+				<>
+					<WarningAmberIcon
+						color='error'
+						sx={{ width: 100, height: 100, m: 5 }}
+					/>
+					<Typography
+						variant='h5'
+						align='center'
+						color='red'>
+						{error}
+					</Typography>
+				</>
 			)}
 			{session.user.role === "owner" && (
 				<Card

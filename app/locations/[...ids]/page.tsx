@@ -17,6 +17,7 @@ interface Props {
 }
 export default function Grups({ params }: Props) {
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 	const [groups, setGroups] = useState<Group[]>([]);
 	const router = useRouter();
 	const [pages, setPages] = useState([
@@ -32,7 +33,7 @@ export default function Grups({ params }: Props) {
 		},
 	});
 	const handleGroupClick = (id: string | number) => {
-		console.log(id);
+		//console.log(id);
 		router.push(`/group/${id}`);
 	};
 
@@ -66,32 +67,80 @@ export default function Grups({ params }: Props) {
 	}, []);
 	useEffect(() => {
 		const fetchLoc = async (locId: string) => {
-			try {
-				const response = await fetch(`/api/loc/days/${locId}`, {
-					method: "GET",
-				});
-				const data: Group[] = await response.json();
-				//console.log(data);
-				const selectedGroups: Group[] = data.filter(
-					(group) => group.dayOfWeek === dayNum
-				);
-				selectedGroups.sort((a, b) => {
-					// Porównanie czasu w formacie HH:mm
-					const timeA = a.timeS.split(":").map(Number);
-					const timeB = b.timeS.split(":").map(Number);
+			if (session?.user || status === "authenticated") {
+				if (session.user.role === "owner" || session.user.role === "admin") {
+					const response = await fetch(`/api/loc/days/${locId}`, {
+						method: "GET",
+					});
+					const data: Group[] | { error: string } = await response.json();
+					if (Array.isArray(data)) {
+						const selectedGroups: Group[] = data.filter(
+							(group) => group.dayOfWeek === dayNum
+						);
+						selectedGroups.sort((a, b) => {
+							// Porównanie czasu w formacie HH:mm
+							const timeA = a.timeS.split(":").map(Number);
+							const timeB = b.timeS.split(":").map(Number);
 
-					if (timeA[0] !== timeB[0]) {
-						return timeA[0] - timeB[0]; // Sortowanie wg. godzin
+							if (timeA[0] !== timeB[0]) {
+								return timeA[0] - timeB[0]; // Sortowanie wg. godzin
+							} else {
+								return timeA[1] - timeB[1]; // Sortowanie wg. minut
+							}
+						});
+						if (selectedGroups && selectedGroups.length > 0) {
+							setGroups(selectedGroups);
+						}
+						setLoading(false);
+						setError("");
 					} else {
-						return timeA[1] - timeB[1]; // Sortowanie wg. minut
+						setError(data.error);
+						setLoading(false);
 					}
-				});
-				if (selectedGroups && selectedGroups.length > 0) {
-					setGroups(selectedGroups);
 				}
-				//console.log(selectedGroups);
-			} catch (error) {
-				console.log("Error", error);
+				if (session.user.role === "coach") {
+					const response = await fetch(
+						`/api/coaches/groups/${session.user.id}`,
+						{ method: "GET" }
+					);
+					const data: number[] | { error: string } = await response.json();
+					if (Array.isArray(data)) {
+						const response2 = await fetch(`/api/loc/days/${locId}`, {
+							method: "GET",
+						});
+						const data2: Group[] | { error: string } = await response2.json();
+						if (Array.isArray(data2)) {
+							const filteredGroups = data2.filter((group) =>
+								data.includes(group.id)
+							);
+							const selectedGroups: Group[] = filteredGroups.filter(
+								(group) => group.dayOfWeek === dayNum
+							);
+							selectedGroups.sort((a, b) => {
+								// Porównanie czasu w formacie HH:mm
+								const timeA = a.timeS.split(":").map(Number);
+								const timeB = b.timeS.split(":").map(Number);
+
+								if (timeA[0] !== timeB[0]) {
+									return timeA[0] - timeB[0]; // Sortowanie wg. godzin
+								} else {
+									return timeA[1] - timeB[1]; // Sortowanie wg. minut
+								}
+							});
+							if (selectedGroups && selectedGroups.length > 0) {
+								setGroups(selectedGroups);
+							}
+							setLoading(false);
+							setError("");
+						} else {
+							setError(data2.error);
+							setLoading(false);
+						}
+					} else {
+						setError(data.error);
+						setLoading(false);
+					}
+				}
 			}
 		};
 		fetchLoc(locId);

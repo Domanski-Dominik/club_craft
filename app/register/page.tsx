@@ -1,9 +1,7 @@
-import Register from '@/context/Register'
+import Register from "@/context/Register";
 
 const RegisterPage = () => {
-  return (
-    <Register/>
-  )
-}
+	return <Register club={null} />;
+};
 
-export default RegisterPage
+export default RegisterPage;

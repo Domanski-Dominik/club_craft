@@ -32,10 +32,7 @@ export const POST = async (req: Request) => {
 				{ error: "Nie udało się zapisać lokalizacji" },
 				{ status: 400 }
 			);
-		return NextResponse.json(
-			{ message: "Udało się zapisać lokalizacje" },
-			{ status: 201 }
-		);
+		return new Response(JSON.stringify(newLoc), { status: 201 });
 	} catch (error) {
 		console.error("Błąd podczas zapisywania lokalizacji:", error);
 		return NextResponse.json(

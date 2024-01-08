@@ -14,10 +14,12 @@ import {
 	GridRowEditStopReasons,
 	useGridApiRef,
 	GridToolbarContainer,
-	GridToolbarDensitySelector,
 	GridPagination,
-	gridPaginationSelector,
-	GridRowHeightParams,
+	GridToolbarColumnsButton,
+	GridToolbarQuickFilter,
+	useGridApiContext,
+	useGridSelector,
+	gridPageCountSelector,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -26,7 +28,9 @@ import {
 	AlertProps,
 	Snackbar,
 	Typography,
+	TablePaginationProps,
 } from "@mui/material";
+
 import type {
 	Participant,
 	Payment,
@@ -54,6 +58,7 @@ import DialogGroups from "../dialogs/DialogGroups";
 type Props = {
 	participants: Participant[];
 	locWithGroups: LocWithGroups[];
+	isOwner: boolean;
 };
 
 const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
@@ -73,14 +78,15 @@ const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
 	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
 	return rowsWithNumbers;
 };
-const formatDate = (date: Date) => {
-	return format(date, "dd-MM-yyyy");
-};
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
 
-const AllParticipantList = ({ participants, locWithGroups }: Props) => {
+const AllParticipantList = ({
+	participants,
+	locWithGroups,
+	isOwner,
+}: Props) => {
 	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
 		null
 	);
@@ -89,8 +95,10 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
 	const [groupsDialogOpen, setGroupsDialogOpen] = React.useState(false);
 	const [edit, setEdit] = React.useState(false);
-	const [more, setMore] = React.useState(false);
 	const [date, setDate] = React.useState<Date>(new Date());
+	const [filteredRows, setFilteredRows] = React.useState<
+		(Participant | GridValidRowModel)[] | []
+	>([]);
 	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants)
 	);
@@ -107,6 +115,14 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	> | null>(null);
 
 	const handleCloseSnackbar = () => setSnackbar(null);
+
+	const hiddenFields = ["num", "actions"];
+
+	const getTogglableColumns = (columns: GridColDef[]) => {
+		return columns
+			.filter((column) => !hiddenFields.includes(column.field))
+			.map((column) => column.field);
+	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
@@ -314,104 +330,79 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 		setRowModesModel(newRowModesModel);
 	};
 
-	const CustomFooter = () => {
+	function CustomToolbar() {
 		return (
-			<Box
-				borderTop={1}
-				height={60}
-				paddingTop={2}
-				borderColor='#e0e0e0'>
-				{!edit && (
-					<>
-						<Button
-							variant='outlined'
-							size='medium'
-							sx={{ marginLeft: 1, marginRight: 1 }}
-							onClick={() => {
-								setEdit(true);
-								setColumnVisibilityModel({
-									phoneNumber: true,
-									actions: true,
-									payment: true,
-									note: true,
-								});
-							}}>
-							<EditIcon />
-							Edytuj
-						</Button>
-						<Button
-							variant='outlined'
-							size='medium'
-							sx={{ marginRight: 1 }}
-							onClick={() => {
-								setColumnVisibilityModel((prev) => ({
-									...prev,
-									phoneNumber: !prev.phoneNumber,
-									payment: !prev.payment,
-									note: !prev.note,
-								}));
-								gridRef.current.scroll({ left: 0 });
-								setMore((prev) => !prev);
-							}}>
-							<MoreVertIcon />
-							{more ? "Mniej" : "Więcej"}
-						</Button>
-						<LocalizationProvider
-							dateAdapter={AdapterDateFns}
-							adapterLocale={pl}>
-							<MobileDatePicker
-								label='Wybierz dzień'
-								value={date}
-								disableFuture
-								onChange={(newDate) => {
-									if (newDate) {
-										setDate(newDate);
-									}
-								}}
-								sx={{ width: 100 }}
-								slotProps={{ textField: { size: "small" } }}
-							/>
-						</LocalizationProvider>
-					</>
+			<GridToolbarContainer
+				sx={{ display: "flex", mt: 1, justifyContent: "space-around" }}>
+				<GridToolbarQuickFilter sx={{ width: "50vw" }} />
+
+				<LocalizationProvider
+					dateAdapter={AdapterDateFns}
+					adapterLocale={pl}>
+					<MobileDatePicker
+						label='Wybierz Miesiąc'
+						value={date}
+						onChange={(newDate) => {
+							if (newDate) {
+								setDate(newDate);
+								console.log(newDate);
+							}
+						}}
+						views={["month", "year"]}
+						sx={{ width: 150 }}
+						slotProps={{ textField: { size: "small" } }}
+					/>
+				</LocalizationProvider>
+				<GridToolbarColumnsButton />
+				{edit ? (
+					<Button
+						variant='text'
+						size='medium'
+						sx={{ marginLeft: 1, marginRight: 1 }}
+						onClick={() => {
+							setEdit(false), gridRef.current.scroll({ left: 0 });
+							setColumnVisibilityModel({
+								actions: false,
+							});
+						}}>
+						<CheckIcon />
+						Zakończ edycje
+					</Button>
+				) : (
+					<Button
+						variant='text'
+						size='medium'
+						sx={{ marginLeft: 1, marginRight: 1 }}
+						onClick={() => {
+							setEdit(true);
+							gridRef.current.scroll({ left: 0 });
+							setColumnVisibilityModel({
+								actions: true,
+							});
+						}}>
+						<EditIcon />
+						Edytuj
+					</Button>
 				)}
-				{edit && (
-					<>
-						<Button
-							variant='outlined'
-							size='medium'
-							sx={{ marginLeft: 1, marginRight: 1 }}
-							onClick={() => {
-								setEdit(false),
-									setColumnVisibilityModel({
-										actions: false,
-										phoneNumber: false,
-										payment: false,
-										note: false,
-									});
-								setMore(false);
-								gridRef.current.scroll({ left: 0 });
-							}}>
-							<CheckIcon />
-							Zakończ edycje
-						</Button>
-					</>
-				)}
-			</Box>
+			</GridToolbarContainer>
 		);
-	};
+	}
 	const columns: GridColDef[] = [
 		{
 			field: "num",
 			headerName: "#",
 			width: 40,
 			sortable: false,
+			filterable: false,
+			hideable: false,
 		},
 		{
 			field: "actions",
 			type: "actions",
-			headerName: "Akcje",
+			headerName: "Edytuj",
 			width: 80,
 			cellClassName: "actions",
+			hideable: true,
 			getActions: ({ id, row }) => {
 				const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -456,21 +447,21 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 			field: "lastName",
 			headerName: "Nazwisko",
 			minWidth: 115,
-			editable: edit,
+			editable: true,
 			flex: 1,
 		},
 		{
 			field: "firstName",
 			headerName: "Imię",
 			minWidth: 100,
-			editable: edit,
+			editable: true,
 			flex: 1,
 		},
 		{
 			field: "phoneNumber",
 			headerName: "Telefon",
 			minWidth: 100,
-			editable: edit,
+			editable: true,
 			hideable: true,
 			flex: 1,
 			sortable: false,
@@ -541,6 +532,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 			hideable: true,
 			editable: false,
 			sortable: false,
+			filterable: true,
 			renderCell: (params) => {
 				const groups = params.row.participantgroup;
 				const groupText = groups.map((gr: any) => (
@@ -579,13 +571,14 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 								</Typography>
 							)}
 						</Box>
-
-						<GridActionsCellItem
-							icon={<EditCalendarIcon />}
-							label='Dodaj płatność'
-							onClick={handleGroupsDialogOpen(params.row)}
-							color='inherit'
-						/>
+						{isOwner && (
+							<GridActionsCellItem
+								icon={<EditCalendarIcon />}
+								label='Dodaj płatność'
+								onClick={handleGroupsDialogOpen(params.row)}
+								color='inherit'
+							/>
+						)}
 					</Box>
 				);
 			},
@@ -594,7 +587,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 			field: "note",
 			headerName: "Notatka",
 			minWidth: 200,
-			editable: edit,
+			editable: true,
 			hideable: true,
 			flex: 1,
 			sortable: false,
@@ -605,20 +598,33 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 			<Box
 				sx={{
 					minWidth: "95vw",
-					height: "65vh",
+					height: "75vh",
 					maxWidth: "98vw",
+					position: "absolute",
+					top: 75,
 				}}>
 				<DataGrid
 					apiRef={gridRef}
 					columns={columns}
 					rows={rows}
-					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-					//autoPageSize
-					//autoHeight
+					pagination
+					disableColumnMenu
 					density='compact'
 					editMode='row'
-					//slots={{ footer: CustomFooter }}
-					//columnVisibilityModel={columnVisibilityModel}
+					processRowUpdate={processRowUpdate}
+					rowModesModel={rowModesModel}
+					onRowModesModelChange={handleRowModesModelChange}
+					onRowEditStop={handleRowEditStop}
+					getRowHeight={() => "auto"}
+					columnVisibilityModel={columnVisibilityModel}
+					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+					slots={{ toolbar: CustomToolbar, pagination: GridPagination }}
+					slotProps={{
+						columnsPanel: { getTogglableColumns, disableHideAllButton: true },
+					}}
+					onColumnVisibilityModelChange={(newModel) =>
+						setColumnVisibilityModel(newModel)
+					}
 					initialState={{
 						columns: {
 							columnVisibilityModel: {
@@ -631,15 +637,6 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 							},
 						},
 					}}
-					processRowUpdate={processRowUpdate}
-					rowModesModel={rowModesModel}
-					onRowModesModelChange={handleRowModesModelChange}
-					onRowEditStop={handleRowEditStop}
-					getRowHeight={() => "auto"}
-					pageSizeOptions={[10, 20, 50, 100]}
-					pagination
-					//paginationModel={paginationModel}
-					//onPaginationModelChange={setPaginationModel}
 				/>
 			</Box>
 			{!!snackbar && (
@@ -687,4 +684,5 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 export default AllParticipantList;
 /*
 
+					
 	 */

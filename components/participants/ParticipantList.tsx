@@ -31,6 +31,7 @@ import {
 	Select,
 	MenuItem,
 	Grid,
+	Typography,
 } from "@mui/material";
 import type { Attendance, Participant, Payment, FormPay } from "@/types/type";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
@@ -311,19 +312,18 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
 	};
-	const CustomFooter = () => {
+	const CustomToolbar = () => {
 		return (
 			<Box
-				borderTop={1}
 				height={60}
 				paddingTop={2}
-				borderColor='#e0e0e0'>
+				mb={1}>
 				{!edit && (
 					<>
 						<Button
 							variant='outlined'
 							size='medium'
-							sx={{ marginLeft: 1, marginRight: 1 }}
+							sx={{ marginLeft: 1, marginRight: 1, height: "37px" }}
 							onClick={() => {
 								setEdit(true);
 								setColumnVisibilityModel({
@@ -339,7 +339,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						<Button
 							variant='outlined'
 							size='medium'
-							sx={{ marginRight: 1 }}
+							sx={{ marginRight: 1, height: "37px" }}
 							onClick={() => {
 								setColumnVisibilityModel((prev) => ({
 									...prev,
@@ -466,7 +466,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		{
 			field: "payment",
 			headerName: "Płatność",
-			minWidth: 100,
+			width: 70,
 			hideable: true,
 			editable: false,
 			sortable: false,
@@ -478,8 +478,29 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				);
 				//console.log(paymentPrt, Payed);
 				return (
-					<>
-						{Payed ? Payed.amount : 0}
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}>
+						<Box width={25}>
+							{Payed ? (
+								<Typography
+									variant='body2'
+									fontWeight='bold'>
+									{Payed.amount}
+								</Typography>
+							) : (
+								<Typography
+									variant='body2'
+									fontWeight='bold'
+									color='error'>
+									0
+								</Typography>
+							)}
+						</Box>
+
 						{Payed ? (
 							<GridActionsCellItem
 								icon={<CreditCardIcon />}
@@ -495,14 +516,14 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 								color='inherit'
 							/>
 						)}
-					</>
+					</Box>
 				);
 			},
 		},
 		{
 			field: "phoneNumber",
 			headerName: "Telefon",
-			minWidth: 100,
+			minWidth: 90,
 			editable: edit,
 			hideable: true,
 			flex: 1,
@@ -511,6 +532,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		{
 			field: "attendance",
 			headerName: "Obecność",
+			maxWidth: 74,
 			renderCell: (params) => {
 				const participantAttendance = params.row.attendance;
 
@@ -579,18 +601,19 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 
 				return (
 					<Checkbox
+						sx={{ width: "100%" }}
 						checked={!!isPresent}
 						onChange={(event) => handlePresenceChange(event)}
 					/>
 				);
 			},
-			maxWidth: 80,
+
 			sortable: false,
 		},
 		{
 			field: "note",
 			headerName: "Notatka",
-			minWidth: 300,
+			minWidth: 150,
 			editable: edit,
 			hideable: true,
 			flex: 1,
@@ -602,12 +625,13 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			<DataGrid
 				apiRef={gridRef}
 				columns={columns}
+				density='compact'
 				rows={rows}
 				localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
 				disableColumnMenu
-				autoHeight
+				getRowHeight={() => "auto"}
 				editMode='row'
-				slots={{ footer: CustomFooter }}
+				slots={{ toolbar: CustomToolbar }}
 				columnVisibilityModel={columnVisibilityModel}
 				initialState={{
 					columns: {
@@ -628,8 +652,8 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				<Snackbar
 					open
 					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={5000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+					autoHideDuration={2000}
+					sx={{ position: "absolute", bottom: 0, zIndex: 20 }}
 					onClose={handleCloseSnackbar}>
 					<Alert
 						{...snackbar}

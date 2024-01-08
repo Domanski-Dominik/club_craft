@@ -16,7 +16,18 @@ model group {
   club      String @default("guest")
   locationschedule locationschedule[]
   participantgroup participantgroup[]
-  
+  coaches          groupcoach[]     // Relacja do trenerów
+}
+
+model groupcoach {
+  groupId         Int               // Klucz obcy do Group
+  userId          String            // Klucz obcy do User
+  //coachData       coachdata?        // Relacja do danych coacha dla danej grupy
+
+  group           group             @relation(fields: [groupId], references: [id])
+  user            user              @relation(fields: [userId], references: [id])
+
+  @@id([groupId, userId])            // Unikalny identyfikator
 }
 
 model locations {
@@ -108,6 +119,7 @@ model user {
   surname       String?
   account       account[]
   session       session[]
+  coachedGroups groupcoach[] // Relacja do danych trenera
 }
 
 model verificationrequest {

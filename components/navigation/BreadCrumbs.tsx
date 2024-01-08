@@ -2,10 +2,8 @@ import React from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
 
 interface Props {
 	pages: { id: number; title: string; path: string }[];
@@ -18,7 +16,7 @@ const MobileNavigation = ({ pages }: Props) => {
 			sx={{
 				position: "absolute",
 				marginBottom: 1,
-				top: "4.5rem",
+				top: "4rem",
 				left: "0.5rem",
 				maxWidth: "95vw",
 			}}>

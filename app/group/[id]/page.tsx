@@ -18,6 +18,8 @@ interface Props {
 
 const Group = ({ params }: Props) => {
 	const [participants, setParticipants] = useState<Participant[]>([]);
+	const [length, setLength] = useState(0);
+	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
@@ -38,7 +40,7 @@ const Group = ({ params }: Props) => {
 				});
 				const data: Participant[] | { error: string } = await response.json();
 				if (Array.isArray(data)) {
-					console.log(data);
+					//console.log(data);
 					setParticipants(data);
 				} else {
 					setError(data.error);
@@ -46,6 +48,7 @@ const Group = ({ params }: Props) => {
 			} catch (error) {
 				console.log(error);
 			}
+			setLoading(false);
 		};
 
 		if (params?.id) fetchParticipants();
@@ -77,6 +80,9 @@ const Group = ({ params }: Props) => {
 							path: `group/${group.id}`,
 						},
 					]);
+					const sum =
+						dayName.length + group.locationName.length + group.name.length;
+					setLength(sum);
 				}
 			} catch (error) {
 				console.log("Error", error);
@@ -86,16 +92,18 @@ const Group = ({ params }: Props) => {
 	}, [params.id]);
 
 	if (status === "loading") return <Loading />;
-
+	if (loading) return <Loading />;
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			{participants.length > 0 && (
+			{participants.length > 0 && length > 0 && (
 				<Box
 					sx={{
 						minWidth: "95vw",
-						minHeight: "68vh",
+						height: "70vh",
 						maxWidth: "98vw",
+						position: "absolute",
+						top: length > 30 ? 120 : 100,
 					}}>
 					<ParticipantList
 						participants={participants}

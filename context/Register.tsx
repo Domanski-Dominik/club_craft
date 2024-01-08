@@ -17,7 +17,11 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const Register = () => {
+interface Props {
+	club: string | null;
+}
+
+const Register = ({ club }: Props) => {
 	const router = useRouter();
 	const [succes, setSucces] = useState(false);
 	const [formData, setFormData] = useState({
@@ -26,8 +30,9 @@ const Register = () => {
 		confirmPassword: "",
 		name: "",
 		surname: "",
-		club: "",
-		role: "owner",
+		club: club === null ? "" : club,
+		role: club === null ? "owner" : "coach",
+		newClub: club === null ? true : false,
 	});
 	const [errors, setErrors] = useState({
 		email: "",
@@ -65,15 +70,16 @@ const Register = () => {
 		}
 
 		// Walidacja pola klubu - tylko litery i cyfry bez znaków białych
-		const clubRegex = /^[a-zA-Z0-9]+$/;
-		if (!clubRegex.test(formData.club)) {
-			newErrors.club =
-				"Nazwa klubu powinna zawierać tylko litery i cyfry bez znaków białych";
-			valid = false;
-		} else {
-			newErrors.club = "";
+		if (club === null) {
+			const clubRegex = /^[a-zA-Z0-9]+$/;
+			if (!clubRegex.test(formData.club)) {
+				newErrors.club =
+					"Nazwa klubu powinna zawierać tylko litery i cyfry bez znaków białych";
+				valid = false;
+			} else {
+				newErrors.club = "";
+			}
 		}
-
 		// Walidacja pola hasła - co najmniej jedna duża litera i jedna cyfra
 		const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
 		if (!passwordRegex.test(formData.password)) {
@@ -199,21 +205,24 @@ const Register = () => {
 									/>
 									<Typography color='error'>{errors.surname}</Typography>
 								</Grid>
-								<Grid
-									item
-									xs={12}
-									sm={12}>
-									<TextField
-										autoComplete='given-name'
-										name='club'
-										required
-										fullWidth
-										id='club'
-										label='Nazwa klubu'
-										onChange={handleInputChange}
-									/>
-									<Typography color='error'>{errors.club}</Typography>
-								</Grid>
+								{club === null && (
+									<Grid
+										item
+										xs={12}
+										sm={12}>
+										<TextField
+											autoComplete='given-name'
+											name='club'
+											required
+											fullWidth
+											id='club'
+											label='Nazwa klubu'
+											onChange={handleInputChange}
+										/>
+										<Typography color='error'>{errors.club}</Typography>
+									</Grid>
+								)}
+
 								<Grid
 									item
 									xs={12}>

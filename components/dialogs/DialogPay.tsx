@@ -204,7 +204,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 									value={paymentData.selectedMonth}
 									onChange={handleDateChange}
 									views={["month", "year"]}
-									sx={{ width: 263 }}
+									sx={{ width: "100%" }}
 								/>
 							</LocalizationProvider>
 						</Grid>

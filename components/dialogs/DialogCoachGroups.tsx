@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import type { LocWithGroups, Group } from "@/types/type";
 
-const DialogGroups: React.FC<DialogGroupsType> = ({
+const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	onClose,
 	open,
 	row,
@@ -49,13 +49,13 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 
 	const handleEditClick = (groupId: string) => {
 		setAddingGroup(false);
-		console.log(locWithGroups);
+		console.log(groupId);
 		setEditedGroupId(groupId);
-		const loc = locWithGroups.find((schedule) =>
-			schedule.locationschedule.find((group) => group.id === groupId)
+		const loc = locWithGroups.find((loc) =>
+			loc.locationschedule.find((group) => group.id === groupId)
 		);
 		if (loc) setSelectedLocation(loc);
-		const day = row.participantgroup.find((obj: any) => obj.id === groupId);
+		const day = row.coachedGroups.find((obj: any) => obj.id === groupId);
 		const daysOfWeek = loc?.locationschedule.map(
 			(schedule) => schedule.dayOfWeek
 		);
@@ -168,23 +168,23 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		onClose("no");
 	};
 	const handleAddGroup = async () => {
-		const participantId = row.id;
+		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
 		try {
-			const response = await fetch("/api/participant/groups", {
+			const response = await fetch(`/api/coaches/${row.club}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					participantId: participantId,
+					coachId: coachId,
 					groupId: groupId,
 				}),
 			});
 			const newGroup = await response.json();
 			console.log(newGroup);
 			if (newGroup.name) {
-				row.participantgroup.push(newGroup);
+				row.coachedGroups.push(newGroup);
 				setEditedGroupId(null);
 				setAddingGroup(false);
 				setError("");
@@ -196,23 +196,23 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		}
 	};
 	const handleDelete = async () => {
-		const participantId = row.id;
+		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
 		try {
-			const response = await fetch("/api/participant/groups", {
+			const response = await fetch(`/api/coaches/${row.club}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					participantId: participantId,
+					coachId: coachId,
 					groupId: groupId,
 				}),
 			});
 			if (response.ok) {
-				const groups = row.participantgroup;
+				const groups = row.coachedGroups;
 				const newGroups = groups?.filter((g: any) => g.id !== groupId);
-				row.participantgroup = newGroups;
+				row.coachedGroups = newGroups;
 				setEditedGroupId(null);
 				setError("");
 			}
@@ -223,17 +223,17 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	};
 	const handleEditSave = async () => {
 		if (editedGroupId !== null && selectedGroupId !== "") {
-			const participantId = row.id;
+			const coachId = row.id;
 			const groupIdToRemove = parseInt(editedGroupId, 10);
 			const groupToAdd = parseInt(selectedGroupId, 10);
 			try {
-				const response = await fetch("/api/participant/groups", {
+				const response = await fetch(`/api/coaches/${row.club}`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						participantId: participantId,
+						coachId: coachId,
 						groupIdToRemove: groupIdToRemove,
 						groupIdToAdd: groupToAdd,
 					}),
@@ -241,12 +241,12 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 				const newGroup = await response.json();
 				console.log(newGroup);
 				if (newGroup.name) {
-					row.participantgroup.push(newGroup);
-					const removedGroup = row.participantgroup;
+					row.coachedGroups.push(newGroup);
+					const removedGroup = row.coachedGroups;
 					const updatedGroups = removedGroup?.filter(
 						(g: any) => g.id !== editedGroupId
 					);
-					row.participantgroup = updatedGroups;
+					row.coachedGroups = updatedGroups;
 					setEditedGroupId(null);
 					setAddingGroup(false);
 					setError("");
@@ -269,7 +269,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 					Zarządzaj grupami: <br />
 					<span style={{ fontWeight: "bold" }}>
 						{" "}
-						{row.firstName} {row.lastName}
+						{row.name} {row.surname}
 					</span>
 					{error !== "" && (
 						<>
@@ -382,7 +382,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 						</div>
 					</div>
 				)}
-				{row.participantgroup.map((group: any) => (
+				{row.coachedGroups.map((group: any) => (
 					<div
 						key={group.id}
 						style={{
@@ -512,13 +512,22 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 						)}
 					</div>
 				))}
-				{row.participantgroup.length === 0 && (
+				{row.coachedGroups.length === 0 && row.role !== "owner" && (
 					<Typography
 						sx={{ mt: 1 }}
 						variant='h6'
 						color='red'
 						align='center'>
-						Uczestnik nie przypisany do żadnej grupy
+						Trener nie przypisany do żadnej grupy
+					</Typography>
+				)}
+				{row.role === "owner" && (
+					<Typography
+						sx={{ mt: 1 }}
+						variant='h6'
+						color='green'
+						align='center'>
+						Pełen dostęp
 					</Typography>
 				)}
 			</DialogContent>
@@ -534,4 +543,4 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	);
 };
 
-export default DialogGroups;
+export default DialogCoachGroups;
