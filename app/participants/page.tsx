@@ -30,6 +30,7 @@ const Participants = () => {
 						}
 					);
 					const data: Participant[] | { error: string } = await response.json();
+
 					if (Array.isArray(data)) {
 						setParticipants(data);
 						setLoading(false);
@@ -47,6 +48,7 @@ const Participants = () => {
 						setError(data2.error);
 					}
 					setLoading(false);
+					setIsOwner(true);
 				}
 				if (session.user.role === "coach") {
 					const response = await fetch(

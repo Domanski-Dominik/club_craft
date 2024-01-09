@@ -52,7 +52,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 		console.log(groupId);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((loc) =>
-			loc.locationschedule.find((group) => group.id === groupId)
+			loc.locationschedule.find((group) => group.id === Number(groupId))
 		);
 		if (loc) setSelectedLocation(loc);
 		const day = row.coachedGroups.find((obj: any) => obj.id === groupId);

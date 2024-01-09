@@ -52,7 +52,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		console.log(locWithGroups);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((schedule) =>
-			schedule.locationschedule.find((group) => group.id === groupId)
+			schedule.locationschedule.find((group) => group.id === Number(groupId))
 		);
 		if (loc) setSelectedLocation(loc);
 		const day = row.participantgroup.find((obj: any) => obj.id === groupId);
