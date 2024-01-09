@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	DataGrid,
 	plPL,
@@ -17,9 +17,6 @@ import {
 	GridPagination,
 	GridToolbarColumnsButton,
 	GridToolbarQuickFilter,
-	useGridApiContext,
-	useGridSelector,
-	gridPageCountSelector,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -28,7 +25,6 @@ import {
 	AlertProps,
 	Snackbar,
 	Typography,
-	TablePaginationProps,
 } from "@mui/material";
 
 import type {
@@ -39,7 +35,6 @@ import type {
 } from "@/types/type";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Close";

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	DataGrid,
 	plPL,
@@ -20,17 +20,7 @@ import {
 	Alert,
 	AlertProps,
 	Snackbar,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
 	Checkbox,
-	TextField,
-	InputLabel,
-	FormControl,
-	Select,
-	MenuItem,
-	Grid,
 	Typography,
 } from "@mui/material";
 import type { Attendance, Participant, Payment, FormPay } from "@/types/type";

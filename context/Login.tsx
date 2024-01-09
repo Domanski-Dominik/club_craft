@@ -13,12 +13,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useState } from "react";
-import { useRouter, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 
 const Login = () => {
-	const router = useRouter();
 	const [data, setData] = useState({
 		email: "",
 		password: "",

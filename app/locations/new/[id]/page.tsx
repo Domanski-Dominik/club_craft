@@ -6,7 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import plLocale from "@fullcalendar/core/locales/pl";
 import React, { useEffect, useState } from "react";
-import { EventApi, EventClickArg, EventInput } from "@fullcalendar/core";
+import { EventClickArg, EventInput } from "@fullcalendar/core";
 
 import {
 	FormControl,

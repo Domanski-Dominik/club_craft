@@ -1,7 +1,6 @@
 import { Card, CardContent, Avatar, Badge } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { CardMedia } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import SportsIcon from "@mui/icons-material/Sports";

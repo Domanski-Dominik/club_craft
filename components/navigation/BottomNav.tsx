@@ -8,18 +8,22 @@ import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { useRouter } from "next/navigation";
-export default function BottomNav() {
-	const [value, setValue] = React.useState("locations");
-	const router = useRouter();
+import { usePathname } from "next/navigation";
 
+export default function BottomNav() {
+	const router = useRouter();
+	const pathname = usePathname();
+	const pathParts = pathname.split("/");
+	const firstPathPart = pathParts[1];
+	const name = firstPathPart === "group" ? "locations" : firstPathPart;
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-		setValue(newValue);
 		router.push(`/${newValue}`);
 	};
 
 	return (
 		<BottomNavigation
-			value={value}
+			showLabels
+			value={name}
 			onChange={handleChange}
 			sx={{
 				width: "100vw",
