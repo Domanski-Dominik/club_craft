@@ -18,14 +18,14 @@ const authOptions: NextAuthOptions = {
 				email: { label: "Email", type: "email" },
 			},
 			async authorize(credentials) {
-				console.log("Wszedłem do authorize");
+				//console.log("Wszedłem do authorize");
 				if (credentials === undefined) {
-					console.log("credential:undefinied");
+					//console.log("credential:undefinied");
 					throw new Error("Brak danych uwierzytelniających");
 				}
 				// Sprawdzenie czy mail i hasło są poprawne
 				if (!credentials.email || !credentials.password) {
-					console.log("!credentials.email ...");
+					//console.log("!credentials.email ...");
 					throw new Error("Niepoprawne dane uwierzytelniające");
 				}
 				// Sprawdzenie czy użytkownik istnieje
@@ -36,7 +36,7 @@ const authOptions: NextAuthOptions = {
 				});
 
 				if (!user) {
-					console.log("User = null");
+					//console.log("User = null");
 					throw new Error("Użytkownik o podanym mailu nie został znaleziony");
 				}
 
@@ -47,7 +47,7 @@ const authOptions: NextAuthOptions = {
 				);
 
 				if (!passwordMatch) {
-					console.log("hasło sie nie zgadza");
+					//console.log("hasło sie nie zgadza");
 					throw new Error("Niepoprawne hasło");
 				}
 

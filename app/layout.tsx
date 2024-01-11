@@ -8,7 +8,7 @@ import { Container } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 export const metadata: Metadata = {
-	title: "Sportify",
+	title: "ClubCraft",
 	description: "Organize, rule, and much more!",
 };
 export default function RootLayout({
@@ -41,6 +41,13 @@ export default function RootLayout({
 					name='viewport'
 					content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
 				/>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no, shrink-to-fit=no'
+				/>
+				<meta
+					name='HandheldFriendly'
+					content='true'></meta>
 			</head>
 			<ThemeRegistry>
 				<body>

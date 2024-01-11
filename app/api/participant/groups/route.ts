@@ -8,7 +8,7 @@ interface Props {
 
 export const POST = async (req: Request) => {
 	const { groupId, participantId } = await req.json();
-	console.log(groupId, participantId);
+	//console.log(groupId, participantId);
 	try {
 		const exist = await prisma.participantgroup.findFirst({
 			where: {
@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
 				participantId: participantId,
 			},
 		});
-		console.log(exist);
+		//console.log(exist);
 		if (exist !== null) {
 			return Response.json(
 				{ error: "Uczestnik już należy do tej grupy" },
@@ -72,7 +72,7 @@ export const POST = async (req: Request) => {
 };
 export const DELETE = async (req: Request) => {
 	const { groupId, participantId } = await req.json();
-	console.log(groupId, participantId);
+	//console.log(groupId, participantId);
 	try {
 		const deleteGroup = await prisma.participantgroup.deleteMany({
 			where: {
@@ -96,7 +96,7 @@ export const DELETE = async (req: Request) => {
 };
 export const PUT = async (req: Request) => {
 	const { groupIdToAdd, participantId, groupIdToRemove } = await req.json();
-	console.log(groupIdToAdd, participantId, groupIdToRemove);
+	//console.log(groupIdToAdd, participantId, groupIdToRemove);
 	try {
 		const exist = await prisma.participantgroup.findFirst({
 			where: {

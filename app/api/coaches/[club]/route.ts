@@ -118,7 +118,7 @@ export const POST = async (req: Request, { params }: Props) => {
 };
 export const DELETE = async (req: Request, { params }: Props) => {
 	const { groupId, coachId } = await req.json();
-	console.log(groupId, coachId);
+	//console.log(groupId, coachId);
 	try {
 		const deleteGroup = await prisma.groupcoach.deleteMany({
 			where: {
@@ -142,7 +142,7 @@ export const DELETE = async (req: Request, { params }: Props) => {
 };
 export const PUT = async (req: Request) => {
 	const { groupIdToAdd, coachId, groupIdToRemove } = await req.json();
-	console.log(groupIdToAdd, coachId, groupIdToRemove);
+	//console.log(groupIdToAdd, coachId, groupIdToRemove);
 	try {
 		const exist = await prisma.groupcoach.findFirst({
 			where: {
