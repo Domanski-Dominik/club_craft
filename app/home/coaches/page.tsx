@@ -203,7 +203,7 @@ const CoachesManage = () => {
 				setLoading(false);
 			}
 			setError("");
-			setNewCoachLink(`http://localhost:3000/register/${session?.user.club}`);
+			setNewCoachLink(`clubcraft.pl/register/${session?.user.club}`);
 		} else {
 			setError("Nie masz uprawnień do tej strony");
 			setLoading(false);

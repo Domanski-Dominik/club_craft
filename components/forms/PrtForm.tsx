@@ -53,6 +53,7 @@ const ParticipantForm = () => {
 			redirect("/login");
 		},
 	});
+	const [noLocs, setNoLocs] = useState(false);
 	const [locWithGroups, setLocWithGroups] = useState<LocWithGroups[]>([]);
 	const [selectedLocation, setSelectedLocation] = useState<
 		LocWithGroups | null | undefined
@@ -84,14 +85,21 @@ const ParticipantForm = () => {
 				setFormData({ ...formData, club: session.user.club });
 				const response = await fetch(`/api/form/${session?.user.club}`);
 				if (response.ok) {
-					const data: LocWithGroups[] = await response.json();
-					setLocWithGroups(data);
+					const data: LocWithGroups[] | [] | { error: string } =
+						await response.json();
+					if (Array.isArray(data)) {
+						if (data.length > 0) {
+							setLocWithGroups(data);
+						} else {
+							setNoLocs(true);
+						}
+					}
 					//console.log(data);
 				}
 				//console.log(session?.user.club);
 			}
 		} catch (error) {
-			setErrors({ ...errors, serverError: "Najpier stwórz lokalizacje" });
+			setErrors({ ...errors, serverError: "Sprawdź połączenie z internetem" });
 		}
 	};
 	useEffect(() => {
@@ -307,6 +315,27 @@ const ParticipantForm = () => {
 		setSelectedLocation(null);
 		setSucces(false);
 	};
+	if (noLocs) {
+		return (
+			<Box
+				sx={{
+					mx: 3,
+				}}>
+				<Typography
+					variant='h4'
+					align='center'>
+					Najpierw musisz utworzyć lokalizację z grupami
+				</Typography>
+				<Button
+					sx={{ mt: 5 }}
+					fullWidth
+					variant='contained'
+					onClick={() => router.push("/locations/new")}>
+					Utwórz lokalizację
+				</Button>
+			</Box>
+		);
+	}
 	return (
 		<Container
 			component='main'

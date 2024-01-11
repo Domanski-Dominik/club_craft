@@ -86,7 +86,7 @@ export default function TopNav() {
 						variant='h6'
 						component='div'
 						sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-						Sportify
+						Club Craft
 					</Typography>
 
 					<Box sx={{ display: { xs: "none", sm: "block" } }}>
