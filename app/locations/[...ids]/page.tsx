@@ -9,6 +9,7 @@ import { Group } from "@/types/type";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
 import { Card, CardContent, Typography } from "@mui/material";
+import { stat } from "fs";
 
 interface Props {
 	params: {
@@ -153,41 +154,36 @@ export default function Grups({ params }: Props) {
 			}
 		};
 		fetchLoc(locId);
-		setLoading(false);
 	}, [session]);
 	const handleAddGroup = () => {
 		router.push(`/locations/new/${locId}`);
 	};
-	if (status === "loading")
-		return (
-			<>
-				<MobileNavigation pages={pages} />
-				<CardsSkeleton />
-			</>
-		);
-	if (loading)
-		return (
-			<>
-				<MobileNavigation pages={pages} />
-				<CardsSkeleton />
-			</>
-		);
+
 	return (
 		<>
-			<MobileNavigation pages={pages} />
-			<GrCard
-				groups={groups}
-				handleClick={handleGroupClick}
-			/>
-			{session.user.role === "owner" && (
-				<Card
-					variant='outlined'
-					onClick={handleAddGroup}
-					sx={{ marginTop: "1rem" }}>
-					<CardContent>
-						<Typography variant='h6'>Dodaj/Usuń grupy</Typography>
-					</CardContent>
-				</Card>
+			{status === "loading" || loading ? (
+				<>
+					<MobileNavigation pages={pages} />
+					<CardsSkeleton />
+				</>
+			) : (
+				<>
+					<MobileNavigation pages={pages} />
+					<GrCard
+						groups={groups}
+						handleClick={handleGroupClick}
+					/>
+					{session.user.role === "owner" && (
+						<Card
+							variant='outlined'
+							onClick={handleAddGroup}
+							sx={{ marginTop: "1rem" }}>
+							<CardContent>
+								<Typography variant='h6'>Dodaj/Usuń grupy</Typography>
+							</CardContent>
+						</Card>
+					)}
+				</>
 			)}
 		</>
 	);

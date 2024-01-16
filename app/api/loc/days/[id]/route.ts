@@ -43,7 +43,7 @@ export async function GET(req: Request, { params }: Props) {
 				participants: schedule.group.participantgroup.length,
 			};
 		});
-		console.log(groups);
+		//console.log(groups);
 		return new Response(JSON.stringify(groups), { status: 201 });
 	} catch (error) {
 		console.error("Błąd podczas pobierania nazw grup:", error);

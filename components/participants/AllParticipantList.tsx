@@ -634,6 +634,13 @@ const AllParticipantList = ({
 					onRowModesModelChange={handleRowModesModelChange}
 					onRowEditStop={handleRowEditStop}
 					getRowHeight={() => "auto"}
+					onCellDoubleClick={() => {
+						setEdit(true);
+						gridRef.current.scroll({ left: 0 });
+						setColumnVisibilityModel({
+							actions: true,
+						});
+					}}
 					columnVisibilityModel={columnVisibilityModel}
 					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
 					slots={{ toolbar: CustomToolbar, pagination: GridPagination }}

@@ -1,9 +1,14 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 
 const Home = () => {
 	const router = useRouter();
+	const { status } = useSession();
+	if (status === "authenticated") {
+		redirect("/home");
+	}
 	return (
 		<>
 			<Box sx={{ textAlign: "center", marginBottom: "2.5rem" }}>

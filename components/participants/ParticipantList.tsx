@@ -633,6 +633,13 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						},
 					},
 				}}
+				onCellDoubleClick={() => {
+					setEdit(true);
+					gridRef.current.scroll({ left: 0 });
+					setColumnVisibilityModel({
+						actions: true,
+					});
+				}}
 				processRowUpdate={processRowUpdate}
 				rowModesModel={rowModesModel}
 				onRowModesModelChange={handleRowModesModelChange}
