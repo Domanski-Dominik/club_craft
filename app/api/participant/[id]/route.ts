@@ -108,19 +108,35 @@ export const PUT = async (req: Request, { params }: Props) => {
 };
 export const DELETE = async (req: Request) => {
 	const prtDel = await req.json();
-	//console.log("Id uczestnika to ", prtDel.id);
+	console.log("Id uczestnika to ", prtDel.id);
 	try {
 		if (prtDel.id !== null && prtDel.id !== undefined) {
 			const deleteSchedule = await prisma.participantgroup.deleteMany({
-				where: { participant: { id: prtDel.id } },
+				where: { participantId: prtDel.id },
 			});
 
 			if (!deleteSchedule) {
 				return Response.json(
-					{ error: "Nie udało się usunąć relacji uczestnika z grupą" },
-					{
-						status: 404,
-					}
+					{ error: "Nie udało się usunąć grup uczestnika" },
+					{ status: 404 }
+				);
+			}
+			const deleteAttendance = await prisma.attendance.deleteMany({
+				where: { participantId: prtDel.id },
+			});
+			if (!deleteAttendance) {
+				return Response.json(
+					{ error: "Nie udało się usunąć obecości" },
+					{ status: 404 }
+				);
+			}
+			const deletePayments = await prisma.payment_participant.deleteMany({
+				where: { participantId: prtDel.id },
+			});
+			if (!deletePayments) {
+				return Response.json(
+					{ error: "Nie udało się usunąć płatności" },
+					{ status: 404 }
 				);
 			}
 
@@ -148,6 +164,6 @@ export const DELETE = async (req: Request) => {
 		}
 	} catch (error: any) {
 		console.error("Błąd podczas usuwania uczestnika:", error);
-		return Response.json({ error: error }, { status: 500 });
+		return Response.json({ error: error.code }, { status: 500 });
 	}
 };

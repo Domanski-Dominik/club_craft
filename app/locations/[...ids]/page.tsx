@@ -15,10 +15,19 @@ interface Props {
 		ids: [string, string];
 	};
 }
+type GroupP = {
+	id: number;
+	name: string;
+	dayOfWeek: number;
+	timeS: string;
+	timeE: string;
+	club: string;
+	participants: number;
+};
 export default function Grups({ params }: Props) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-	const [groups, setGroups] = useState<Group[]>([]);
+	const [groups, setGroups] = useState<GroupP[]>([]);
 	const router = useRouter();
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
@@ -72,9 +81,9 @@ export default function Grups({ params }: Props) {
 					const response = await fetch(`/api/loc/days/${locId}`, {
 						method: "GET",
 					});
-					const data: Group[] | { error: string } = await response.json();
+					const data: GroupP[] | { error: string } = await response.json();
 					if (Array.isArray(data)) {
-						const selectedGroups: Group[] = data.filter(
+						const selectedGroups: GroupP[] = data.filter(
 							(group) => group.dayOfWeek === dayNum
 						);
 						selectedGroups.sort((a, b) => {
@@ -108,12 +117,12 @@ export default function Grups({ params }: Props) {
 						const response2 = await fetch(`/api/loc/days/${locId}`, {
 							method: "GET",
 						});
-						const data2: Group[] | { error: string } = await response2.json();
+						const data2: GroupP[] | { error: string } = await response2.json();
 						if (Array.isArray(data2)) {
 							const filteredGroups = data2.filter((group) =>
 								data.includes(group.id)
 							);
-							const selectedGroups: Group[] = filteredGroups.filter(
+							const selectedGroups: GroupP[] = filteredGroups.filter(
 								(group) => group.dayOfWeek === dayNum
 							);
 							selectedGroups.sort((a, b) => {

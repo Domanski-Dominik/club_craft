@@ -16,6 +16,11 @@ import {
 	FormControl,
 	InputLabel,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { LocWithGroups, Group } from "@/types/type";
 
 const DialogGroups: React.FC<DialogGroupsType> = ({
@@ -39,10 +44,6 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	const [error, setError] = useState("");
 
 	const handleOptionClick = (value: string) => {
-		if (value === "yes") {
-			// Tutaj dodaj logikę zapisywania zmienionych danych
-			console.log("Zapisano zmiany dla grupy o id:", editedGroupId);
-		}
 		setEditedGroupId(null);
 		onClose(value);
 	};
@@ -262,7 +263,8 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	return (
 		<Dialog
 			open={open}
-			onClose={handleClose}>
+			onClose={handleClose}
+			scroll='paper'>
 			<DialogTitle>
 				<Typography sx={{ fontSize: 20 }}>
 					{" "}
@@ -279,7 +281,9 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 					)}
 				</Typography>
 			</DialogTitle>
-			<DialogContent dividers>
+			<DialogContent
+				dividers
+				sx={{ px: 2 }}>
 				{addingGroup && (
 					<div
 						style={{
@@ -371,12 +375,14 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 								onClick={() => setAddingGroup(false)}
 								variant='outlined'
 								color='warning'
-								sx={{ marginBottom: 2 }}>
+								sx={{ marginBottom: 2 }}
+								endIcon={<CloseIcon />}>
 								Anuluj
 							</Button>
 							<Button
 								onClick={handleAddGroup}
-								variant='outlined'>
+								variant='outlined'
+								endIcon={<SaveIcon />}>
 								Zapisz
 							</Button>
 						</div>
@@ -482,30 +488,37 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 									alignItems: "center",
 								}}>
 								<Button
+									fullWidth
 									onClick={handleCancelClick}
 									variant='outlined'
-									color='warning'
-									sx={{ marginBottom: 2 }}>
+									sx={{ marginBottom: 2 }}
+									endIcon={<CloseIcon />}>
 									Anuluj
 								</Button>
 								<Button
+									fullWidth
 									onClick={handleDelete}
 									variant='outlined'
 									color='error'
+									endIcon={<DeleteIcon />}
 									sx={{ marginBottom: 2 }}>
 									Usuń
 								</Button>
 								<Button
+									fullWidth
 									onClick={handleEditSave}
-									variant='outlined'>
+									endIcon={<SaveIcon />}
+									variant='contained'>
 									Zapisz
 								</Button>
 							</div>
 						) : (
-							<div>
+							<div style={{ marginLeft: 6 }}>
 								<Button
+									fullWidth
 									onClick={() => handleEditClick(group.id)}
-									variant='outlined'>
+									variant='outlined'
+									endIcon={<EditIcon />}>
 									Edytuj
 								</Button>
 							</div>
@@ -523,10 +536,17 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 				)}
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleAddGroupClick}>Dodaj grupę</Button>
+				<Button
+					onClick={handleAddGroupClick}
+					variant='outlined'
+					startIcon={<AddIcon />}>
+					Dodaj grupę
+				</Button>
 				<Button
 					onClick={() => handleOptionClick("no")}
-					color='warning'>
+					color='primary'
+					variant='contained'
+					startIcon={<CloseIcon />}>
 					Zamknij
 				</Button>
 			</DialogActions>

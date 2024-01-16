@@ -17,7 +17,15 @@ export async function GET(req: Request, { params }: Props) {
 				locationId: locationIdNum,
 			},
 			include: {
-				group: true,
+				group: {
+					include: {
+						participantgroup: {
+							include: {
+								participant: { select: { id: true } },
+							},
+						},
+					},
+				},
 			},
 		});
 		if (!schedule) {
@@ -32,8 +40,10 @@ export async function GET(req: Request, { params }: Props) {
 				dayOfWeek: schedule.group.dayOfWeek,
 				timeS: schedule.group.timeS,
 				timeE: schedule.group.timeE,
+				participants: schedule.group.participantgroup.length,
 			};
 		});
+		console.log(groups);
 		return new Response(JSON.stringify(groups), { status: 201 });
 	} catch (error) {
 		console.error("Błąd podczas pobierania nazw grup:", error);

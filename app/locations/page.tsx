@@ -54,7 +54,7 @@ export default function LocationList() {
 
 	const fetchLoc = async () => {
 		if (session?.user || status === "authenticated") {
-			console.log(session.user);
+			//console.log(session.user);
 			if (session.user.role === "owner") {
 				const response = await fetch(
 					`/api/loc/club/${session.user.club}/owner`

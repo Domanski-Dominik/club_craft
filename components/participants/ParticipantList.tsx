@@ -191,10 +191,10 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 							}
 							return row;
 						});
-						console.log(updatedRows);
+						//console.log(updatedRows);
 						setRows(updatedRows);
 					} else {
-						console.log(message);
+						//console.log(message);
 						setSnackbar({ children: message.error, severity: "error" });
 					}
 				}
@@ -229,14 +229,14 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				});
 				const message = await response.json();
 				if (response.ok) {
-					console.log(message);
+					//console.log(message);
 					setSnackbar({
 						children: message.message,
 						severity: "success",
 					});
 					setRows(rows.filter((row) => row.id !== selectedRow.id));
 				} else {
-					console.log(message);
+					//console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });
 				}
 			} catch (error) {
@@ -264,7 +264,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		const updatedRows = rows.map((row) =>
 			row.id === newRow.id ? updatedRow : row
 		);
-		console.log(newRow, oldRow);
+		//console.log(newRow, oldRow);
 		const findRow = rows.find((row) => row.id === newRow.id);
 		if (findRow) {
 			try {
@@ -277,7 +277,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				});
 				const message = await response.json();
 				if (response.ok) {
-					console.log(message);
+					//console.log(message);
 					setSnackbar({
 						children: message.message,
 						severity: "success",
@@ -285,7 +285,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 					setRows(sortAndAddNumbers(updatedRows, groupId));
 					return updatedRow;
 				} else {
-					console.log(message);
+					//console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });
 					return oldRow;
 				}
@@ -531,7 +531,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				);
 
 				const handlePresenceChange = async (event: any) => {
-					console.log(event.target.checked);
+					//console.log(event.target.checked);
 					const isChecked = event.target.checked;
 
 					try {
@@ -577,7 +577,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 								severity: "success",
 							});
 						} else {
-							console.log(message);
+							//console.log(message);
 							setSnackbar({ children: message.error, severity: "error" });
 						}
 					} catch (error) {
