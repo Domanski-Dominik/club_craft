@@ -1,8 +1,8 @@
 "use client";
 
-import type { Group } from "@/types/type";
 import { Typography, Card, CardContent } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 
 type GroupCardProps = {
 	groups: {
@@ -14,27 +14,38 @@ type GroupCardProps = {
 		club: string;
 		participants: number;
 	}[];
+	handleAddGroupClick: () => void;
 	handleClick: (id: string | number) => void;
+	owner: boolean;
 };
 
-const GrCard = ({ groups, handleClick }: GroupCardProps) => {
+const GrCard = ({
+	groups,
+	handleClick,
+	owner,
+	handleAddGroupClick,
+}: GroupCardProps) => {
 	const handleGroupClick = (id: number | string) => {
 		handleClick(id); //Przekazuje ID klikniętej karty do funkcji handleClick
 	};
 	return (
 		<Grid
 			container
-			columns={1}
-			spacing={2}
-			columnSpacing={1}
-			direction='column'>
+			spacing={1}
+			paddingTop={3}
+			width={"100%"}>
 			{groups.map((group) => {
 				return (
-					<Grid key={group.timeS}>
+					<Grid
+						key={group.timeS}
+						xs={12}
+						sm={6}
+						md={6}
+						lg={4}
+						xl={3}>
 						<Card
 							variant='outlined'
-							onClick={() => handleGroupClick(group.id)}
-							sx={{ width: "90vw" }}>
+							onClick={() => handleGroupClick(group.id)}>
 							<CardContent>
 								<Typography
 									variant='h5'
@@ -55,6 +66,32 @@ const GrCard = ({ groups, handleClick }: GroupCardProps) => {
 					</Grid>
 				);
 			})}
+			{owner && (
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
+					<Card
+						variant='outlined'
+						onClick={handleAddGroupClick}
+						sx={{ height: "100%" }}>
+						<CardContent
+							sx={{
+								height: "100%",
+							}}>
+							<Typography
+								mt={1}
+								align='center'
+								variant='h5'
+								color={"darkviolet"}>
+								<EditCalendarIcon /> Zarządzaj grupami
+							</Typography>
+						</CardContent>
+					</Card>
+				</Grid>
+			)}
 		</Grid>
 	);
 };

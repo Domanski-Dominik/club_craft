@@ -616,10 +616,8 @@ const AllParticipantList = ({
 			<Box
 				sx={{
 					minWidth: "95vw",
-					height: "75vh",
+					height: "80vh",
 					maxWidth: "98vw",
-					position: "absolute",
-					top: 75,
 				}}>
 				<DataGrid
 					apiRef={gridRef}

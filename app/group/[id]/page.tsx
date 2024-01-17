@@ -100,10 +100,10 @@ const Group = ({ params }: Props) => {
 				<Box
 					sx={{
 						minWidth: "95vw",
-						height: "70vh",
+						height: "100%",
 						maxWidth: "98vw",
-						position: "absolute",
-						top: length > 30 ? 120 : 100,
+						mt: length > 30 ? 6 : 3,
+						//top: length > 30 ? 120 : 100,
 					}}>
 					<ParticipantList
 						participants={participants}

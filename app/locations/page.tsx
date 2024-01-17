@@ -1,36 +1,16 @@
 "use client";
 import * as React from "react";
-import Box from "@mui/material/Box";
+import AddIcon from "@mui/icons-material/Add";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import LocCard from "@/components/cards/LocCard";
 import { Location } from "@/types/type";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import LocCardsSkeleton from "@/components/skeletons/LocCardSkeleton";
-
-type LocCardListProps = {
-	data: Location[] | [];
-	handleClick: (id: string | number) => void;
-	isOwner: boolean;
-};
-
-const LocCardList = ({ data, handleClick, isOwner }: LocCardListProps) => {
-	return (
-		<Box sx={{ minWidth: 275, "& > :not(style)": { marginBottom: "20px" } }}>
-			{data.map((loc: Location) => (
-				<LocCard
-					key={loc.id}
-					loc={loc}
-					handleClick={handleClick}
-					isOwner={isOwner}
-				/>
-			))}
-		</Box>
-	);
-};
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 export default function LocationList() {
 	const [loading, setLoading] = useState(true);
@@ -113,15 +93,51 @@ export default function LocationList() {
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			{loading ? (
-				<LocCardsSkeleton />
-			) : (
-				<LocCardList
-					data={locs}
-					handleClick={handleClick}
-					isOwner={isOwner}
-				/>
-			)}
+			<Grid
+				container
+				spacing={1}
+				paddingTop={3}
+				width={"100%"}>
+				{locs.map((loc: Location) => (
+					<Grid
+						xs={12}
+						sm={6}
+						md={6}
+						lg={4}
+						xl={3}>
+						<LocCard
+							key={loc.id}
+							loc={loc}
+							handleClick={handleClick}
+							isOwner={isOwner}
+						/>
+					</Grid>
+				))}
+
+				{session.user.role === "owner" && (
+					<Grid
+						xs={12}
+						sm={6}
+						md={6}
+						lg={4}
+						xl={3}>
+						<Card
+							variant='outlined'
+							onClick={handleAddLoc}
+							sx={{ height: "100%" }}>
+							<CardContent>
+								<Button
+									sx={{ mt: 1 }}
+									fullWidth
+									size='large'
+									startIcon={<AddIcon />}>
+									Dodaj Lokalizacje
+								</Button>
+							</CardContent>
+						</Card>
+					</Grid>
+				)}
+			</Grid>
 			{error !== "" && (
 				<>
 					<WarningAmberIcon
@@ -135,15 +151,6 @@ export default function LocationList() {
 						{error}
 					</Typography>
 				</>
-			)}
-			{session.user.role === "owner" && (
-				<Card
-					variant='outlined'
-					onClick={handleAddLoc}>
-					<CardContent>
-						<Typography variant='h6'>Dodaj lokalizacje</Typography>
-					</CardContent>
-				</Card>
 			)}
 		</>
 	);

@@ -55,7 +55,7 @@ export default function BottomNav() {
 				icon={<HowToRegSharpIcon />}
 			/>
 			<BottomNavigationAction
-				label='Płatności'
+				label='Finanse'
 				value='payments'
 				icon={<PaidOutlinedIcon />}
 			/>

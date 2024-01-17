@@ -16,7 +16,7 @@ const MobileNavigation = ({ pages }: Props) => {
 			sx={{
 				position: "absolute",
 				marginBottom: 1,
-				top: "4rem",
+				top: "70px",
 				left: "0.5rem",
 				maxWidth: "95vw",
 			}}>

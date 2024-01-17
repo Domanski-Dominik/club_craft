@@ -68,8 +68,15 @@ const HomePage = () => {
 			<MobileNavigation pages={pages} />
 			<Grid
 				container
-				spacing={0.5}>
-				<Grid xs={6}>
+				spacing={1}
+				paddingTop={3}
+				width={"100%"}>
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
 					<HomeCard
 						amount={data.loc.length === 0 ? 0 : data.loc.length}
 						name='Lokalizacje'
@@ -77,7 +84,12 @@ const HomePage = () => {
 						url='/locations'
 					/>
 				</Grid>
-				<Grid xs={6}>
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
 					<HomeCard
 						amount={data.coaches.length === 0 ? 0 : data.coaches.length}
 						name='Trenerzy'
@@ -85,7 +97,12 @@ const HomePage = () => {
 						url={isOwner ? "/home/coaches" : "/home"}
 					/>
 				</Grid>
-				<Grid xs={6}>
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
 					<HomeCard
 						amount={data.groups.length === 0 ? 0 : data.groups.length}
 						name='Grupy'
@@ -93,7 +110,12 @@ const HomePage = () => {
 						url='/home/groups'
 					/>
 				</Grid>
-				<Grid xs={6}>
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
 					<HomeCard
 						amount={
 							data.participants.length === 0 ? 0 : data.participants.length

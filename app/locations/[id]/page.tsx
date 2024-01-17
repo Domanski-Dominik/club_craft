@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import DaysCard from "@/components/cards/DaysCard";
 import { Group } from "@/types/type";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
@@ -18,6 +18,7 @@ export default function Days({ params }: Props) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [groups, setGroups] = useState({});
+	const [owner, setOwner] = useState(false);
 	const router = useRouter();
 	const [pages, setPages] = useState([
 		{ id: 1, title: "Lokalizacje", path: "/locations" },
@@ -73,6 +74,7 @@ export default function Days({ params }: Props) {
 						});
 						setGroups(groupsByDay);
 						setLoading(false);
+						setOwner(true);
 						setError("");
 					} else {
 						setError(error);
@@ -154,19 +156,10 @@ export default function Days({ params }: Props) {
 			<MobileNavigation pages={pages} />
 			<DaysCard
 				gr={groups}
-				cols={1}
+				owner={owner}
 				handleClick={handleDayClick}
+				handleAddGroupClick={handleAddGroup}
 			/>
-			{session.user.role === "owner" && (
-				<Card
-					variant='outlined'
-					onClick={handleAddGroup}
-					sx={{ marginTop: "1rem" }}>
-					<CardContent>
-						<Typography variant='h6'>Dodaj/Usuń grupy</Typography>
-					</CardContent>
-				</Card>
-			)}
 		</>
 	);
 }

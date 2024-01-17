@@ -24,6 +24,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import SendIcon from "@mui/icons-material/Send";
 import type { Group, LocWithGroups } from "@/types/type";
 import PolishDayName from "@/context/PolishDayName";
 import { ReversePolishName } from "@/context/PolishDayName";
@@ -138,7 +141,7 @@ const ParticipantForm = () => {
 			newErrors.tel = "";
 		}
 		if (formData.groups.length === 0) {
-			newErrors.group = "Wybierz co najmniej jedną grupę";
+			newErrors.group = "Wybierz grupę i kliknij + dodaj";
 			valid = false;
 		} else if (formData.groups.length > 0) {
 			newErrors.group = "";
@@ -239,7 +242,6 @@ const ParticipantForm = () => {
 		setSelectedDayOfWeek("");
 		setSelectedGroupId("");
 	};
-
 	const handleDayOfWeekChange = (
 		event: React.ChangeEvent<{ value: string }>
 	) => {
@@ -263,7 +265,6 @@ const ParticipantForm = () => {
 		setGroups(groupsInLoc);
 		setSelectedGroupId("");
 	};
-
 	const handleGroupChange = (event: React.ChangeEvent<{ value: string }>) => {
 		//console.log(event.target.value);
 		setSelectedGroupId(event.target.value);
@@ -401,9 +402,7 @@ const ParticipantForm = () => {
 								<Grid
 									item
 									xs={6}>
-									<FormControl
-										fullWidth
-										size='small'>
+									<FormControl fullWidth>
 										<InputLabel id='loc'>Lokalizacja</InputLabel>
 										<Select
 											labelId='loc'
@@ -427,9 +426,7 @@ const ParticipantForm = () => {
 									<Grid
 										item
 										xs={6}>
-										<FormControl
-											fullWidth
-											size='small'>
+										<FormControl fullWidth>
 											<InputLabel id='day'>Dzień tygodnia</InputLabel>
 											<Select
 												labelId='day'
@@ -453,11 +450,8 @@ const ParticipantForm = () => {
 								{selectedDayOfWeek && (
 									<Grid
 										item
-										xs={6}
-										sx={{ maxWidth: 170 }}>
-										<FormControl
-											fullWidth
-											size='small'>
+										xs={6}>
+										<FormControl fullWidth>
 											<InputLabel id='group'>Grupa</InputLabel>
 											<Select
 												labelId='group'
@@ -486,9 +480,10 @@ const ParticipantForm = () => {
 										xs={6}>
 										<Button
 											fullWidth
-											size='medium'
+											size='large'
 											variant='outlined'
-											sx={{ height: 36 }}
+											sx={{ height: "100%" }}
+											startIcon={<AddIcon />}
 											onClick={() => {
 												if (selectedLocation) {
 													const foundGroup =
@@ -506,7 +501,7 @@ const ParticipantForm = () => {
 													}
 												}
 											}}>
-											Dodaj grupę
+											Dodaj
 										</Button>
 									</Grid>
 								)}
@@ -532,21 +527,22 @@ const ParticipantForm = () => {
 													<ListItem
 														key={group.groupId}
 														sx={{ justifyContent: "space-between" }}>
-														<Typography variant='subtitle1'>
+														<Typography
+															color={"darkviolet"}
+															variant='subtitle1'>
 															{group.locName}
 														</Typography>
-														<Typography
-															variant='subtitle1'
-															color='#455a64'>
+														<Typography variant='subtitle1'>
 															{group.dayOfWeek}
 														</Typography>
 														<Typography
 															variant='subtitle1'
-															color='#78909c'>
+															fontWeight={"bold"}>
 															{group.groupName}
 														</Typography>
 														<Button
 															size='small'
+															variant='outlined'
 															color='error'
 															onClick={() => removeGroup(group.groupId)}>
 															Usuń
@@ -591,15 +587,16 @@ const ParticipantForm = () => {
 								justifyContent={"space-around"}
 								sx={{ marginY: "1rem" }}>
 								<Button
-									variant='contained'
+									variant='outlined'
 									onClick={() => router.push("/locations")}
-									color='warning'
+									startIcon={<CloseIcon />}
 									type='button'>
 									Anuluj
 								</Button>
 								<Button
 									type='submit'
-									variant='contained'>
+									variant='contained'
+									endIcon={<SendIcon />}>
 									Dodaj uczestnika
 								</Button>
 							</Grid>

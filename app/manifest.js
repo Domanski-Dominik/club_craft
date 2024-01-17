@@ -5,8 +5,8 @@ export default function manifest() {
 		description: "Zarządzaj swoim klubem!",
 		start_url: "/",
 		display: "standalone",
-		background_color: "black",
-		theme_color: "black",
+		background_color: "white",
+		theme_color: "white",
 		icons: [
 			{
 				src: "/favicon.ico",

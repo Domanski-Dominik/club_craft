@@ -4,9 +4,8 @@ import TopNav from "@/components/navigation/Nav";
 import Provider from "@/context/Provider";
 import BottomNav from "@/components/navigation/BottomNav";
 import ThemeRegistry from "@/theme/ThemeRegistry";
-import { Container } from "@mui/material";
+import { Container, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-
 export const metadata: Metadata = {
 	title: "ClubCraft",
 	description: "Organize, rule, and much more!",
@@ -17,7 +16,6 @@ export default function RootLayout({
 	children?: React.ReactNode;
 }) {
 	//if (status==="loading") return <div>Loading...</div>;
-
 	return (
 		<html lang='en'>
 			<head>
@@ -67,8 +65,8 @@ export default function RootLayout({
 									marginRight: "auto",
 									paddingLeft: "2px",
 									paddingRight: "2px",
-									paddingTop: "6rem",
-									paddingBottom: "6rem",
+									paddingTop: "75px",
+									paddingBottom: "90px",
 									minHeight: "100vh",
 									maxWidth: "64rem",
 								}}>

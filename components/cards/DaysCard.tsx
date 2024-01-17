@@ -1,17 +1,22 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+import { Button, Typography, Card, CardContent } from "@mui/material";
 import { Group } from "@/types/type";
 import Grid from "@mui/material/Unstable_Grid2";
 import PolishDayName from "@/context/PolishDayName";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 
 type DaysCardProps = {
 	gr: { [dayOfWeek: number]: Group[] };
 	handleClick: (id: string | number) => void;
-	cols: number;
+	handleAddGroupClick: () => void;
+	owner: boolean;
 };
 
-const DaysCard = ({ gr, handleClick, cols }: DaysCardProps) => {
+const DaysCard = ({
+	gr,
+	handleClick,
+	owner,
+	handleAddGroupClick,
+}: DaysCardProps) => {
 	const handleDayClick = (id: number) => {
 		handleClick(id); //Przekazuje ID klikniętej karty do funkcji handleClick
 		//console.log(id);
@@ -26,9 +31,9 @@ const DaysCard = ({ gr, handleClick, cols }: DaysCardProps) => {
 	return (
 		<Grid
 			container
-			columns={1}
-			rowSpacing={2}
-			direction='column'>
+			paddingTop={3}
+			spacing={1}
+			width={"100%"}>
 			{sortedDaysOfWeek.map((day) => {
 				const groupsForDay = gr[day];
 				// Sortuj grupy według timeS
@@ -46,16 +51,21 @@ const DaysCard = ({ gr, handleClick, cols }: DaysCardProps) => {
 				});
 
 				return (
-					<Grid key={day}>
+					<Grid
+						key={day}
+						xs={12}
+						sm={6}
+						md={6}
+						lg={4}
+						xl={3}>
 						<Card
 							variant='outlined'
-							onClick={() => handleDayClick(day)}
-							sx={{ width: "90vw" }}>
+							onClick={() => handleDayClick(day)}>
 							<CardContent>
 								<Typography
 									variant='h5'
 									component='div'
-									sx={{ marginBottom: 1, textAlign: "center" }}>
+									align='center'>
 									{PolishDayName(day)}
 								</Typography>
 								<Typography variant='body1'>
@@ -66,6 +76,32 @@ const DaysCard = ({ gr, handleClick, cols }: DaysCardProps) => {
 					</Grid>
 				);
 			})}
+			{owner && (
+				<Grid
+					xs={12}
+					sm={6}
+					md={6}
+					lg={4}
+					xl={3}>
+					<Card
+						variant='outlined'
+						onClick={handleAddGroupClick}
+						sx={{ height: "100%" }}>
+						<CardContent
+							sx={{
+								height: "100%",
+							}}>
+							<Typography
+								mt={1}
+								align='center'
+								variant='h5'
+								color={"darkviolet"}>
+								<EditCalendarIcon /> Zarządzaj grupami
+							</Typography>
+						</CardContent>
+					</Card>
+				</Grid>
+			)}
 		</Grid>
 	);
 };

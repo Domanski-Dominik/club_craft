@@ -1,7 +1,6 @@
 "use client";
 
 import { createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles";
-import { plPL } from "@mui/x-data-grid";
 import { NextAppDirEmotionCacheProvider } from "./EmotionCache";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Roboto } from "next/font/google";
@@ -22,6 +21,7 @@ const ThemeOptions: ThemeOptions = {
 		background: {
 			// pink
 			default: "#e1bee7",
+			//default: "#ffffff",
 		},
 		primary: {
 			light: "#af52bf",

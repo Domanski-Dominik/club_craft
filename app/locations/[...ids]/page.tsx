@@ -28,6 +28,7 @@ type GroupP = {
 export default function Grups({ params }: Props) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [owner, setOwner] = useState(false);
 	const [groups, setGroups] = useState<GroupP[]>([]);
 	const router = useRouter();
 	const [pages, setPages] = useState([
@@ -101,6 +102,7 @@ export default function Grups({ params }: Props) {
 						if (selectedGroups && selectedGroups.length > 0) {
 							setGroups(selectedGroups);
 						}
+						setOwner(true);
 						setLoading(false);
 						setError("");
 					} else {
@@ -172,17 +174,9 @@ export default function Grups({ params }: Props) {
 					<GrCard
 						groups={groups}
 						handleClick={handleGroupClick}
+						owner={owner}
+						handleAddGroupClick={handleAddGroup}
 					/>
-					{session.user.role === "owner" && (
-						<Card
-							variant='outlined'
-							onClick={handleAddGroup}
-							sx={{ marginTop: "1rem" }}>
-							<CardContent>
-								<Typography variant='h6'>Dodaj/Usuń grupy</Typography>
-							</CardContent>
-						</Card>
-					)}
 				</>
 			)}
 		</>

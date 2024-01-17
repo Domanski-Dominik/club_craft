@@ -122,11 +122,12 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 
 	const handleAddPayment = async (
 		form: FormPay | null,
-		row: GridRowModel | null
+		row: GridRowModel | null,
+		action: "save" | "delete" | null
 	) => {
-		// Tutaj możesz dodać logikę obsługi dodawania płatności
 		//console.log(form, row);
-		if (form !== null && row !== null) {
+		setPayDialogOpen(false);
+		if (form !== null && row !== null && action !== null) {
 			try {
 				if (selectedRow) {
 					const response = await fetch(`/api/payment/${selectedRow.id}`, {
@@ -136,65 +137,92 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						},
 						body: JSON.stringify({
 							form,
+							action,
 						}), // Przekaż zaktualizowane dane uczestnika
 					});
 					const message = await response.json();
-					if (response.ok) {
+					if (!message.error) {
 						//console.log(message);
 						setSnackbar({
-							children: message.message,
+							children:
+								action === "save"
+									? "Udało się dodać płatność"
+									: "Udało się usunąć płatność",
 							severity: "success",
 						});
+						if (action === "save") {
+							const updatedRows = rows.map((row) => {
+								if (row.id === selectedRow.id) {
+									// Sprawdź, czy istnieje płatność dla danego miesiąca
+									const existingPayment = row.payments.find(
+										(payment: Payment) => payment.month === form.selectedMonth
+									);
+									if (existingPayment) {
+										// Jeśli płatność istnieje, zaktualizuj jej dane
+										const updatedPayments = row.payments.map(
+											(payment: Payment) =>
+												payment.month === form.selectedMonth
+													? {
+															...payment,
+															amount: form.amount,
+															description: form.description,
+															paymentDate: form.paymentDate,
+															paymentMethod: form.paymentMethod,
+													  }
+													: payment
+										);
 
-						const updatedRows = rows.map((row) => {
-							if (row.id === selectedRow.id) {
-								// Sprawdź, czy istnieje płatność dla danego miesiąca
-								const existingPayment = row.payments.find(
-									(payment: Payment) => payment.month === form.selectedMonth
-								);
+										return {
+											...row,
+											payments: updatedPayments,
+										};
+									} else {
+										// Jeśli płatność nie istnieje, dodaj nowy obiekt płatności
+										const newPayment = {
+											id: message.id,
+											month: form.selectedMonth,
+											amount: form.amount,
+											description: form.description,
+											paymentDate: form.paymentDate,
+											paymentMethod: form.paymentMethod,
+										};
 
-								if (existingPayment) {
-									// Jeśli płatność istnieje, zaktualizuj jej dane
-									const updatedPayments = row.payments.map((payment: Payment) =>
-										payment.month === form.selectedMonth
-											? {
-													...payment,
-													amount: form.amount,
-													description: form.description,
-													paymentDate: form.paymentDate,
-													paymentMethod: form.paymentMethod,
-													// ... inne zaktualizowane pola
-											  }
-											: payment
+										return {
+											...row,
+											payments: [...row.payments, newPayment],
+										};
+									}
+								}
+								return row;
+							});
+							setRows(updatedRows);
+						}
+						if (action === "delete") {
+							const updatedRows = rows.map((row) => {
+								if (row.id === selectedRow.id) {
+									// Sprawdź, czy istnieje płatność dla danego miesiąca
+									const existingPaymentIndex = row.payments.findIndex(
+										(payment: Payment) => payment.month === form.selectedMonth
 									);
 
-									return {
-										...row,
-										payments: updatedPayments,
-									};
-								} else {
-									// Jeśli płatność nie istnieje, dodaj nowy obiekt płatności
-									const newPayment = {
-										month: form.selectedMonth,
-										amount: form.amount,
-										description: form.description,
-										paymentDate: form.paymentDate,
-										paymentMethod: form.paymentMethod,
-										// ... inne pola dla nowej płatności
-									};
+									if (existingPaymentIndex !== -1) {
+										// Usuń płatność, jeśli istnieje
+										const updatedPayments = [...row.payments];
+										updatedPayments.splice(existingPaymentIndex, 1);
 
-									return {
-										...row,
-										payments: [...row.payments, newPayment],
-									};
+										return {
+											...row,
+											payments: updatedPayments,
+										};
+									}
 								}
-							}
-							return row;
-						});
-						//console.log(updatedRows);
-						setRows(updatedRows);
+								return row;
+							});
+							console.log(updatedRows);
+							setRows(updatedRows);
+						}
 					} else {
-						//console.log(message);
+						console.log(message);
 						setSnackbar({ children: message.error, severity: "error" });
 					}
 				}
@@ -206,7 +234,6 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				});
 			}
 		}
-		setPayDialogOpen(false);
 		setSelectedRow(null);
 	};
 	const handleDeleteClick = (row: GridRowModel) => () => {
@@ -612,39 +639,41 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	];
 	return (
 		<>
-			<DataGrid
-				apiRef={gridRef}
-				columns={columns}
-				density='compact'
-				rows={rows}
-				localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-				disableColumnMenu
-				getRowHeight={() => "auto"}
-				editMode='row'
-				slots={{ toolbar: CustomToolbar }}
-				columnVisibilityModel={columnVisibilityModel}
-				initialState={{
-					columns: {
-						columnVisibilityModel: {
-							phoneNumber: false,
-							actions: false,
-							payment: false,
-							note: false,
+			<Box sx={{ height: "75vh" }}>
+				<DataGrid
+					apiRef={gridRef}
+					columns={columns}
+					density='compact'
+					rows={rows}
+					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+					disableColumnMenu
+					getRowHeight={() => "auto"}
+					editMode='row'
+					slots={{ toolbar: CustomToolbar }}
+					columnVisibilityModel={columnVisibilityModel}
+					initialState={{
+						columns: {
+							columnVisibilityModel: {
+								phoneNumber: false,
+								actions: false,
+								payment: false,
+								note: false,
+							},
 						},
-					},
-				}}
-				onCellDoubleClick={() => {
-					setEdit(true);
-					gridRef.current.scroll({ left: 0 });
-					setColumnVisibilityModel({
-						actions: true,
-					});
-				}}
-				processRowUpdate={processRowUpdate}
-				rowModesModel={rowModesModel}
-				onRowModesModelChange={handleRowModesModelChange}
-				onRowEditStop={handleRowEditStop}
-			/>
+					}}
+					onCellDoubleClick={() => {
+						setEdit(true);
+						gridRef.current.scroll({ left: 0 });
+						setColumnVisibilityModel({
+							actions: true,
+						});
+					}}
+					processRowUpdate={processRowUpdate}
+					rowModesModel={rowModesModel}
+					onRowModesModelChange={handleRowModesModelChange}
+					onRowEditStop={handleRowEditStop}
+				/>
+			</Box>
 			{!!snackbar && (
 				<Snackbar
 					open
