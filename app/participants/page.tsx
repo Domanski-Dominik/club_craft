@@ -67,7 +67,11 @@ const Participants = () => {
 					const data: Participant[] | { error: string } = await response.json();
 					console.log(data);
 					if (Array.isArray(data)) {
-						setParticipants(data);
+						if (data.length > 0) {
+							setParticipants(data);
+							setLoading(false);
+						}
+						setNoPrt(true);
 						setLoading(false);
 					} else {
 						setError(data.error);

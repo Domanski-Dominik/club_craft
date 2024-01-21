@@ -4,7 +4,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HowToRegSharpIcon from "@mui/icons-material/HowToRegSharp";
-import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { useRouter } from "next/navigation";
@@ -55,9 +55,9 @@ export default function BottomNav() {
 				icon={<HowToRegSharpIcon />}
 			/>
 			<BottomNavigationAction
-				label='Finanse'
+				label='Statystyki'
 				value='payments'
-				icon={<PaidOutlinedIcon />}
+				icon={<LeaderboardIcon />}
 			/>
 		</BottomNavigation>
 	);

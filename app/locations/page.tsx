@@ -7,9 +7,9 @@ import { redirect, useRouter } from "next/navigation";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import LocCard from "@/components/cards/LocCard";
 import { Location } from "@/types/type";
-import { Card, CardContent, Typography, Button } from "@mui/material";
+import { Typography, Fab } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import LocCardsSkeleton from "@/components/skeletons/LocCardSkeleton";
+import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 export default function LocationList() {
@@ -86,59 +86,14 @@ export default function LocationList() {
 		return (
 			<>
 				<MobileNavigation pages={pages} />
-				<LocCardsSkeleton />
+				<CardsSkeleton />
 			</>
 		);
 
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			<Grid
-				container
-				spacing={1}
-				paddingTop={3}
-				width={"100%"}>
-				{locs.map((loc: Location) => (
-					<Grid
-						xs={12}
-						sm={6}
-						md={6}
-						lg={4}
-						xl={3}>
-						<LocCard
-							key={loc.id}
-							loc={loc}
-							handleClick={handleClick}
-							isOwner={isOwner}
-						/>
-					</Grid>
-				))}
-
-				{session.user.role === "owner" && (
-					<Grid
-						xs={12}
-						sm={6}
-						md={6}
-						lg={4}
-						xl={3}>
-						<Card
-							variant='outlined'
-							onClick={handleAddLoc}
-							sx={{ height: "100%" }}>
-							<CardContent>
-								<Button
-									sx={{ mt: 1 }}
-									fullWidth
-									size='large'
-									startIcon={<AddIcon />}>
-									Dodaj Lokalizacje
-								</Button>
-							</CardContent>
-						</Card>
-					</Grid>
-				)}
-			</Grid>
-			{error !== "" && (
+			{error !== "" ? (
 				<>
 					<WarningAmberIcon
 						color='error'
@@ -151,6 +106,39 @@ export default function LocationList() {
 						{error}
 					</Typography>
 				</>
+			) : (
+				<Grid
+					container
+					spacing={1}
+					paddingTop={3}
+					width={"100%"}>
+					{locs.map((loc: Location) => (
+						<Grid
+							xs={12}
+							sm={6}
+							md={6}
+							lg={4}
+							xl={3}>
+							<LocCard
+								key={loc.id}
+								loc={loc}
+								handleClick={handleClick}
+								isOwner={isOwner}
+							/>
+						</Grid>
+					))}
+				</Grid>
+			)}
+			{session.user.role === "owner" && (
+				<Fab
+					onClick={() => router.push("/locations/new")}
+					sx={{ mt: 2 }}
+					color='primary'
+					variant='extended'
+					size='small'>
+					<AddIcon sx={{ mr: 1, mb: 1 }} />
+					Dodaj lokalizajce
+				</Fab>
 			)}
 		</>
 	);

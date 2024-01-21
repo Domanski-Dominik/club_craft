@@ -2,11 +2,11 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import ParticipantList from "@/components/participants/ParticipantList";
 import type { Participant } from "@/types/type";
 
@@ -31,7 +31,7 @@ const Group = ({ params }: Props) => {
 		},
 	});
 	const groupId = parseInt(params.id, 10);
-
+	const router = useRouter();
 	useEffect(() => {
 		const fetchParticipants = async () => {
 			try {
@@ -100,7 +100,7 @@ const Group = ({ params }: Props) => {
 				<Box
 					sx={{
 						minWidth: "95vw",
-						height: "100%",
+						height: `calc(100vh - 75px - 90px - 30px)`,
 						maxWidth: "98vw",
 						mt: length > 30 ? 6 : 3,
 						//top: length > 30 ? 120 : 100,
@@ -113,12 +113,21 @@ const Group = ({ params }: Props) => {
 			)}
 
 			{error !== "" && (
-				<Typography
-					align='center'
-					variant='h4'
-					color='error'>
-					{error}
-				</Typography>
+				<>
+					<Typography
+						align='center'
+						variant='h4'
+						mb={2}
+						color='error'>
+						{error}
+					</Typography>
+					<Button
+						variant='contained'
+						size='large'
+						onClick={() => router.push(`/add`)}>
+						Dodaj uczestników
+					</Button>
+				</>
 			)}
 		</>
 	);

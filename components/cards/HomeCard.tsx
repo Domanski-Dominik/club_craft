@@ -35,7 +35,9 @@ const HomeCard = ({ name, amount, url, color }: HomeCardProps) => {
 								<GroupsIcon style={{ color: "white" }} />
 							)}
 							{name === "Trenerzy" && <SportsIcon style={{ color: "white" }} />}
-							{name === "Grupy" && <TableRowsIcon style={{ color: "white" }} />}
+							{name === "Lokalizacje i Grupy" && (
+								<TableRowsIcon style={{ color: "white" }} />
+							)}
 						</Avatar>
 					</Badge>
 					{/* Reszta informacji po prawej stronie */}

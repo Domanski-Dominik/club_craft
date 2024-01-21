@@ -14,6 +14,7 @@ model group {
   timeS     String
   timeE     String
   club      String @default("guest")
+  color     String @default("#3788d8")
   locationschedule locationschedule[]
   participantgroup participantgroup[]
   coaches          groupcoach[]     // Relacja do trenerów

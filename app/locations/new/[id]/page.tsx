@@ -1,31 +1,38 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Loading from "@/context/Loading";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import plLocale from "@fullcalendar/core/locales/pl";
-import React, { useEffect, useState } from "react";
 import { EventClickArg, EventInput } from "@fullcalendar/core";
 
 import {
 	FormControl,
 	TextField,
-	Grid,
 	Button,
 	MenuItem,
 	InputLabel,
 	Select,
 	Box,
+	useMediaQuery,
+	useTheme,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import SendIcon from "@mui/icons-material/Send";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { useRouter } from "next/navigation";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { plPL } from "@mui/x-date-pickers/locales";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import Loading from "@/context/Loading";
 
 interface Props {
 	params: {
@@ -40,6 +47,7 @@ interface Group {
 	timeE: string;
 	locationId: number;
 	club: string;
+	color: string;
 }
 
 const daysOfWeekOptions = [
@@ -52,12 +60,23 @@ const daysOfWeekOptions = [
 	{ value: 0, label: "Niedziela" },
 ];
 
+const colorsOptions = [
+	{ value: "#3788d8", label: "Niebieski" },
+	{ value: "#228B22", label: "Zielony" },
+	{ value: "#9400D3", label: "Fioletowy" },
+	{ value: "#DC143C", label: "Czerwony" },
+	{ value: "#FFD700", label: "Złoty" },
+	{ value: "#FF8C00", label: "Pomarańczowy" },
+];
+
 const CreateGroups = ({ params }: Props) => {
 	const [events, setEvents] = useState<EventInput[]>([]);
 	const locationIdNum = parseInt(params.id, 10);
 	const [isClicked, setIsClicked] = useState(false);
 	const [club, setClub] = useState("guest");
 	const router = useRouter();
+	const theme = useTheme();
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -72,8 +91,8 @@ const CreateGroups = ({ params }: Props) => {
 		timeE: "17:00",
 		locationId: locationIdNum,
 		club: club,
+		color: "#3788d8",
 	});
-
 	useEffect(() => {
 		const fetchGrups = async () => {
 			try {
@@ -89,6 +108,8 @@ const CreateGroups = ({ params }: Props) => {
 					startTime: `${group.timeS}:00`,
 					endTime: `${group.timeE}:00`,
 					allDay: false,
+					backgroundColor: group.color,
+					borderColor: group.color,
 				}));
 				//console.log("Formatted events: ", formattedEvents);
 
@@ -109,7 +130,7 @@ const CreateGroups = ({ params }: Props) => {
 				body: JSON.stringify(newGroup),
 			});
 			const data = await response.json();
-			console.log("Nowa grupa dodana: ", data);
+			//console.log("Nowa grupa dodana: ", data);
 			if (response.ok) {
 				const formattedNewGroup: EventInput = {
 					id: `${data.id}`,
@@ -118,6 +139,7 @@ const CreateGroups = ({ params }: Props) => {
 					startTime: `${data.timeS}:00`,
 					endTime: `${data.timeE}:00`,
 					allDay: false,
+					color: data.color,
 				};
 				setEvents([...events, formattedNewGroup]);
 			}
@@ -143,7 +165,7 @@ const CreateGroups = ({ params }: Props) => {
 				body: JSON.stringify(newGroup),
 			});
 			const data = await response.json();
-			console.log("Grupa usunięta: ", data);
+			//console.log("Grupa usunięta: ", data);
 		} catch (error) {
 			console.error("Błąd podczas usuwania grupy: ", error);
 		}
@@ -183,6 +205,8 @@ const CreateGroups = ({ params }: Props) => {
 							startTime: `${data.timeS}:00`,
 							endTime: `${data.timeE}:00`,
 							allDay: false,
+							backgroundColor: data.color,
+							borderColor: data.color,
 						};
 					}
 					return event;
@@ -264,6 +288,8 @@ const CreateGroups = ({ params }: Props) => {
 
 		//console.log(clickInfo.event.id);
 		const clickedId = parseInt(clickInfo.event.id);
+		const color = clickInfo.event.backgroundColor;
+		//console.log(color);
 
 		setNewGroup({
 			id: clickedId,
@@ -273,6 +299,7 @@ const CreateGroups = ({ params }: Props) => {
 			timeE: `${hourE}:${minutesE}`,
 			locationId: locationIdNum,
 			club: club,
+			color: color,
 		});
 		setIsClicked(true);
 	};
@@ -289,206 +316,261 @@ const CreateGroups = ({ params }: Props) => {
 	if (status === "loading") return <Loading />;
 	return (
 		<>
-			<form
+			<Grid
+				container
+				component='form'
 				onSubmit={handleSubmit}
-				id='formId'>
+				id='formId'
+				spacing={2}
+				sx={{ marginBottom: 1, width: "100%" }}>
 				<Grid
-					container
-					spacing={2}
-					justifyContent='center'
-					sx={{ marginBottom: "1rem" }}
-					direction={"row"}>
-					<Grid
-						item
-						xs={10}
-						md={15}>
-						<FormControl fullWidth>
-							<TextField
-								id={"outlined-basic"}
-								type='text'
-								value={newGroup.name}
-								onChange={(e) =>
-									setNewGroup({ ...newGroup, name: e.target.value })
-								}
-								label='Nazwa Grupy'
-								variant='outlined'
-								size='small'
-								required
-							/>
-						</FormControl>
-					</Grid>
-					<Grid item>
-						<FormControl fullWidth>
-							<InputLabel id='dayOfWeek-label'>Dzień Tygodnia</InputLabel>
-							<Select
-								labelId='dayOfWeek-label'
-								id='dayOfWeek'
-								value={newGroup.dayOfWeek}
-								label='Dzień Tygodnia'
-								size='small'
-								onChange={(e) =>
-									setNewGroup({
-										...newGroup,
-										dayOfWeek: parseInt(e.target.value as string),
-									})
-								}>
-								{daysOfWeekOptions.map((option) => (
-									<MenuItem
-										key={option.value}
-										value={option.value}>
-										{option.label}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid
-						item
-						xs={3}>
-						<FormControl>
-							<LocalizationProvider
-								dateAdapter={AdapterDateFns}
-								localeText={
-									plPL.components.MuiLocalizationProvider.defaultProps
-										.localeText
-								}>
-								<MobileTimePicker
-									minTime={new Date("2000-01-01T06:00")}
-									label='Początek'
-									ampm={false}
-									slotProps={{ textField: { size: "small" } }}
-									value={new Date(`2000-01-01T${newGroup.timeS}:00`)}
-									onChange={(newValue) => {
-										if (newValue !== null && newValue !== undefined) {
-											const hours = newValue
-												.getHours()
-												.toString()
-												.padStart(2, "0");
-											const minutes = newValue
-												.getMinutes()
-												.toString()
-												.padStart(2, "0");
-											const newTimeS = `${hours}:${minutes}`;
-
-											setNewGroup((prevGroup) => ({
-												...prevGroup,
-												timeS: newTimeS,
-											}));
-										}
-									}}
-								/>
-							</LocalizationProvider>
-						</FormControl>
-					</Grid>
-					<Grid
-						item
-						xs={3}>
-						<FormControl>
-							<LocalizationProvider
-								dateAdapter={AdapterDateFns}
-								localeText={
-									plPL.components.MuiLocalizationProvider.defaultProps
-										.localeText
-								}>
-								<MobileTimePicker
-									minTime={new Date("2000-01-01T06:00")}
-									label='Koniec'
-									ampm={false}
-									slotProps={{ textField: { size: "small" } }}
-									value={new Date(`2000-01-01T${newGroup.timeE}:00`)}
-									onChange={(newValue) => {
-										if (newValue !== null && newValue !== undefined) {
-											const hours = newValue
-												.getHours()
-												.toString()
-												.padStart(2, "0");
-											const minutes = newValue
-												.getMinutes()
-												.toString()
-												.padStart(2, "0");
-											const newTimeE = `${hours}:${minutes}`;
-
-											setNewGroup((prevGroup) => ({
-												...prevGroup,
-												timeE: newTimeE,
-											}));
-										}
-									}}
-								/>
-							</LocalizationProvider>
-						</FormControl>
-					</Grid>
+					xs={6}
+					sm={6}
+					md={3}
+					lg={3}>
+					<FormControl fullWidth>
+						<TextField
+							id={"outlined-basic"}
+							type='text'
+							value={newGroup.name}
+							onChange={(e) =>
+								setNewGroup({ ...newGroup, name: e.target.value })
+							}
+							label='Nazwa Grupy'
+							variant='outlined'
+							size='small'
+							required
+						/>
+					</FormControl>
 				</Grid>
 				<Grid
-					container
-					justifyContent={"space-around"}
-					sx={{ marginBottom: "1rem" }}>
+					xs={6}
+					sm={6}
+					md={2}
+					lg={2}>
+					<FormControl fullWidth>
+						<InputLabel id='dayOfWeek-label'>Dzień Tygodnia</InputLabel>
+						<Select
+							labelId='dayOfWeek-label'
+							id='dayOfWeek'
+							value={newGroup.dayOfWeek}
+							label='Dzień Tygodnia'
+							size='small'
+							onChange={(e) =>
+								setNewGroup({
+									...newGroup,
+									dayOfWeek: parseInt(e.target.value as string),
+								})
+							}>
+							{daysOfWeekOptions.map((option) => (
+								<MenuItem
+									key={option.value}
+									value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid
+					xs={3}
+					sm={3}
+					md={2}
+					lg={1}>
+					<FormControl>
+						<LocalizationProvider
+							dateAdapter={AdapterDateFns}
+							localeText={
+								plPL.components.MuiLocalizationProvider.defaultProps.localeText
+							}>
+							<MobileTimePicker
+								minTime={new Date("2000-01-01T06:00")}
+								label='Początek'
+								ampm={false}
+								slotProps={{ textField: { size: "small" } }}
+								value={new Date(`2000-01-01T${newGroup.timeS}:00`)}
+								onChange={(newValue) => {
+									if (newValue !== null && newValue !== undefined) {
+										const hours = newValue
+											.getHours()
+											.toString()
+											.padStart(2, "0");
+										const minutes = newValue
+											.getMinutes()
+											.toString()
+											.padStart(2, "0");
+										const newTimeS = `${hours}:${minutes}`;
+
+										setNewGroup((prevGroup) => ({
+											...prevGroup,
+											timeS: newTimeS,
+										}));
+									}
+								}}
+							/>
+						</LocalizationProvider>
+					</FormControl>
+				</Grid>
+				<Grid
+					xs={3}
+					sm={3}
+					md={2}
+					lg={1}>
+					<FormControl>
+						<LocalizationProvider
+							dateAdapter={AdapterDateFns}
+							localeText={
+								plPL.components.MuiLocalizationProvider.defaultProps.localeText
+							}>
+							<MobileTimePicker
+								minTime={new Date("2000-01-01T06:00")}
+								label='Koniec'
+								ampm={false}
+								slotProps={{ textField: { size: "small" } }}
+								value={new Date(`2000-01-01T${newGroup.timeE}:00`)}
+								onChange={(newValue) => {
+									if (newValue !== null && newValue !== undefined) {
+										const hours = newValue
+											.getHours()
+											.toString()
+											.padStart(2, "0");
+										const minutes = newValue
+											.getMinutes()
+											.toString()
+											.padStart(2, "0");
+										const newTimeE = `${hours}:${minutes}`;
+
+										setNewGroup((prevGroup) => ({
+											...prevGroup,
+											timeE: newTimeE,
+										}));
+									}
+								}}
+							/>
+						</LocalizationProvider>
+					</FormControl>
+				</Grid>
+				<Grid
+					xs={6}
+					sm={6}
+					md={3}
+					lg={2}>
+					<FormControl fullWidth>
+						<InputLabel id='color-label'>Kolor grupy</InputLabel>
+						<Select
+							labelId='color-label'
+							id='color'
+							value={newGroup.color}
+							label='Kolor grupy'
+							size='small'
+							onChange={(e) =>
+								setNewGroup({
+									...newGroup,
+									color: e.target.value,
+								})
+							}>
+							{colorsOptions.map((option) => (
+								<MenuItem
+									key={option.label}
+									value={option.value}>
+									<div
+										style={{
+											width: "12px",
+											height: "12px",
+											marginRight: "8px",
+											backgroundColor: option.value,
+											border: "1px solid #ddd",
+											display: "inline-block",
+										}}></div>
+									{option.label}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid
+					xs={4}
+					sm={4}
+					md={4}
+					lg={1}>
 					<Button
+						fullWidth
 						variant='outlined'
 						onClick={handleDelete}
 						disabled={!isClicked}
 						color='error'
+						startIcon={<DeleteIcon />}
 						type='button'>
 						Usuń
 					</Button>
+				</Grid>
+				<Grid
+					xs={4}
+					sm={4}
+					md={4}
+					lg={1}>
 					<Button
-						variant='outlined'
+						fullWidth
+						variant='contained'
 						onClick={handleEdit}
 						disabled={!isClicked}
-						color='info'
+						startIcon={<SaveIcon />}
 						type='button'>
-						Zapisz zmiany
+						Zapisz
 					</Button>
+				</Grid>
+				<Grid
+					xs={4}
+					sm={4}
+					md={4}
+					lg={1}>
 					{isClicked ? (
 						<Button
+							fullWidth
 							variant='outlined'
 							onClick={handleDiscard}
-							color='warning'
+							endIcon={<CloseIcon />}
 							type='button'>
 							Anuluj
 						</Button>
 					) : (
 						<Button
-							variant='outlined'
+							fullWidth
+							variant='contained'
 							type='submit'
-							color='success'
+							endIcon={<SendIcon />}
 							form='formId'>
 							Dodaj
 						</Button>
 					)}
 				</Grid>
-			</form>
+			</Grid>
 			<Box
 				sx={{
-					borderWidth: "0.5px",
-					width: "95%",
+					borderWidth: 1,
+					width: "100%",
 					minWidth: "350px",
-					borderColor: "white",
+					px: 1,
+					borderColor: "#ffffff",
+					height: isSmallScreen
+						? "calc(100vh - 160px - 165px - 50px)"
+						: "calc(100vh - 100px - 165px - 80px)",
 				}}>
 				<FullCalendar
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					initialView='timeGridWeek'
-					selectable={true}
+					selectable={false}
 					selectMirror={true}
 					dayMaxEvents={true}
 					slotMinTime={"06:00"}
 					headerToolbar={false}
 					scrollTime={"16:00"}
 					slotDuration={"00:20:00"}
-					height={300}
+					height={"100%"}
 					locale={plLocale}
 					allDaySlot={false}
 					dayHeaderFormat={{ weekday: "long" }}
 					events={events}
-					/*events={groups.map((group) => ({
-            title: group.name,
-            daysOfWeek: [group.dayOfWeek],
-            startTime: group.timeS,
-            endTime: group.timeE,
-          }))}*/
-
-					// called after events are initialized/added/changed/removed
-					//you can update a remote database when these fire:
 					eventAdd={function () {
 						console.log("dodano event");
 					}}
@@ -500,8 +582,8 @@ const CreateGroups = ({ params }: Props) => {
 			<Button
 				variant='contained'
 				fullWidth
-				sx={{ marginTop: "1rem" }}
-				onClick={() => router.push("/locations")}>
+				sx={{ marginTop: 1 }}
+				onClick={() => router.push("/home")}>
 				Zakończ edycje grup
 			</Button>
 		</>

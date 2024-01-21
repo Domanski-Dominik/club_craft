@@ -32,6 +32,7 @@ import type {
 	FormPay,
 	LocWithGroups,
 } from "@/types/type";
+import MuiPagination from "@mui/material/Pagination";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -405,6 +406,7 @@ const AllParticipantList = ({
 			</GridToolbarContainer>
 		);
 	}
+
 	const columns: GridColDef[] = [
 		{
 			field: "num",
@@ -616,7 +618,7 @@ const AllParticipantList = ({
 			<Box
 				sx={{
 					minWidth: "95vw",
-					height: "80vh",
+					height: "calc(100vh - 75px - 90px)",
 					maxWidth: "98vw",
 				}}>
 				<DataGrid
@@ -654,11 +656,7 @@ const AllParticipantList = ({
 								actions: false,
 							},
 						},
-						pagination: {
-							paginationModel: {
-								pageSize: 50,
-							},
-						},
+						pagination: { paginationModel: { pageSize: 100 } },
 					}}
 				/>
 			</Box>
@@ -706,6 +704,16 @@ const AllParticipantList = ({
 
 export default AllParticipantList;
 /*
-
+sx={{
+						"& .MuiTablePagination-caption[id]": {
+							display: "block",
+						},
+						"& .MuiTablePagination-input": {
+							display: "inline-flex",
+						},
+						"& .MuiTablePagination-selectLabel": {
+							display: "inline-flex",
+						},
+					}}
 					
 	 */

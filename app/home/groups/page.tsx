@@ -1,14 +1,23 @@
 "use client";
-import * as React from "react";
+import { useState, useEffect } from "react";
+import React from "react";
 import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
-import { Box, Button, ListItem, Typography } from "@mui/material";
+import {
+	Snackbar,
+	Alert,
+	AlertProps,
+	Button,
+	ListItem,
+	Stack,
+	Typography,
+} from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -20,6 +29,8 @@ import { redirect, useRouter } from "next/navigation";
 import PolishDayName from "@/context/PolishDayName";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
 
 type Location = {
 	id: number;
@@ -35,20 +46,27 @@ type Location = {
 
 const GroupList = () => {
 	const router = useRouter();
-	const [loading, setLoading] = React.useState(true);
-	const [isOwner, setIsOwner] = React.useState(false);
-	const [error, setError] = React.useState("");
-	const [data, setData] = React.useState<Location[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [isOwner, setIsOwner] = useState(false);
+	const [error, setError] = useState("");
+	const [data, setData] = useState<Location[]>([]);
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
 			redirect("/login");
 		},
 	});
-	const [openDays, setOpenDays] = React.useState<number[]>([]);
-	const [openDaysDetail, setOpenDaysDetail] = React.useState<{
+	const [deleteLoc, setDeleteLoc] = useState<Location | null>(null);
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [openDays, setOpenDays] = useState<number[]>([]);
+	const [openDaysDetail, setOpenDaysDetail] = useState<{
 		[key: number]: { [key: number]: boolean };
 	}>({});
+	const [snackbar, setSnackbar] = React.useState<Pick<
+		AlertProps,
+		"children" | "severity"
+	> | null>(null);
 	const pages = [
 		{ id: 1, title: "Klub", path: "/home" },
 		{
@@ -57,6 +75,7 @@ const GroupList = () => {
 			path: "/home/groups",
 		},
 	];
+	const handleCloseSnackbar = () => setSnackbar(null);
 	const handleClick = (index: number) => {
 		setOpenDays((prevOpen) => {
 			const isOpen = prevOpen.includes(index);
@@ -81,16 +100,16 @@ const GroupList = () => {
 		});
 	};
 	const collectGroupsByDay = (location: Location) => {
-		const groupsByDay: { [key: number]: string[] } = {};
+		const groupsByDay: { [key: number]: { name: string; id: string }[] } = {};
 
 		location.locationschedule.forEach((group) => {
-			const { dayOfWeek, name } = group;
+			const { dayOfWeek, name, id } = group;
 
 			if (!groupsByDay[dayOfWeek]) {
 				groupsByDay[dayOfWeek] = [];
 			}
 
-			groupsByDay[dayOfWeek].push(name);
+			groupsByDay[dayOfWeek].push({ name: name, id: String(id) });
 		});
 
 		return groupsByDay;
@@ -138,7 +157,42 @@ const GroupList = () => {
 		}
 	};
 
-	React.useEffect(() => {
+	const handleChoice = async (value: string) => {
+		console.log(value);
+		setDialogOpen(false);
+		if (value === "yes" && deleteLoc !== null) {
+			try {
+				const response = await fetch("/api/loc", {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(deleteLoc), // Przekaż zaktualizowane dane uczestnika
+				});
+				const message = await response.json();
+				if (!message.error) {
+					console.log(message);
+					setSnackbar({
+						children: message.message,
+						severity: "success",
+					});
+					setData(data.filter((loc) => loc.id !== deleteLoc.id));
+				} else {
+					console.log(message);
+					setSnackbar({ children: message.error, severity: "error" });
+				}
+			} catch (error) {
+				setSnackbar({
+					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					severity: "error",
+				});
+			}
+		} else {
+			setDeleteLoc(null);
+		}
+	};
+
+	useEffect(() => {
 		fetchLoc();
 	}, [session]);
 	if (loading) return <Loading />;
@@ -162,14 +216,34 @@ const GroupList = () => {
 					{data.map((location, locationIndex) => (
 						<React.Fragment key={location.id}>
 							<ListItem
+								sx={{ pr: isEdit && isOwner ? 9 : 0 }}
 								secondaryAction={
-									isOwner && (
-										<EditIcon
-											color='warning'
-											onClick={() =>
-												router.push(`/locations/new/${location.id}`)
-											}
-										/>
+									isOwner &&
+									isEdit && (
+										<>
+											<DeleteIcon
+												color='error'
+												sx={{ mr: 2 }}
+												onClick={() => {
+													setDeleteLoc(location);
+													setDialogOpen(true);
+													console.log("clicked");
+												}}
+											/>
+											<EditIcon
+												color='warning'
+												sx={{ mr: 2 }}
+												onClick={() =>
+													router.push(`/locations/edit/${location.id}`)
+												}
+											/>
+											<EditCalendarIcon
+												color='secondary'
+												onClick={() =>
+													router.push(`/locations/new/${location.id}`)
+												}
+											/>
+										</>
 									)
 								}
 								disablePadding>
@@ -202,7 +276,7 @@ const GroupList = () => {
 													onClick={() =>
 														handleDetailClick(locationIndex, Number(dayOfWeek))
 													}
-													sx={{ pl: 4 }}>
+													sx={{ pl: 3, pr: 5 }}>
 													<ListItemIcon>
 														<CalendarTodayIcon color='secondary' />
 													</ListItemIcon>
@@ -226,15 +300,23 @@ const GroupList = () => {
 													timeout='auto'
 													unmountOnExit>
 													<List
-														sx={{ pl: 6 }}
+														sx={{ pl: 3 }}
 														component='div'
 														disablePadding>
-														{groups.map((groupName, groupIndex) => (
-															<ListItem key={groupIndex}>
+														{groups.map((group, index) => (
+															<ListItem
+																secondaryAction={
+																	<VisibilityIcon
+																		onClick={() =>
+																			router.push(`/group/${group.id}`)
+																		}
+																	/>
+																}
+																key={index}>
 																<ListItemIcon>
 																	<GroupIcon />
 																</ListItemIcon>
-																<ListItemText primary={groupName} />
+																<ListItemText primary={group.name} />
 															</ListItem>
 														))}
 													</List>
@@ -248,27 +330,76 @@ const GroupList = () => {
 					))}
 				</List>
 				{isOwner && (
-					<Button
-						variant='contained'
-						sx={{ width: "50vw", my: 2 }}
-						onClick={() => router.push("/locations/new")}>
-						Dodaj Lokalizację
-					</Button>
+					<Stack
+						direction='row'
+						spacing={2}
+						sx={{ my: 2 }}>
+						<Button
+							variant='outlined'
+							startIcon={<EditIcon />}
+							onClick={() => setIsEdit((prev) => !prev)}>
+							{isEdit ? "Zakończ Edycje" : "Edytuj"}
+						</Button>
+						<Button
+							variant='contained'
+							onClick={() => router.push("/locations/new")}>
+							Dodaj Lokalizację
+						</Button>
+					</Stack>
+				)}
+				{deleteLoc && (
+					<DialogDeleteLoc
+						open={dialogOpen}
+						name={deleteLoc?.name}
+						onClose={handleChoice}
+					/>
+				)}
+				{!!snackbar && (
+					<Snackbar
+						open
+						anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+						autoHideDuration={3000}
+						sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+						onClose={handleCloseSnackbar}>
+						<Alert
+							{...snackbar}
+							onClose={handleCloseSnackbar}
+						/>
+					</Snackbar>
 				)}
 			</>
 		);
 	} else {
 		return (
 			<>
-				<MobileNavigation pages={pages} />
-				<Typography
-					variant='h5'
-					align='center'
-					color='error'>
-					{error},
-					<br />
-					sprawdź połączenie z internetem
-				</Typography>
+				{error !== "" ? (
+					<>
+						<MobileNavigation pages={pages} />
+						<Typography
+							variant='h5'
+							align='center'
+							color='error'>
+							{error}
+							<br />
+						</Typography>
+					</>
+				) : (
+					<>
+						<MobileNavigation pages={pages} />
+						<Typography
+							variant='h3'
+							mb={3}
+							align='center'>
+							Najpier stwórz lokalizacje
+						</Typography>
+						<Button
+							variant='contained'
+							size='large'
+							onClick={() => router.push("/locations/new")}>
+							Dodaj Lokalizacje
+						</Button>
+					</>
+				)}
 			</>
 		);
 	}

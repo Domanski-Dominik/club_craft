@@ -49,6 +49,14 @@ export const GET = async (req: Request, { params }: Props) => {
 					},
 					{ status: 400 }
 				);
+			if (access.length === 0) {
+				return Response.json(
+					{
+						error: "Nie zostały ci przypisane jeszcze żadne grupy",
+					},
+					{ status: 400 }
+				);
+			}
 			const uniqueLocationIds = new Set<number>();
 			const uniqueLocations: any[] = [];
 

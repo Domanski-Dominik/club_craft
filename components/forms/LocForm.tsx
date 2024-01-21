@@ -12,6 +12,8 @@ import {
 	LinearProgress,
 	Fade,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import SendIcon from "@mui/icons-material/Send";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useRouter, redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -165,8 +167,9 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 								direction={"row"}
 								sx={{ justifyContent: "center" }}>
 								<Grid
-									xs={11}
-									md={15}>
+									xs={12}
+									sm={12}
+									md={4}>
 									<FormControl fullWidth>
 										<TextField
 											id={"outlined-basic"}
@@ -183,7 +186,10 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 										/>
 									</FormControl>
 								</Grid>
-								<Grid xs={8}>
+								<Grid
+									xs={8}
+									sm={8}
+									md={4}>
 									<FormControl fullWidth>
 										<TextField
 											id={"outlined-basic"}
@@ -198,7 +204,10 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 										/>
 									</FormControl>
 								</Grid>
-								<Grid xs={3}>
+								<Grid
+									xs={4}
+									sm={4}
+									md={4}>
 									<FormControl fullWidth>
 										<TextField
 											id={"outlined-basic"}
@@ -213,7 +222,10 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 										/>
 									</FormControl>
 								</Grid>
-								<Grid xs={6}>
+								<Grid
+									xs={6}
+									sm={6}
+									md={6}>
 									<FormControl fullWidth>
 										<TextField
 											id={"outlined-basic"}
@@ -228,7 +240,10 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 										/>
 									</FormControl>
 								</Grid>
-								<Grid xs={5}>
+								<Grid
+									xs={6}
+									sm={6}
+									md={6}>
 									<FormControl fullWidth>
 										<TextField
 											id={"outlined-basic"}
@@ -245,27 +260,39 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 							</Grid>
 							<Grid
 								container
-								sx={{ marginTop: "2rem", justifyContent: "center" }}
-								columnSpacing={3}>
-								<Grid>
+								sx={{ marginTop: "1rem", justifyContent: "center" }}
+								spacing={2}>
+								<Grid
+									xs={6}
+									sm={6}
+									md={4}
+									lg={3}
+									xl={2}>
 									<Button
+										fullWidth
 										variant='outlined'
 										onClick={() => router.push("/locations")}
-										color='warning'
 										size='large'
+										startIcon={<CloseIcon />}
 										type='button'>
 										Anuluj
 									</Button>
 								</Grid>
-								<Grid>
+								<Grid
+									xs={6}
+									sm={6}
+									md={4}
+									lg={3}
+									xl={2}>
 									<Button
-										variant='outlined'
+										fullWidth
+										variant='contained'
 										type='submit'
-										color='success'
 										size='large'
 										form='formId'
+										endIcon={<SendIcon />}
 										disabled={!validFormat || newLoc.name === "" || isSending}>
-										{type === "edit" ? "Zapisz zamiany" : "Dodaj"}
+										{type === "edit" ? "Zapisz" : "Dodaj"}
 									</Button>
 								</Grid>
 							</Grid>

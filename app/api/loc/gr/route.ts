@@ -1,7 +1,8 @@
 import { prisma } from "@/prisma/prisma";
 
 export const POST = async (req: Request) => {
-	const { name, dayOfWeek, timeS, timeE, locationId, club } = await req.json();
+	const { name, dayOfWeek, timeS, timeE, locationId, club, color } =
+		await req.json();
 	//console.log(name, dayOfWeek, timeS, timeE, locationId, club);
 
 	if (!name || !timeS || !timeE || !locationId) {
@@ -23,6 +24,7 @@ export const POST = async (req: Request) => {
 				timeS: String(timeS),
 				timeE: String(timeE),
 				club: String(club),
+				color: String(color),
 			},
 		});
 
@@ -93,7 +95,8 @@ export const DELETE = async (req: Request) => {
 };
 
 export const PUT = async (req: Request) => {
-	const { name, dayOfWeek, timeS, timeE, locationId, id } = await req.json();
+	const { name, dayOfWeek, timeS, timeE, locationId, id, color } =
+		await req.json();
 	//console.log("Wszedłem w edytowanie");
 	//console.log(id, name, dayOfWeek, timeS, timeE, locationId);
 	if (!name || !timeS || !timeE || !locationId) {
@@ -118,6 +121,7 @@ export const PUT = async (req: Request) => {
 					dayOfWeek !== undefined ? Number(dayOfWeek) : existingGroup.dayOfWeek,
 				timeS: timeS !== undefined ? String(timeS) : existingGroup.timeS,
 				timeE: timeE !== undefined ? String(timeE) : existingGroup.timeE,
+				color: color !== undefined ? String(color) : existingGroup.color,
 			},
 		});
 

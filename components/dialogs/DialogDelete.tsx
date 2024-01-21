@@ -25,8 +25,8 @@ const DialogDelete: React.FC<DialogDeleteType> = ({ onClose, open, row }) => {
 			<DialogContent
 				dividers>{`Usuń ${row.firstName} ${row.lastName} z bazy danych`}</DialogContent>
 			<DialogActions>
-				<Button onClick={() => handleOptionClick("no")}>No</Button>
-				<Button onClick={() => handleOptionClick("yes")}>Yes</Button>
+				<Button onClick={() => handleOptionClick("no")}>Nie</Button>
+				<Button onClick={() => handleOptionClick("yes")}>Tak</Button>
 			</DialogActions>
 		</Dialog>
 	);

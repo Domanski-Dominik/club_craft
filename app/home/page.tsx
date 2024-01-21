@@ -78,19 +78,6 @@ const HomePage = () => {
 					lg={4}
 					xl={3}>
 					<HomeCard
-						amount={data.loc.length === 0 ? 0 : data.loc.length}
-						name='Lokalizacje'
-						color='blue'
-						url='/locations'
-					/>
-				</Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={4}
-					xl={3}>
-					<HomeCard
 						amount={data.coaches.length === 0 ? 0 : data.coaches.length}
 						name='Trenerzy'
 						color='green'
@@ -105,7 +92,7 @@ const HomePage = () => {
 					xl={3}>
 					<HomeCard
 						amount={data.groups.length === 0 ? 0 : data.groups.length}
-						name='Grupy'
+						name='Lokalizacje i Grupy'
 						color='indigo'
 						url='/home/groups'
 					/>

@@ -639,41 +639,40 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	];
 	return (
 		<>
-			<Box sx={{ height: "75vh" }}>
-				<DataGrid
-					apiRef={gridRef}
-					columns={columns}
-					density='compact'
-					rows={rows}
-					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-					disableColumnMenu
-					getRowHeight={() => "auto"}
-					editMode='row'
-					slots={{ toolbar: CustomToolbar }}
-					columnVisibilityModel={columnVisibilityModel}
-					initialState={{
-						columns: {
-							columnVisibilityModel: {
-								phoneNumber: false,
-								actions: false,
-								payment: false,
-								note: false,
-							},
+			<DataGrid
+				apiRef={gridRef}
+				columns={columns}
+				density='compact'
+				rows={rows}
+				localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+				disableColumnMenu
+				getRowHeight={() => "auto"}
+				editMode='row'
+				slots={{ toolbar: CustomToolbar }}
+				columnVisibilityModel={columnVisibilityModel}
+				initialState={{
+					columns: {
+						columnVisibilityModel: {
+							phoneNumber: false,
+							actions: false,
+							payment: false,
+							note: false,
 						},
-					}}
-					onCellDoubleClick={() => {
-						setEdit(true);
-						gridRef.current.scroll({ left: 0 });
-						setColumnVisibilityModel({
-							actions: true,
-						});
-					}}
-					processRowUpdate={processRowUpdate}
-					rowModesModel={rowModesModel}
-					onRowModesModelChange={handleRowModesModelChange}
-					onRowEditStop={handleRowEditStop}
-				/>
-			</Box>
+					},
+				}}
+				onCellDoubleClick={() => {
+					setEdit(true);
+					gridRef.current.scroll({ left: 0 });
+					setColumnVisibilityModel({
+						actions: true,
+					});
+				}}
+				processRowUpdate={processRowUpdate}
+				rowModesModel={rowModesModel}
+				onRowModesModelChange={handleRowModesModelChange}
+				onRowEditStop={handleRowEditStop}
+			/>
+
 			{!!snackbar && (
 				<Snackbar
 					open

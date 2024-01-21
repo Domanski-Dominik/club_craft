@@ -93,4 +93,75 @@ export const PUT = async (req: Request) => {
 		return NextResponse.json({ error: "Zmień dane" }, { status: 500 });
 	}
 };
-/* */
+export const DELETE = async (req: Request) => {
+	const body = await req.json();
+	const id = body.id;
+	try {
+		const findLoc = await prisma.locations.findFirst({
+			where: { id: id },
+			include: { locationschedule: true },
+		});
+		if (!findLoc) {
+			return NextResponse.json(
+				{ error: "Nie udało się znaleźć lokalizacji w bazie danych" },
+				{ status: 404 }
+			);
+		}
+		const groupIds = findLoc.locationschedule.map((gr) => gr.groupId);
+
+		const deleteParticipants = await prisma.participantgroup.deleteMany({
+			where: { groupId: { in: groupIds } },
+		});
+		if (!deleteParticipants) {
+			return NextResponse.json(
+				{ error: "Nie udało się usunąć relacji z uczestnikami" },
+				{ status: 500 }
+			);
+		}
+		const deleteSchedule = await prisma.locationschedule.deleteMany({
+			where: { locationId: id },
+		});
+		if (!deleteSchedule) {
+			return NextResponse.json(
+				{ error: "Nie udało się usunąć relacji z grupami" },
+				{ status: 500 }
+			);
+		}
+		const deleteCoaches = await prisma.groupcoach.deleteMany({
+			where: { groupId: { in: groupIds } },
+		});
+		if (!deleteCoaches) {
+			return NextResponse.json(
+				{ error: "Nie udało się usunąć relacji z trenerami" },
+				{ status: 500 }
+			);
+		}
+		const deleteGroups = await prisma.group.deleteMany({
+			where: { id: { in: groupIds } },
+		});
+		if (!deleteGroups) {
+			return NextResponse.json(
+				{ error: "Nie udało się usunąć grup" },
+				{ status: 500 }
+			);
+		}
+		const deleteLoc = await prisma.locations.delete({
+			where: { id: id },
+		});
+		if (!deleteLoc) {
+			return NextResponse.json(
+				{ error: "Nie udało się usunąć lokalizacji" },
+				{ status: 500 }
+			);
+		}
+		return NextResponse.json(
+			{ message: "Udało się usunąć lokalizacje!" },
+			{ status: 200 }
+		);
+	} catch (error) {
+		return NextResponse.json(
+			{ error: "Nie udało się usunąć lokalizacji" },
+			{ status: 500 }
+		);
+	}
+};
