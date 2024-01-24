@@ -29,7 +29,7 @@ export default function BottomNav() {
 				width: "100vw",
 				position: "fixed",
 				bottom: 0,
-				zIndex: 20,
+				zIndex: 10,
 				height: "80px",
 				paddingBottom: 2,
 			}}
@@ -56,7 +56,7 @@ export default function BottomNav() {
 			/>
 			<BottomNavigationAction
 				label='Statystyki'
-				value='payments'
+				value='stats'
 				icon={<LeaderboardIcon />}
 			/>
 		</BottomNavigation>

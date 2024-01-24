@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import Loading from "@/context/Loading";
 import { Typography } from "@mui/material";
 
-const Payments = () => {
+const Stats = () => {
 	const { status } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -19,4 +19,4 @@ const Payments = () => {
 	return <Typography variant='h2'>Już wkrótce!</Typography>;
 };
 
-export default Payments;
+export default Stats;

@@ -107,7 +107,7 @@ const Login = () => {
 							item
 							xs>
 							<Link
-								href='#'
+								href='/reset'
 								variant='body2'>
 								Zapomniałeś hasła?
 							</Link>

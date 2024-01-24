@@ -107,20 +107,22 @@ model attendance {
 }
 
 model user {
-  id            String    @id @default(uuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime?
-  password      String
-  club          String    @default("guest")
-  role          String    @default("guest")
-  surname       String?
-  account       account[]
-  session       session[]
-  coachedGroups groupcoach[] // Relacja do danych trenera
+  id                        String    @id @default(uuid())
+  name                      String?
+  email                     String?   @unique
+  emailVerified             DateTime?
+  image                     String?
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime?
+  password                  String
+  club                      String    @default("guest")
+  role                      String    @default("guest")
+  surname                   String?
+  resetPasswordToken        String?   @unique
+  resetPasswordTokenExpire  DateTime?
+  account                   account[]
+  session                   session[]
+  coachedGroups             groupcoach[] // Relacja do danych trenera
 }
 
 model verificationrequest {

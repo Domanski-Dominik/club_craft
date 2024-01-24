@@ -18,11 +18,21 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { signOut, useSession } from "next-auth/react";
+import { ListItemIcon } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useRouter } from "next/navigation";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import InfoIcon from "@mui/icons-material/Info";
 
 const drawerWidth = 240;
-const navItems = ["Klub", "Informacje", "Coś tam"];
+const navItems = [
+	{ name: "Kalendarz", icon: <CalendarMonthIcon /> },
+	{ name: "Informacje", icon: <InfoIcon /> },
+];
 
 export default function TopNav() {
+	const router = useRouter();
 	const { data: session, status } = useSession();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -39,17 +49,14 @@ export default function TopNav() {
 			<Typography
 				variant='h6'
 				sx={{ my: 2 }}>
-				Panel Zarządzania
+				Club Craft
 			</Typography>
 			<Divider />
 			<List>
 				{navItems.map((item) => (
-					<ListItem
-						key={item}
-						disablePadding>
-						<ListItemButton sx={{ textAlign: "center" }}>
-							<ListItemText primary={item} />
-						</ListItemButton>
+					<ListItem key={item.name}>
+						<ListItemIcon>{item.icon}</ListItemIcon>
+						<ListItemText primary={item.name} />
 					</ListItem>
 				))}
 			</List>
@@ -92,9 +99,11 @@ export default function TopNav() {
 					<Box sx={{ display: { xs: "none", sm: "block" } }}>
 						{navItems.map((item) => (
 							<Button
-								key={item}
+								disabled
+								startIcon={item.icon}
+								key={item.name}
 								sx={{ color: "#fff" }}>
-								{item}
+								{item.name}
 							</Button>
 						))}
 					</Box>
@@ -123,13 +132,26 @@ export default function TopNav() {
 								}}
 								open={Boolean(anchorEl)}
 								onClose={handleClose}>
-								<MenuItem onClick={handleClose}>Profil</MenuItem>
-								<MenuItem onClick={handleClose}>Jakaś opcja</MenuItem>
+								<MenuItem
+									onClick={() => {
+										router.push("/profile");
+										handleClose();
+									}}>
+									<ListItemIcon>
+										<AccountCircleIcon />
+									</ListItemIcon>
+									<ListItemText>Profil</ListItemText>
+								</MenuItem>
+
 								<MenuItem
 									onClick={() => {
 										signOut();
+										handleClose();
 									}}>
-									Wyloguj się
+									<ListItemIcon>
+										<LogoutIcon />
+									</ListItemIcon>
+									<ListItemText>Wyloguj się</ListItemText>
 								</MenuItem>
 							</Menu>
 						</div>
