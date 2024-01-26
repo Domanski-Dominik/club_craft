@@ -1,6 +1,11 @@
 import bcrypt from "bcrypt";
 import { prisma } from "@/prisma/prisma";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import { randomBytes } from "crypto";
+import { VerifyEmailTemplate } from "@/components/emailTemps/EmailVerify";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface Body {
 	formData: {
@@ -54,6 +59,7 @@ export async function POST(req: Request, res: Response) {
 			}
 		}
 		const hashedPassword = await bcrypt.hash(password, 10);
+		const verifyEmailToken = randomBytes(16).toString("base64url");
 
 		const user = await prisma.user.create({
 			data: {
@@ -63,8 +69,31 @@ export async function POST(req: Request, res: Response) {
 				role: role,
 				name: name,
 				surname: surname,
+				verifyEmailToken: verifyEmailToken,
 			},
 		});
+		if (!user) {
+			return NextResponse.json(
+				{ error: "Nie udało się stworzyć konta" },
+				{ status: 400 }
+			);
+		}
+
+		const emailSend = await resend.emails.send({
+			from: "Club Craft <reset@clubcraft.pl>",
+			to: [email.toLowerCase()],
+			subject: "Zresetuj hasło",
+			react: VerifyEmailTemplate({
+				email,
+				verifyEmailToken,
+			}) as React.ReactElement,
+		});
+		if (!emailSend) {
+			return NextResponse.json(
+				{ error: "Nie udało się wysłać maila" },
+				{ status: 400 }
+			);
+		}
 
 		return NextResponse.json(user);
 	} catch (error: any) {

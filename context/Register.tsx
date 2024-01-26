@@ -306,7 +306,7 @@ const Register = ({ club }: Props) => {
 							mt={4}
 							color='blueviolet'
 							textAlign='center'>
-							Udało ci się zarejestrować!
+							Udało ci się zarejestrować, sprawdź mail żeby zweryfikować konto!
 						</Typography>
 						<Button
 							fullWidth

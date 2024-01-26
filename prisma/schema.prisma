@@ -120,6 +120,7 @@ model user {
   surname                   String?
   resetPasswordToken        String?   @unique
   resetPasswordTokenExpire  DateTime?
+  verifyEmailToken          String?   @unique
   account                   account[]
   session                   session[]
   coachedGroups             groupcoach[] // Relacja do danych trenera
