@@ -10,13 +10,13 @@ export const VerifyEmailTemplate: React.FC<
 > = ({ email, verifyEmailToken }) => (
 	<div>
 		<h1>
-			Zresetuj hasło dla <b>{email}</b>!
+			ZZweryfikuj <b>{email}</b>!
 		</h1>
 		<p>
 			Żeby zweryfikować email, kliknij w link poniżej i podążaj za instrukcją
 		</p>
 		<a href={`https://www.clubcraft.pl/register/verify/${verifyEmailToken}`}>
-			Kliknij tu by zresetować hasło!
+			Kliknij tu by zweryfikować email!
 		</a>
 	</div>
 );

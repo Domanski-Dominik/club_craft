@@ -38,11 +38,16 @@ const VerifyEmail = ({ params }: Props) => {
 	return (
 		<>
 			{success ? (
-				<Typography variant='h4'>{message}</Typography>
+				<Typography
+					variant='h3'
+					align='center'>
+					{message}
+				</Typography>
 			) : (
 				<Typography
 					color={"red"}
-					variant='h4'>
+					align='center'
+					variant='h3'>
 					{message}
 				</Typography>
 			)}

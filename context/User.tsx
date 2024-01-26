@@ -1,7 +1,6 @@
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Snackbar, Alert, AlertProps } from "@mui/material";
 import SecurityIcon from "@mui/icons-material/Security";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -37,6 +36,27 @@ type Info = {
 export const User = ({ id }: Props) => {
 	const [data, setData] = useState<Info | null>(null);
 	const [loading, setLoading] = useState(true);
+	const [snackbar, setSnackbar] = useState<Pick<
+		AlertProps,
+		"children" | "severity"
+	> | null>(null);
+
+	const handleCloseSnackbar = () => setSnackbar(null);
+	const handleVerify = async () => {
+		if (data !== null) {
+			const email = data.email;
+			const verify = await fetch("/api/auth/verifyEmail", {
+				method: "POST",
+				body: JSON.stringify({ email: email }),
+			});
+			const response = await verify.json();
+			if (!response.error) {
+				setSnackbar({ children: response.message, severity: "success" });
+			} else {
+				setSnackbar({ children: response.error, severity: "error" });
+			}
+		}
+	};
 	const fetchData = async () => {
 		const response = await fetch(`/api/profile/${id}`, { method: "GET" });
 		const data = await response.json();
@@ -147,7 +167,7 @@ export const User = ({ id }: Props) => {
 							secondaryAction={
 								data.emailVerified === null && (
 									<Button
-										disabled
+										onClick={handleVerify}
 										color='primary'>
 										Zweryfikuj
 									</Button>
@@ -170,6 +190,19 @@ export const User = ({ id }: Props) => {
 						Edytuj Profil
 					</Fab>
 				</>
+			)}
+			{!!snackbar && (
+				<Snackbar
+					open
+					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+					autoHideDuration={3000}
+					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+					onClose={handleCloseSnackbar}>
+					<Alert
+						{...snackbar}
+						onClose={handleCloseSnackbar}
+					/>
+				</Snackbar>
 			)}
 		</>
 	);

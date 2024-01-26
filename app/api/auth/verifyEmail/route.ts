@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: Request) {
 	const body = await req.json();
 	const email = body.email;
-	console.log(body);
+	//console.log(body);
 	try {
 		const user = await prisma.user.findUnique({ where: { email: body.email } });
 		if (!user) {

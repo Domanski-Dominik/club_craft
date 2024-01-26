@@ -182,10 +182,10 @@ const CoachesManage = () => {
 			//console.log(session.user);
 			//console.log(data);
 			if (!data.error) {
-				const filteredRows = data.filter(
+				/*const filteredRows = data.filter(
 					(user: any) => user.id !== session.user.id
-				);
-				setRows(sortAndAddNumbers(filteredRows));
+				);*/
+				setRows(sortAndAddNumbers(data));
 				//console.log(data);
 			} else {
 				setError(data.error);
