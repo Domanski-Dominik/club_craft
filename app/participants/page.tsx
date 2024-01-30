@@ -70,9 +70,11 @@ const Participants = () => {
 						if (data.length > 0) {
 							setParticipants(data);
 							setLoading(false);
+							setNoPrt(false);
+						} else {
+							setNoPrt(true);
+							setLoading(false);
 						}
-						setNoPrt(true);
-						setLoading(false);
 					} else {
 						setError(data.error);
 					}

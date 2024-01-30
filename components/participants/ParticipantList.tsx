@@ -38,6 +38,7 @@ import format from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 type Props = {
 	participants: Participant[];
@@ -93,6 +94,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			actions: false,
 			payment: false,
 			note: false,
+			regulamin: false,
 		});
 	const [snackbar, setSnackbar] = React.useState<Pick<
 		AlertProps,
@@ -119,7 +121,6 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		setSelectedRow(row);
 		setPayDialogOpen(true);
 	};
-
 	const handleAddPayment = async (
 		form: FormPay | null,
 		row: GridRowModel | null,
@@ -282,7 +283,6 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			[id]: { mode: GridRowModes.View, ignoreModifications: true },
 		});
 	};
-
 	const processRowUpdate = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -331,69 +331,85 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	};
 	const CustomToolbar = () => {
 		return (
-			<Box
+			<Grid
+				container
 				height={60}
+				width={"100%"}
 				paddingTop={2}
-				mb={1}>
+				justifyContent='center'
+				alignItems={"center"}
+				mx={0}
+				mb={1}
+				spacing={1}>
 				{!edit && (
 					<>
-						<Button
-							variant='outlined'
-							size='medium'
-							sx={{ marginLeft: 1, marginRight: 1, height: "37px" }}
-							onClick={() => {
-								setEdit(true);
-								setColumnVisibilityModel({
-									phoneNumber: true,
-									actions: true,
-									payment: true,
-									note: true,
-								});
-							}}>
-							<EditIcon />
-							Edytuj
-						</Button>
-						<Button
-							variant='outlined'
-							size='medium'
-							sx={{ marginRight: 1, height: "37px" }}
-							onClick={() => {
-								setColumnVisibilityModel((prev) => ({
-									...prev,
-									phoneNumber: !prev.phoneNumber,
-									payment: !prev.payment,
-									note: !prev.note,
-								}));
-								gridRef.current.scroll({ left: 0 });
-								setMore((prev) => !prev);
-							}}>
-							<MoreVertIcon />
-							{more ? "Mniej" : "Więcej"}
-						</Button>
-						<LocalizationProvider
-							dateAdapter={AdapterDateFns}
-							adapterLocale={pl}>
-							<MobileDatePicker
-								label='Wybierz dzień'
-								value={date}
-								disableFuture
-								onChange={(newDate) => {
-									if (newDate) {
-										setDate(newDate);
-									}
-								}}
-								sx={{ width: 100 }}
-								slotProps={{ textField: { size: "small" } }}
-							/>
-						</LocalizationProvider>
+						<Grid xs={4}>
+							<Button
+								fullWidth
+								variant='outlined'
+								size='medium'
+								sx={{ height: "37px" }}
+								onClick={() => {
+									setEdit(true);
+									setColumnVisibilityModel({
+										phoneNumber: true,
+										actions: true,
+										payment: true,
+										note: true,
+										regulamin: true,
+									});
+								}}>
+								<EditIcon />
+								Edytuj
+							</Button>
+						</Grid>
+						<Grid xs={4}>
+							<Button
+								fullWidth
+								variant='outlined'
+								size='medium'
+								sx={{ height: "37px" }}
+								onClick={() => {
+									setColumnVisibilityModel((prev) => ({
+										...prev,
+										phoneNumber: !prev.phoneNumber,
+										payment: !prev.payment,
+										note: !prev.note,
+										regulamin: !prev.regulamin,
+									}));
+									gridRef.current.scroll({ left: 0 });
+									setMore((prev) => !prev);
+								}}>
+								<MoreVertIcon />
+								{more ? "Mniej" : "Więcej"}
+							</Button>
+						</Grid>
+						<Grid xs={4}>
+							<LocalizationProvider
+								dateAdapter={AdapterDateFns}
+								adapterLocale={pl}>
+								<MobileDatePicker
+									label='Wybierz dzień'
+									value={date}
+									disableFuture
+									onChange={(newDate) => {
+										if (newDate) {
+											setDate(newDate);
+										}
+									}}
+									sx={{ width: "100%" }}
+									slotProps={{ textField: { size: "small" } }}
+								/>
+							</LocalizationProvider>
+						</Grid>
 					</>
 				)}
 				{edit && (
-					<>
+					<Grid xs={12}>
 						<Button
+							fullWidth
 							variant='outlined'
 							size='medium'
-							sx={{ marginLeft: 1, marginRight: 1 }}
 							onClick={() => {
 								setEdit(false),
 									setColumnVisibilityModel({
@@ -401,6 +417,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 										phoneNumber: false,
 										payment: false,
 										note: false,
+										regulamin: false,
 									});
 								setMore(false);
 								gridRef.current.scroll({ left: 0 });
@@ -408,8 +425,40 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 							<CheckIcon />
 							Zakończ edycje
 						</Button>
-					</>
+					</Grid>
 				)}
+			</Grid>
+		);
+	};
+	const CustomFooter = () => {
+		const attendance = rows.map((row) => row.attendance);
+		const countMatchingDates = attendance.reduce((total, innerArray) => {
+			// Sprawdź, czy w tablicy wewnętrznej istnieje element o danej dacie
+			const datePresent = innerArray.some(
+				(item: Attendance) => item.date === formatDate(date)
+			);
+			// Jeśli istnieje, zwiększ licznik
+			if (datePresent) {
+				return total + 1;
+			}
+			// W przeciwnym razie, zwróć aktualną wartość licznika
+			return total;
+		}, 0);
+		return (
+			<Box
+				height={20}
+				borderTop={1}
+				borderColor={"rgba(224, 224, 224, 1)"}
+				paddingTop={1}
+				px={1}
+				mb={2}>
+				<Typography
+					align='center'
+					variant='body1'>
+					Obecnych :{" "}
+					<span style={{ fontWeight: "bold" }}>{countMatchingDates}</span> /{" "}
+					{rows.length}
+				</Typography>
 			</Box>
 		);
 	};
@@ -547,6 +596,15 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			sortable: false,
 		},
 		{
+			field: "regulamin",
+			headerName: "Umowa",
+			width: 70,
+			editable: true,
+			hideable: true,
+			type: "boolean",
+			sortable: false,
+		},
+		{
 			field: "attendance",
 			headerName: "Obecność",
 			maxWidth: 74,
@@ -648,7 +706,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				disableColumnMenu
 				getRowHeight={() => "auto"}
 				editMode='row'
-				slots={{ toolbar: CustomToolbar }}
+				slots={{ toolbar: CustomToolbar, footer: CustomFooter }}
 				columnVisibilityModel={columnVisibilityModel}
 				initialState={{
 					columns: {

@@ -32,7 +32,7 @@ import type {
 	FormPay,
 	LocWithGroups,
 } from "@/types/type";
-import MuiPagination from "@mui/material/Pagination";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -49,6 +49,7 @@ import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/context/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
+import ExportToExel from "../export/ExportToExel";
 
 type Props = {
 	participants: Participant[];
@@ -138,7 +139,6 @@ const AllParticipantList = ({
 		setSelectedRow(row);
 		setGroupsDialogOpen(true);
 	};
-
 	const handlePayment = async (
 		form: FormPay | null,
 		row: GridRowModel | null,
@@ -301,7 +301,6 @@ const AllParticipantList = ({
 			[id]: { mode: GridRowModes.View, ignoreModifications: true },
 		});
 	};
-
 	const processRowUpdate = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -348,7 +347,6 @@ const AllParticipantList = ({
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
 	};
-
 	function CustomToolbar() {
 		return (
 			<GridToolbarContainer
@@ -403,10 +401,13 @@ const AllParticipantList = ({
 						Edytuj
 					</Button>
 				)}
+				<Button onClick={Export}>
+					<IosShareIcon />
+					Exportuj
+				</Button>
 			</GridToolbarContainer>
 		);
 	}
-
 	const columns: GridColDef[] = [
 		{
 			field: "num",
@@ -545,6 +546,14 @@ const AllParticipantList = ({
 			},
 		},
 		{
+			field: "regulamin",
+			headerName: "Umowa",
+			width: 70,
+			editable: true,
+			hideable: true,
+			type: "boolean",
+		},
+		{
 			field: "participantgroup",
 			headerName: "Grupy",
 			minWidth: 300,
@@ -613,6 +622,9 @@ const AllParticipantList = ({
 			sortable: false,
 		},
 	];
+	const Export = async () => {
+		ExportToExel({ data: rows });
+	};
 	return (
 		<>
 			<Box

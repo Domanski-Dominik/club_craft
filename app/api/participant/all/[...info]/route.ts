@@ -95,6 +95,7 @@ export const GET = async (req: Request, { params }: Props) => {
 								include: {
 									participant: {
 										include: {
+											attendance: true,
 											payments: {
 												include: {
 													payment: true,

@@ -62,7 +62,8 @@ model participant {
   note               String?
   participantgroup   participantgroup[]  
   attendance         attendance[] 
-  payments           payment_participant[] // Relacja między uczestnikiem a płatnościami
+  payments           payment_participant[]
+  regulamin          Boolean @default(false) // Relacja między uczestnikiem a płatnościami
 }
 
 model payment {

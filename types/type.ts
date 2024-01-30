@@ -33,8 +33,9 @@ export type Participant = {
 	lastName: string;
 	club: string;
 	email?: string;
-	tel?: string;
+	phoneNumber?: string;
 	note?: string;
+	regulamin?: boolean;
 	attendance?: [Attendance];
 	payments?: [Payment];
 };
