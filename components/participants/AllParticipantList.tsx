@@ -548,7 +548,7 @@ const AllParticipantList = ({
 		{
 			field: "regulamin",
 			headerName: "Umowa",
-			width: 70,
+			width: 80,
 			editable: true,
 			hideable: true,
 			type: "boolean",
