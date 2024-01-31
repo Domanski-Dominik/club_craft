@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	DataGrid,
 	plPL,
@@ -68,7 +68,18 @@ const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
 
 	// Dodaj numery do posortowanych uczestników
 	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return { ...row, num: index + 1 };
+		return {
+			...row,
+			num: index + 1,
+			hiddengroups:
+				row.participantgroup.length > 0
+					? row.participantgroup
+							.map(
+								(g: any) => ` ${g.location} ${g.name} ${PolishDayName(g.day)}`
+							)
+							.join(",")
+					: "Nie przypisany do żadnej grupy",
+		};
 	});
 
 	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
@@ -83,33 +94,30 @@ const AllParticipantList = ({
 	locWithGroups,
 	isOwner,
 }: Props) => {
-	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
-		null
-	);
+	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
-	const [dialogOpen, setDialogOpen] = React.useState(false);
-	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
-	const [groupsDialogOpen, setGroupsDialogOpen] = React.useState(false);
-	const [edit, setEdit] = React.useState(false);
-	const [date, setDate] = React.useState<Date>(new Date());
-	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [payDialogOpen, setPayDialogOpen] = useState(false);
+	const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
+	const [edit, setEdit] = useState(false);
+	const [date, setDate] = useState<Date>(new Date());
+	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants)
 	);
-	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-		{}
-	);
+	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
-		React.useState<GridColumnVisibilityModel>({
+		useState<GridColumnVisibilityModel>({
 			actions: false,
+			hiddengroups: false,
 		});
-	const [snackbar, setSnackbar] = React.useState<Pick<
+	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
 
 	const handleCloseSnackbar = () => setSnackbar(null);
 
-	const hiddenFields = ["num", "actions"];
+	const hiddenFields = ["num", "actions", "hiddengroups"];
 
 	const getTogglableColumns = (columns: GridColDef[]) => {
 		return columns
@@ -124,6 +132,10 @@ const AllParticipantList = ({
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
 			event.defaultMuiPrevented = true;
 		}
+		setRowModesModel({
+			...rowModesModel,
+			[params.id]: { mode: GridRowModes.View },
+		});
 	};
 	const handleEditClick = (id: GridRowId) => () => {
 		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -380,7 +392,13 @@ const AllParticipantList = ({
 							setEdit(false), gridRef.current.scroll({ left: 0 });
 							setColumnVisibilityModel({
 								actions: false,
+								hiddengroups: false,
 							});
+							const newModesModel: GridRowModesModel = {};
+							rows.forEach((row) => {
+								newModesModel[row.id] = { mode: GridRowModes.View };
+							});
+							setRowModesModel(newModesModel);
 						}}>
 						<CheckIcon />
 						Zakończ edycje
@@ -395,6 +413,7 @@ const AllParticipantList = ({
 							gridRef.current.scroll({ left: 0 });
 							setColumnVisibilityModel({
 								actions: true,
+								hiddengroups: false,
 							});
 						}}>
 						<EditIcon />
@@ -548,7 +567,7 @@ const AllParticipantList = ({
 		{
 			field: "regulamin",
 			headerName: "Umowa",
-			width: 80,
+			width: 90,
 			editable: true,
 			hideable: true,
 			type: "boolean",
@@ -621,6 +640,7 @@ const AllParticipantList = ({
 			flex: 1,
 			sortable: false,
 		},
+		{ field: "hiddengroups", headerName: "Ukryta ", hideable: true },
 	];
 	const Export = async () => {
 		ExportToExel({ data: rows });
@@ -651,6 +671,7 @@ const AllParticipantList = ({
 						gridRef.current.scroll({ left: 0 });
 						setColumnVisibilityModel({
 							actions: true,
+							hiddengroups: false,
 						});
 					}}
 					columnVisibilityModel={columnVisibilityModel}
@@ -666,6 +687,7 @@ const AllParticipantList = ({
 						columns: {
 							columnVisibilityModel: {
 								actions: false,
+								hiddengroups: false,
 							},
 						},
 						pagination: { paginationModel: { pageSize: 100 } },

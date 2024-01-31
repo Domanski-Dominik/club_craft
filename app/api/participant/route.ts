@@ -8,12 +8,13 @@ interface Body {
 	surname: string;
 	club: string;
 	groups: number[];
+	regulamin: boolean;
 }
 export async function POST(req: Request, res: Response) {
 	try {
 		const body: Body = await req.json();
 		//console.log(body);
-		const { email, tel, name, surname, club, groups } = body;
+		const { email, tel, name, surname, club, groups, regulamin } = body;
 		//console.log(email, tel, name, surname, club, groups);
 
 		if (!name || !surname || !groups) {
@@ -45,6 +46,7 @@ export async function POST(req: Request, res: Response) {
 				email: email.toLowerCase(),
 				phoneNumber: tel,
 				club: club,
+				regulamin: regulamin,
 				participantgroup: {
 					create: groups.map((id: number) => ({
 						group: { connect: { id: id } },

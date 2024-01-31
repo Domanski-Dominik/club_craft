@@ -38,6 +38,7 @@ export type Participant = {
 	regulamin?: boolean;
 	attendance?: [Attendance];
 	payments?: [Payment];
+	participantgroup?: [];
 };
 export type Payment = {
 	id: number;
