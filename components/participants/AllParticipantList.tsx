@@ -389,7 +389,6 @@ const AllParticipantList = ({
 						size='medium'
 						sx={{ marginLeft: 1, marginRight: 1 }}
 						onClick={() => {
-							setEdit(false), gridRef.current.scroll({ left: 0 });
 							setColumnVisibilityModel({
 								actions: false,
 								hiddengroups: false,
@@ -668,7 +667,6 @@ const AllParticipantList = ({
 					getRowHeight={() => "auto"}
 					onCellDoubleClick={() => {
 						setEdit(true);
-						gridRef.current.scroll({ left: 0 });
 						setColumnVisibilityModel({
 							actions: true,
 							hiddengroups: false,
