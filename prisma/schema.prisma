@@ -60,10 +60,11 @@ model participant {
   email              String?
   phoneNumber        String?
   note               String?
+  active             Boolean @default(false)
   participantgroup   participantgroup[]  
   attendance         attendance[] 
   payments           payment_participant[]
-  regulamin          Boolean @default(false) // Relacja między uczestnikiem a płatnościami
+  regulamin          Boolean @default(false) 
 }
 
 model payment {
@@ -102,6 +103,7 @@ model attendance {
   date          String
   groupId       Int
   participantId Int
+  belongs       Boolean @default(true)
   participant   participant @relation(fields: [participantId], references: [id])
 
   @@index([participantId])

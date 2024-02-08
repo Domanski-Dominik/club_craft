@@ -18,6 +18,7 @@ interface Props {
 
 const Group = ({ params }: Props) => {
 	const [participants, setParticipants] = useState<Participant[]>([]);
+	const [workOutPrt, setWorkOutPrt] = useState<Participant[]>([]);
 	const [length, setLength] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
@@ -40,7 +41,7 @@ const Group = ({ params }: Props) => {
 				});
 				const data: Participant[] | { error: string } = await response.json();
 				if (Array.isArray(data)) {
-					//console.log(data);
+					console.log(data);
 					setParticipants(data);
 				} else {
 					setError(data.error);
@@ -91,6 +92,20 @@ const Group = ({ params }: Props) => {
 		loadName(params.id);
 	}, [params.id]);
 
+	useEffect(() => {
+		const checkWorkOut = async () => {
+			const response = await fetch(`/api/presence/${groupId}`, {
+				method: "GET",
+			});
+			const data: Participant[] | [] = await response.json();
+			if (data.length > 0) {
+				setWorkOutPrt(data);
+			}
+		};
+		setWorkOutPrt([]);
+		checkWorkOut();
+	}, []);
+
 	if (status === "loading") return <Loading />;
 	if (loading) return <Loading />;
 	return (
@@ -108,6 +123,7 @@ const Group = ({ params }: Props) => {
 					<ParticipantList
 						participants={participants}
 						groupId={groupId}
+						workOutPrt={workOutPrt}
 					/>
 				</Box>
 			)}

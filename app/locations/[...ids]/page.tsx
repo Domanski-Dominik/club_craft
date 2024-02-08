@@ -24,6 +24,7 @@ type GroupP = {
 	timeE: string;
 	club: string;
 	participants: number;
+	active: number;
 };
 export default function Grups({ params }: Props) {
 	const [loading, setLoading] = useState(true);

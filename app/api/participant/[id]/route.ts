@@ -46,9 +46,9 @@ export const GET = async (req: Request, { params }: Props) => {
 			);
 		}
 		/*const participants = schedule.map((object) => object.participant);*/
-		const participants = schedule.map((object) => {
+		const participants = schedule.map((object: any) => {
 			const paymentsArray = object.participant.payments.map(
-				(paymentParticipant) => ({
+				(paymentParticipant: any) => ({
 					id: paymentParticipant.payment.id,
 					amount: paymentParticipant.payment.amount,
 					description: paymentParticipant.payment.description,

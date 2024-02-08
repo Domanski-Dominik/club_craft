@@ -17,6 +17,8 @@ import {
 	GridPagination,
 	GridToolbarColumnsButton,
 	GridToolbarQuickFilter,
+	GridFooterContainer,
+	GridFooter,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -124,7 +126,6 @@ const AllParticipantList = ({
 			.filter((column) => !hiddenFields.includes(column.field))
 			.map((column) => column.field);
 	};
-
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
 		event
@@ -426,6 +427,25 @@ const AllParticipantList = ({
 			</GridToolbarContainer>
 		);
 	}
+	function CustomFooter() {
+		const active = rows.filter(
+			(participant) => participant.active === true
+		).length;
+		return (
+			<GridFooterContainer>
+				<Typography
+					variant='body2'
+					ml={2}>
+					<span style={{ fontWeight: "bold", color: "darkviolet" }}>
+						{active}
+					</span>{" "}
+					/ <span style={{ fontWeight: "bold" }}>{rows.length}</span>{" "}
+					uczestników
+				</Typography>
+				<GridFooter />
+			</GridFooterContainer>
+		);
+	}
 	const columns: GridColDef[] = [
 		{
 			field: "num",
@@ -674,7 +694,11 @@ const AllParticipantList = ({
 					}}
 					columnVisibilityModel={columnVisibilityModel}
 					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-					slots={{ toolbar: CustomToolbar, pagination: GridPagination }}
+					slots={{
+						toolbar: CustomToolbar,
+						pagination: GridPagination,
+						footer: CustomFooter,
+					}}
 					slotProps={{
 						columnsPanel: { getTogglableColumns, disableHideAllButton: true },
 					}}

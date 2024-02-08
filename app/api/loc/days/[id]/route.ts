@@ -21,7 +21,7 @@ export async function GET(req: Request, { params }: Props) {
 					include: {
 						participantgroup: {
 							include: {
-								participant: { select: { id: true } },
+								participant: { select: { id: true, active: true } },
 							},
 						},
 					},
@@ -41,6 +41,9 @@ export async function GET(req: Request, { params }: Props) {
 				timeS: schedule.group.timeS,
 				timeE: schedule.group.timeE,
 				participants: schedule.group.participantgroup.length,
+				active: schedule.group.participantgroup.filter(
+					(p) => p.participant.active === true
+				).length,
 			};
 		});
 		//console.log(groups);

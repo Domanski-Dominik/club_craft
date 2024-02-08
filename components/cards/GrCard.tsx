@@ -14,6 +14,7 @@ type GroupCardProps = {
 		timeE: string;
 		club: string;
 		participants: number;
+		active: number;
 	}[];
 	handleAddGroupClick: () => void;
 	handleClick: (id: string | number) => void;
@@ -67,17 +68,44 @@ const GrCard = ({
 										</Typography>
 										<Box
 											sx={{ display: "flex", justifyContent: "space-between" }}>
-											<Typography variant='body2'>
-												<span style={{ fontWeight: "bold" }}>
-													{group.participants}{" "}
-												</span>
-												uczestników
-											</Typography>
-											<Typography variant='body2'>
-												{" "}
-												{group.timeS} {" - "}
-												{group.timeE}
-											</Typography>
+											{group.active === group.participants ? (
+												<>
+													<Typography variant='body2'>
+														<span style={{ fontWeight: "bold" }}>
+															{group.participants}{" "}
+														</span>
+														uczestników
+													</Typography>
+
+													<Typography variant='body2'>
+														{" "}
+														{group.timeS} {" - "}
+														{group.timeE}
+													</Typography>
+												</>
+											) : (
+												<>
+													<Typography variant='body2'>
+														<span
+															style={{
+																fontWeight: "bold",
+																color: "darkviolet",
+															}}>
+															{group.active}
+														</span>
+														/
+														<span style={{ fontWeight: "bold" }}>
+															{group.participants}{" "}
+														</span>
+														uczestników
+													</Typography>
+													<Typography variant='body2'>
+														{" "}
+														{group.timeS} {" - "}
+														{group.timeE}
+													</Typography>
+												</>
+											)}
 										</Box>
 									</Box>
 								</CardContent>

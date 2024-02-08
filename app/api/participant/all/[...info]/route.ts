@@ -1,10 +1,46 @@
 import { prisma } from "@/prisma/prisma";
+import { isWithinInterval, subDays, format, subMonths, parse } from "date-fns";
 
 interface Props {
 	params: {
 		info: [string, string, string];
 	};
 }
+const updateParticipantStatus = async (participant: any) => {
+	const participantId = participant.id;
+
+	const recentAttendances = participant.attendance.filter((a: any) => {
+		// Parsuj datę z formatu dd-mm-yyyy do obiektu Date
+		const attendanceDate = parse(a.date, "dd-MM-yyyy", new Date());
+
+		// Sprawdź, czy obecność jest w ostatnich 31 dniach
+		return isWithinInterval(attendanceDate, {
+			start: subDays(new Date(), 31),
+			end: new Date(),
+		});
+	});
+
+	const hasPaymentForPreviousMonth = participant.payments.some(
+		(paymentParticipant: any) => {
+			const previousMonth = subMonths(new Date(), 1);
+			return (
+				format(previousMonth, "MM-yyyy") === paymentParticipant.payment.month ||
+				format(new Date(), "MM-yyyy") === paymentParticipant.payment.month
+			);
+		}
+	);
+	/*console.log(
+		participant.lastName,
+		recentAttendances,
+		hasPaymentForPreviousMonth
+	);*/
+	await prisma.participant.update({
+		where: { id: participantId },
+		data: {
+			active: recentAttendances.length > 0 || hasPaymentForPreviousMonth,
+		},
+	});
+};
 export const GET = async (req: Request, { params }: Props) => {
 	const role = params.info[0];
 	const club = params.info[1];
@@ -59,6 +95,7 @@ export const GET = async (req: Request, { params }: Props) => {
 					}
 				);
 			}
+			await Promise.all(allParticipants.map(updateParticipantStatus));
 			const participants = allParticipants.map((object) => {
 				const paymentsArray = object.payments.map((paymentParticipant) => ({
 					id: paymentParticipant.payment.id,

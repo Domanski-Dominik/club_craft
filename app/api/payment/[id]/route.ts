@@ -10,7 +10,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 	const { amount, description, paymentDate, paymentMethod, selectedMonth } =
 		body.form;
 	const action = body.action;
-	console.log(action);
+	//console.log(action);
 	const participantId = parseInt(params.id, 10);
 	/*console.log(
 		" participant: ",

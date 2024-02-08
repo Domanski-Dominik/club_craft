@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma/prisma";
+import { parse } from "path";
 
 export const POST = async (req: Request) => {
 	const { name, dayOfWeek, timeS, timeE, locationId, club, color } =
@@ -53,18 +54,18 @@ export const POST = async (req: Request) => {
 };
 export const DELETE = async (req: Request) => {
 	const { id } = await req.json();
-	//console.log("Id grupy to " + id);
+	console.log("Id grupy to " + id);
 	try {
 		if (id !== null && id !== undefined) {
 			const deleteSchedule = await prisma.locationschedule.deleteMany({
 				where: { group: { id: id } },
 			});
-
 			if (!deleteSchedule) {
 				return new Response("Nie udało się usunąć relacji z lokalizacją:", {
 					status: 404,
 				});
 			}
+
 			const deleteParticipants = await prisma.participantgroup.deleteMany({
 				where: { groupId: id },
 			});
@@ -73,8 +74,13 @@ export const DELETE = async (req: Request) => {
 					status: 404,
 				});
 			}
-
-			const deleteGroup = await prisma.group.delete({
+			const deleteAttendance = await prisma.attendance.deleteMany({
+				where: { groupId: id },
+			});
+			if (!deleteAttendance) {
+				return new Response("Nie udało się usunąć obecności", { status: 500 });
+			}
+			const deleteGroup = await prisma.group.deleteMany({
 				where: { id: id },
 			});
 
@@ -134,3 +140,18 @@ export const PUT = async (req: Request) => {
 		});
 	}
 };
+/*
+const findSchedule = await prisma.locationschedule.findMany({
+				where: { group: { id } },
+			});
+			if (findSchedule.length > 1) {
+const findParticipants = await prisma.participantgroup.findMany({
+				where: { groupId: id },
+			});
+			if (findParticipants.length > 0) {
+				}
+			const findAttendance = await prisma.attendance.deleteMany({
+				where:{groupId:id}
+			})
+
+*/

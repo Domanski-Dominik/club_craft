@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
 	DataGrid,
 	plPL,
@@ -39,10 +39,14 @@ import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import DialogPresent from "../dialogs/DialogPresent";
+import { darken, lighten, styled } from "@mui/material/styles";
+import SearchIcon from "@mui/icons-material/Search";
 
 type Props = {
 	participants: Participant[];
 	groupId: number;
+	workOutPrt: Participant[] | [];
 };
 
 const sortAndAddNumbers = (
@@ -59,7 +63,7 @@ const sortAndAddNumbers = (
 
 	// Dodaj numery do posortowanych uczestników
 	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return { ...row, num: index + 1, groupId: groupId };
+		return { ...row, num: index + 1, groupId: groupId, status: "normal" };
 	});
 
 	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
@@ -71,37 +75,188 @@ const formatDate = (date: Date) => {
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
+const getBackgroundColor = (color: string, mode: string) =>
+	mode === "dark" ? darken(color, 0.7) : lighten(color, 0.7);
 
-const ParticipantList = ({ participants, groupId }: Props) => {
-	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
-		null
-	);
+const getHoverBackgroundColor = (color: string, mode: string) =>
+	mode === "dark" ? darken(color, 0.7) : lighten(color, 0.6);
+
+const getSelectedBackgroundColor = (color: string, mode: string) =>
+	mode === "dark" ? darken(color, 0.5) : lighten(color, 0.5);
+
+const getSelectedHoverBackgroundColor = (color: string, mode: string) =>
+	mode === "dark" ? darken(color, 0.4) : lighten(color, 0.4);
+
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+	"& .row-info": {
+		backgroundColor: getBackgroundColor(
+			theme.palette.info.main,
+			theme.palette.mode
+		),
+		"&:hover": {
+			backgroundColor: getHoverBackgroundColor(
+				theme.palette.info.main,
+				theme.palette.mode
+			),
+		},
+		"&.Mui-selected": {
+			backgroundColor: getSelectedBackgroundColor(
+				theme.palette.info.main,
+				theme.palette.mode
+			),
+			"&:hover": {
+				backgroundColor: getSelectedHoverBackgroundColor(
+					theme.palette.info.main,
+					theme.palette.mode
+				),
+			},
+		},
+	},
+	"& .row-external": {
+		backgroundColor: getBackgroundColor(
+			theme.palette.warning.main,
+			theme.palette.mode
+		),
+		"&:hover": {
+			backgroundColor: getHoverBackgroundColor(
+				theme.palette.warning.main,
+				theme.palette.mode
+			),
+		},
+		"&.Mui-selected": {
+			backgroundColor: getSelectedBackgroundColor(
+				theme.palette.warning.main,
+				theme.palette.mode
+			),
+			"&:hover": {
+				backgroundColor: getSelectedHoverBackgroundColor(
+					theme.palette.warning.main,
+					theme.palette.mode
+				),
+			},
+		},
+	},
+	"& .row-error": {
+		backgroundColor: getBackgroundColor(
+			theme.palette.error.main,
+			theme.palette.mode
+		),
+		"&:hover": {
+			backgroundColor: getHoverBackgroundColor(
+				theme.palette.error.main,
+				theme.palette.mode
+			),
+		},
+		"&.Mui-selected": {
+			backgroundColor: getSelectedBackgroundColor(
+				theme.palette.error.main,
+				theme.palette.mode
+			),
+			"&:hover": {
+				backgroundColor: getSelectedHoverBackgroundColor(
+					theme.palette.error.main,
+					theme.palette.mode
+				),
+			},
+		},
+	},
+}));
+
+const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
+	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
-	const [dialogOpen, setDialogOpen] = React.useState(false);
-	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
-	const [edit, setEdit] = React.useState(false);
-	const [more, setMore] = React.useState(false);
-	const [date, setDate] = React.useState<Date>(new Date());
-	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
+	const [workOutParticipants, setWorkOutParticpants] = useState<
+		Participant[] | []
+	>(workOutPrt);
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [payDialogOpen, setPayDialogOpen] = useState(false);
+	const [presentDiaolgOpen, setPresentDialogOpen] = useState(false);
+	const [edit, setEdit] = useState(false);
+	const [more, setMore] = useState(false);
+	const [date, setDate] = useState<Date>(new Date());
+	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants, groupId)
 	);
-	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-		{}
-	);
+	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
-		React.useState<GridColumnVisibilityModel>({
+		useState<GridColumnVisibilityModel>({
 			phoneNumber: false,
 			actions: false,
 			payment: false,
 			note: false,
 			regulamin: false,
+			active: false,
 		});
-	const [snackbar, setSnackbar] = React.useState<Pick<
+	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
 
 	const handleCloseSnackbar = () => setSnackbar(null);
+
+	useEffect(() => {
+		if (workOutParticipants.length > 0) {
+			// Znajdź uczestników, którzy są obecni w danym dniu
+			const participantsToAdd = workOutParticipants.filter((p) =>
+				p.attendance?.some(
+					(a) => a.date === formatDate(date) && a.groupId === groupId
+				)
+			);
+
+			// Znajdź unikalnych uczestników, którzy jeszcze nie są w tablicy rows
+			const uniqueParticipantsToAdd = participantsToAdd.filter(
+				(participant) => !rows.some((row) => row.id === participant.id)
+			);
+			console.log(uniqueParticipantsToAdd);
+			// Zaktualizuj tablicę rows, dodając nowych uczestników
+			setRows((prevRows) => [
+				...prevRows,
+				...uniqueParticipantsToAdd.map((p) => ({
+					...p,
+					status: "info",
+				})),
+			]);
+		}
+	}, [workOutParticipants]);
+
+	const handleDateChange = (newDate: Date | null) => {
+		if (newDate) {
+			if (workOutParticipants.length > 0) {
+				const updatedRows = [...rows];
+				const participantsToRemove = workOutParticipants.filter((p) => {
+					return !p.attendance?.some(
+						(a) => a.date === formatDate(newDate) && a.groupId === groupId
+					);
+				});
+				participantsToRemove.forEach((p) => {
+					const indexToRemove = rows.findIndex((row) => row.id === p.id);
+					if (indexToRemove !== -1) {
+						updatedRows.splice(indexToRemove, 1);
+					}
+				});
+				const participantsToAdd = workOutParticipants.filter((p) => {
+					return p.attendance?.some(
+						(a) => a.date === formatDate(newDate) && a.groupId === groupId
+					);
+				});
+				participantsToAdd.forEach((p) => {
+					// Sprawdź, czy uczestnik już istnieje w updatedRows
+					const exists = updatedRows.some((row) => row.id === p.id);
+
+					if (!exists) {
+						// Jeśli nie istnieje, dodaj uczestnika
+						updatedRows.push({
+							...p,
+							status: "info", // Ustaw dowolny status
+						});
+					}
+				});
+
+				setRows(updatedRows);
+			}
+			setDate(newDate);
+		}
+	};
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
@@ -120,6 +275,17 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 	const handlePayDialogOpen = (row: GridRowModel) => () => {
 		setSelectedRow(row);
 		setPayDialogOpen(true);
+	};
+	const handlePresentDialogOpen = () => {
+		setPresentDialogOpen(true);
+	};
+	const handlePresentDialogChoice = (participant: Participant | null) => {
+		console.log(participant);
+		setPresentDialogOpen(false);
+
+		if (participant !== null) {
+			setRows([...rows, { ...participant, status: "info" }]);
+		}
 	};
 	const handleAddPayment = async (
 		form: FormPay | null,
@@ -376,6 +542,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 										payment: !prev.payment,
 										note: !prev.note,
 										regulamin: !prev.regulamin,
+										active: !prev.active,
 									}));
 									gridRef.current.scroll({ left: 0 });
 									setMore((prev) => !prev);
@@ -392,11 +559,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 									label='Wybierz dzień'
 									value={date}
 									disableFuture
-									onChange={(newDate) => {
-										if (newDate) {
-											setDate(newDate);
-										}
-									}}
+									onChange={handleDateChange}
 									sx={{ width: "100%" }}
 									slotProps={{ textField: { size: "small" } }}
 								/>
@@ -418,6 +581,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 										payment: false,
 										note: false,
 										regulamin: false,
+										active: false,
 									});
 								setMore(false);
 								gridRef.current.scroll({ left: 0 });
@@ -435,7 +599,8 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 		const countMatchingDates = attendance.reduce((total, innerArray) => {
 			// Sprawdź, czy w tablicy wewnętrznej istnieje element o danej dacie
 			const datePresent = innerArray.some(
-				(item: Attendance) => item.date === formatDate(date)
+				(item: Attendance) =>
+					item.date === formatDate(date) && item.groupId === groupId
 			);
 			// Jeśli istnieje, zwiększ licznik
 			if (datePresent) {
@@ -444,22 +609,47 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			// W przeciwnym razie, zwróć aktualną wartość licznika
 			return total;
 		}, 0);
+		const active = rows.filter(
+			(participant) => participant.active === true
+		).length;
 		return (
-			<Box
+			<Grid
+				container
 				height={20}
+				width={"100%"}
+				my={1}
+				mx={0}
+				py={0.5}
 				borderTop={1}
 				borderColor={"rgba(224, 224, 224, 1)"}
-				paddingTop={1}
-				px={1}
-				mb={2}>
-				<Typography
-					align='center'
-					variant='body1'>
-					Obecnych :{" "}
-					<span style={{ fontWeight: "bold" }}>{countMatchingDates}</span> /{" "}
-					{rows.length}
-				</Typography>
-			</Box>
+				spacing={0.1}>
+				<Grid xs={4}>
+					<Typography
+						variant='body1'
+						align='center'>
+						Obecnych:{" "}
+						<span style={{ fontWeight: "bold" }}>{countMatchingDates}</span>/
+						{rows.length}
+					</Typography>
+				</Grid>
+				<Grid xs={4}>
+					<Typography
+						variant='body1'
+						align='center'>
+						Aktywnych: <span style={{ fontWeight: "bold" }}>{active}</span>/
+						{rows.length}
+					</Typography>
+				</Grid>
+				<Grid xs={4}>
+					<Button
+						onClick={handlePresentDialogOpen}
+						fullWidth
+						endIcon={<SearchIcon />}
+						sx={{ p: 0 }}>
+						Odrabianie
+					</Button>
+				</Grid>
+			</Grid>
 		);
 	};
 	const columns: GridColDef[] = [
@@ -612,16 +802,49 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				const participantAttendance = params.row.attendance;
 
 				const isPresent = participantAttendance.find(
-					(item: Attendance) => item.date === formatDate(date)
+					(item: Attendance) =>
+						item.date === formatDate(date) && item.groupId === groupId
 				);
 
 				const handlePresenceChange = async (event: any) => {
 					//console.log(event.target.checked);
 					const isChecked = event.target.checked;
+					const updatedRows = [...rows];
+					// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
+					const rowIndex = updatedRows.findIndex(
+						(row) => row.id === params.row.id
+					);
 
+					if (isChecked) {
+						// Jeśli isChecked to true, dodaj nowy obiekt Attendance
+						updatedRows[rowIndex].attendance.push({
+							date: formatDate(date),
+							groupId: groupId,
+						});
+					} else {
+						// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
+						updatedRows[rowIndex].attendance = updatedRows[
+							rowIndex
+						].attendance.filter(
+							(item: Attendance) => item.date !== formatDate(date)
+						);
+						if (updatedRows[rowIndex].status === "info") {
+							// Usuń uczestnika z workOutPrt
+							const updatedWorkOutPrt = workOutPrt.filter(
+								(participant) => participant.id !== updatedRows[rowIndex].id
+							);
+
+							// Usuń uczestnika z rows
+							updatedRows.splice(rowIndex, 1);
+
+							// Ustaw zaktualizowane wartości
+							setRows(updatedRows);
+							setWorkOutParticpants(updatedWorkOutPrt);
+						}
+					}
 					try {
 						const response = await fetch(
-							`/api/presence/${params.row.groupId}/${params.row.id}`,
+							`/api/presence/${groupId}/${params.row.id}`,
 							{
 								method: "PUT",
 								headers: {
@@ -637,17 +860,23 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 						if (response.ok) {
 							//console.log(message);
 							// Skopiuj aktualny stan rows
+							setSnackbar({
+								children: message.message,
+								severity: "success",
+							});
+						} else {
+							//console.log(message);
 							const updatedRows = [...rows];
-
 							// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
 							const rowIndex = updatedRows.findIndex(
 								(row) => row.id === params.row.id
 							);
 
-							if (isChecked) {
+							if (!isChecked) {
 								// Jeśli isChecked to true, dodaj nowy obiekt Attendance
 								updatedRows[rowIndex].attendance.push({
 									date: formatDate(date),
+									groupId: groupId,
 								});
 							} else {
 								// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
@@ -657,12 +886,6 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 									(item: Attendance) => item.date !== formatDate(date)
 								);
 							}
-							setSnackbar({
-								children: message.message,
-								severity: "success",
-							});
-						} else {
-							//console.log(message);
 							setSnackbar({ children: message.error, severity: "error" });
 						}
 					} catch (error) {
@@ -694,10 +917,19 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 			flex: 1,
 			sortable: false,
 		},
+		{
+			field: "active",
+			headerName: "Aktywny",
+			width: 70,
+			editable: false,
+			hideable: true,
+			type: "boolean",
+			sortable: false,
+		},
 	];
 	return (
 		<>
-			<DataGrid
+			<StyledDataGrid
 				apiRef={gridRef}
 				columns={columns}
 				density='compact'
@@ -715,6 +947,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 							actions: false,
 							payment: false,
 							note: false,
+							active: false,
 						},
 					},
 				}}
@@ -729,6 +962,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 				rowModesModel={rowModesModel}
 				onRowModesModelChange={handleRowModesModelChange}
 				onRowEditStop={handleRowEditStop}
+				getRowClassName={(params) => `row-${params.row.status}`}
 			/>
 
 			{!!snackbar && (
@@ -736,7 +970,7 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 					open
 					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 					autoHideDuration={2000}
-					sx={{ position: "absolute", bottom: 0, zIndex: 20 }}
+					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
 					onClose={handleCloseSnackbar}>
 					<Alert
 						{...snackbar}
@@ -758,6 +992,10 @@ const ParticipantList = ({ participants, groupId }: Props) => {
 					onClose={handleAddPayment}
 				/>
 			)}
+			<DialogPresent
+				open={presentDiaolgOpen}
+				onClose={handlePresentDialogChoice}
+			/>
 		</>
 	);
 };
