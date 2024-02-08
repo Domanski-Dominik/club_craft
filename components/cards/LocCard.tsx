@@ -21,7 +21,9 @@ export default function LocCard({ loc, handleClick, isOwner }: LocCardProps) {
 	};
 
 	return (
-		<Card variant='outlined'>
+		<Card
+			variant='outlined'
+			onClick={handleCardClick}>
 			<CardContent sx={{ display: "flex", alignItems: "center" }}>
 				<Box sx={{ position: "relative", right: 0 }}>
 					<Avatar sx={{ width: 35, height: 35, backgroundColor: "#3f51b5" }}>
@@ -31,14 +33,12 @@ export default function LocCard({ loc, handleClick, isOwner }: LocCardProps) {
 				<Box sx={{ ml: 2 }}>
 					<Typography
 						variant='h5'
-						component='div'
-						onClick={handleCardClick}>
+						component='div'>
 						{loc.name}
 					</Typography>
 
 					<Typography
 						variant='body2'
-						onClick={handleCardClick}
 						sx={{ mt: 0.5 }}>
 						{loc.street === "" && "Brak danych o adresie"}
 						{loc.street === "" && <br />}
