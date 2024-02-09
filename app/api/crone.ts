@@ -37,7 +37,7 @@ const updateParticipantStatus = async (participant: any) => {
 		},
 	});
 };
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export default async function handler(req: NextRequest, res: NextResponse) {
 	try {
 		console.log("Rozpoczynam Crone Job");
 		const allParticipants = await prisma.participant.findMany({
@@ -84,4 +84,4 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 		console.error(error);
 		return new NextResponse("Nie udało się", { status: 500 });
 	}
-};
+}
