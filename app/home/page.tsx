@@ -5,116 +5,97 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+  useQuery,
+} from "@tanstack/react-query";
+import { Typography } from "@mui/material";
 
 type Data = {
-	groups: [];
-	loc: [];
-	participants: [];
-	coaches: [];
+  groups: [];
+  loc: [];
+  participants: [];
+  coaches: [];
+  role: string;
 };
 
-const HomePage = () => {
-	const pages = [{ id: 1, title: "Klub", path: "/home" }];
-	const [isOwner, setIsOwner] = useState(false);
-	const [data, setData] = useState<Data>({
-		groups: [],
-		loc: [],
-		participants: [],
-		coaches: [],
-	});
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const fetchLoc = async () => {
-		if (session?.user || status === "authenticated") {
-			if (session.user.role === "owner" || session.user.role === "admin") {
-				const response = await fetch(
-					`/api/home/${session.user.role}/${session.user.club}`,
-					{ method: "GET" }
-				);
-				const data = await response.json();
-				setData({
-					loc: data.loc,
-					groups: data.groups,
-					participants: data.participants,
-					coaches: data.coaches,
-				});
-				setIsOwner(true);
-			}
-			if (session.user.role === "coach") {
-				const response = await fetch(
-					`/api/home/${session.user.role}/${session.user.club}/${session.user.id}`,
-					{ method: "GET" }
-				);
-				const data = await response.json();
-				setData({
-					loc: data.loc,
-					groups: data.groups,
-					participants: data.participants,
-					coaches: [],
-				});
-			}
-		}
-	};
-
-	useEffect(() => {
-		fetchLoc();
-	}, [session]);
-	return (
-		<>
-			<MobileNavigation pages={pages} />
-			<Grid
-				container
-				spacing={1}
-				paddingTop={3}
-				width={"100%"}>
-				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={4}
-					xl={3}>
-					<HomeCard
-						amount={data.coaches.length === 0 ? 0 : data.coaches.length}
-						name='Trenerzy'
-						color='green'
-						url={isOwner ? "/home/coaches" : "/home"}
-					/>
-				</Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={4}
-					xl={3}>
-					<HomeCard
-						amount={data.groups.length === 0 ? 0 : data.groups.length}
-						name='Lokalizacje i Grupy'
-						color='indigo'
-						url='/home/groups'
-					/>
-				</Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={4}
-					xl={3}>
-					<HomeCard
-						amount={
-							data.participants.length === 0 ? 0 : data.participants.length
-						}
-						name='Uczestnicy'
-						color='orange'
-						url='/participants'
-					/>
-				</Grid>
-			</Grid>
-		</>
-	);
-};
-
-export default HomePage;
+export default function HomePage() {
+  const pages = [{ id: 1, title: "Klub", path: "/home" }];
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    },
+  });
+  const {
+    data: homeInfo,
+    isSuccess,
+    isError,
+    error,
+  } = useQuery<Data>({
+    queryKey: ["home"],
+    enabled: !!session,
+    queryFn: () =>
+      fetch(
+        `/api/home/${session?.user.role}/${session?.user.club}/${session?.user.id}`
+      ).then((res) => res.json()),
+  });
+  return (
+    <>
+      <MobileNavigation pages={pages} />
+      <Grid container spacing={1} paddingTop={3} width={"100%"}>
+        <Grid xs={12} sm={6} md={6} lg={4} xl={3}>
+          <HomeCard
+            amount={
+              isSuccess
+                ? homeInfo.coaches.length === 0
+                  ? 0
+                  : homeInfo.coaches.length
+                : 0
+            }
+            name="Trenerzy"
+            color="green"
+            url={
+              isSuccess
+                ? homeInfo.role === "owner"
+                  ? "/home/coaches"
+                  : "/home"
+                : "/home"
+            }
+          />
+        </Grid>
+        <Grid xs={12} sm={6} md={6} lg={4} xl={3}>
+          <HomeCard
+            amount={
+              isSuccess
+                ? homeInfo.groups.length === 0
+                  ? 0
+                  : homeInfo.groups.length
+                : 0
+            }
+            name="Lokalizacje i Grupy"
+            color="indigo"
+            url="/home/groups"
+          />
+        </Grid>
+        <Grid xs={12} sm={6} md={6} lg={4} xl={3}>
+          <HomeCard
+            amount={
+              isSuccess
+                ? homeInfo.participants.length === 0
+                  ? 0
+                  : homeInfo.participants.length
+                : 0
+            }
+            name="Uczestnicy"
+            color="orange"
+            url="/participants"
+          />
+        </Grid>
+      </Grid>
+      {isError && <Typography color={"red"}>{error.message}</Typography>}
+    </>
+  );
+}

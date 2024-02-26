@@ -1,165 +1,91 @@
 "use client";
-import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import DaysCard from "@/components/cards/DaysCard";
 import { Group } from "@/types/type";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-
+import { useQuery } from "@tanstack/react-query";
 interface Props {
-	params: {
-		id: string;
-	};
+  params: {
+    id: string;
+  };
 }
 export default function Days({ params }: Props) {
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
-	const [groups, setGroups] = useState({});
-	const [owner, setOwner] = useState(false);
-	const router = useRouter();
-	const [pages, setPages] = useState([
-		{ id: 1, title: "Lokalizacje", path: "/locations" },
-	]);
-	const locId = params.id;
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
+  const router = useRouter();
+  const pages = [{ id: 1, title: "Lokalizacje", path: "/locations" }];
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    },
+  });
+  const breadcrumbs = useQuery({
+    queryKey: ["breadcrumbs1", params.id],
+    queryFn: () => fetch(`/api/loc/${params.id}`).then((res) => res.json()),
+    select: (data) => [
+      { id: 1, title: "Lokalizacje", path: "/locations" },
+      {
+        id: 2,
+        title: `${data?.name}`,
+        path: `/locations/${data?.id}`,
+      },
+    ],
+  });
+  const days = useQuery({
+    queryKey: ["days", params.id],
+    enabled: !!session,
+    queryFn: () =>
+      fetch(
+        `/api/loc/days/${params.id}/days/${session?.user.role}/${session?.user.id}`
+      ).then((res) => res.json()),
+  });
 
-	useEffect(() => {
-		const loadName = async (locId: string) => {
-			try {
-				const response = await fetch(`/api/loc/${locId}`, { method: "GET" });
-				if (response.ok) {
-					const locName = await response.json();
-					//console.log(locName);
-					setPages([
-						...pages,
-						{
-							id: 2,
-							title: `${locName.name}`,
-							path: `/locations/${locName.id}`,
-						},
-					]);
-				}
-			} catch (error) {
-				console.log("Error", error);
-			}
-		};
-		loadName(locId);
-	}, []);
-	useEffect(() => {
-		const fetchLoc = async (locId: string) => {
-			if (session?.user || status === "authenticated") {
-				//console.log(session.user);
-				if (session.user.role === "owner" || session.user.role === "admin") {
-					const response = await fetch(`/api/loc/days/${locId}`, {
-						method: "GET",
-					});
-					const data: Group[] | { error: string } = await response.json();
-					if (Array.isArray(data)) {
-						const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
-						data.forEach((group) => {
-							const { dayOfWeek } = group;
+  const handleDayClick = (id: string | number) => {
+    router.push(`/locations/${params.id}/${id}`);
+  };
 
-							if (!groupsByDay[dayOfWeek]) {
-								groupsByDay[dayOfWeek] = [];
-							}
-							groupsByDay[dayOfWeek].push(group);
-						});
-						setGroups(groupsByDay);
-						setLoading(false);
-						setOwner(true);
-						setError("");
-					} else {
-						setError(error);
-						setLoading(false);
-					}
-				}
-				if (session.user.role === "coach") {
-					const response = await fetch(
-						`/api/coaches/groups/${session.user.id}`,
-						{ method: "GET" }
-					);
-					const data: number[] | { error: string } = await response.json();
-					if (Array.isArray(data)) {
-						const response2 = await fetch(`/api/loc/days/${locId}`, {
-							method: "GET",
-						});
-						const data2: Group[] | { error: string } = await response2.json();
-						if (Array.isArray(data2)) {
-							const filteredGroups = data2.filter((group) =>
-								data.includes(group.id)
-							);
-							const groupsByDay: { [dayOfWeek: number]: Group[] } = {};
-							filteredGroups.forEach((group) => {
-								const { dayOfWeek } = group;
-
-								if (!groupsByDay[dayOfWeek]) {
-									groupsByDay[dayOfWeek] = [];
-								}
-								groupsByDay[dayOfWeek].push(group);
-							});
-							setGroups(groupsByDay);
-							setLoading(false);
-							setError("");
-						} else {
-							setError(data2.error);
-							setLoading(false);
-						}
-					} else {
-						setError(data.error);
-						setLoading(false);
-					}
-				}
-			}
-		};
-		fetchLoc(locId);
-	}, [session]);
-
-	const handleDayClick = (id: string | number) => {
-		router.push(`/locations/${locId}/${id}`);
-	};
-
-	const handleAddGroup = () => {
-		router.push(`/locations/new/${locId}`);
-	};
-	if (status === "loading" || loading)
-		return (
-			<>
-				<MobileNavigation pages={pages} />
-				<CardsSkeleton />
-			</>
-		);
-	if (error !== "")
-		return (
-			<>
-				<WarningAmberIcon
-					color='error'
-					sx={{ width: 100, height: 100, m: 5 }}
-				/>
-				<Typography
-					variant='h5'
-					align='center'
-					color='red'>
-					{error}
-				</Typography>
-			</>
-		);
-	return (
-		<>
-			<MobileNavigation pages={pages} />
-			<DaysCard
-				gr={groups}
-				owner={owner}
-				handleClick={handleDayClick}
-				handleAddGroupClick={handleAddGroup}
-			/>
-		</>
-	);
+  const handleAddGroup = () => {
+    router.push(`/locations/new/${params.id}`);
+  };
+  if (status === "loading" || days.isLoading)
+    return (
+      <>
+        <MobileNavigation
+          pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+        />
+        <CardsSkeleton />
+      </>
+    );
+  if (days.isError)
+    return (
+      <>
+        {console.log(days.error)}
+        <MobileNavigation
+          pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+        />
+        <WarningAmberIcon
+          color="error"
+          sx={{ width: 100, height: 100, m: 5 }}
+        />
+        <Typography variant="h5" align="center" color="red">
+          {days.error.message}
+        </Typography>
+      </>
+    );
+  return (
+    <>
+      <MobileNavigation
+        pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+      />
+      <DaysCard
+        gr={days?.data}
+        owner={session.user.role === "owner"}
+        handleClick={handleDayClick}
+        handleAddGroupClick={handleAddGroup}
+      />
+    </>
+  );
 }

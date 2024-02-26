@@ -1,184 +1,107 @@
 "use client";
-import * as React from "react";
-import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
+import { Typography } from "@mui/material";
 import GrCard from "@/components/cards/GrCard";
-import { Group } from "@/types/type";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
-import { Card, CardContent, Typography } from "@mui/material";
-import { stat } from "fs";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
-	params: {
-		ids: [string, string];
-	};
+  params: {
+    ids: [string, string];
+  };
 }
 type GroupP = {
-	id: number;
-	name: string;
-	dayOfWeek: number;
-	timeS: string;
-	timeE: string;
-	club: string;
-	participants: number;
+  id: number;
+  name: string;
+  dayOfWeek: number;
+  timeS: string;
+  timeE: string;
+  club: string;
+  participants: number;
 };
 export default function Grups({ params }: Props) {
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
-	const [owner, setOwner] = useState(false);
-	const [groups, setGroups] = useState<GroupP[]>([]);
-	const router = useRouter();
-	const [pages, setPages] = useState([
-		{ id: 1, title: "Lokalizacje", path: "/locations" },
-	]);
-	const locId = params.ids[0];
-	const day = params.ids[1];
-	const dayNum = parseInt(day, 10);
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const handleGroupClick = (id: string | number) => {
-		//console.log(id);
-		router.push(`/group/${id}`);
-	};
+  const router = useRouter();
+  const locId = params.ids[0];
+  const day = params.ids[1];
+  const dayNum = parseInt(day, 10);
+  const pages = [{ id: 1, title: "Lokalizacje", path: "/locations" }];
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    },
+  });
+  const breadcrumbs = useQuery({
+    queryKey: ["breadcrumbs2", params.ids[0]],
+    queryFn: () => fetch(`/api/loc/${locId}`).then((res) => res.json()),
+    select: (data) => [
+      { id: 1, title: "Lokalizacje", path: "/locations" },
+      {
+        id: 2,
+        title: `${data?.name}`,
+        path: `/locations/${data?.id}`,
+      },
+      {
+        id: 3,
+        title: `${PolishDayName(dayNum)}`,
+        path: `locations/${data?.id}/${dayNum}`,
+      },
+    ],
+  });
+  const allGroups = useQuery({
+    queryKey: ["allGroups", params.ids[0], params.ids[1]],
+    enabled: !!session,
+    queryFn: () =>
+      fetch(
+        `/api/loc/days/${params.ids[0]}/groups/${session?.user.role}/${session?.user.id}/${params.ids[1]}`
+      ).then((res) => res.json()),
+  });
 
-	useEffect(() => {
-		const loadName = async (locId: string) => {
-			try {
-				const response = await fetch(`/api/loc/${locId}`, { method: "GET" });
-				if (response.ok) {
-					const locName = await response.json();
-					//console.log(locName);
-					const dayName = PolishDayName(dayNum);
-					setPages([
-						...pages,
-						{
-							id: 2,
-							title: `${locName.name}`,
-							path: `/locations/${locName.id}`,
-						},
-						{
-							id: 3,
-							title: `${dayName}`,
-							path: `locations/${locName.id}/${dayNum}`,
-						},
-					]);
-				}
-			} catch (error) {
-				console.log("Error", error);
-			}
-		};
-		loadName(locId);
-	}, []);
-	useEffect(() => {
-		const fetchLoc = async (locId: string) => {
-			if (session?.user || status === "authenticated") {
-				if (session.user.role === "owner" || session.user.role === "admin") {
-					const response = await fetch(`/api/loc/days/${locId}`, {
-						method: "GET",
-					});
-					const data: GroupP[] | { error: string } = await response.json();
-					if (Array.isArray(data)) {
-						const selectedGroups: GroupP[] = data.filter(
-							(group) => group.dayOfWeek === dayNum
-						);
-						selectedGroups.sort((a, b) => {
-							// Porównanie czasu w formacie HH:mm
-							const timeA = a.timeS.split(":").map(Number);
-							const timeB = b.timeS.split(":").map(Number);
-
-							if (timeA[0] !== timeB[0]) {
-								return timeA[0] - timeB[0]; // Sortowanie wg. godzin
-							} else {
-								return timeA[1] - timeB[1]; // Sortowanie wg. minut
-							}
-						});
-						if (selectedGroups && selectedGroups.length > 0) {
-							setGroups(selectedGroups);
-						}
-						setOwner(true);
-						setLoading(false);
-						setError("");
-					} else {
-						setError(data.error);
-						setLoading(false);
-					}
-				}
-				if (session.user.role === "coach") {
-					const response = await fetch(
-						`/api/coaches/groups/${session.user.id}`,
-						{ method: "GET" }
-					);
-					const data: number[] | { error: string } = await response.json();
-					if (Array.isArray(data)) {
-						const response2 = await fetch(`/api/loc/days/${locId}`, {
-							method: "GET",
-						});
-						const data2: GroupP[] | { error: string } = await response2.json();
-						if (Array.isArray(data2)) {
-							const filteredGroups = data2.filter((group) =>
-								data.includes(group.id)
-							);
-							const selectedGroups: GroupP[] = filteredGroups.filter(
-								(group) => group.dayOfWeek === dayNum
-							);
-							selectedGroups.sort((a, b) => {
-								// Porównanie czasu w formacie HH:mm
-								const timeA = a.timeS.split(":").map(Number);
-								const timeB = b.timeS.split(":").map(Number);
-
-								if (timeA[0] !== timeB[0]) {
-									return timeA[0] - timeB[0]; // Sortowanie wg. godzin
-								} else {
-									return timeA[1] - timeB[1]; // Sortowanie wg. minut
-								}
-							});
-							if (selectedGroups && selectedGroups.length > 0) {
-								setGroups(selectedGroups);
-							}
-							setLoading(false);
-							setError("");
-						} else {
-							setError(data2.error);
-							setLoading(false);
-						}
-					} else {
-						setError(data.error);
-						setLoading(false);
-					}
-				}
-			}
-		};
-		fetchLoc(locId);
-	}, [session]);
-	const handleAddGroup = () => {
-		router.push(`/locations/new/${locId}`);
-	};
-
-	return (
-		<>
-			{status === "loading" || loading ? (
-				<>
-					<MobileNavigation pages={pages} />
-					<CardsSkeleton />
-				</>
-			) : (
-				<>
-					<MobileNavigation pages={pages} />
-					<GrCard
-						groups={groups}
-						handleClick={handleGroupClick}
-						owner={owner}
-						handleAddGroupClick={handleAddGroup}
-					/>
-				</>
-			)}
-		</>
-	);
+  const handleGroupClick = (id: string | number) => {
+    router.push(`/group/${id}`);
+  };
+  const handleAddGroup = () => {
+    router.push(`/locations/new/${locId}`);
+  };
+  if (allGroups.isLoading || status === "loading")
+    return (
+      <>
+        <MobileNavigation
+          pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+        />
+        <CardsSkeleton />
+      </>
+    );
+  if (allGroups.isError)
+    return (
+      <>
+        <MobileNavigation
+          pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+        />
+        <WarningAmberIcon
+          color="error"
+          sx={{ width: 100, height: 100, m: 5 }}
+        />
+        <Typography variant="h5" align="center" color="red">
+          {allGroups.error.message}
+        </Typography>
+      </>
+    );
+  return (
+    <>
+      <MobileNavigation
+        pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+      />
+      <GrCard
+        groups={allGroups?.data}
+        handleClick={handleGroupClick}
+        owner={session.user.role === "owner"}
+        handleAddGroupClick={handleAddGroup}
+      />
+    </>
+  );
 }
