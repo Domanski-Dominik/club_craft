@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	DataGrid,
 	plPL,
@@ -17,6 +17,8 @@ import {
 	GridPagination,
 	GridToolbarColumnsButton,
 	GridToolbarQuickFilter,
+	GridFooterContainer,
+	GridFooter,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -32,7 +34,7 @@ import type {
 	FormPay,
 	LocWithGroups,
 } from "@/types/type";
-import MuiPagination from "@mui/material/Pagination";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -49,6 +51,7 @@ import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/context/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
+import ExportToExel from "../export/ExportToExel";
 
 type Props = {
 	participants: Participant[];
@@ -67,7 +70,18 @@ const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
 
 	// Dodaj numery do posortowanych uczestników
 	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return { ...row, num: index + 1 };
+		return {
+			...row,
+			num: index + 1,
+			hiddengroups:
+				row.participantgroup.length > 0
+					? row.participantgroup
+							.map(
+								(g: any) => ` ${g.location} ${g.name} ${PolishDayName(g.day)}`
+							)
+							.join(",")
+					: "Nie przypisany do żadnej grupy",
+		};
 	});
 
 	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
@@ -82,40 +96,36 @@ const AllParticipantList = ({
 	locWithGroups,
 	isOwner,
 }: Props) => {
-	const [selectedRow, setSelectedRow] = React.useState<GridRowModel | null>(
-		null
-	);
+	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
-	const [dialogOpen, setDialogOpen] = React.useState(false);
-	const [payDialogOpen, setPayDialogOpen] = React.useState(false);
-	const [groupsDialogOpen, setGroupsDialogOpen] = React.useState(false);
-	const [edit, setEdit] = React.useState(false);
-	const [date, setDate] = React.useState<Date>(new Date());
-	const [rows, setRows] = React.useState<(Participant | GridValidRowModel)[]>(
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [payDialogOpen, setPayDialogOpen] = useState(false);
+	const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
+	const [edit, setEdit] = useState(false);
+	const [date, setDate] = useState<Date>(new Date());
+	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
 		sortAndAddNumbers(participants)
 	);
-	const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-		{}
-	);
+	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
-		React.useState<GridColumnVisibilityModel>({
+		useState<GridColumnVisibilityModel>({
 			actions: false,
+			hiddengroups: false,
 		});
-	const [snackbar, setSnackbar] = React.useState<Pick<
+	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
 
 	const handleCloseSnackbar = () => setSnackbar(null);
 
-	const hiddenFields = ["num", "actions"];
+	const hiddenFields = ["num", "actions", "hiddengroups"];
 
 	const getTogglableColumns = (columns: GridColDef[]) => {
 		return columns
 			.filter((column) => !hiddenFields.includes(column.field))
 			.map((column) => column.field);
 	};
-
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
 		event
@@ -123,6 +133,10 @@ const AllParticipantList = ({
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
 			event.defaultMuiPrevented = true;
 		}
+		setRowModesModel({
+			...rowModesModel,
+			[params.id]: { mode: GridRowModes.View },
+		});
 	};
 	const handleEditClick = (id: GridRowId) => () => {
 		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -138,7 +152,6 @@ const AllParticipantList = ({
 		setSelectedRow(row);
 		setGroupsDialogOpen(true);
 	};
-
 	const handlePayment = async (
 		form: FormPay | null,
 		row: GridRowModel | null,
@@ -301,7 +314,6 @@ const AllParticipantList = ({
 			[id]: { mode: GridRowModes.View, ignoreModifications: true },
 		});
 	};
-
 	const processRowUpdate = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -348,7 +360,6 @@ const AllParticipantList = ({
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
 	};
-
 	function CustomToolbar() {
 		return (
 			<GridToolbarContainer
@@ -379,10 +390,15 @@ const AllParticipantList = ({
 						size='medium'
 						sx={{ marginLeft: 1, marginRight: 1 }}
 						onClick={() => {
-							setEdit(false), gridRef.current.scroll({ left: 0 });
 							setColumnVisibilityModel({
 								actions: false,
+								hiddengroups: false,
 							});
+							const newModesModel: GridRowModesModel = {};
+							rows.forEach((row) => {
+								newModesModel[row.id] = { mode: GridRowModes.View };
+							});
+							setRowModesModel(newModesModel);
 						}}>
 						<CheckIcon />
 						Zakończ edycje
@@ -397,16 +413,39 @@ const AllParticipantList = ({
 							gridRef.current.scroll({ left: 0 });
 							setColumnVisibilityModel({
 								actions: true,
+								hiddengroups: false,
 							});
 						}}>
 						<EditIcon />
 						Edytuj
 					</Button>
 				)}
+				<Button onClick={Export}>
+					<IosShareIcon />
+					Exportuj
+				</Button>
 			</GridToolbarContainer>
 		);
 	}
-
+	function CustomFooter() {
+		const active = rows.filter(
+			(participant) => participant.active === true
+		).length;
+		return (
+			<GridFooterContainer>
+				<Typography
+					variant='body2'
+					ml={2}>
+					<span style={{ fontWeight: "bold", color: "darkviolet" }}>
+						{active}
+					</span>{" "}
+					/ <span style={{ fontWeight: "bold" }}>{rows.length}</span>{" "}
+					uczestników
+				</Typography>
+				<GridFooter />
+			</GridFooterContainer>
+		);
+	}
 	const columns: GridColDef[] = [
 		{
 			field: "num",
@@ -545,6 +584,14 @@ const AllParticipantList = ({
 			},
 		},
 		{
+			field: "regulamin",
+			headerName: "Umowa",
+			width: 90,
+			editable: true,
+			hideable: true,
+			type: "boolean",
+		},
+		{
 			field: "participantgroup",
 			headerName: "Grupy",
 			minWidth: 300,
@@ -612,7 +659,11 @@ const AllParticipantList = ({
 			flex: 1,
 			sortable: false,
 		},
+		{ field: "hiddengroups", headerName: "Ukryta ", hideable: true },
 	];
+	const Export = async () => {
+		ExportToExel({ data: rows });
+	};
 	return (
 		<>
 			<Box
@@ -636,14 +687,18 @@ const AllParticipantList = ({
 					getRowHeight={() => "auto"}
 					onCellDoubleClick={() => {
 						setEdit(true);
-						gridRef.current.scroll({ left: 0 });
 						setColumnVisibilityModel({
 							actions: true,
+							hiddengroups: false,
 						});
 					}}
 					columnVisibilityModel={columnVisibilityModel}
 					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
-					slots={{ toolbar: CustomToolbar, pagination: GridPagination }}
+					slots={{
+						toolbar: CustomToolbar,
+						pagination: GridPagination,
+						footer: CustomFooter,
+					}}
 					slotProps={{
 						columnsPanel: { getTogglableColumns, disableHideAllButton: true },
 					}}
@@ -654,6 +709,7 @@ const AllParticipantList = ({
 						columns: {
 							columnVisibilityModel: {
 								actions: false,
+								hiddengroups: false,
 							},
 						},
 						pagination: { paginationModel: { pageSize: 100 } },

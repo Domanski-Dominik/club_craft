@@ -426,8 +426,9 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 							type='submit'
 							color='primary'
 							variant='contained'
+							disabled={addingPayment}
 							endIcon={<AddIcon />}>
-							Dodaj
+							Nowa
 						</Button>
 					</Grid>
 				</Grid>

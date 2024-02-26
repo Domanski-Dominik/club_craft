@@ -46,9 +46,9 @@ export const GET = async (req: Request, { params }: Props) => {
 			);
 		}
 		/*const participants = schedule.map((object) => object.participant);*/
-		const participants = schedule.map((object) => {
+		const participants = schedule.map((object: any) => {
 			const paymentsArray = object.participant.payments.map(
-				(paymentParticipant) => ({
+				(paymentParticipant: any) => ({
 					id: paymentParticipant.payment.id,
 					amount: paymentParticipant.payment.amount,
 					description: paymentParticipant.payment.description,
@@ -87,6 +87,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 				lastName: prtUpdate.lastName,
 				phoneNumber: prtUpdate.phoneNumber,
 				note: prtUpdate.note,
+				regulamin: prtUpdate.regulamin,
 			},
 		});
 		if (!update) {
@@ -108,7 +109,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 };
 export const DELETE = async (req: Request) => {
 	const prtDel = await req.json();
-	console.log("Id uczestnika to ", prtDel.id);
+	//console.log("Id uczestnika to ", prtDel.id);
 	try {
 		if (prtDel.id !== null && prtDel.id !== undefined) {
 			const deleteSchedule = await prisma.participantgroup.deleteMany({

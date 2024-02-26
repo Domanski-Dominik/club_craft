@@ -19,6 +19,8 @@ import {
 	List,
 	ListItem,
 	SelectChangeEvent,
+	Checkbox,
+	FormControlLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -45,6 +47,7 @@ type FormData = {
 	club: string;
 	tel: string;
 	groups: (number | string)[];
+	regulamin: boolean;
 };
 
 const ParticipantForm = () => {
@@ -73,6 +76,7 @@ const ParticipantForm = () => {
 		club: "",
 		tel: "",
 		groups: [],
+		regulamin: false,
 	});
 	const [errors, setErrors] = useState({
 		email: "",
@@ -582,6 +586,21 @@ const ParticipantForm = () => {
 									<Typography color='error'>{errors.email}</Typography>
 								</Grid>
 							</Grid>
+							<FormControlLabel
+								control={
+									<Checkbox
+										sx={{ ml: 1 }}
+										value={formData.regulamin}
+										onChange={() =>
+											setFormData({
+												...formData,
+												regulamin: !formData.regulamin,
+											})
+										}
+									/>
+								}
+								label='Podpisał regulamin/umowę'
+							/>
 							<Grid
 								container
 								justifyContent={"space-around"}

@@ -1,10 +1,12 @@
 import { prisma } from "@/prisma/prisma";
+import { isWithinInterval, subDays, format, subMonths, parse } from "date-fns";
 
 interface Props {
 	params: {
 		info: [string, string, string];
 	};
 }
+
 export const GET = async (req: Request, { params }: Props) => {
 	const role = params.info[0];
 	const club = params.info[1];
@@ -59,6 +61,7 @@ export const GET = async (req: Request, { params }: Props) => {
 					}
 				);
 			}
+
 			const participants = allParticipants.map((object) => {
 				const paymentsArray = object.payments.map((paymentParticipant) => ({
 					id: paymentParticipant.payment.id,
@@ -95,6 +98,7 @@ export const GET = async (req: Request, { params }: Props) => {
 								include: {
 									participant: {
 										include: {
+											attendance: true,
 											payments: {
 												include: {
 													payment: true,

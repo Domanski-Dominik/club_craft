@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma/prisma";
+import { NextResponse } from "next/server";
 
 interface Props {
 	params: {
@@ -18,16 +19,33 @@ export const PUT = async (req: Request, { params }: Props) => {
 				date: date,
 			},
 		});
+		//console.log(existingAttendance);
 		if (!existingAttendance) {
 			if (isChecked) {
-				await prisma.attendance.create({
-					data: {
-						date: date,
-						groupId,
-						participantId,
-					},
+				const belongs = await prisma.participantgroup.findFirst({
+					where: { groupId, participantId },
 				});
-				return Response.json({ message: "Obecny" }, { status: 200 });
+				if (belongs) {
+					await prisma.attendance.create({
+						data: {
+							date: date,
+							groupId,
+							participantId,
+							belongs: true,
+						},
+					});
+					return Response.json({ message: "Obecny" }, { status: 200 });
+				} else {
+					await prisma.attendance.create({
+						data: {
+							date: date,
+							groupId,
+							participantId,
+							belongs: false,
+						},
+					});
+					return Response.json({ message: "Obrabia" }, { status: 200 });
+				}
 			} else {
 				return Response.json(
 					{ error: "Błąd w logice systemu przy dodawaniu obecności" },
@@ -49,6 +67,76 @@ export const PUT = async (req: Request, { params }: Props) => {
 				{ status: 400 }
 			);
 		}
+	} catch (error: any) {
+		return Response.json({ error: error.message }, { status: error.code });
+	}
+};
+export const GET = async (req: Request, { params }: Props) => {
+	const groupId = parseInt(params.ids[0], 10);
+	try {
+		const existingAttendance = await prisma.attendance.findMany({
+			where: {
+				belongs: false,
+				groupId,
+			},
+			include: {
+				participant: {
+					include: {
+						attendance: true,
+						payments: {
+							include: {
+								payment: {
+									select: {
+										id: true,
+										amount: true,
+										description: true,
+										paymentDate: true,
+										paymentMethod: true,
+										month: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+		//console.log(existingAttendance);
+		if (!existingAttendance) {
+			return Response.json(
+				{ message: "Brak odrabiających w tej grupie" },
+				{ status: 200 }
+			);
+		}
+
+		const uniqueParticipants: any[] = [];
+		const uniqueIds: Set<number> = new Set();
+
+		existingAttendance.forEach((object: any) => {
+			const paymentsArray = object.participant.payments.map(
+				(paymentParticipant: any) => ({
+					id: paymentParticipant.payment.id,
+					amount: paymentParticipant.payment.amount,
+					description: paymentParticipant.payment.description,
+					paymentDate: paymentParticipant.payment.paymentDate,
+					paymentMethod: paymentParticipant.payment.paymentMethod,
+					month: paymentParticipant.payment.month,
+				})
+			);
+
+			const participant = {
+				...object.participant,
+				payments: paymentsArray,
+			};
+
+			// Dodaj uczestnika tylko jeśli nie istnieje już w tablicy
+			if (!uniqueIds.has(participant.id)) {
+				uniqueIds.add(participant.id);
+				uniqueParticipants.push(participant);
+			}
+		});
+
+		return NextResponse.json(uniqueParticipants);
 	} catch (error: any) {
 		return Response.json({ error: error.message }, { status: error.code });
 	}

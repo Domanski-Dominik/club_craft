@@ -14,6 +14,19 @@ type GroupCardProps = {
     timeE: string;
     club: string;
     participants: number;
+    active: number;
+  }[];
+  handleAddGroupClick: () => void;
+  handleClick: (id: string | number) => void;
+  owner: boolean;
+  groups: {
+    id: number;
+    name: string;
+    dayOfWeek: number;
+    timeS: string;
+    timeE: string;
+    club: string;
+    participants: number;
   }[];
   handleAddGroupClick: () => void;
   handleClick: (id: string | number) => void;
