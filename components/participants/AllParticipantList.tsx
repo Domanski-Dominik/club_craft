@@ -638,14 +638,13 @@ const AllParticipantList = ({
 								</Typography>
 							)}
 						</Box>
-						{isOwner && (
-							<GridActionsCellItem
-								icon={<EditCalendarIcon />}
-								label='Dodaj płatność'
-								onClick={handleGroupsDialogOpen(params.row)}
-								color='inherit'
-							/>
-						)}
+
+						<GridActionsCellItem
+							icon={<EditCalendarIcon />}
+							label='Dodaj grupy'
+							onClick={handleGroupsDialogOpen(params.row)}
+							color='inherit'
+						/>
 					</Box>
 				);
 			},
