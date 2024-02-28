@@ -10,6 +10,7 @@ import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import PolishDayName from "@/context/PolishDayName";
 import ParticipantList from "@/components/participants/ParticipantList";
 import type { Participant } from "@/types/type";
+import { sortAndAddNumbers } from "@/functions/sorting";
 
 interface Props {
 	params: {
@@ -25,7 +26,6 @@ const Group = ({ params }: Props) => {
 			redirect("/login");
 		},
 	});
-	const [workOutPrt, setWorkOutPrt] = useState<Participant[]>([]);
 	const groupId = parseInt(params.id, 10);
 	const router = useRouter();
 	const breadcrumbs = useQuery({
@@ -60,24 +60,18 @@ const Group = ({ params }: Props) => {
 			];
 		},
 	});
-	const participants = useQuery({
+	const participants = useQuery<Participant[]>({
 		queryKey: ["participants", params.id],
 		queryFn: () =>
 			fetch(`/api/participant/${params.id}`).then((res) => res.json()),
+		select: (data) => sortAndAddNumbers(data, params.id, "normal"),
 	});
-	useEffect(() => {
-		const checkWorkOut = async () => {
-			const response = await fetch(`/api/presence/${groupId}`, {
-				method: "GET",
-			});
-			const data: Participant[] | [] = await response.json();
-			if (data.length > 0) {
-				setWorkOutPrt(data);
-			}
-		};
-		setWorkOutPrt([]);
-		checkWorkOut();
-	}, []);
+	const workOutPrt = useQuery<Participant[] | []>({
+		queryKey: ["workout", params.id],
+		queryFn: () =>
+			fetch(`/api/presence/${params.id}`).then((res) => res.json()),
+		select: (data) => sortAndAddNumbers(data, params.id, "info"),
+	});
 
 	if (status === "loading" || participants.isLoading)
 		return (
@@ -109,33 +103,36 @@ const Group = ({ params }: Props) => {
 				</Button>
 			</>
 		);
-	return (
-		<>
-			<MobileNavigation
-				pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
-			/>
-			{participants.data.length > 0 && (
-				<Box
-					sx={{
-						minWidth: "95vw",
-						height: `calc(100vh - 75px - 90px - 30px)`,
-						maxWidth: "98vw",
-						mt: breadcrumbs.isSuccess
-							? breadcrumbs.data?.reduce((acc, item) => acc + item.length, 0) >
-							  30
-								? 6
-								: 3
-							: 3,
-					}}>
-					<ParticipantList
-						participants={participants.data}
-						groupId={groupId}
-						workOutPrt={workOutPrt}
-					/>
-				</Box>
-			)}
-		</>
-	);
+	if (participants.data)
+		return (
+			<>
+				<MobileNavigation
+					pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+				/>
+				{participants.data.length > 0 && workOutPrt.isSuccess && (
+					<Box
+						sx={{
+							minWidth: "95vw",
+							height: `calc(100vh - 75px - 90px - 30px)`,
+							maxWidth: "98vw",
+							mt: breadcrumbs.isSuccess
+								? breadcrumbs.data?.reduce(
+										(acc, item) => acc + item.length,
+										0
+								  ) > 30
+									? 6
+									: 3
+								: 3,
+						}}>
+						<ParticipantList
+							participants={participants.data}
+							groupId={groupId}
+							workOutPrt={workOutPrt.data}
+						/>
+					</Box>
+				)}
+			</>
+		);
 };
 
 export default Group;

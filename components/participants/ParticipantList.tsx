@@ -42,6 +42,12 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import DialogPresent from "../dialogs/DialogPresent";
 import { darken, lighten, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import {
+	useAttendance,
+	useDeletePrt,
+	usePayment,
+	useUpdatePrt,
+} from "@/hooks/participantHooks";
 
 type Props = {
 	participants: Participant[];
@@ -49,26 +55,6 @@ type Props = {
 	workOutPrt: Participant[] | [];
 };
 
-const sortAndAddNumbers = (
-	rows: (Participant | GridValidRowModel)[],
-	groupId: number
-) => {
-	const sortedRows = [...rows];
-	sortedRows.sort((a, b) => {
-		if (a.lastName === b.lastName) {
-			return a.firstName.localeCompare(b.firstName);
-		}
-		return a.lastName.localeCompare(b.lastName);
-	});
-
-	// Dodaj numery do posortowanych uczestników
-	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return { ...row, num: index + 1, groupId: groupId, status: "normal" };
-	});
-
-	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
-	return rowsWithNumbers;
-};
 const formatDate = (date: Date) => {
 	return format(date, "dd-MM-yyyy");
 };
@@ -164,6 +150,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 
 const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
+	const addedParticipantIds = new Set();
 	const gridRef = useGridApiRef();
 	const [workOutParticipants, setWorkOutParticpants] = useState<
 		Participant[] | []
@@ -174,9 +161,8 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 	const [edit, setEdit] = useState(false);
 	const [more, setMore] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
-	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
-		sortAndAddNumbers(participants, groupId)
-	);
+	const [rows, setRows] =
+		useState<(Participant | GridValidRowModel)[]>(participants);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
 		useState<GridColumnVisibilityModel>({
@@ -191,33 +177,39 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
-
+	const payment = usePayment();
+	const attendance = useAttendance();
+	const updatePrt = useUpdatePrt();
+	const deletePrt = useDeletePrt();
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	useEffect(() => {
-		if (workOutParticipants.length > 0) {
+		//console.log("workOutPrt:", workOutPrt);
+		//console.log("rows:", rows);
+		if (workOutPrt.length > 0) {
 			// Znajdź uczestników, którzy są obecni w danym dniu
-			const participantsToAdd = workOutParticipants.filter((p) =>
+			const participantsToAdd = workOutPrt.filter((p) =>
 				p.attendance?.some(
 					(a) => a.date === formatDate(date) && a.groupId === groupId
 				)
 			);
 
-			// Znajdź unikalnych uczestników, którzy jeszcze nie są w tablicy rows
-			const uniqueParticipantsToAdd = participantsToAdd.filter(
-				(participant) => !rows.some((row) => row.id === participant.id)
-			);
-			console.log(uniqueParticipantsToAdd);
-			// Zaktualizuj tablicę rows, dodając nowych uczestników
-			setRows((prevRows) => [
-				...prevRows,
-				...uniqueParticipantsToAdd.map((p) => ({
-					...p,
-					status: "info",
-				})),
-			]);
+			// Dodaj tylko unikalnych uczestników, którzy jeszcze nie są w tablicy rows
+			participantsToAdd.forEach((participant) => {
+				if (!addedParticipantIds.has(participant.id)) {
+					addedParticipantIds.add(participant.id);
+
+					// Zaktualizuj tablicę rows, dodając nowego uczestnika
+					setRows((prevRows) => [
+						...prevRows,
+						{
+							...participant,
+						},
+					]);
+				}
+			});
 		}
-	}, [workOutParticipants]);
+	}, []);
 
 	const handleDateChange = (newDate: Date | null) => {
 		if (newDate) {
@@ -284,7 +276,10 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 		setPresentDialogOpen(false);
 
 		if (participant !== null) {
-			setRows([...rows, { ...participant, status: "info" }]);
+			setRows([
+				...rows,
+				{ ...participant, num: 0, groupId: groupId, status: "info" },
+			]);
 		}
 	};
 	const handleAddPayment = async (
@@ -297,17 +292,12 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 		if (form !== null && row !== null && action !== null) {
 			try {
 				if (selectedRow) {
-					const response = await fetch(`/api/payment/${selectedRow.id}`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							form,
-							action,
-						}), // Przekaż zaktualizowane dane uczestnika
-					});
-					const message = await response.json();
+					const data = {
+						participantId: selectedRow.id,
+						form: form,
+						action: action,
+					};
+					const message = await payment.mutateAsync(data);
 					if (!message.error) {
 						//console.log(message);
 						setSnackbar({
@@ -414,15 +404,12 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 		setDialogOpen(false);
 		if (value === "yes" && selectedRow !== null) {
 			try {
-				const response = await fetch(`/api/participant/${selectedRow.id}`, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(selectedRow), // Przekaż zaktualizowane dane uczestnika
-				});
-				const message = await response.json();
-				if (response.ok) {
+				const data = {
+					id: selectedRow.id,
+					selectedRow: selectedRow,
+				};
+				const message = await deletePrt.mutateAsync(data);
+				if (message.message) {
 					//console.log(message);
 					setSnackbar({
 						children: message.message,
@@ -458,24 +445,21 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 			row.id === newRow.id ? updatedRow : row
 		);
 		//console.log(newRow, oldRow);
-		const findRow = rows.find((row) => row.id === newRow.id);
+		const findRow = updatedRows.find((row) => row.id === newRow.id);
 		if (findRow) {
 			try {
-				const response = await fetch(`/api/participant/${newRow.id}`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(updatedRow), // Przekaż zaktualizowane dane uczestnika
-				});
-				const message = await response.json();
-				if (response.ok) {
+				const data = {
+					newRowId: newRow.id,
+					updatedRow: updatedRow,
+				};
+				const message = await updatePrt.mutateAsync(data);
+				if (!message.error) {
 					//console.log(message);
 					setSnackbar({
 						children: message.message,
 						severity: "success",
 					});
-					setRows(sortAndAddNumbers(updatedRows, groupId));
+					//setRows(sortAndAddNumbers(updatedRows, groupId));
 					return updatedRow;
 				} else {
 					//console.log(message);
@@ -843,29 +827,14 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 						}
 					}
 					try {
-						const response = await fetch(
-							`/api/presence/${groupId}/${params.row.id}`,
-							{
-								method: "PUT",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify({
-									date: formatDate(date),
-									isChecked: isChecked,
-								}), // Przekaż zaktualizowane dane uczestnika
-							}
-						);
-						const message = await response.json();
-						if (response.ok) {
-							//console.log(message);
-							// Skopiuj aktualny stan rows
-							setSnackbar({
-								children: message.message,
-								severity: "success",
-							});
-						} else {
-							//console.log(message);
+						const data = {
+							groupId: groupId,
+							participantId: params.row.id,
+							date: formatDate(date),
+							isChecked: isChecked,
+						};
+						const message = await attendance.mutateAsync(data);
+						if (message.error) {
 							const updatedRows = [...rows];
 							// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
 							const rowIndex = updatedRows.findIndex(
@@ -886,7 +855,15 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 									(item: Attendance) => item.date !== formatDate(date)
 								);
 							}
-							setSnackbar({ children: message.error, severity: "error" });
+							setSnackbar({
+								children: message.error,
+								severity: "error",
+							});
+						} else {
+							setSnackbar({
+								children: message.message,
+								severity: "success",
+							});
 						}
 					} catch (error) {
 						console.error("Błąd podczas aktualizacji danych:", error);

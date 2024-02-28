@@ -52,6 +52,12 @@ import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/context/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
 import ExportToExel from "../export/ExportToExel";
+import { sortAndAddNumbersAll } from "@/functions/sorting";
+import {
+	useDeletePrt,
+	usePayment,
+	useUpdatePrt,
+} from "@/hooks/participantHooks";
 
 type Props = {
 	participants: Participant[];
@@ -59,43 +65,11 @@ type Props = {
 	isOwner: boolean;
 };
 
-const sortAndAddNumbers = (rows: (Participant | GridValidRowModel)[]) => {
-	const sortedRows = [...rows];
-	sortedRows.sort((a, b) => {
-		if (a.lastName === b.lastName) {
-			return a.firstName.localeCompare(b.firstName);
-		}
-		return a.lastName.localeCompare(b.lastName);
-	});
-
-	// Dodaj numery do posortowanych uczestników
-	const rowsWithNumbers = sortedRows.map((row, index) => {
-		return {
-			...row,
-			num: index + 1,
-			hiddengroups:
-				row.participantgroup.length > 0
-					? row.participantgroup
-							.map(
-								(g: any) => ` ${g.location} ${g.name} ${PolishDayName(g.day)}`
-							)
-							.join(",")
-					: "Nie przypisany do żadnej grupy",
-		};
-	});
-
-	// Zaktualizuj stan z posortowaną i ponumerowaną listą uczestników
-	return rowsWithNumbers;
-};
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
 
-const AllParticipantList = ({
-	participants,
-	locWithGroups,
-	isOwner,
-}: Props) => {
+const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -104,7 +78,7 @@ const AllParticipantList = ({
 	const [edit, setEdit] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
 	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
-		sortAndAddNumbers(participants)
+		sortAndAddNumbersAll(participants)
 	);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
@@ -116,7 +90,9 @@ const AllParticipantList = ({
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
-
+	const payment = usePayment();
+	const deletePrt = useDeletePrt();
+	const updatePrt = useUpdatePrt();
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	const hiddenFields = ["num", "actions", "hiddengroups"];
@@ -162,17 +138,12 @@ const AllParticipantList = ({
 		if (form !== null && row !== null && action !== null) {
 			try {
 				if (selectedRow) {
-					const response = await fetch(`/api/payment/${selectedRow.id}`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							form,
-							action,
-						}), // Przekaż zaktualizowane dane uczestnika
-					});
-					const message = await response.json();
+					const data = {
+						participantId: selectedRow.id,
+						form: form,
+						action: action,
+					};
+					const message = await payment.mutateAsync(data);
 					if (!message.error) {
 						//console.log(message);
 						setSnackbar({
@@ -250,7 +221,7 @@ const AllParticipantList = ({
 								}
 								return row;
 							});
-							console.log(updatedRows);
+							//console.log(updatedRows);
 							setRows(updatedRows);
 						}
 					} else {
@@ -275,18 +246,15 @@ const AllParticipantList = ({
 		//console.log(row);
 	};
 	const handleChoice = async (value: string) => {
-		console.log(value);
+		//console.log(value);
 		setDialogOpen(false);
 		if (value === "yes" && selectedRow !== null) {
 			try {
-				const response = await fetch(`/api/participant/${selectedRow.id}`, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(selectedRow), // Przekaż zaktualizowane dane uczestnika
-				});
-				const message = await response.json();
+				const data = {
+					id: selectedRow.id,
+					selectedRow: selectedRow,
+				};
+				const message = await deletePrt.mutateAsync(data);
 				if (!message.error) {
 					console.log(message);
 					setSnackbar({
@@ -322,28 +290,25 @@ const AllParticipantList = ({
 		const updatedRows = rows.map((row) =>
 			row.id === newRow.id ? updatedRow : row
 		);
-		console.log(newRow, oldRow);
+		//console.log(newRow, oldRow);
 		const findRow = rows.find((row) => row.id === newRow.id);
 		if (findRow) {
 			try {
-				const response = await fetch(`/api/participant/${newRow.id}`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(updatedRow), // Przekaż zaktualizowane dane uczestnika
-				});
-				const message = await response.json();
-				if (response.ok) {
-					console.log(message);
+				const data = {
+					newRowId: newRow.id,
+					updatedRow: updatedRow,
+				};
+				const message = await updatePrt.mutateAsync(data);
+				if (message.message) {
+					//console.log(message);
 					setSnackbar({
 						children: message.message,
 						severity: "success",
 					});
-					setRows(sortAndAddNumbers(updatedRows));
+					setRows(sortAndAddNumbersAll(updatedRows));
 					return updatedRow;
 				} else {
-					console.log(message);
+					//console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });
 					return oldRow;
 				}
@@ -758,17 +723,3 @@ const AllParticipantList = ({
 };
 
 export default AllParticipantList;
-/*
-sx={{
-						"& .MuiTablePagination-caption[id]": {
-							display: "block",
-						},
-						"& .MuiTablePagination-input": {
-							display: "inline-flex",
-						},
-						"& .MuiTablePagination-selectLabel": {
-							display: "inline-flex",
-						},
-					}}
-					
-	 */

@@ -1,6 +1,6 @@
 import { GridRowModel } from "@mui/x-data-grid";
 export interface Location {
-	id: number | string;
+	id: number;
 	name: string;
 	street: string;
 	city: string;
