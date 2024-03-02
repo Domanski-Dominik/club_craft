@@ -38,7 +38,7 @@ const Stats = () => {
 		enabled: !!session,
 		queryFn: () =>
 			fetch(
-				`/api/participant/all/${session?.user.role}/AKROSTAR/${session?.user.id}`
+				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
 	useEffect(() => {
