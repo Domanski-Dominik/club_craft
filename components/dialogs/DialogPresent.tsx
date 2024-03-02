@@ -35,7 +35,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({ onClose, open }) => {
 		const fetchParticipants = async () => {
 			if (session?.user && status === "authenticated") {
 				const response = await fetch(
-					`/api/participant/all/${session.user.role}/${session.user.club}`,
+					`/api/participant/all/owner/${session.user.club}`,
 					{
 						method: "GET",
 					}
