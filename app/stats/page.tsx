@@ -23,7 +23,8 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 const Stats = () => {
 	const [paymentData, setPaymentData] = useState<any>([]);
 	const [month, setMonth] = useState<Date>(new Date());
-	const [sum, setSum] = useState<number>(0);
+	const [sumCash, setSumCash] = useState<number>(0);
+	const [sumTransfer, setSumTransfer] = useState<number>(0);
 	const [owner, setOwner] = useState(false);
 	const { status, data: session } = useSession({
 		required: true,
@@ -97,11 +98,13 @@ const Stats = () => {
 					? parseInt(dailyPayments[day.getDate()].transfer, 10)
 					: 0,
 			}));
-			const sum = chartData.reduce(
-				(sum, data) => sum + data.cash + data.transfer,
+			const sumCash = chartData.reduce((sum, data) => sum + data.cash, 0);
+			const sumTransfer = chartData.reduce(
+				(sum, data) => sum + data.transfer,
 				0
 			);
-			setSum(sum);
+			setSumCash(sumCash);
+			setSumTransfer(sumTransfer);
 			// Teraz zmienna chartData zawiera tablicę obiektów {x: (numery od 1 do 31), cash: suma cash, transfer: suma transfer}
 			//console.log(chartData);
 			setPaymentData(chartData);
@@ -150,15 +153,17 @@ const Stats = () => {
 								}}
 								views={["month", "year"]}
 								sx={{ width: 150 }}
-								slotProps={{ textField: { size: "small" } }}
 							/>
 						</LocalizationProvider>
 					</Grid>
 					<Grid xs={6}>
 						<Typography
-							variant='h5'
+							variant='h6'
 							align='center'>
-							Suma: <span style={{ color: "darkviolet" }}>{sum}</span> zł
+							Gotówka: <span style={{ color: "darkviolet" }}>{sumCash}</span> zł
+							<br />
+							Przelew:{" "}
+							<span style={{ color: "darkviolet" }}>{sumTransfer}</span> zł
 						</Typography>
 					</Grid>
 				</Grid>
