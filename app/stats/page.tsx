@@ -20,13 +20,11 @@ import {
 import pl from "date-fns/locale/pl";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
-const formatDateMonth = (date: Date) => {
-	return format(date, "MM-yyyy");
-};
 const Stats = () => {
 	const [paymentData, setPaymentData] = useState<any>([]);
 	const [month, setMonth] = useState<Date>(new Date());
 	const [sum, setSum] = useState<number>(0);
+	const [owner, setOwner] = useState(false);
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -41,6 +39,13 @@ const Stats = () => {
 				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
+	useEffect(() => {
+		if (session?.user.role !== "owner") {
+			setOwner(false);
+		} else {
+			setOwner(true);
+		}
+	}, [session]);
 	useEffect(() => {
 		if (participants.data) {
 			// Tworzymy obiekt, który będzie przechowywał sumy płatności dla każdego dnia miesiąca
@@ -106,8 +111,24 @@ const Stats = () => {
 
 	if (status === "loading" || participants.isLoading) return <Loading />;
 	if (participants.isError)
-		return <Typography>{participants.error.message}</Typography>;
-	if (paymentData.length > 0)
+		return (
+			<Typography
+				color={"red"}
+				variant='h3'
+				align='center'>
+				{participants.error.message}
+			</Typography>
+		);
+	if (!owner)
+		return (
+			<Typography
+				color={"red"}
+				variant='h3'
+				align='center'>
+				Nie masz uprawnień do tej strony
+			</Typography>
+		);
+	if (paymentData.length > 0 && owner)
 		return (
 			<>
 				<Grid
