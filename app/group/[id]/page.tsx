@@ -11,6 +11,7 @@ import PolishDayName from "@/context/PolishDayName";
 import ParticipantList from "@/components/participants/ParticipantList";
 import type { Participant } from "@/types/type";
 import { sortAndAddNumbers } from "@/functions/sorting";
+import ErrorLocations from "@/components/errors/Locations";
 
 interface Props {
 	params: {
@@ -60,7 +61,7 @@ const Group = ({ params }: Props) => {
 			];
 		},
 	});
-	const participants = useQuery<Participant[]>({
+	const participants = useQuery({
 		queryKey: ["participants", params.id],
 		queryFn: () =>
 			fetch(`/api/participant/${params.id}`).then((res) => res.json()),
@@ -82,19 +83,17 @@ const Group = ({ params }: Props) => {
 				<Loading />
 			</>
 		);
-	if (participants.isError)
+	if (participants.isError || participants.data.length === 0)
 		return (
 			<>
-				<MobileNavigation
+				<ErrorLocations
 					pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+					message={
+						participants.isError
+							? participants.error.message
+							: "Nie znaleziono uczestników"
+					}
 				/>
-				<Typography
-					align='center'
-					variant='h4'
-					mb={2}
-					color='error'>
-					{participants.error.message}
-				</Typography>
 				<Button
 					variant='contained'
 					size='large'
@@ -103,36 +102,34 @@ const Group = ({ params }: Props) => {
 				</Button>
 			</>
 		);
-	if (participants.data)
-		return (
-			<>
-				<MobileNavigation
-					pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
-				/>
-				{participants.data.length > 0 && workOutPrt.isSuccess && (
-					<Box
-						sx={{
-							minWidth: "95vw",
-							height: `calc(100vh - 75px - 90px - 30px)`,
-							maxWidth: "98vw",
-							mt: breadcrumbs.isSuccess
-								? breadcrumbs.data?.reduce(
-										(acc, item) => acc + item.length,
-										0
-								  ) > 30
-									? 6
-									: 3
-								: 3,
-						}}>
-						<ParticipantList
-							participants={participants.data}
-							groupId={groupId}
-							workOutPrt={workOutPrt.data}
-						/>
-					</Box>
-				)}
-			</>
-		);
+
+	return (
+		<>
+			<MobileNavigation
+				pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
+			/>
+			{participants.data.length > 0 && workOutPrt.isSuccess && (
+				<Box
+					sx={{
+						minWidth: "95vw",
+						height: `calc(100vh - 75px - 90px - 30px)`,
+						maxWidth: "98vw",
+						mt: breadcrumbs.isSuccess
+							? breadcrumbs.data?.reduce((acc, item) => acc + item.length, 0) >
+							  30
+								? 6
+								: 3
+							: 3,
+					}}>
+					<ParticipantList
+						participants={participants.data}
+						groupId={groupId}
+						workOutPrt={workOutPrt.data}
+					/>
+				</Box>
+			)}
+		</>
+	);
 };
 
 export default Group;

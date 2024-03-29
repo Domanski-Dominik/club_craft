@@ -11,6 +11,7 @@ import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useQuery } from "@tanstack/react-query";
+import ErrorLocations from "@/components/errors/Locations";
 
 export default function LocationList() {
 	const router = useRouter();
@@ -48,46 +49,60 @@ export default function LocationList() {
 				<CardsSkeleton />
 			</>
 		);
-
+	if (locs.isError || locs.data.error)
+		return (
+			<ErrorLocations
+				pages={pages}
+				message={locs.isError ? locs.error.message : locs.data.error}
+			/>
+		);
+	if (locs.data.length === 0)
+		return (
+			<>
+				<ErrorLocations
+					pages={pages}
+					message={
+						session.user.role === "owner"
+							? "Nie utworzyłeś jeszcze żadnych lokalizacji"
+							: "Nie przypisano ci jeszcze lokalizacji"
+					}
+				/>
+				{session.user.role === "owner" && (
+					<Fab
+						onClick={() => router.push("/locations/new")}
+						sx={{ mt: 2 }}
+						color='primary'
+						variant='extended'
+						size='small'>
+						<AddIcon sx={{ mr: 1, mb: 1 }} />
+						Dodaj lokalizajce
+					</Fab>
+				)}
+			</>
+		);
 	return (
 		<>
 			<MobileNavigation pages={pages} />
-			{locs.isError ? (
-				<>
-					<WarningAmberIcon
-						color='error'
-						sx={{ width: 100, height: 100, m: 4 }}
-					/>
-					<Typography
-						variant='h5'
-						align='center'
-						color='red'
-						mb={2}>
-						{locs.error.message}
-					</Typography>
-				</>
-			) : (
-				<Grid
-					container
-					spacing={1}
-					paddingTop={3}
-					width={"100%"}>
-					{locs.data.map((loc: Location) => (
-						<Grid
-							key={loc.id}
-							xs={12}
-							sm={6}
-							md={6}
-							lg={4}
-							xl={3}>
-							<LocCard
-								loc={loc}
-								handleClick={handleClick}
-							/>
-						</Grid>
-					))}
-				</Grid>
-			)}
+			<Grid
+				container
+				spacing={1}
+				paddingTop={3}
+				width={"100%"}>
+				{locs.data.map((loc: Location) => (
+					<Grid
+						key={loc.id}
+						xs={12}
+						sm={6}
+						md={6}
+						lg={4}
+						xl={3}>
+						<LocCard
+							loc={loc}
+							handleClick={handleClick}
+						/>
+					</Grid>
+				))}
+			</Grid>
 			{session.user.role === "owner" && (
 				<Fab
 					onClick={() => router.push("/locations/new")}

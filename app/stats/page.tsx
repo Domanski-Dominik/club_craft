@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Loading from "@/context/Loading";
-import { Box, Typography } from "@mui/material";
+import { Box, FormControl, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { Participant } from "@/types/type";
@@ -25,6 +25,7 @@ const Stats = () => {
 	const [month, setMonth] = useState<Date>(new Date());
 	const [sumCash, setSumCash] = useState<number>(0);
 	const [sumTransfer, setSumTransfer] = useState<number>(0);
+	const [sumAll, setSumAll] = useState<number>(0);
 	const [owner, setOwner] = useState(false);
 	const { status, data: session } = useSession({
 		required: true,
@@ -105,6 +106,7 @@ const Stats = () => {
 			);
 			setSumCash(sumCash);
 			setSumTransfer(sumTransfer);
+			setSumAll(sumCash + sumTransfer);
 			// Teraz zmienna chartData zawiera tablicę obiektów {x: (numery od 1 do 31), cash: suma cash, transfer: suma transfer}
 			//console.log(chartData);
 			setPaymentData(chartData);
@@ -139,31 +141,41 @@ const Stats = () => {
 					width={"100%"}
 					spacing={3}>
 					<Grid xs={6}>
-						<LocalizationProvider
-							dateAdapter={AdapterDateFns}
-							adapterLocale={pl}>
-							<MobileDatePicker
-								label='Miesiąc płatności'
-								value={month}
-								onChange={(newDate) => {
-									if (newDate) {
-										setMonth(newDate);
-										//console.log(newDate);
-									}
-								}}
-								views={["month", "year"]}
-								sx={{ width: 150 }}
-							/>
-						</LocalizationProvider>
+						<FormControl
+							fullWidth
+							sx={{
+								alignItems: "center",
+								alignContent: "center",
+								justifyContent: "center",
+								justifyItems: "center",
+							}}>
+							<LocalizationProvider
+								dateAdapter={AdapterDateFns}
+								adapterLocale={pl}>
+								<MobileDatePicker
+									label='Miesiąc płatności'
+									value={month}
+									onChange={(newDate) => {
+										if (newDate) {
+											setMonth(newDate);
+											//console.log(newDate);
+										}
+									}}
+									views={["month", "year"]}
+									sx={{
+										width: 150,
+									}}
+								/>
+							</LocalizationProvider>
+						</FormControl>
 					</Grid>
 					<Grid xs={6}>
-						<Typography
-							variant='h6'
-							align='center'>
-							Gotówka: <span style={{ color: "darkviolet" }}>{sumCash}</span> zł
+						<Typography align='center'>
+							Gotówka: <span style={{ color: "darkviolet" }}>{sumCash}</span>{" "}
+							zł, Przelew:{" "}
+							<span style={{ color: "darkviolet" }}>{sumTransfer}</span> zł,
 							<br />
-							Przelew:{" "}
-							<span style={{ color: "darkviolet" }}>{sumTransfer}</span> zł
+							Suma: <span style={{ color: "darkviolet" }}>{sumAll}</span> zł
 						</Typography>
 					</Grid>
 				</Grid>

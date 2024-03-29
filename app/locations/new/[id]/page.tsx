@@ -4,7 +4,12 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
-
+import { useQuery } from "@tanstack/react-query";
+import {
+	useUpdateGroup,
+	useDeleteGroup,
+	useAddGroup,
+} from "@/hooks/scheduleHooks";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -22,6 +27,9 @@ import {
 	Box,
 	useMediaQuery,
 	useTheme,
+	AlertProps,
+	Snackbar,
+	Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import SendIcon from "@mui/icons-material/Send";
@@ -67,10 +75,11 @@ const colorsOptions = [
 	{ value: "#DC143C", label: "Czerwony" },
 	{ value: "#FFD700", label: "Złoty" },
 	{ value: "#FF8C00", label: "Pomarańczowy" },
+	{ value: "#00ffc8", label: "Cyjan" },
+	{ value: "#f200ff", label: "Różowy" },
 ];
 
 const CreateGroups = ({ params }: Props) => {
-	const [events, setEvents] = useState<EventInput[]>([]);
 	const locationIdNum = parseInt(params.id, 10);
 	const [isClicked, setIsClicked] = useState(false);
 	const [club, setClub] = useState("guest");
@@ -93,61 +102,30 @@ const CreateGroups = ({ params }: Props) => {
 		club: club,
 		color: "#3788d8",
 	});
-	useEffect(() => {
-		const fetchGrups = async () => {
-			try {
-				const response = await fetch(`/api/loc/gr/${params.id}`, {
-					method: "GET",
-				});
-				const data = await response.json();
-				//console.log(data);
-				const formattedEvents: EventInput[] = data.map((group: Group) => ({
-					id: `${group.id}`,
-					title: group.name,
-					daysOfWeek: [group.dayOfWeek],
-					startTime: `${group.timeS}:00`,
-					endTime: `${group.timeE}:00`,
-					allDay: false,
-					backgroundColor: group.color,
-					borderColor: group.color,
-				}));
-				//console.log("Formatted events: ", formattedEvents);
-
-				setEvents(formattedEvents);
-			} catch (error) {
-				console.error("Błąd podczas pobierania grup: ", error);
-			}
-		};
-		fetchGrups();
-	}, []);
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-
-		try {
-			const response = await fetch("/api/loc/gr", {
-				method: "POST",
-				body: JSON.stringify(newGroup),
-			});
-			const data = await response.json();
-			//console.log("Nowa grupa dodana: ", data);
-			if (response.ok) {
-				const formattedNewGroup: EventInput = {
-					id: `${data.id}`,
-					title: data.name,
-					daysOfWeek: [data.dayOfWeek],
-					startTime: `${data.timeS}:00`,
-					endTime: `${data.timeE}:00`,
-					allDay: false,
-					color: data.color,
-				};
-				setEvents([...events, formattedNewGroup]);
-			}
-		} catch (error) {
-			console.error("Błąd podczas dodawania grupy: ", error);
-		}
-		//setGroups([...groups, newGroup]);
-
+	const schedule = useQuery({
+		queryKey: ["schedule", params.id],
+		queryFn: () => fetch(`/api/loc/gr/${params.id}`).then((res) => res.json()),
+		select: (data) =>
+			data.map((group: Group) => ({
+				id: `${group.id}`,
+				title: group.name,
+				daysOfWeek: [group.dayOfWeek],
+				startTime: `${group.timeS}:00`,
+				endTime: `${group.timeE}:00`,
+				allDay: false,
+				backgroundColor: group.color,
+				borderColor: group.color,
+			})),
+	});
+	const updateGroup = useUpdateGroup();
+	const deleteGroup = useDeleteGroup();
+	const addGroup = useAddGroup();
+	const [snackbar, setSnackbar] = useState<Pick<
+		AlertProps,
+		"children" | "severity"
+	> | null>(null);
+	const handleCloseSnackbar = () => setSnackbar(null);
+	const clearGroupForm = () => {
 		setNewGroup({
 			...newGroup,
 			id: null,
@@ -155,89 +133,61 @@ const CreateGroups = ({ params }: Props) => {
 			timeS: "16:00",
 			timeE: "17:00",
 		});
+	};
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		const message = await addGroup.mutateAsync(newGroup);
+		//console.log(message);
+		if (!message.error) {
+			schedule.refetch();
+			setSnackbar({
+				children: "Udało się dodać grupę",
+				severity: "success",
+			});
+		} else {
+			console.log(message.error);
+			setSnackbar({ children: message.error, severity: "error" });
+		}
+		clearGroupForm();
 	};
 	const handleDelete = async (e: React.FormEvent) => {
 		e.preventDefault();
 		//console.log(newGroup);
-		try {
-			const response = await fetch("/api/loc/gr", {
-				method: "DELETE",
-				body: JSON.stringify(newGroup),
+		const message = await deleteGroup.mutateAsync(newGroup);
+		//console.log(message);
+		if (!message.error) {
+			schedule.refetch();
+			setSnackbar({
+				children: "Udało się usunąć grupę",
+				severity: "success",
 			});
-			const data = await response.json();
-			//console.log("Grupa usunięta: ", data);
-		} catch (error) {
-			console.error("Błąd podczas usuwania grupy: ", error);
+		} else {
+			console.log(message.error);
+			setSnackbar({ children: message.error, severity: "error" });
 		}
-		const idToDelete = `${newGroup.id}`;
-		const updatedEvents = events.filter((event) => event.id !== idToDelete);
-
-		setEvents(updatedEvents);
-		//console.log(updatedEvents);
-		setNewGroup({
-			...newGroup,
-			id: null,
-			name: "",
-			dayOfWeek: 1,
-			timeS: "16:00",
-			timeE: "17:00",
-			club: club,
-		});
+		clearGroupForm();
 		setIsClicked(false);
 	};
 	const handleEdit = async (e: React.FormEvent) => {
+		e.preventDefault();
 		//console.log(newGroup);
-		try {
-			const response = await fetch("/api/loc/gr", {
-				method: "PUT",
-				body: JSON.stringify(newGroup),
+		const message = await updateGroup.mutateAsync(newGroup);
+		//console.log(message);
+		if (!message.error) {
+			schedule.refetch();
+			setSnackbar({
+				children: "Udało się zaktualizować grupę",
+				severity: "success",
 			});
-			const data = await response.json();
-			//console.log("Grupa edytowana: ", data);
-			if (response.ok) {
-				const updatedEvents = events.map((event) => {
-					if (event.id === `${data.id}`) {
-						return {
-							...event,
-							id: `${data.id}`,
-							title: data.name,
-							daysOfWeek: [data.dayOfWeek],
-							startTime: `${data.timeS}:00`,
-							endTime: `${data.timeE}:00`,
-							allDay: false,
-							backgroundColor: data.color,
-							borderColor: data.color,
-						};
-					}
-					return event;
-				});
-				setEvents(updatedEvents);
-				//console.log(updatedEvents);
-			}
-		} catch (error) {
-			console.error("Błąd podczas edytowania grupy: ", error);
+		} else {
+			console.log(message.error);
+			setSnackbar({ children: message.error, severity: "error" });
 		}
-		setNewGroup({
-			...newGroup,
-			id: null,
-			name: "",
-			dayOfWeek: 1,
-			timeS: "16:00",
-			timeE: "17:00",
-			club: club,
-		});
+		clearGroupForm();
 		setIsClicked(false);
 	};
 	const handleDiscard = async (e: React.FormEvent) => {
-		setNewGroup({
-			...newGroup,
-			id: null,
-			name: "",
-			dayOfWeek: 1,
-			timeS: "16:00",
-			timeE: "17:00",
-			club: club,
-		});
+		clearGroupForm();
 		setIsClicked(false);
 	};
 
@@ -570,7 +520,7 @@ const CreateGroups = ({ params }: Props) => {
 					locale={plLocale}
 					allDaySlot={false}
 					dayHeaderFormat={{ weekday: "long" }}
-					events={events}
+					events={schedule.isSuccess ? schedule.data : []}
 					eventAdd={function () {
 						console.log("dodano event");
 					}}
@@ -586,8 +536,122 @@ const CreateGroups = ({ params }: Props) => {
 				onClick={() => router.push("/home")}>
 				Zakończ edycje grup
 			</Button>
+			{!!snackbar && (
+				<Snackbar
+					open
+					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+					autoHideDuration={2000}
+					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+					onClose={handleCloseSnackbar}>
+					<Alert
+						{...snackbar}
+						onClose={handleCloseSnackbar}
+					/>
+				</Snackbar>
+			)}
 		</>
 	);
 };
 
 export default CreateGroups;
+/*
+	const [events, setEvents] = useState<EventInput[]>([]);
+
+useEffect(() => {
+		const fetchGrups = async () => {
+			try {
+				const response = await fetch(`/api/loc/gr/${params.id}`, {
+					method: "GET",
+				});
+				const data = await response.json();
+				//console.log(data);
+				const formattedEvents: EventInput[] = data.map((group: Group) => ({
+					id: `${group.id}`,
+					title: group.name,
+					daysOfWeek: [group.dayOfWeek],
+					startTime: `${group.timeS}:00`,
+					endTime: `${group.timeE}:00`,
+					allDay: false,
+					backgroundColor: group.color,
+					borderColor: group.color,
+				}));
+				//console.log("Formatted events: ", formattedEvents);
+
+				setEvents(formattedEvents);
+			} catch (error) {
+				console.error("Błąd podczas pobierania grup: ", error);
+			}
+		};
+		fetchGrups();
+	}, []);
+	try {
+			const response = await fetch("/api/loc/gr", {
+				method: "PUT",
+				body: JSON.stringify(newGroup),
+			});
+			const data = await response.json();
+			//console.log("Grupa edytowana: ", data);
+			if (response.ok) {
+				const updatedEvents = events.map((event) => {
+					if (event.id === `${data.id}`) {
+						return {
+							...event,
+							id: `${data.id}`,
+							title: data.name,
+							daysOfWeek: [data.dayOfWeek],
+							startTime: `${data.timeS}:00`,
+							endTime: `${data.timeE}:00`,
+							allDay: false,
+							backgroundColor: data.color,
+							borderColor: data.color,
+						};
+					}
+					return event;
+				});
+				setEvents(updatedEvents);
+				//console.log(updatedEvents);
+			}
+		} catch (error) {
+			console.error("Błąd podczas edytowania grupy: ", error);
+		}
+
+		try {
+			const response = await fetch("/api/loc/gr", {
+				method: "DELETE",
+				body: JSON.stringify(newGroup),
+			});
+			const data = await response.json();
+			//console.log("Grupa usunięta: ", data);
+		} catch (error) {
+			console.error("Błąd podczas usuwania grupy: ", error);
+		}
+		const idToDelete = `${newGroup.id}`;
+		const updatedEvents = events.filter((event) => event.id !== idToDelete);
+
+		setEvents(updatedEvents);
+		//console.log(updatedEvents);
+
+		try {
+			const response = await fetch("/api/loc/gr", {
+				method: "POST",
+				body: JSON.stringify(newGroup),
+			});
+			const data = await response.json();
+			//console.log("Nowa grupa dodana: ", data);
+			if (response.ok) {
+				const formattedNewGroup: EventInput = {
+					id: `${data.id}`,
+					title: data.name,
+					daysOfWeek: [data.dayOfWeek],
+					startTime: `${data.timeS}:00`,
+					endTime: `${data.timeE}:00`,
+					allDay: false,
+					color: data.color,
+				};
+				setEvents([...events, formattedNewGroup]);
+			}
+		} catch (error) {
+			console.error("Błąd podczas dodawania grupy: ", error);
+		}
+		//setGroups([...groups, newGroup]);
+*/
