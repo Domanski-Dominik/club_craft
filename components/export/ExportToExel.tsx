@@ -9,7 +9,7 @@ interface Props {
 }
 
 function ExportToExel({ data }: Props) {
-	console.log(data);
+	//console.log(data);
 	const workbook = new ExcelJS.Workbook();
 	const sheet = workbook.addWorksheet("Uczestnicy");
 	sheet.columns = [

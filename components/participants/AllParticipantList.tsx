@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	DataGrid,
 	plPL,
@@ -96,6 +96,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	const hiddenFields = ["num", "actions", "hiddengroups"];
+	const filterTextsRef = useRef([]);
 
 	const getTogglableColumns = (columns: GridColDef[]) => {
 		return columns
@@ -623,10 +624,56 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 			flex: 1,
 			sortable: false,
 		},
+		{
+			field: "active",
+			headerName: "Aktywny",
+			width: 100,
+			editable: false,
+			hideable: true,
+			type: "boolean",
+			sortable: true,
+		},
 		{ field: "hiddengroups", headerName: "Ukryta ", hideable: true },
 	];
 	const Export = async () => {
-		ExportToExel({ data: rows });
+		const filteredData = participants.filter(
+			(participant) =>
+				participant.active &&
+				filterTextsRef.current.every((filter: any) =>
+					Object.entries(participant).some(([key, value]) => {
+						if (Array.isArray(value)) {
+							return value.some((item) => {
+								if (key === "participantgroup") {
+									const dayName = PolishDayName(item.day);
+									const flatString =
+										`${dayName} ${item.location} ${item.name}`.toLowerCase();
+									return flatString.includes(filter);
+								} else {
+									const flatString = Object.values(item)
+										.join(" ")
+										.toLowerCase();
+									return flatString.includes(filter) && !key.includes("id");
+								}
+							});
+						} else if (value && typeof value === "string") {
+							return (
+								value.toLowerCase().includes(filter) && !key.includes("id")
+							);
+						}
+						return false;
+					})
+				)
+		);
+		ExportToExel({ data: filteredData });
+
+		//ExportToExel({ data: rows });
+	};
+	const handleFilterModelChange = (model: any) => {
+		const newFilterTexts = model.quickFilterValues.map((value: string) =>
+			value.toLowerCase()
+		);
+		// Nie wykonujemy filtrowania tutaj, tylko przechowujemy wartość filtru w stanie komponentu
+		filterTextsRef.current = newFilterTexts;
 	};
 	return (
 		<>
@@ -678,6 +725,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 						},
 						pagination: { paginationModel: { pageSize: 100 } },
 					}}
+					onFilterModelChange={handleFilterModelChange}
 				/>
 			</Box>
 			{!!snackbar && (
@@ -723,3 +771,50 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 };
 
 export default AllParticipantList;
+/*const handleFilterModelChange = (model: any) => {
+		const filterTexts = model.quickFilterValues.map((value: string) =>
+			value.toLowerCase()
+		); // Zamień na małe litery
+		//console.log(filterTexts);
+		if (filterTexts.length !== 0) {
+			const filteredData = participants.filter(
+				(participant) =>
+					participant.active && // Dodaj warunek, że participant musi być aktywny
+					filterTexts.every(
+						(
+							filter: any // Zmieniamy some na every, aby sprawdzić, czy każda fraza pasuje
+						) =>
+							Object.entries(participant).some(([key, value]) => {
+								// Iterujemy po polach uczestnika
+								if (Array.isArray(value)) {
+									// Sprawdzamy, czy wartość jest tablicą
+									return value.some((item) => {
+										// Sprawdzamy, czy jakikolwiek element w tablicy pasuje
+										if (key === "participantgroup") {
+											const dayName = PolishDayName(item.day); // Zamień numer dnia tygodnia na jego nazwę
+											const flatString =
+												`${dayName} ${item.location} ${item.name}`.toLowerCase(); // Tworzymy ciąg znaków z nazwy dnia, lokalizacji i nazwy grupy
+											return flatString.includes(filter); // Sprawdzamy, czy ciąg znaków zawiera frazę
+										} else {
+											const flatString = Object.values(item)
+												.join(" ")
+												.toLowerCase(); // Spłaszczamy obiekt do ciągu znaków i zamieniamy na małe litery
+											return flatString.includes(filter) && !key.includes("id"); // Sprawdzamy, czy ciąg znaków zawiera frazę i czy klucz nie zawiera 'id'
+										}
+									});
+								} else if (value && typeof value === "string") {
+									// Sprawdzamy, czy wartość jest łańcuchem znaków
+									return (
+										value.toLowerCase().includes(filter) && !key.includes("id")
+									); // Sprawdzamy, czy wartość zawiera frazę i czy klucz nie zawiera 'id'
+								}
+								return false; // Zwracamy false, jeśli wartość nie jest łańcuchem znaków, tablicą lub jeśli jest null
+							})
+					)
+			);
+			/*console.log(model);
+			console.log(model.quickFilterValues.join(" "));
+			console.log(filteredData);
+			setFilteredRows(filteredData);
+		}
+	};*/

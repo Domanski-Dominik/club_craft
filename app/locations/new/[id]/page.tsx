@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, QueryCache } from "@tanstack/react-query";
 import {
 	useUpdateGroup,
 	useDeleteGroup,
@@ -120,6 +120,19 @@ const CreateGroups = ({ params }: Props) => {
 	const updateGroup = useUpdateGroup();
 	const deleteGroup = useDeleteGroup();
 	const addGroup = useAddGroup();
+	const queryCache = new QueryCache({
+		onError: (error) => {
+			console.log(error);
+		},
+		onSuccess: (data) => {
+			console.log(data);
+		},
+		onSettled: (data, error) => {
+			console.log(data, error);
+		},
+	});
+	const query = queryCache.findAll();
+	console.log(query);
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"

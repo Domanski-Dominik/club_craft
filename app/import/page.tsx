@@ -4,7 +4,16 @@ import React from "react";
 import { ImportP } from "@/server/actions";
 
 const Import = () => {
-	return <Button onClick={() => ImportP()}>Import</Button>;
+	const crone = async () => {
+		fetch(`/api/crone`, { method: "POST" });
+		console.log("crone");
+	};
+	return (
+		<>
+			<Button onClick={() => ImportP()}>Import</Button>
+			<Button onClick={() => crone()}>Crone job</Button>
+		</>
+	);
 };
 
 export default Import;
