@@ -638,7 +638,14 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const Export = async () => {
 		const filteredData = participants.filter(
 			(participant) =>
-				participant.active &&
+				(participant.active ||
+					participant.payments?.some(
+						(p: any) => p.month === formatDateMonth(date)
+					) ||
+					participant.attendance?.some((a: any) => {
+						const attendanceMonthYear = a.date.substring(3); // Ucinamy pierwsze trzy znaki z daty
+						return attendanceMonthYear === formatDateMonth(date);
+					})) &&
 				filterTextsRef.current.every((filter: any) =>
 					Object.entries(participant).some(([key, value]) => {
 						if (Array.isArray(value)) {
