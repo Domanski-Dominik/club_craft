@@ -15,6 +15,13 @@ const formatDateMonth = (date: Date) => {
 };
 function ExportToExel({ data, date }: Props) {
 	console.log(data);
+	// Sortujemy dane według nazwiska, a jeśli są takie same, to według imienia
+	const sortedData = data.sort((a, b) => {
+		if (a.lastName === b.lastName) {
+			return a.firstName.localeCompare(b.firstName);
+		}
+		return a.lastName.localeCompare(b.lastName);
+	});
 	const workbook = new ExcelJS.Workbook();
 	const sheet = workbook.addWorksheet("Uczestnicy");
 	sheet.columns = [
@@ -35,7 +42,7 @@ function ExportToExel({ data, date }: Props) {
 		pattern: "solid",
 		fgColor: { argb: "ffa4ffa4" },
 	};
-	data.forEach((prt: any) => {
+	sortedData.forEach((prt: any) => {
 		const row = sheet.addRow({
 			lastName: prt.lastName,
 			firstName: prt.firstName,
@@ -77,7 +84,7 @@ function ExportToExel({ data, date }: Props) {
 		row.height = Math.max(defaultRowHeight, calculatedRowHeight);
 	});
 
-	const totalPaymentAmount = data.reduce((total: number, prt: any) => {
+	const totalPaymentAmount = sortedData.reduce((total: number, prt: any) => {
 		const paymentsForDate = prt.payments.filter(
 			(payment: any) => formatDateMonth(date) === payment.month
 		);
