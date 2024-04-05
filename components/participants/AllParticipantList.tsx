@@ -664,7 +664,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 					})
 				)
 		);
-		ExportToExel({ data: filteredData });
+		ExportToExel({ data: filteredData, date: date });
 
 		//ExportToExel({ data: rows });
 	};
