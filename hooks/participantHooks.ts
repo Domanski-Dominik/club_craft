@@ -52,9 +52,61 @@ const deleteParticipant = async (info: any) => {
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(info.selectedRow), // Przekaż zaktualizowane dane uczestnika
+		body: JSON.stringify(info.selectedRow),
 	}).then((res) => res.json());
 };
 export const useDeletePrt = () => {
 	return useMutation({ mutationFn: deleteParticipant });
+};
+
+const updateParticpantGroup = async (info: any) => {
+	//console.log(info);
+	return fetch("/api/participant/groups", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			participantId: info.participantId,
+			groupId: info.groupId,
+		}),
+	}).then((res) => res.json());
+};
+export const useUpdatePrtGr = () => {
+	return useMutation({ mutationFn: updateParticpantGroup });
+};
+
+const deleteParticipantGr = async (info: any) => {
+	//console.log(info);
+	return fetch("/api/participant/groups", {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			participantId: info.participantId,
+			groupId: info.groupId,
+		}),
+	}).then((res) => res.json());
+};
+export const useDeletePrtGr = () => {
+	return useMutation({ mutationFn: deleteParticipantGr });
+};
+
+const editParticipantGr = async (info: any) => {
+	//console.log(info);
+	return fetch("/api/participant/groups", {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			participantId: info.participantId,
+			groupIdToRemove: info.groupIdToRemove,
+			groupIdToAdd: info.groupToAdd,
+		}),
+	}).then((res) => res.json());
+};
+export const useEditPrtGr = () => {
+	return useMutation({ mutationFn: editParticipantGr });
 };

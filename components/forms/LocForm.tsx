@@ -18,6 +18,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { useRouter, redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import type { Location } from "@/types/type";
+import { useAddLoc, useEditLoc } from "@/hooks/scheduleHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
 	locInfo: Location;
@@ -26,6 +28,9 @@ type Props = {
 
 const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 	const router = useRouter();
+	const addLoc = useAddLoc();
+	const editLoc = useEditLoc();
+	const queryClient = useQueryClient();
 	const [id, setId] = useState();
 	const [success, setSuccess] = useState(false);
 	const [postalCode, setPostalCode] = useState(locInfo.postalCode);
@@ -66,57 +71,35 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 		if (validFormat && newLoc.name !== "") {
 			setIsSending(true);
 			// Obsługa przesłania formularza
-			console.log("Formularz został przesłany.");
+			//console.log("Formularz został przesłany.");
 			if (type === "edit") {
-				try {
-					const response = await fetch("/api/loc", {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(newLoc),
-					});
-					const data = await response.json();
-					console.log(data, response);
-					if (response.ok) {
-						console.log("Zaktualizowano lokalizacje: ", data);
-						//router.push(`/locations/new/${data.id}`);
-						setSuccess(true);
-						setIsSending(false);
-					} else {
-						setError(data.error);
-						setIsSending(false);
-					}
-				} catch (error) {
-					console.error("Wystąpił błąd podczas wykonywania żądania: ", error);
+				const message = await editLoc.mutateAsync(newLoc);
+				if (!message.error) {
+					console.log(message);
+					setSuccess(true);
+					setIsSending(false);
+					queryClient.invalidateQueries({ queryKey: ["locations"] });
+				} else {
+					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
+					setError(message.error);
 					setIsSending(false);
 				}
 			} else {
-				try {
-					const response = await fetch("/api/loc", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(newLoc),
-					});
-					const data = await response.json();
-					if (response.ok) {
-						setId(data.id);
-						setSuccess(true);
-						setIsSending(false);
-					} else {
-						console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
-						setError(data.error);
-						setIsSending(false);
-					}
-				} catch (error) {
-					console.error("Wystąpił błąd podczas wykonywania żądania: ", error);
+				const message = await addLoc.mutateAsync(newLoc);
+				if (!message.error) {
+					//console.log(message);
+					setId(message.id);
+					setSuccess(true);
+					setIsSending(false);
+					queryClient.invalidateQueries({ queryKey: ["locations"] });
+				} else {
+					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
+					setError(message.error);
 					setIsSending(false);
 				}
 			}
 		} else {
-			console.log('Kod pocztowy lub pole "name" jest niepoprawne.');
+			//console.log('Kod pocztowy lub pole "name" jest niepoprawne.');
 			setIsSending(false);
 		}
 	};

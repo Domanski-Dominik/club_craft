@@ -22,6 +22,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { LocWithGroups, Group } from "@/types/type";
+import {
+	useUpdatePrtGr,
+	useDeletePrtGr,
+	useEditPrtGr,
+} from "@/hooks/participantHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DialogGroups: React.FC<DialogGroupsType> = ({
 	onClose,
@@ -32,6 +38,10 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	if (row === null) {
 		return null;
 	}
+	const updateGr = useUpdatePrtGr();
+	const deleteGr = useDeletePrtGr();
+	const editGr = useEditPrtGr();
+	const queryClient = useQueryClient();
 	const [addingGroup, setAddingGroup] = useState(false);
 	const [editedGroupId, setEditedGroupId] = useState<string | null>(null);
 	const [selectedLocation, setSelectedLocation] = useState<
@@ -50,7 +60,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 
 	const handleEditClick = (groupId: string) => {
 		setAddingGroup(false);
-		console.log(locWithGroups);
+		//console.log(locWithGroups);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((schedule) =>
 			schedule.locationschedule.find((group) => group.id === Number(groupId))
@@ -169,93 +179,62 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		onClose("no");
 	};
 	const handleAddGroup = async () => {
-		const participantId = row.id;
-		const groupId = parseInt(selectedGroupId, 10);
-		try {
-			const response = await fetch("/api/participant/groups", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					participantId: participantId,
-					groupId: groupId,
-				}),
-			});
-			const newGroup = await response.json();
-			console.log(newGroup);
-			if (newGroup.name) {
-				row.participantgroup.push(newGroup);
-				setEditedGroupId(null);
-				setAddingGroup(false);
-				setError("");
-			}
-			setError(newGroup.error);
-		} catch (error: any) {
-			console.error(error);
-			setError(error.error);
+		const info = {
+			participantId: row.id,
+			groupId: parseInt(selectedGroupId, 10),
+		};
+		const message = await updateGr.mutateAsync(info);
+		if (!message.error) {
+			row.participantgroup.push(message);
+			setEditedGroupId(null);
+			setAddingGroup(false);
+			setError("");
+			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+			queryClient.invalidateQueries({ queryKey: ["participants"] });
+		} else {
+			setError(message.error);
 		}
 	};
 	const handleDelete = async () => {
-		const participantId = row.id;
-		const groupId = parseInt(selectedGroupId, 10);
-		try {
-			const response = await fetch("/api/participant/groups", {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					participantId: participantId,
-					groupId: groupId,
-				}),
-			});
-			if (response.ok) {
-				const groups = row.participantgroup;
-				const newGroups = groups?.filter((g: any) => g.id !== groupId);
-				row.participantgroup = newGroups;
-				setEditedGroupId(null);
-				setError("");
-			}
-		} catch (error: any) {
-			console.error(error);
-			setError(error.error);
+		const info = {
+			participantId: row.id,
+			groupId: parseInt(selectedGroupId, 10),
+		};
+		const message = await deleteGr.mutateAsync(info);
+		if (!message.error) {
+			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+			queryClient.invalidateQueries({ queryKey: ["participants"] });
+			const groups = row.participantgroup;
+			const newGroups = groups?.filter((g: any) => g.id !== info.groupId);
+			row.participantgroup = newGroups;
+			setEditedGroupId(null);
+			setError("");
+		} else {
+			setError(message.error);
 		}
 	};
 	const handleEditSave = async () => {
 		if (editedGroupId !== null && selectedGroupId !== "") {
-			const participantId = row.id;
-			const groupIdToRemove = parseInt(editedGroupId, 10);
-			const groupToAdd = parseInt(selectedGroupId, 10);
-			try {
-				const response = await fetch("/api/participant/groups", {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						participantId: participantId,
-						groupIdToRemove: groupIdToRemove,
-						groupIdToAdd: groupToAdd,
-					}),
-				});
-				const newGroup = await response.json();
-				console.log(newGroup);
-				if (newGroup.name) {
-					row.participantgroup.push(newGroup);
-					const removedGroup = row.participantgroup;
-					const updatedGroups = removedGroup?.filter(
-						(g: any) => g.id !== editedGroupId
-					);
-					row.participantgroup = updatedGroups;
-					setEditedGroupId(null);
-					setAddingGroup(false);
-					setError("");
-				}
-				setError(newGroup.error);
-			} catch (error: any) {
-				console.error(error);
-				setError(error.error);
+			const info = {
+				participantId: row.id,
+				groupIdToRemove: parseInt(editedGroupId, 10),
+				groupToAdd: parseInt(selectedGroupId, 10),
+			};
+			const message = await editGr.mutateAsync(info);
+			if (!message.error) {
+				queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+				queryClient.invalidateQueries({ queryKey: ["participants"] });
+				row.participantgroup.push(message);
+				const removedGroup = row.participantgroup;
+				const updatedGroups = removedGroup?.filter(
+					(g: any) => g.id !== editedGroupId
+				);
+				row.participantgroup = updatedGroups;
+				setEditedGroupId(null);
+				setAddingGroup(false);
+				setError("");
+			} else {
+				setError(message.error);
 			}
 		}
 	};

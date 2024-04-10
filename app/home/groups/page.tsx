@@ -31,6 +31,8 @@ import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
+import { useDeleteLoc } from "@/hooks/scheduleHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Location = {
 	id: number;
@@ -46,6 +48,8 @@ type Location = {
 
 const GroupList = () => {
 	const router = useRouter();
+	const deleteLocation = useDeleteLoc();
+	const queryClient = useQueryClient();
 	const [loading, setLoading] = useState(true);
 	const [isOwner, setIsOwner] = useState(false);
 	const [error, setError] = useState("");
@@ -125,7 +129,7 @@ const GroupList = () => {
 					}
 				);
 				const data = await response.json();
-				console.log(data);
+				//console.log(data);
 				if (Array.isArray(data)) {
 					setData(data);
 					setLoading(false);
@@ -144,7 +148,7 @@ const GroupList = () => {
 					}
 				);
 				const data = await response.json();
-				console.log(data);
+				//console.log(data);
 				if (Array.isArray(data)) {
 					setData(data);
 					setLoading(false);
@@ -158,34 +162,21 @@ const GroupList = () => {
 	};
 
 	const handleChoice = async (value: string) => {
-		console.log(value);
+		//console.log(value);
 		setDialogOpen(false);
 		if (value === "yes" && deleteLoc !== null) {
-			try {
-				const response = await fetch("/api/loc", {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(deleteLoc), // Przekaż zaktualizowane dane uczestnika
-				});
-				const message = await response.json();
-				if (!message.error) {
-					console.log(message);
-					setSnackbar({
-						children: message.message,
-						severity: "success",
-					});
-					setData(data.filter((loc) => loc.id !== deleteLoc.id));
-				} else {
-					console.log(message);
-					setSnackbar({ children: message.error, severity: "error" });
-				}
-			} catch (error) {
+			const message = await deleteLocation.mutateAsync(deleteLoc);
+			if (!message.error) {
+				//console.log(message);
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
-					severity: "error",
+					children: message.message,
+					severity: "success",
 				});
+				setData(data.filter((loc) => loc.id !== deleteLoc.id));
+				queryClient.invalidateQueries({ queryKey: ["locations"] });
+			} else {
+				//console.log(message);
+				setSnackbar({ children: message.error, severity: "error" });
 			}
 		} else {
 			setDeleteLoc(null);

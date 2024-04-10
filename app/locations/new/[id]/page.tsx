@@ -4,7 +4,8 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
-import { useQuery, QueryCache } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
 	useUpdateGroup,
 	useDeleteGroup,
@@ -120,19 +121,7 @@ const CreateGroups = ({ params }: Props) => {
 	const updateGroup = useUpdateGroup();
 	const deleteGroup = useDeleteGroup();
 	const addGroup = useAddGroup();
-	const queryCache = new QueryCache({
-		onError: (error) => {
-			console.log(error);
-		},
-		onSuccess: (data) => {
-			console.log(data);
-		},
-		onSettled: (data, error) => {
-			console.log(data, error);
-		},
-	});
-	const query = queryCache.findAll();
-	console.log(query);
+	const queryClient = useQueryClient();
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"
@@ -157,6 +146,8 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się dodać grupę",
 				severity: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: ["days"] });
+			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
@@ -174,6 +165,8 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się usunąć grupę",
 				severity: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: ["days"] });
+			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
@@ -192,6 +185,8 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się zaktualizować grupę",
 				severity: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: ["days"] });
+			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
