@@ -42,12 +42,14 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import DialogPresent from "../dialogs/DialogPresent";
 import { darken, lighten, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
 	useAttendance,
 	useDeletePrt,
 	usePayment,
 	useUpdatePrt,
 } from "@/hooks/participantHooks";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	participants: Participant[];
@@ -149,6 +151,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
+	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const addedParticipantIds = new Set();
 	const gridRef = useGridApiRef();
@@ -172,6 +175,7 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 			note: false,
 			regulamin: false,
 			active: false,
+			info: false,
 		});
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
@@ -507,6 +511,7 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 										payment: true,
 										note: true,
 										regulamin: true,
+										info: true,
 									});
 								}}>
 								<EditIcon />
@@ -527,6 +532,7 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 										note: !prev.note,
 										regulamin: !prev.regulamin,
 										active: !prev.active,
+										info: !prev.info,
 									}));
 									gridRef.current.scroll({ left: 0 });
 									setMore((prev) => !prev);
@@ -770,6 +776,21 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 			sortable: false,
 		},
 		{
+			field: "info",
+			headerName: "Info",
+			width: 15,
+			editable: false,
+			sortable: false,
+			hideable: true,
+			renderCell: (params) => {
+				return (
+					<InfoOutlinedIcon
+						onClick={() => router.push(`/participant/${params.row.id}`)}
+					/>
+				);
+			},
+		},
+		{
 			field: "regulamin",
 			headerName: "Umowa",
 			width: 70,
@@ -925,6 +946,7 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 							payment: false,
 							note: false,
 							active: false,
+							info: false,
 						},
 					},
 				}}

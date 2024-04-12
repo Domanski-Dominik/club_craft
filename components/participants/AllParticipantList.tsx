@@ -58,6 +58,8 @@ import {
 	usePayment,
 	useUpdatePrt,
 } from "@/hooks/participantHooks";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	participants: Participant[];
@@ -70,6 +72,7 @@ const formatDateMonth = (date: Date) => {
 };
 
 const AllParticipantList = ({ participants, locWithGroups }: Props) => {
+	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -546,6 +549,21 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 							/>
 						)}
 					</Box>
+				);
+			},
+		},
+		{
+			field: "info",
+			headerName: "Info",
+			width: 15,
+			editable: false,
+			sortable: false,
+			hideable: true,
+			renderCell: (params) => {
+				return (
+					<InfoOutlinedIcon
+						onClick={() => router.push(`/participant/${params.row.id}`)}
+					/>
 				);
 			},
 		},
