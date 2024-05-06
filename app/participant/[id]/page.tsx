@@ -6,6 +6,33 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AttendanceCalendar from "@/components/calendars/AttendanceCalendar";
 
+const tableStyle = {
+	width: "100%",
+	border: "1px solid #dddddd",
+	borderRadius: "5px",
+	height: "100%",
+};
+
+const tdStyle = {
+	borderBottom: "1px solid #dddddd",
+	padding: "8px",
+	margin: 0,
+};
+const tdStyleRight = {
+	borderBottom: "1px solid #dddddd",
+	borderRight: "1px solid #dddddd",
+	padding: "8px",
+	margin: 0,
+};
+const tdStyleLast = {
+	padding: "8px",
+	margin: 0,
+};
+const tdStyleLastRight = {
+	padding: "8px",
+	borderRight: "1px solid #dddddd",
+	margin: 0,
+};
 interface Props {
 	params: {
 		id: string;
@@ -47,7 +74,7 @@ const ParticipantInfo = ({ params }: Props) => {
 			<Grid
 				container
 				spacing={2}
-				paddingTop={3}
+				paddingTop={2}
 				width={"100%"}>
 				<Grid
 					xs={12}
@@ -113,43 +140,46 @@ const ParticipantInfo = ({ params }: Props) => {
 					md={12}
 					lg={12}
 					xl={2}>
-					<Typography
-						variant='body1'
-						align='center'>
-						Tel: {participant.data.phoneNumber},
-						<br /> Email: {participant.data.email},
-						<br />
-						Regulamin: {participant.data.regulamin ? "tak" : "nie"},<br />{" "}
-						Aktywny: {participant.data.active ? "tak" : "nie"}
-						<br />
-						Notatka: {participant.data.note},
-					</Typography>
+					<table style={tableStyle}>
+						<tbody>
+							<tr>
+								<td style={tdStyleRight}>Telefon:</td>
+								<td style={tdStyle}>{participant.data.phoneNumber}</td>
+							</tr>
+							<tr>
+								<td style={tdStyleRight}>Email:</td>
+								<td style={tdStyle}>
+									{participant.data.email === null
+										? "brak maila"
+										: participant.data.email}
+								</td>
+							</tr>
+							<tr>
+								<td style={tdStyleRight}>Regulamin:</td>
+								<td style={tdStyle}>
+									{participant.data.regulamin ? "tak" : "nie"}
+								</td>
+							</tr>
+							<tr>
+								<td style={tdStyleRight}>Aktywny:</td>
+								<td style={tdStyle}>
+									{participant.data.active ? "tak" : "nie"}
+								</td>
+							</tr>
+							<tr>
+								<td style={tdStyleLastRight}>Notatka:</td>
+								<td style={tdStyleLast}>
+									{participant.data.note === null ||
+									participant.data.note === ""
+										? "brak notatki"
+										: participant.data.note}
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</Grid>
 			</Grid>
 		);
 };
 
 export default ParticipantInfo;
-/*
-<Grid
-					container
-					spacing={1}
-					paddingTop={3}
-					width={"100%"}>
-					<Grid
-						xs={12}
-						sm={12}
-						md={12}
-						lg={12}
-						xl={12}>
-                        </Grid>
-					<Grid
-						xs={12}
-						sm={6}
-						md={6}
-						lg={4}
-						xl={3}>
-						<Typography variant='h4'></Typography>
-					</Grid>
-				</Grid>
-*/
