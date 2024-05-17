@@ -10,7 +10,7 @@ export const ImportP = async () => {
 					firstName: participant.firstName,
 					lastName: participant.lastName,
 					phoneNumber: participant.phoneNumber,
-					club: "AkroSmyk",
+					club: participant.club,
 					// Dodaj więcej pól, jeśli twoje dane zawierają więcej informacji
 				},
 			});

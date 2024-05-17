@@ -41,3 +41,26 @@ export const ReversePolishName = (dayOfWeek: string) => {
 			return 7;
 	}
 };
+
+export const ColorName = (color: string) => {
+	switch (color) {
+		case "#3788d8":
+			return "Niebieski";
+		case "#228B22":
+			return "Zielony";
+		case "#9400D3":
+			return "Fioletowy";
+		case "#DC143C":
+			return "Czerwony";
+		case "#FFD700":
+			return "Złoty";
+		case "#FF8C00":
+			return "Pomarańczowy";
+		case "#00ffc8":
+			return "Cyjan";
+		case "#f200ff":
+			return "Różowy";
+		default:
+			return "Nieznany";
+	}
+};

@@ -1,19 +1,19 @@
 "use client";
 
 import AllParticipantList from "@/components/participants/AllParticipantList";
+import { useQuery } from "@tanstack/react-query";
 import Loading from "@/context/Loading";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { redirect, useRouter } from "next/navigation";
 import type { Participant, LocWithGroups } from "@/types/type";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Fab } from "@mui/material";
+import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 const Participants = () => {
-	const [participants, setParticipants] = React.useState<Participant[]>([]);
-	const [locWithGroups, setLocWithGroups] = React.useState<LocWithGroups[]>([]);
-	const [isOwner, setIsOwner] = React.useState(false);
-	const [error, setError] = React.useState("");
-	const [noPrt, setNoPrt] = React.useState(false);
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -21,118 +21,87 @@ const Participants = () => {
 		},
 	});
 	const router = useRouter();
-	const [loading, setLoading] = React.useState(true);
-	React.useEffect(() => {
-		const fetchParticipants = async () => {
-			if (session?.user && status === "authenticated") {
-				if (session.user.role === "owner" || session.user.role === "admin") {
-					const response = await fetch(
-						`/api/participant/all/${session.user.role}/${session.user.club}`,
-						{
-							method: "GET",
-						}
-					);
-					const data: Participant[] | { error: string } = await response.json();
+	const participants = useQuery<Participant[]>({
+		queryKey: ["AllParticipants"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(
+				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
+			).then((res) => res.json()),
+	});
+	const locWithGroups = useQuery<LocWithGroups[]>({
+		queryKey: ["AllParticipantsLocs"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/form/${session?.user.club}`).then((res) => res.json()),
+	});
 
-					if (Array.isArray(data)) {
-						if (data.length > 0) {
-							setParticipants(data);
-							setLoading(false);
-						} else {
-							setNoPrt(true);
-						}
-					} else {
-						setError(data.error);
-					}
-					const response2 = await fetch(`/api/form/${session?.user.club}`, {
-						method: "GET",
-					});
-					const data2: LocWithGroups[] | { error: string } =
-						await response2.json();
-					if (Array.isArray(data2)) {
-						setLocWithGroups(data2);
-					} else {
-						setError(data2.error);
-					}
-					setLoading(false);
-					setIsOwner(true);
-				}
-				if (session.user.role === "coach") {
-					const response = await fetch(
-						`/api/participant/all/${session.user.role}/${session.user.club}/${session.user.id}`,
-						{
-							method: "GET",
-						}
-					);
-					const data: Participant[] | { error: string } = await response.json();
-					console.log(data);
-					if (Array.isArray(data)) {
-						if (data.length > 0) {
-							setParticipants(data);
-							setLoading(false);
-							setNoPrt(false);
-						} else {
-							setNoPrt(true);
-							setLoading(false);
-						}
-					} else {
-						setError(data.error);
-					}
-					const response2 = await fetch(`/api/form/${session?.user.club}`, {
-						method: "GET",
-					});
-					const data2: LocWithGroups[] | { error: string } =
-						await response2.json();
-					if (Array.isArray(data2)) {
-						setLocWithGroups(data2);
-					} else {
-						setError(data2.error);
-					}
-					setLoading(false);
-				}
-			}
-		};
-
-		fetchParticipants();
-	}, [session]);
-	if (error !== "")
+	if (
+		status === "loading" ||
+		participants.isFetching ||
+		locWithGroups.isFetching
+	)
+		return <Loading />;
+	if (
+		participants.isError ||
+		participants.data === undefined ||
+		locWithGroups.data === undefined
+	) {
 		return (
-			<Typography
-				color={"red"}
-				variant='h4'>
-				{error}
-			</Typography>
+			<>
+				<WarningAmberIcon
+					color='error'
+					sx={{ width: 100, height: 100, m: 4 }}
+				/>
+				<Typography
+					color={"red"}
+					variant='h4'>
+					{participants.isError
+						? participants.error.message
+						: "Nie udało się pobrać uczestników lub grup"}
+				</Typography>
+				<Fab
+					onClick={() => window.location.reload()}
+					sx={{ mt: 4, mb: 1 }}
+					color='primary'
+					variant='extended'
+					size='small'>
+					<CachedOutlinedIcon sx={{ mr: 1 }} />
+					Odśwież stronę
+				</Fab>
+			</>
 		);
-	if (status === "loading") return <Loading />;
-	if (loading) return <Loading />;
-	if (noPrt)
+	}
+	if (participants.data.length === 0)
 		return (
-			<Box
-				sx={{
-					mx: 3,
-				}}>
+			<>
+				<PersonOffOutlinedIcon
+					sx={{ width: 100, height: 100, mb: 4 }}
+					color='secondary'
+				/>
 				<Typography
 					variant='h4'
 					align='center'>
 					Brak dodanych uczestników
 				</Typography>
-				<Button
+				<Fab
 					sx={{ mt: 5 }}
-					fullWidth
-					variant='contained'
+					color='primary'
+					variant='extended'
 					onClick={() => router.push("/add")}>
+					<AddOutlinedIcon sx={{ mr: 1 }} />
 					Dodaj Uczestników
-				</Button>
-			</Box>
+				</Fab>
+			</>
 		);
-	if (participants.length > 0 && locWithGroups.length > 0)
-		return (
-			<AllParticipantList
-				participants={participants}
-				locWithGroups={locWithGroups}
-				isOwner={isOwner}
-			/>
-		);
+
+	return (
+		<AllParticipantList
+			participants={participants.data}
+			locWithGroups={locWithGroups.data}
+			isOwner={session?.user.role === "owner"}
+		/>
+	);
 };
 
 export default Participants;

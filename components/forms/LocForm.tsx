@@ -91,7 +91,10 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 					setId(message.id);
 					setSuccess(true);
 					setIsSending(false);
-					queryClient.invalidateQueries({ queryKey: ["locations"] });
+					queryClient.invalidateQueries({
+						queryKey: ["locations"],
+						refetchType: "all",
+					});
 				} else {
 					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
 					setError(message.error);

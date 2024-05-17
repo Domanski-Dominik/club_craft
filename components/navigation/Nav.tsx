@@ -23,12 +23,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/navigation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import InfoIcon from "@mui/icons-material/Info";
 
 const drawerWidth = 240;
 const navItems = [
-	{ name: "Kalendarz", icon: <CalendarMonthIcon /> },
-	{ name: "Informacje", icon: <InfoIcon /> },
+	{
+		name: "Zarządzaj grupami",
+		icon: <WidgetsIcon />,
+		link: "/home/manageGroups",
+	},
+	//{ name: "Informacje", icon: <InfoIcon />, link: "/home/info" },
 ];
 
 export default function TopNav() {
@@ -54,7 +59,9 @@ export default function TopNav() {
 			<Divider />
 			<List>
 				{navItems.map((item) => (
-					<ListItem key={item.name}>
+					<ListItem
+						key={item.name}
+						onClick={() => router.push(item.link)}>
 						<ListItemIcon>{item.icon}</ListItemIcon>
 						<ListItemText primary={item.name} />
 					</ListItem>
@@ -99,10 +106,10 @@ export default function TopNav() {
 					<Box sx={{ display: { xs: "none", sm: "block" } }}>
 						{navItems.map((item) => (
 							<Button
-								disabled
 								startIcon={item.icon}
 								key={item.name}
-								sx={{ color: "#fff" }}>
+								sx={{ color: "#fff" }}
+								onClick={() => router.push(item.link)}>
 								{item.name}
 							</Button>
 						))}

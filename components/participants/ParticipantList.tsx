@@ -950,20 +950,12 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 						},
 					},
 				}}
-				onCellDoubleClick={() => {
-					setEdit(true);
-					gridRef.current.scroll({ left: 0 });
-					setColumnVisibilityModel({
-						actions: true,
-					});
-				}}
 				processRowUpdate={processRowUpdate}
 				rowModesModel={rowModesModel}
 				onRowModesModelChange={handleRowModesModelChange}
 				onRowEditStop={handleRowEditStop}
 				getRowClassName={(params) => `row-${params.row.status}`}
 			/>
-
 			{!!snackbar && (
 				<Snackbar
 					open
@@ -1000,3 +992,14 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 };
 
 export default ParticipantList;
+
+/*
+			
+			
+			onCellDoubleClick={() => {
+					setEdit(true);
+					gridRef.current.scroll({ left: 0 });
+					setColumnVisibilityModel({
+						actions: true,
+					});
+				}}*/

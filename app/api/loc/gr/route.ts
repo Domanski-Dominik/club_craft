@@ -89,6 +89,15 @@ export const DELETE = async (req: Request) => {
 					{ status: 500 }
 				);
 			}
+			const deleteCoach = await prisma.groupcoach.deleteMany({
+				where: { groupId: id },
+			});
+			if (!deleteCoach) {
+				return Response.json(
+					{ error: "Nie udało się usunąć trenerów" },
+					{ status: 500 }
+				);
+			}
 			const deleteGroup = await prisma.group.deleteMany({
 				where: { id: id },
 			});
@@ -117,23 +126,64 @@ export const DELETE = async (req: Request) => {
 };
 
 export const PUT = async (req: Request) => {
-	const { name, dayOfWeek, timeS, timeE, locationId, id, color } =
-		await req.json();
+	const {
+		name,
+		dayOfWeek,
+		timeS,
+		timeE,
+		id,
+		color,
+		price,
+		locationschedule,
+		locations,
+	} = await req.json();
 	//console.log("Wszedłem w edytowanie");
 	//console.log(id, name, dayOfWeek, timeS, timeE, locationId);
-	if (!name || !timeS || !timeE || !locationId) {
+	if (!name || !timeS || !timeE) {
 		return Response.json({ error: "Brak wymaganych danych" }, { status: 400 });
 	}
 	try {
 		// Sprawdzenie, czy grupa istnieje
 		const existingGroup = await prisma.group.findUnique({
 			where: { id: id },
+			include: {
+				locationschedule: {
+					include: { locations: true },
+				},
+			},
 		});
 
 		if (!existingGroup) {
 			return Response.json({ error: "Grupa nie istnieje" }, { status: 404 });
 		}
-
+		if (
+			!existingGroup.locationschedule.some(
+				(l: any) => l.locations.name === locationschedule
+			)
+		) {
+			const scheduleId = existingGroup.locationschedule.find(
+				(l) => l.id !== undefined
+			)?.id;
+			if (scheduleId !== undefined) {
+				const loc = locations.find((l: any) => l.name === locationschedule);
+				if (loc) {
+					const updatedSchedule = await prisma.locationschedule.update({
+						where: { id: scheduleId },
+						data: {
+							groupId: existingGroup.id,
+							locationId: loc.id,
+						},
+					});
+					if (!updatedSchedule) {
+						return Response.json(
+							{ error: "Wystąpił błąd podczas przepisywania grupy" },
+							{ status: 400 }
+						);
+					}
+				}
+				/**/
+			}
+		}
 		// Aktualizacja danych grupy
 		const updatedGroup = await prisma.group.update({
 			where: { id: id },
@@ -144,6 +194,7 @@ export const PUT = async (req: Request) => {
 				timeS: timeS !== undefined ? String(timeS) : existingGroup.timeS,
 				timeE: timeE !== undefined ? String(timeE) : existingGroup.timeE,
 				color: color !== undefined ? String(color) : existingGroup.color,
+				price: price !== undefined ? price : existingGroup.price,
 			},
 		});
 
@@ -157,18 +208,3 @@ export const PUT = async (req: Request) => {
 		);
 	}
 };
-/*
-const findSchedule = await prisma.locationschedule.findMany({
-				where: { group: { id } },
-			});
-			if (findSchedule.length > 1) {
-const findParticipants = await prisma.participantgroup.findMany({
-				where: { groupId: id },
-			});
-			if (findParticipants.length > 0) {
-				}
-			const findAttendance = await prisma.attendance.deleteMany({
-				where:{groupId:id}
-			})
-
-*/

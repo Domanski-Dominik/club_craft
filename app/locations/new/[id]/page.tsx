@@ -146,8 +146,14 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się dodać grupę",
 				severity: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["days"] });
-			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+			queryClient.invalidateQueries({
+				queryKey: ["days", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["allGroups", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
@@ -165,8 +171,14 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się usunąć grupę",
 				severity: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["days"] });
-			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+			queryClient.invalidateQueries({
+				queryKey: ["days", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["allGroups", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
@@ -185,8 +197,14 @@ const CreateGroups = ({ params }: Props) => {
 				children: "Udało się zaktualizować grupę",
 				severity: "success",
 			});
-			queryClient.invalidateQueries({ queryKey: ["days"] });
-			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
+			queryClient.invalidateQueries({
+				queryKey: ["days", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["allGroups", `${locationIdNum}`],
+				refetchType: "inactive",
+			});
 		} else {
 			console.log(message.error);
 			setSnackbar({ children: message.error, severity: "error" });
@@ -562,104 +580,3 @@ const CreateGroups = ({ params }: Props) => {
 };
 
 export default CreateGroups;
-/*
-	const [events, setEvents] = useState<EventInput[]>([]);
-
-useEffect(() => {
-		const fetchGrups = async () => {
-			try {
-				const response = await fetch(`/api/loc/gr/${params.id}`, {
-					method: "GET",
-				});
-				const data = await response.json();
-				//console.log(data);
-				const formattedEvents: EventInput[] = data.map((group: Group) => ({
-					id: `${group.id}`,
-					title: group.name,
-					daysOfWeek: [group.dayOfWeek],
-					startTime: `${group.timeS}:00`,
-					endTime: `${group.timeE}:00`,
-					allDay: false,
-					backgroundColor: group.color,
-					borderColor: group.color,
-				}));
-				//console.log("Formatted events: ", formattedEvents);
-
-				setEvents(formattedEvents);
-			} catch (error) {
-				console.error("Błąd podczas pobierania grup: ", error);
-			}
-		};
-		fetchGrups();
-	}, []);
-	try {
-			const response = await fetch("/api/loc/gr", {
-				method: "PUT",
-				body: JSON.stringify(newGroup),
-			});
-			const data = await response.json();
-			//console.log("Grupa edytowana: ", data);
-			if (response.ok) {
-				const updatedEvents = events.map((event) => {
-					if (event.id === `${data.id}`) {
-						return {
-							...event,
-							id: `${data.id}`,
-							title: data.name,
-							daysOfWeek: [data.dayOfWeek],
-							startTime: `${data.timeS}:00`,
-							endTime: `${data.timeE}:00`,
-							allDay: false,
-							backgroundColor: data.color,
-							borderColor: data.color,
-						};
-					}
-					return event;
-				});
-				setEvents(updatedEvents);
-				//console.log(updatedEvents);
-			}
-		} catch (error) {
-			console.error("Błąd podczas edytowania grupy: ", error);
-		}
-
-		try {
-			const response = await fetch("/api/loc/gr", {
-				method: "DELETE",
-				body: JSON.stringify(newGroup),
-			});
-			const data = await response.json();
-			//console.log("Grupa usunięta: ", data);
-		} catch (error) {
-			console.error("Błąd podczas usuwania grupy: ", error);
-		}
-		const idToDelete = `${newGroup.id}`;
-		const updatedEvents = events.filter((event) => event.id !== idToDelete);
-
-		setEvents(updatedEvents);
-		//console.log(updatedEvents);
-
-		try {
-			const response = await fetch("/api/loc/gr", {
-				method: "POST",
-				body: JSON.stringify(newGroup),
-			});
-			const data = await response.json();
-			//console.log("Nowa grupa dodana: ", data);
-			if (response.ok) {
-				const formattedNewGroup: EventInput = {
-					id: `${data.id}`,
-					title: data.name,
-					daysOfWeek: [data.dayOfWeek],
-					startTime: `${data.timeS}:00`,
-					endTime: `${data.timeE}:00`,
-					allDay: false,
-					color: data.color,
-				};
-				setEvents([...events, formattedNewGroup]);
-			}
-		} catch (error) {
-			console.error("Błąd podczas dodawania grupy: ", error);
-		}
-		//setGroups([...groups, newGroup]);
-*/

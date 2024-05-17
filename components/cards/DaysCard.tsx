@@ -4,6 +4,7 @@ import { Group } from "@/types/type";
 import Grid from "@mui/material/Unstable_Grid2";
 import PolishDayName from "@/context/PolishDayName";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import LabelOffOutlinedIcon from "@mui/icons-material/LabelOffOutlined";
 
 type DaysCardProps = {
 	gr: { [dayOfWeek: number]: Group[] };
@@ -90,6 +91,20 @@ const DaysCard = ({
 					);
 				})}
 			</Grid>
+			{sortedDaysOfWeek.length === 0 && (
+				<>
+					<LabelOffOutlinedIcon
+						color='secondary'
+						sx={{ width: 100, height: 100, m: 4 }}
+					/>
+					<Typography
+						variant='h4'
+						align='center'
+						mb={2}>
+						Brak grup w danej lokalizacji
+					</Typography>
+				</>
+			)}
 			{owner && (
 				<Fab
 					onClick={handleAddGroupClick}

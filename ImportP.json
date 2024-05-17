@@ -1,2241 +1,1772 @@
 [
 	{
-		"lastName": "Abatay",
-		"firstName": "Zara",
-		"phoneNumber": "503852830",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Aniśkiewicz",
-		"firstName": "Kinga",
-		"phoneNumber": "601506488",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Antkowiak",
-		"firstName": "Matylda",
-		"phoneNumber": "72105800",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Banas",
-		"firstName": "Zoja",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Barbasz",
-		"firstName": "Emilia",
-		"phoneNumber": "505090044",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Batiuk",
-		"firstName": "Ola",
-		"phoneNumber": "795132159",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bednarek",
-		"firstName": "Ala",
-		"phoneNumber": "609766896",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bednarek",
-		"firstName": "Maja",
-		"phoneNumber": "535080188",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bera",
-		"firstName": "Ania",
-		"phoneNumber": "691635486",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bialkowska",
-		"firstName": "Amelia",
-		"phoneNumber": "511920420",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Birut",
-		"firstName": "Katarzyna",
-		"phoneNumber": "664892746",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Blaszczyk",
-		"firstName": "Liliana",
-		"phoneNumber": "500858815",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Blaszyczyk",
-		"firstName": "Jerzy",
-		"phoneNumber": "723556007",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bober",
-		"firstName": "Maja",
-		"phoneNumber": "697841444",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bober",
-		"firstName": "Zuzanna",
-		"phoneNumber": "697841444",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bochman",
-		"firstName": "Maja",
-		"phoneNumber": "790438714",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bochman",
-		"firstName": "Marta",
-		"phoneNumber": "790438714",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bodak",
-		"firstName": "Julia",
-		"phoneNumber": "663933799",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bolda",
-		"firstName": "Ola",
-		"phoneNumber": "511867699",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Boniarczyk",
-		"firstName": "Lidia",
-		"phoneNumber": "882092414",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Boroń",
-		"firstName": "Karol",
-		"phoneNumber": "604108143",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Bujacz",
-		"firstName": "Stefan",
-		"phoneNumber": "696002154",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Charitoniuk",
-		"firstName": "Emilia",
-		"phoneNumber": "519877661",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Chodecki",
-		"firstName": "Marcin",
-		"phoneNumber": "791987345",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Chudy",
-		"firstName": "Oliwia",
-		"phoneNumber": "535135008",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Cichońska",
-		"firstName": "Helena",
-		"phoneNumber": "507024504",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Cichy",
-		"firstName": "Ignacy",
-		"phoneNumber": "667561911",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ciener",
-		"firstName": "Hania",
-		"phoneNumber": "602841044",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Cieślachowska",
-		"firstName": "Julia",
-		"phoneNumber": "783207400",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Cymbala",
-		"firstName": "Ala",
-		"phoneNumber": "502160000",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Cymbala",
-		"firstName": "Piotr",
-		"phoneNumber": "502160000",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czarniecka",
-		"firstName": "Zuzia",
-		"phoneNumber": "663380007",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czerniewksa",
-		"firstName": "Natalia",
-		"phoneNumber": "663322672",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czerniewska",
-		"firstName": "Iza",
-		"phoneNumber": "663322672",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czerwiński",
-		"firstName": "Florian",
-		"phoneNumber": "665280864",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czubak",
-		"firstName": "Klara",
-		"phoneNumber": "535400530",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czubak",
-		"firstName": "Maja",
-		"phoneNumber": "535400530",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czuchra",
-		"firstName": "Olek",
-		"phoneNumber": "695484926",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Czuksanow",
-		"firstName": "Michał",
-		"phoneNumber": "729221222",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dembic",
-		"firstName": "Wojtek",
-		"phoneNumber": "606935700",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Demianik",
-		"firstName": "Helena",
-		"phoneNumber": "607078188",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Demianiuk",
-		"firstName": "Helena",
-		"phoneNumber": "607079188",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Derewecki",
-		"firstName": "Kuba",
-		"phoneNumber": "603221210",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Derewecki",
-		"firstName": "Michał",
-		"phoneNumber": "603221210",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Derewecki",
-		"firstName": "Wojtek",
-		"phoneNumber": "603221210",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Diakowska",
-		"firstName": "Lucja",
-		"phoneNumber": "604759597",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dominiak",
-		"firstName": "Kalina",
-		"phoneNumber": "607455645",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Domżalska",
-		"firstName": "Iza",
-		"phoneNumber": "505264642",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dreiseitel",
-		"firstName": "Kuba",
-		"phoneNumber": "691707212",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dreiseitel",
-		"firstName": "Maciej",
-		"phoneNumber": "512528495",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dudek",
-		"firstName": "Blanka",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Dudek",
-		"firstName": "Julia",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Durma",
-		"firstName": "Kacper",
-		"phoneNumber": "608678816",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Duszenko",
-		"firstName": "Anastazja",
-		"phoneNumber": "693101051",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Emelyanenko",
-		"firstName": "Alex",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Fąfara",
-		"firstName": "Alicja",
-		"phoneNumber": "694786224",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Fąfara",
-		"firstName": "Nela",
-		"phoneNumber": "694786224",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Filipowiak",
-		"firstName": "Julia",
-		"phoneNumber": "507581077",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Frąckiewicz",
-		"firstName": "Iza",
-		"phoneNumber": "602758395",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Frąckiewicz",
-		"firstName": "Julia",
-		"phoneNumber": "602758395",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Fulawka",
-		"firstName": "Hania",
-		"phoneNumber": "663377538",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gaik",
-		"firstName": "Fryderyk",
-		"phoneNumber": "790503678",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gajda",
-		"firstName": "Ala",
-		"phoneNumber": "501849117",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gajda",
-		"firstName": "Ola",
-		"phoneNumber": "501849117",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Galej",
-		"firstName": "Julian",
-		"phoneNumber": "501894461",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Geron",
-		"firstName": "Tosia",
-		"phoneNumber": "608880929",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gląb",
-		"firstName": "Julia",
-		"phoneNumber": "600686932",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Glod",
-		"firstName": "Helena",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Glogocka",
-		"firstName": "Elena",
-		"phoneNumber": "606389815",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Glogocka",
-		"firstName": "Elena",
-		"phoneNumber": "606389815",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Glogocka",
-		"firstName": "Elena",
-		"phoneNumber": "606389815",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Głąb",
-		"firstName": "Maks",
-		"phoneNumber": "600686932",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Głąb",
-		"firstName": "Max",
-		"phoneNumber": "600686932",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Goląbek",
-		"firstName": "Ania",
-		"phoneNumber": "604121606",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gonera",
-		"firstName": "Amelia",
-		"phoneNumber": "531670005",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gonera",
-		"firstName": "Luiza",
-		"phoneNumber": "531670005",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Góra",
-		"firstName": "Milena",
-		"phoneNumber": "692473246",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grochowska",
-		"firstName": "Ida",
-		"phoneNumber": "607239886",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grochowska",
-		"firstName": "Nela",
-		"phoneNumber": "607239886",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grochowska",
-		"firstName": "Zuzia",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grocka",
-		"firstName": "Wiktoria",
-		"phoneNumber": "790506341",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grodzka",
-		"firstName": "Ola",
-		"phoneNumber": "665759445",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grycak",
-		"firstName": "Matylda",
-		"phoneNumber": "501737078",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grytcaj",
-		"firstName": "Egor",
-		"phoneNumber": "532793757",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Grześ",
-		"firstName": "Natasza",
-		"phoneNumber": "502191030",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Gumula",
-		"firstName": "Kalina",
-		"phoneNumber": "691434265",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Guzikowska",
-		"firstName": "Helena",
-		"phoneNumber": "723286184",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Habiniak",
-		"firstName": "Pola",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Hamczyk",
-		"firstName": "Emilian",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Hauk",
-		"firstName": "Zosia",
-		"phoneNumber": "502255069",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Horodow",
-		"firstName": "Pawel",
-		"phoneNumber": "536069782",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Hulboj",
-		"firstName": "Wiktoria",
-		"phoneNumber": "608826607",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jakimiuk",
-		"firstName": "Tosia",
-		"phoneNumber": "665571246",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jakubek",
-		"firstName": "Martyna",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jantys",
-		"firstName": "Kinga",
-		"phoneNumber": "505635695",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Januszkiewicz",
-		"firstName": "Wiktor",
-		"phoneNumber": "797305226",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jastrzębcka",
-		"firstName": "Ola",
-		"phoneNumber": "607525404",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jeziorska",
-		"firstName": "Maja",
-		"phoneNumber": "697374900",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Jontys",
-		"firstName": "Kinga",
-		"phoneNumber": "505635695",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Juzefiak",
-		"firstName": "Agata",
-		"phoneNumber": "693063365",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kadłubowska",
-		"firstName": "Zosia",
-		"phoneNumber": "609237413",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kadłubowski",
-		"firstName": "Jan",
-		"phoneNumber": "609237413",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kalip",
-		"firstName": "Ignacy",
-		"phoneNumber": "663856255",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kaluźna",
-		"firstName": "Magda",
-		"phoneNumber": "691727327",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kaluźna",
-		"firstName": "Maria",
-		"phoneNumber": "691727327",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kaluźna",
-		"firstName": "Martyna",
-		"phoneNumber": "601966101",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kamińska",
-		"firstName": "Laura",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kamiński",
-		"firstName": "Julian",
-		"phoneNumber": "601785276",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Karaszewska",
-		"firstName": "Selena",
-		"phoneNumber": "882695679",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kastrowicka",
-		"firstName": "Sara",
-		"phoneNumber": "607647727",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kaszczyk",
-		"firstName": "Zofia",
-		"phoneNumber": "693404317",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kępka",
-		"firstName": "Ula",
-		"phoneNumber": "696087515",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kiełbasiewicz",
-		"firstName": "Adam",
-		"phoneNumber": "609650380",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kiełbasiewicz",
-		"firstName": "Julia",
-		"phoneNumber": "609650380",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kinastowska",
-		"firstName": "Alicja",
-		"phoneNumber": "667425222",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Klapuch",
-		"firstName": "Zofia",
-		"phoneNumber": "696791401",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Klapuch",
-		"firstName": "Zofia",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Klaus",
-		"firstName": "Sonia",
-		"phoneNumber": "667720923",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kobasiński",
-		"firstName": "Filip",
-		"phoneNumber": "603229672",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kobasiński",
-		"firstName": "Tobiasz",
-		"phoneNumber": "603229672",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kochanowski",
-		"firstName": "Julian",
-		"phoneNumber": "509452542",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kochańska",
-		"firstName": "Maja",
-		"phoneNumber": "501398804",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kogut",
-		"firstName": "Czesław",
-		"phoneNumber": "793657081",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kolenda",
-		"firstName": "Hania",
-		"phoneNumber": "781630934",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kolenda",
-		"firstName": "Witek",
-		"phoneNumber": "781630934",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kołodzieczyk",
-		"firstName": "Maria",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kołodziejczyk",
-		"firstName": "k",
-		"phoneNumber": "796796607",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kondel",
-		"firstName": "Alicia",
-		"phoneNumber": "792830906",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kondel",
-		"firstName": "Mateusz",
-		"phoneNumber": "792830906",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Konieczny",
-		"firstName": "Bartosz",
-		"phoneNumber": "694631702",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Konieczny",
-		"firstName": "Bartosz",
-		"phoneNumber": "694631702",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Konowalska",
-		"firstName": "Nadia",
-		"phoneNumber": "731108420",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Korzeniowska",
-		"firstName": "Natalia",
-		"phoneNumber": "505404325",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kotowska",
-		"firstName": "Marta",
-		"phoneNumber": "607589945",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kowalska",
-		"firstName": "Gabriela",
-		"phoneNumber": "660392703",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kowalska",
-		"firstName": "Julia",
-		"phoneNumber": "600387512",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kowalska",
-		"firstName": "Klaudia",
-		"phoneNumber": "512075783",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kowalska",
-		"firstName": "Patrycja",
-		"phoneNumber": "512075783",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kowalska",
-		"firstName": "Pola",
-		"phoneNumber": "600387512",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kozarecka",
-		"firstName": "Ania",
-		"phoneNumber": "882781267",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kozarecka",
-		"firstName": "Asia",
-		"phoneNumber": "882781267",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Koziel",
-		"firstName": "Gabriela",
-		"phoneNumber": "727771808",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Koziel",
-		"firstName": "Julia",
-		"phoneNumber": "727771808",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Krala",
-		"firstName": "Marika",
-		"phoneNumber": "604500967",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Krala",
-		"firstName": "Mia",
-		"phoneNumber": "790568009",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Krala",
-		"firstName": "Mikołaj",
-		"phoneNumber": "604500967",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Krawczyk",
-		"firstName": "Aniela",
-		"phoneNumber": "693648928",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Krengiel",
-		"firstName": "Milena",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Król",
-		"firstName": "Ola",
-		"phoneNumber": "538352150",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kubera",
-		"firstName": "Anna",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kuczera",
 		"firstName": "Hanna",
-		"phoneNumber": "661595777",
-		"club": "AkroSmyk"
+		"lastName": "Bernatek",
+		"phoneNumber": "730127997",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Kuklewska",
-		"firstName": "Alicja",
-		"phoneNumber": "609179884",
-		"club": "AkroSmyk"
+		"firstName": "Róża",
+		"lastName": "Olszewska",
+		"phoneNumber": "513140001",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Kulczytski",
-		"firstName": "German",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kulej",
-		"firstName": "Piotr",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kulik",
-		"firstName": "Amelia",
-		"phoneNumber": "609315985",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kunicka",
-		"firstName": "Natalia",
-		"phoneNumber": "508171417",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kunst",
-		"firstName": "Klara",
-		"phoneNumber": "504328658",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Kupiński",
-		"firstName": "Jan",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ladziński",
-		"firstName": "Ewelina",
-		"phoneNumber": "665631805",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ladziński",
-		"firstName": "Robert",
-		"phoneNumber": "665631805",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Lamanow",
-		"firstName": "Maks",
-		"phoneNumber": "577980897",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Latkowska",
-		"firstName": "Oliwia",
-		"phoneNumber": "505952669",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Leśniewska",
-		"firstName": "Jagoda",
-		"phoneNumber": "512168274",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Leśniewska",
-		"firstName": "Oliwia",
-		"phoneNumber": "512169274",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Lewinska",
-		"firstName": "Magda",
-		"phoneNumber": "791201844",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Lęcka",
-		"firstName": "Helena",
-		"phoneNumber": "603587774",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ligutcka",
-		"firstName": "Katarzyna",
-		"phoneNumber": "694003344",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Lont",
-		"firstName": "Amelia",
-		"phoneNumber": "506800024",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Los",
-		"firstName": "Maksym",
-		"phoneNumber": "888094180",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Maciejewski",
-		"firstName": "Marcel",
-		"phoneNumber": "509021728",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Macij",
-		"firstName": "Miriam",
-		"phoneNumber": "606880012",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Majcher",
-		"firstName": "Iga",
-		"phoneNumber": "664977367",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Makuch",
-		"firstName": "Gabrysia",
-		"phoneNumber": "791452459",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Makuch",
-		"firstName": "Gosia",
-		"phoneNumber": "791452459",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Makuch",
-		"firstName": "Kajetan",
-		"phoneNumber": "661053779",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Makuch",
-		"firstName": "Martyna",
-		"phoneNumber": "661053779",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Marek",
-		"firstName": "Jan",
-		"phoneNumber": "531950070",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Marek",
-		"firstName": "Tymoteusz",
-		"phoneNumber": "531950070",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Marienkow",
-		"firstName": "Makar",
-		"phoneNumber": "788188992",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mazur",
-		"firstName": "Alicia",
-		"phoneNumber": "606701495",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Miąsik",
-		"firstName": "Laura",
-		"phoneNumber": "788348183",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Michalczenko",
-		"firstName": "Alina",
-		"phoneNumber": "880877827",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Michalczyk",
-		"firstName": "Bruno",
-		"phoneNumber": "605401333",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Michalkowski",
-		"firstName": "Eryk",
-		"phoneNumber": "507776397",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Michalkowski",
-		"firstName": "Leon",
-		"phoneNumber": "507776325",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mickiewicz",
-		"firstName": "Gosia",
-		"phoneNumber": "603242468",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mickiewicz",
 		"firstName": "Małgorzata",
-		"phoneNumber": "603242463",
-		"club": "AkroSmyk"
+		"lastName": "Gryczyk",
+		"phoneNumber": "604607472",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Mielczarek",
-		"firstName": "Poliana",
-		"phoneNumber": "730880897",
-		"club": "AkroSmyk"
+		"firstName": "Maja",
+		"lastName": "Wałasz",
+		"phoneNumber": "513459191",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Milczarek",
-		"firstName": "Poliana",
-		"phoneNumber": "730880877",
-		"club": "AkroSmyk"
+		"firstName": "Alicja",
+		"lastName": "Łosowska",
+		"phoneNumber": "661431899",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Miler",
-		"firstName": "Hanna",
-		"phoneNumber": "789228192",
-		"club": "AkroSmyk"
+		"firstName": "Natalia",
+		"lastName": "Tatarczyńska",
+		"phoneNumber": "667273794",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Milewska",
-		"firstName": "Marta",
-		"phoneNumber": "668192280",
-		"club": "AkroSmyk"
+		"firstName": "Jagoda",
+		"lastName": "Toms",
+		"phoneNumber": "501001354",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Mościcka",
-		"firstName": "Liwia",
-		"phoneNumber": "512926248",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mościcki",
-		"firstName": "Stasiu",
-		"phoneNumber": "512926248",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Motowidelko",
-		"firstName": "Amelia",
-		"phoneNumber": "698017408",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Motowidelko",
-		"firstName": "Laura",
-		"phoneNumber": "698017408",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mroczek",
-		"firstName": "Matylda",
-		"phoneNumber": "664958921",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mroczek",
-		"firstName": "Matylda",
-		"phoneNumber": "664958921",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Mróz",
 		"firstName": "Zuzanna",
-		"phoneNumber": "661345826",
-		"club": "AkroSmyk"
+		"lastName": "Gabrek",
+		"phoneNumber": "883346723",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Murdza",
-		"firstName": "Ola",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"firstName": "Milena",
+		"lastName": "Pazińska",
+		"phoneNumber": "606301902",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Nagiel",
-		"firstName": "Zofia",
-		"phoneNumber": "601737266",
-		"club": "AkroSmyk"
+		"firstName": "Halina",
+		"lastName": "Semeniuk",
+		"phoneNumber": "602339867",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Nawrot",
-		"firstName": "iga",
-		"phoneNumber": "609453132",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nietubyc",
-		"firstName": "Kaja",
-		"phoneNumber": "501013323",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nietubyc",
-		"firstName": "Tola",
-		"phoneNumber": "501013323",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nietubyk",
-		"firstName": "Tola",
-		"phoneNumber": "501013323",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nikolenko",
-		"firstName": "Liza",
-		"phoneNumber": "786381613",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nikonenko",
-		"firstName": "Miron",
-		"phoneNumber": "799963216",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nimczyk",
-		"firstName": "Maria",
-		"phoneNumber": "600883559",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nosow",
-		"firstName": "Marak",
-		"phoneNumber": "502833602",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nosow",
-		"firstName": "Timur",
-		"phoneNumber": "502833602",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Nowacki",
-		"firstName": "Stasiu",
-		"phoneNumber": "882748718",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ogonowska",
-		"firstName": "Lila",
-		"phoneNumber": "660098066",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Olenderek",
-		"firstName": "Helena",
-		"phoneNumber": "797230502",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Olipra",
-		"firstName": "Amelia",
-		"phoneNumber": "664288959",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Olipra",
-		"firstName": "Amelia",
-		"phoneNumber": "664288959",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Olszańska",
-		"firstName": "Julia",
-		"phoneNumber": "697411378",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Orichowski",
-		"firstName": "Oli",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Orlik",
-		"firstName": "Kazi",
-		"phoneNumber": "508313119",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Orlik",
-		"firstName": "Zosia",
-		"phoneNumber": "508313119",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Orzeszek",
-		"firstName": "Piotr",
-		"phoneNumber": "720876628",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Osipiuk",
-		"firstName": "Mila",
-		"phoneNumber": "603917127",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Osipiuk",
-		"firstName": "Róża",
-		"phoneNumber": "603917127",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ostrowska",
-		"firstName": "Helena",
-		"phoneNumber": "602186789",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ozóg",
-		"firstName": "Paulina",
-		"phoneNumber": "668390274",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pacholska",
-		"firstName": "Oliwia",
-		"phoneNumber": "729232453",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pacholska",
-		"firstName": "Paula",
-		"phoneNumber": "729296853",
-		"club": "AkroSmyk"
-	},
-
-	{
-		"lastName": "Palińska",
-		"firstName": "Helena",
-		"phoneNumber": "697812635",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pampuch",
 		"firstName": "Jagoda",
-		"phoneNumber": "668240988",
-		"club": "AkroSmyk"
+		"lastName": "Zwierzak",
+		"phoneNumber": "726221321",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Panenka",
-		"firstName": "Zosia",
-		"phoneNumber": "508376116",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Paplińska",
-		"firstName": "Alicja",
-		"phoneNumber": "608130799",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Paplińska",
-		"firstName": "Natalia",
-		"phoneNumber": "608130799",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Parfenczuk",
-		"firstName": "Kira",
-		"phoneNumber": "53521769",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Parszuto",
-		"firstName": "Julia",
-		"phoneNumber": "668168326",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Paulińska",
-		"firstName": "Helena",
-		"phoneNumber": "697812635",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pawłowska",
-		"firstName": "Emilia",
-		"phoneNumber": "609658589",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pazera",
-		"firstName": "Maja",
-		"phoneNumber": "600629681",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Piasecka",
-		"firstName": "Marika",
-		"phoneNumber": "534818781",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Piasecki",
-		"firstName": "Oliwer",
-		"phoneNumber": "534818781",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Piątek",
-		"firstName": "Filip",
-		"phoneNumber": "882137713",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Piątek",
-		"firstName": "Ola",
-		"phoneNumber": "882137717",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pieprzak",
-		"firstName": "Maja",
-		"phoneNumber": "508100834",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pieprzak",
-		"firstName": "Oliwia",
-		"phoneNumber": "508100834",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pierzchlewicz",
-		"firstName": "Bartek",
-		"phoneNumber": "665045483",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pierzchlewicz",
-		"firstName": "Bartek",
-		"phoneNumber": "665045483",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pirek",
-		"firstName": "Olga",
-		"phoneNumber": "785762585",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pochwał",
-		"firstName": "Julia",
-		"phoneNumber": "601339150",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pochwał",
-		"firstName": "Maria",
-		"phoneNumber": "609222980",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pokorska",
-		"firstName": "Jadwiga",
-		"phoneNumber": "795933421",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Polakowski",
-		"firstName": "Natan",
-		"phoneNumber": "503127818",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Polewska",
-		"firstName": "Izabela",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Porasinska",
-		"firstName": "Amelia",
-		"phoneNumber": "793304193",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Porasińska",
-		"firstName": "Amelia",
-		"phoneNumber": "793304193",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Poznaniak",
-		"firstName": "Alicja",
-		"phoneNumber": "691760271",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Przewoźna",
-		"firstName": "Zofia",
-		"phoneNumber": "535041431",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Przybylko",
-		"firstName": "Maria",
-		"phoneNumber": "535404712",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Przybyło",
-		"firstName": "Natalia",
-		"phoneNumber": "609032013",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Przybyło",
-		"firstName": "Oliwia",
-		"phoneNumber": "609032013",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Ptak",
-		"firstName": "Paula",
-		"phoneNumber": "731748433",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pudlo",
-		"firstName": "Helena",
-		"phoneNumber": "733006037",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Pustelnik",
-		"firstName": "Kinga",
-		"phoneNumber": "608393240",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Raczak",
-		"firstName": "Emilia",
-		"phoneNumber": "693378900",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rajchman",
-		"firstName": "Nina",
-		"phoneNumber": "603548181",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rau",
-		"firstName": "Joanna",
-		"phoneNumber": "695664408",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Relkowski",
-		"firstName": "Jakub",
-		"phoneNumber": "696413992",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Reperowska",
-		"firstName": "Amelia",
-		"phoneNumber": "517674210",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rettore",
-		"firstName": "Nikol",
-		"phoneNumber": "798335177",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rękosiewicz",
-		"firstName": "Gabrysia",
-		"phoneNumber": "665505325",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rola",
-		"firstName": "Lucja",
-		"phoneNumber": "697487714",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rola",
-		"firstName": "Wanda",
-		"phoneNumber": "697487714",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Romińska",
-		"firstName": "Julia",
-		"phoneNumber": "609989686",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rose",
-		"firstName": "Jagoda",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rossa",
-		"firstName": "Natalia",
-		"phoneNumber": "789454268",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rudnicka",
-		"firstName": "Julia",
-		"phoneNumber": "602616351",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rybak",
 		"firstName": "Nela",
-		"phoneNumber": "601696324",
-		"club": "AkroSmyk"
+		"lastName": "Jovanovski",
+		"phoneNumber": "881436993",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Rybczyński",
-		"firstName": "Szymon",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Rzepka",
-		"firstName": "Marta",
-		"phoneNumber": "693933044",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Salomon Dudziak",
-		"firstName": "Antek",
-		"phoneNumber": "693660106",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Salomon Dudziak",
-		"firstName": "Feliks",
-		"phoneNumber": "693660106",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sawicki",
-		"firstName": "Jakub",
-		"phoneNumber": "697173507",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Shyroki",
-		"firstName": "Michał",
-		"phoneNumber": "576101829",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Shyroki",
-		"firstName": "Michał",
-		"phoneNumber": "576101829",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Siekierska",
-		"firstName": "Garmelia",
-		"phoneNumber": "661202661",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Siękierska",
-		"firstName": "Garmela",
-		"phoneNumber": "661202661",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Skoda-Filip",
-		"firstName": "Joanna",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Skuratawa",
-		"firstName": "Kira",
-		"phoneNumber": "571283899",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sloka",
-		"firstName": "Daniel",
-		"phoneNumber": "602425337",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Smenda",
-		"firstName": "Łukasz",
-		"phoneNumber": "791010707",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sobaciński",
-		"firstName": "Wojtek",
-		"phoneNumber": "697525654",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sobczak",
-		"firstName": "Amelia",
-		"phoneNumber": "504554904",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Soroczyńska",
-		"firstName": "Liliana",
-		"phoneNumber": "691857249",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sprzednicka",
-		"firstName": "Emilia",
-		"phoneNumber": "663065785",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stachowiak",
-		"firstName": "Marianna",
-		"phoneNumber": "694131181",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stadnicka",
-		"firstName": "Hanna",
-		"phoneNumber": "533216379",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stafani",
-		"firstName": "Zosia",
-		"phoneNumber": "506037702",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stal",
-		"firstName": "Anastasia",
-		"phoneNumber": "503862837",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Staniszewska",
-		"firstName": "Otylia",
-		"phoneNumber": "597413944",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stankiewicz",
-		"firstName": "Helena",
-		"phoneNumber": "693717831",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stankiewicz",
-		"firstName": "Olga",
-		"phoneNumber": "698033670",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stasiak",
-		"firstName": "Kaja",
-		"phoneNumber": "605558505",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stefani",
-		"firstName": "Lidia",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Steiner",
-		"firstName": "Erik",
-		"phoneNumber": "511725449",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Stykowski",
-		"firstName": "Mateucz",
-		"phoneNumber": "507630156",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Suskyj",
-		"firstName": "Miron",
-		"phoneNumber": "574788501",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szafraniec",
-		"firstName": "Jagoda",
-		"phoneNumber": "517127241",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szaro",
-		"firstName": "Liliana",
-		"phoneNumber": "790730220",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szewczyk",
-		"firstName": "Adrianna",
-		"phoneNumber": "667025086",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szmagirewska",
-		"firstName": "Ida",
-		"phoneNumber": "607320961",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szmaj",
-		"firstName": "Jaśmina",
-		"phoneNumber": "602830000",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szmaj",
-		"firstName": "Konstancja",
-		"phoneNumber": "722288838",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szmutka",
-		"firstName": "Laura",
-		"phoneNumber": "695181984",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sztangret",
-		"firstName": "Dawid",
-		"phoneNumber": "603030822",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Sztangret",
-		"firstName": "Emilia",
-		"phoneNumber": "603030822",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Szulc",
 		"firstName": "Oliwia",
-		"phoneNumber": "693444359",
-		"club": "AkroSmyk"
+		"lastName": "Lelito",
+		"phoneNumber": "531630103",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Szulc",
-		"firstName": "Zofia",
-		"phoneNumber": "794200008",
-		"club": "AkroSmyk"
+		"firstName": "Maja",
+		"lastName": "Walczyńska",
+		"phoneNumber": "664160212",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Szuwarowska",
-		"firstName": "Zosia",
-		"phoneNumber": "785334977",
-		"club": "AkroSmyk"
+		"firstName": "Marysia",
+		"lastName": "Kiryczuk",
+		"phoneNumber": "609446317",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Szylc",
-		"firstName": "Oliwia",
-		"phoneNumber": "693444359",
-		"club": "AkroSmyk"
+		"firstName": "Izabela",
+		"lastName": "Guździoł",
+		"phoneNumber": "782576876",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Tarchalska",
-		"firstName": "Gabi",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"firstName": "Maja",
+		"lastName": "Bakalarz",
+		"phoneNumber": "505524606",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Tchórzowska",
-		"firstName": "Lidia",
-		"phoneNumber": "660760123",
-		"club": "AkroSmyk"
+		"firstName": "Julia",
+		"lastName": "Zastawna",
+		"phoneNumber": "603214438",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Tchórzowska",
-		"firstName": "Rozalia",
-		"phoneNumber": "660760123",
-		"club": "AkroSmyk"
+		"firstName": "Lena",
+		"lastName": "Bober",
+		"phoneNumber": "506811014",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Teluk",
-		"firstName": "Jana",
-		"phoneNumber": "608553028",
-		"club": "AkroSmyk"
+		"firstName": "Wiktoria",
+		"lastName": "Bronowska",
+		"phoneNumber": "790894884",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Teska",
-		"firstName": "Mateusz",
-		"phoneNumber": "607660003",
-		"club": "AkroSmyk"
+		"firstName": "Michał",
+		"lastName": "Drewniak",
+		"phoneNumber": "697175481",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Tomana",
-		"firstName": "Bianka",
-		"phoneNumber": "501431737",
-		"club": "AkroSmyk"
+		"firstName": "Lilia",
+		"lastName": "Michaluk",
+		"phoneNumber": "505431696",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Tondel",
-		"firstName": "Pola",
-		"phoneNumber": "691310009",
-		"club": "AkroSmyk"
+		"firstName": "Klara",
+		"lastName": "Baraniecka",
+		"phoneNumber": "725475334",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Toporowski",
-		"firstName": "Karol",
-		"phoneNumber": "517873274",
-		"club": "AkroSmyk"
+		"firstName": "Marcelina",
+		"lastName": "Blicharczyk",
+		"phoneNumber": "504553629",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Toporowski",
 		"firstName": "Nikodem",
-		"phoneNumber": "517873274",
-		"club": "AkroSmyk"
+		"lastName": "Duszeńko",
+		"phoneNumber": "664081596",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Trelińska",
-		"firstName": "Maria",
-		"phoneNumber": "506060785",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Tumilowicz",
-		"firstName": "Helena",
-		"phoneNumber": "603184282",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Turczyn",
-		"firstName": "Liliana",
-		"phoneNumber": "730482142",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Turek",
-		"firstName": "Amelia",
-		"phoneNumber": "570052177",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Tyc",
-		"firstName": "Marta",
-		"phoneNumber": "730584026",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Tyczyńska",
-		"firstName": "Julia",
-		"phoneNumber": "696145069",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Tylwska",
-		"firstName": "Adrianna",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Urbańczyk",
-		"firstName": "Tosia",
-		"phoneNumber": "726342984",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Urbańczyk",
-		"firstName": "Tosia",
-		"phoneNumber": "726342984",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wachnik",
-		"firstName": "Nina",
-		"phoneNumber": "504087565",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wachnik",
-		"firstName": "Pola",
-		"phoneNumber": "504087565",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wdowiak",
-		"firstName": "Karolina",
-		"phoneNumber": "660101699",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Welchowicz",
-		"firstName": "Kamila",
-		"phoneNumber": "668397878",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Welinski",
-		"firstName": "Kasjan",
-		"phoneNumber": "692333035",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wencel",
-		"firstName": "Julia",
-		"phoneNumber": "695339705",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wencel",
-		"firstName": "Julia",
-		"phoneNumber": "695359705",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Węglowska",
-		"firstName": "Michalina",
-		"phoneNumber": "503118846",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Widrzyński",
-		"firstName": "Marcin",
-		"phoneNumber": "507865762",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wieczorek",
 		"firstName": "Bianka",
-		"phoneNumber": "695666345",
-		"club": "AkroSmyk"
+		"lastName": "Dykiert",
+		"phoneNumber": "510400099",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wierzbicka",
+		"firstName": "Laura",
+		"lastName": "Głogowska",
+		"phoneNumber": "723622703",
+		"club": "ARS"
+	},
+	{
 		"firstName": "Zofia",
-		"phoneNumber": "509832419",
-		"club": "AkroSmyk"
+		"lastName": "Kiszło",
+		"phoneNumber": "690315719",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wiśniewska",
-		"firstName": "Gaja",
-		"phoneNumber": "600883559",
-		"club": "AkroSmyk"
+		"firstName": "Martyna",
+		"lastName": "Kopania",
+		"phoneNumber": "690315719",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wojcik",
+		"firstName": "Zuzanna",
+		"lastName": "Kotwicka",
+		"phoneNumber": "607934880",
+		"club": "ARS"
+	},
+	{
 		"firstName": "Alicja",
-		"phoneNumber": "600496679",
-		"club": "AkroSmyk"
+		"lastName": "Łosowska",
+		"phoneNumber": "888870818",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wojna",
-		"firstName": "Ida",
-		"phoneNumber": "603478287",
-		"club": "AkroSmyk"
+		"firstName": "Marcelina",
+		"lastName": "Martyniak",
+		"phoneNumber": "604486630",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wojna",
-		"firstName": "Tobiasz",
-		"phoneNumber": "510745131",
-		"club": "AkroSmyk"
+		"firstName": "Kinga",
+		"lastName": "Mazurowska",
+		"phoneNumber": "665758301",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wojtowicz",
-		"firstName": "Amelia",
-		"phoneNumber": "794777377",
-		"club": "AkroSmyk"
+		"firstName": "Luiza",
+		"lastName": "Pięciorak",
+		"phoneNumber": "889714197",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wojtukiewicz",
-		"firstName": "Amelia",
+		"firstName": "Gabrysia",
+		"lastName": "Tarkowska",
+		"phoneNumber": "609422657",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Wasiak",
+		"phoneNumber": "691802202",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Wirska",
+		"phoneNumber": "601583571",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Oleksy",
+		"phoneNumber": "660791309",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kamil",
+		"lastName": "Skrzypek",
+		"phoneNumber": "605330021",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Michalina",
+		"lastName": "Stocka",
+		"phoneNumber": "605052312",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Kaczmar",
 		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wolchowicz",
-		"firstName": "Kamila",
-		"phoneNumber": "668397878",
-		"club": "AkroSmyk"
+		"firstName": "Tymon",
+		"lastName": "Suder",
+		"phoneNumber": "782450776",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wolodko",
-		"firstName": "Tosia",
-		"phoneNumber": "662111227",
-		"club": "AkroSmyk"
+		"firstName": "Ela",
+		"lastName": "Mikulska",
+		"phoneNumber": "602522147",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wolwiak",
-		"firstName": "Katia",
-		"phoneNumber": "534834318",
-		"club": "AkroSmyk"
+		"firstName": "Oliwia",
+		"lastName": "Lelito",
+		"phoneNumber": "531630103",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Woźnica",
-		"firstName": "Helena",
-		"phoneNumber": "506160480",
-		"club": "AkroSmyk"
+		"firstName": "Aleksander",
+		"lastName": "Wirski",
+		"phoneNumber": "601583571",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Wronka",
-		"firstName": "Jagoda",
-		"phoneNumber": "691135190",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wróblewska",
-		"firstName": "Wiktoria",
-		"phoneNumber": "697111198",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wrólewska",
-		"firstName": "Wiktoria",
-		"phoneNumber": "697111198",
-		"club": "AkroSmyk"
-	},
-	{
-		"lastName": "Wydrzyński",
-		"firstName": "Marcin",
+		"firstName": "Alicja",
+		"lastName": "Węgrzyn",
 		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zabielska",
-		"firstName": "Sonia",
-		"phoneNumber": "695581902",
-		"club": "AkroSmyk"
+		"firstName": "Helenka",
+		"lastName": "Lisiecka",
+		"phoneNumber": "799799773",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zadworna",
-		"firstName": "Natalia",
-		"phoneNumber": "510800802",
-		"club": "AkroSmyk"
+		"firstName": "Laura",
+		"lastName": "Lisiecka",
+		"phoneNumber": "799799773",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zajonkowska",
-		"firstName": "Róża",
-		"phoneNumber": "506391990",
-		"club": "AkroSmyk"
+		"firstName": "Zuzia",
+		"lastName": "Bakalarz",
+		"phoneNumber": "505524606",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zara",
-		"firstName": "k",
-		"phoneNumber": "503852830",
-		"club": "AkroSmyk"
+		"firstName": "Ania",
+		"lastName": "Szal",
+		"phoneNumber": "514563350",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zbinkowski",
-		"firstName": "Jakub",
-		"phoneNumber": "693581031",
-		"club": "AkroSmyk"
+		"firstName": "Brygida",
+		"lastName": "Mikulska",
+		"phoneNumber": "602522147",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zielony",
-		"firstName": "Tomek",
-		"phoneNumber": "551554171",
-		"club": "AkroSmyk"
+		"firstName": "Amelia",
+		"lastName": "Bienias",
+		"phoneNumber": "796185728",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Ziener",
+		"firstName": "Karolina",
+		"lastName": "Bób",
+		"phoneNumber": "667564015",
+		"club": "ARS"
+	},
+	{
 		"firstName": "Hanna",
-		"phoneNumber": "602841044",
-		"club": "AkroSmyk"
+		"lastName": "Ciupryk",
+		"phoneNumber": "507132254",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zięntar",
-		"firstName": "Dawid",
-		"phoneNumber": "782697685",
-		"club": "AkroSmyk"
+		"firstName": "Maja",
+		"lastName": "Dębska",
+		"phoneNumber": "669505165",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zięntara",
-		"firstName": "Dawid",
-		"phoneNumber": "782657693",
-		"club": "AkroSmyk"
+		"firstName": "Klara",
+		"lastName": "Dygoń",
+		"phoneNumber": "881549654",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Ziętek",
-		"firstName": "Ewa",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"firstName": "Karolina",
+		"lastName": "Dykiert",
+		"phoneNumber": "883346723",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Ziunkowski",
-		"firstName": "Michał",
-		"phoneNumber": "534550988",
-		"club": "AkroSmyk"
+		"firstName": "Małgorzata",
+		"lastName": "Gawlińska",
+		"phoneNumber": "723662703",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zolnierowicz",
-		"firstName": "Agata",
-		"phoneNumber": null,
-		"club": "AkroSmyk"
+		"firstName": "Alicja",
+		"lastName": "Kotwińska",
+		"phoneNumber": "506649198",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zych",
-		"firstName": "Antonina",
-		"phoneNumber": "660488780",
-		"club": "AkroSmyk"
+		"firstName": "Kornelia",
+		"lastName": "Kroczak",
+		"phoneNumber": "601430178",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zych",
-		"firstName": "Tosia",
-		"phoneNumber": "660488780",
-		"club": "AkroSmyk"
+		"firstName": "Maja",
+		"lastName": "Lenart",
+		"phoneNumber": "512203702",
+		"club": "ARS"
 	},
 	{
-		"lastName": "Zygmunt",
+		"firstName": "Helena",
+		"lastName": "Lis",
+		"phoneNumber": "510599991",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Martyniak",
+		"phoneNumber": "665758301",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Małgorzata",
+		"lastName": "Naryniecka",
+		"phoneNumber": "691214185",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Dominik",
+		"lastName": "Naryniecki",
+		"phoneNumber": "691214185",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jagoda",
+		"lastName": "Oleksy",
+		"phoneNumber": "601092510",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Ania",
+		"lastName": "Spryś",
+		"phoneNumber": "535755400",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kornelia",
+		"lastName": "Stryjakiewicz",
+		"phoneNumber": "510659483",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Julian",
+		"lastName": "Tarkowski",
+		"phoneNumber": "793322125",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Ania",
+		"lastName": "Tarnowska",
+		"phoneNumber": "603524488",
+		"club": "ARS"
+	},
+	{
 		"firstName": "Julia",
-		"phoneNumber": "609575356",
-		"club": "AkroSmyk"
+		"lastName": "Gruszyńska",
+		"phoneNumber": "502422727",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Łaska",
+		"lastName": "Łaska",
+		"phoneNumber": "502091735",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Emilia",
+		"lastName": "Motyl",
+		"phoneNumber": "510427085",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Michalska",
+		"phoneNumber": "721772245",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Rosik",
+		"phoneNumber": "725518962",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kacper",
+		"lastName": "Krzyżanowski",
+		"phoneNumber": "600916523",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Lewińska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Czupil",
+		"phoneNumber": "795180765",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Onyśko",
+		"phoneNumber": "607639345",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Teodor",
+		"lastName": "Stańczak",
+		"phoneNumber": "609422657",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Olszewska",
+		"phoneNumber": "510024587",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Bryda",
+		"phoneNumber": "886970606",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Małgorzata",
+		"lastName": "Babiarz",
+		"phoneNumber": "535499655",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Szlachetka",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Malinowska",
+		"phoneNumber": "604486630",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktoria",
+		"lastName": "Wasilewska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Rostek",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Agata",
+		"lastName": "Laszczowska",
+		"phoneNumber": "693488449",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Amelka",
+		"lastName": "Milik",
+		"phoneNumber": "694515124",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksandra",
+		"lastName": "Bób",
+		"phoneNumber": "667564015",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Olena",
+		"lastName": "Riabchenko",
+		"phoneNumber": "733786856",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Barbara",
+		"lastName": "Lusar",
+		"phoneNumber": "500800964",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Nikodem",
+		"phoneNumber": "790322875",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Szymkiewicz",
+		"phoneNumber": "665261733",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Weronika",
+		"lastName": "Pazińska",
+		"phoneNumber": "889714197",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Laura",
+		"lastName": "Dolińska",
+		"phoneNumber": "537441492",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Anastazja",
+		"lastName": "Serafinowicz",
+		"phoneNumber": "882074680",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Gabriel",
+		"lastName": "Kobylecki",
+		"phoneNumber": "794367689",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natan",
+		"lastName": "Wróbel",
+		"phoneNumber": "606328806",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Grzesik",
+		"phoneNumber": "603600925",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Kulak",
+		"phoneNumber": "666084397",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Kanik",
+		"phoneNumber": "601069129",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktoria",
+		"lastName": "Pacholska",
+		"phoneNumber": "533554433",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jula",
+		"lastName": "Iżak vel Iżewska",
+		"phoneNumber": "691657767",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Agata",
+		"lastName": "Jarząbowicz",
+		"phoneNumber": "798030919",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Kasza",
+		"phoneNumber": "668463406",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Mac",
+		"phoneNumber": "793033366",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Laura",
+		"lastName": "Matuszczak",
+		"phoneNumber": "889100551",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Nowak",
+		"phoneNumber": "726425492",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Iga",
+		"lastName": "Wienckiewicz",
+		"phoneNumber": "609023777",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zofia",
+		"lastName": "Zielińska",
+		"phoneNumber": "534295551",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Kowalska",
+		"phoneNumber": "506626431",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktoria",
+		"lastName": " Holiantus",
+		"phoneNumber": "570530156",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nicola",
+		"lastName": "Rybarczyk",
+		"phoneNumber": "783544998",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Agata",
+		"lastName": "Borczuch",
+		"phoneNumber": "607321993",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Luiza",
+		"lastName": "Grzejda",
+		"phoneNumber": "530205295",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzia",
+		"lastName": "Bator",
+		"phoneNumber": "793768618",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Danusia",
+		"lastName": "Bator",
+		"phoneNumber": "793768618",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Błachuta",
+		"phoneNumber": "661680379",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksandra",
+		"lastName": "Błażejowska",
+		"phoneNumber": "501677109",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jagoda",
+		"lastName": "Chuczak",
+		"phoneNumber": "607679306",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Ada",
+		"lastName": "Dzięcioł",
+		"phoneNumber": "695151620",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Gmitruk",
+		"phoneNumber": "793144747",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Filip",
+		"lastName": "Rybarczyk",
+		"phoneNumber": "783544998",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Helena",
+		"lastName": "Guzikowska",
+		"phoneNumber": "792772422",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Latańska",
+		"phoneNumber": "782094360",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Martyna",
+		"lastName": "Milik",
+		"phoneNumber": "784061052",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktor",
+		"lastName": "Milik",
+		"phoneNumber": "784061052",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Anna",
+		"lastName": "Musiał",
+		"phoneNumber": "508287200",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zofia",
+		"lastName": "Musiał",
+		"phoneNumber": "508287200",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Musiał",
+		"phoneNumber": "603847840",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Laura",
+		"lastName": "Rozłąkowska",
+		"phoneNumber": "784006757",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Karlikowska",
+		"phoneNumber": "505039530",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kapitolina",
+		"lastName": "Udovruchenko",
+		"phoneNumber": "501677109",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Emilka",
+		"lastName": "Paczkowska",
+		"phoneNumber": "668822976",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nicola",
+		"lastName": "Kozłowska",
+		"phoneNumber": "721016472",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Kłysz",
+		"phoneNumber": "697577340",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Alan",
+		"lastName": "Malcher",
+		"phoneNumber": "607301437",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Gabriela",
+		"lastName": "Kozica",
+		"phoneNumber": "667303058",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Ada",
+		"lastName": "Woźniak",
+		"phoneNumber": "781261187",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Wabnic",
+		"phoneNumber": "663861002",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nel",
+		"lastName": "Napiórkowska",
+		"phoneNumber": "696499587",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Klementyna",
+		"lastName": "Gauden",
+		"phoneNumber": "603464473",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Braksator",
+		"phoneNumber": "502483950",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Weronika",
+		"lastName": "Kwak",
+		"phoneNumber": "792410341",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Martyna",
+		"lastName": "Stąporek",
+		"phoneNumber": "884999369",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Matylda",
+		"lastName": "Miśta",
+		"phoneNumber": "884898929",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maria",
+		"lastName": "Guzikowska",
+		"phoneNumber": "792772422",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Dębińska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Jakubowska",
+		"phoneNumber": "531260259",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Marika",
+		"lastName": "Krala",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tymon",
+		"lastName": "Wabnic",
+		"phoneNumber": "663861002",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Nowicka",
+		"phoneNumber": "791791458",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Ewa",
+		"lastName": "Kostiv",
+		"phoneNumber": "793435886",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Karolina",
+		"lastName": "Kaczmarek",
+		"phoneNumber": "605480929",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Gałka",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Franek",
+		"lastName": "Dębiński",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Kozłowska",
+		"phoneNumber": "667457427",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maria",
+		"lastName": "Stanisz",
+		"phoneNumber": "660721730",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Karolina",
+		"lastName": "Majka",
+		"phoneNumber": "788695750",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Marcelina",
+		"lastName": "Blabuś",
+		"phoneNumber": "667761810",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kasia",
+		"lastName": "Fedor",
+		"phoneNumber": "668630328",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksandra",
+		"lastName": "Konopka",
+		"phoneNumber": "508203631",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Marcelina",
+		"lastName": "Tracińska",
+		"phoneNumber": "792466085",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Alicja",
+		"lastName": "Kuler",
+		"phoneNumber": "66373658",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Michalina",
+		"lastName": "Hałaj",
+		"phoneNumber": "501687447",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jaś",
+		"lastName": "Strub",
+		"phoneNumber": "796846841",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tytus",
+		"lastName": "Sawicki",
+		"phoneNumber": "503966956",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tymon",
+		"lastName": "Majecki",
+		"phoneNumber": "666401697",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hania",
+		"lastName": "Machał",
+		"phoneNumber": "791210707",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksandra",
+		"lastName": "Machał",
+		"phoneNumber": "791210707",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Galuś",
+		"phoneNumber": "793345605",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Amelka",
+		"lastName": "Radzymińska",
+		"phoneNumber": "793984464",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Helena",
+		"lastName": "Płoszaj",
+		"phoneNumber": "507804142",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzia",
+		"lastName": "Makarońska",
+		"phoneNumber": "606943171",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Gabrysia",
+		"lastName": "Makarońska",
+		"phoneNumber": "606943171",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jula",
+		"lastName": "Ćwiertnia",
+		"phoneNumber": "730676937",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Kryczka",
+		"phoneNumber": "690006024",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Trabski",
+		"phoneNumber": "783737644",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maks",
+		"lastName": "Pankała",
+		"phoneNumber": "604293439",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Magdalena",
+		"lastName": "Wadowska",
+		"phoneNumber": "606736895",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antonina",
+		"lastName": "Żurawska",
+		"phoneNumber": "604475857",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Mikołaj",
+		"lastName": "Górnicki",
+		"phoneNumber": "505270112",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktoria",
+		"lastName": "Mikos",
+		"phoneNumber": "692443046",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Dropińska",
+		"phoneNumber": "504754507",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Laura",
+		"lastName": "Turchan",
+		"phoneNumber": "519031147",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Słoma",
+		"phoneNumber": "661349946",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Michalina",
+		"lastName": "Maligranda",
+		"phoneNumber": "604209564",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Pydzińska",
+		"phoneNumber": "604213140",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zosia",
+		"lastName": "Andrzejczak",
+		"phoneNumber": "692339956",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Gołacka",
+		"phoneNumber": "603128048",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Leon",
+		"lastName": "Dobrowolski",
+		"phoneNumber": "604522755",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Dobrowolska",
+		"phoneNumber": "604522755",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Grzegorz",
+		"lastName": "Gawryś",
+		"phoneNumber": "694775927",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Mateusz",
+		"lastName": "Godzieszka",
+		"phoneNumber": "600758565",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Góra",
+		"phoneNumber": "600635321",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tymon",
+		"lastName": "Komarczewski",
+		"phoneNumber": "534458833",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Teodor",
+		"lastName": "Krukowski ",
+		"phoneNumber": "660450817",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Marchewka",
+		"phoneNumber": "607694155",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nikodem",
+		"lastName": "Niemczuk",
+		"phoneNumber": "661486208",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Szymon ",
+		"lastName": "Niemczuk",
+		"phoneNumber": "661486208",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksander",
+		"lastName": "Riabchenko",
+		"phoneNumber": "578656547",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Adam",
+		"lastName": "Skowroński",
+		"phoneNumber": "794181717",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jan",
+		"lastName": "Szczot",
+		"phoneNumber": "517170797",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Śnitek",
+		"phoneNumber": "601793137",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Adam",
+		"lastName": "Tołoczko",
+		"phoneNumber": "606257139",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maciej",
+		"lastName": "Kurtyka",
+		"phoneNumber": "601776302",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Iga",
+		"lastName": "Żurawiecka",
+		"phoneNumber": "793018938",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Stanisław",
+		"lastName": "Żychliński",
+		"phoneNumber": "668469345",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Olaf",
+		"lastName": "Huzar",
+		"phoneNumber": "691912832",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kuba",
+		"lastName": "Kaczorowski",
+		"phoneNumber": "609574600",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Dagmara",
+		"lastName": "Baraniecka",
+		"phoneNumber": "691383921",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Grzegorz",
+		"lastName": "Baraniecki",
+		"phoneNumber": "691383921",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maciej",
+		"lastName": "Baraniecki",
+		"phoneNumber": "691383921",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Cielecka",
+		"phoneNumber": "603555030",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Barbara",
+		"lastName": "Ginter",
+		"phoneNumber": "606428984",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Olivia",
+		"lastName": "Karlińska",
+		"phoneNumber": "604530172",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Mateusz",
+		"lastName": "Kobylecki",
+		"phoneNumber": "794367689",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Joanna",
+		"lastName": "Majchrzak",
+		"phoneNumber": "601385206",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Karolina",
+		"lastName": "Pająk",
+		"phoneNumber": "603543954",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Karolina",
+		"lastName": "Stefańska",
+		"phoneNumber": "607771916",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Paulina",
+		"lastName": "Stefańska",
+		"phoneNumber": "607771916",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jakub",
+		"lastName": "Wdowiak",
+		"phoneNumber": "664128038",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Igor",
+		"lastName": "Witek",
+		"phoneNumber": "501979944",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aden",
+		"lastName": "Arik",
+		"phoneNumber": "602275800",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Aleksander",
+		"lastName": "Stańczak",
+		"phoneNumber": "502483897",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Alicja",
+		"lastName": "Purtak",
+		"phoneNumber": "792979041",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Bartłomiej",
+		"lastName": "Skrzypczak",
+		"phoneNumber": "783689678",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Bianka",
+		"lastName": "Rak",
+		"phoneNumber": "790431331",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Florian",
+		"lastName": "Banach ",
+		"phoneNumber": "726042625",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Franciszek",
+		"lastName": "Krupiński",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Franciszek",
+		"lastName": "Łucki",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Grzegorz",
+		"lastName": "Serek",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Krzysztof",
+		"lastName": "Serek",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Gustav",
+		"lastName": "Kołodziej",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Pers",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kamil",
+		"lastName": "Purtak",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Leah",
+		"lastName": "Inglot",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Marek",
+		"lastName": "Nowakowski",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jerzy",
+		"lastName": "Nowakowski",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Marysia",
+		"lastName": "Łukomska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Miłosz",
+		"lastName": "Nadurak",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nina",
+		"lastName": "Sienkiewicz",
+		"phoneNumber": "663850519",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natan",
+		"lastName": "Sienkiewicz",
+		"phoneNumber": "663850519",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nela",
+		"lastName": "Jovanovski",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Nel",
+		"lastName": "Sawicka",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Dębińska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Paulina",
+		"lastName": "Łęgosz",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tymon",
+		"lastName": "Śnitko",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktor",
+		"lastName": "Bernacki",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wojciech",
+		"lastName": "Kowalewski",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Michalina",
+		"lastName": "Kowalewska",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wojciech",
+		"lastName": "Zima",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Grzegorz",
+		"lastName": "Wańkowicz",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Iga",
+		"lastName": "Szczupak",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Stefan",
+		"lastName": "Mielnik",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Franciszek",
+		"lastName": "Dębiński",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Julian",
+		"lastName": "Banach ",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hubert",
+		"lastName": "Widziewicz",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Inka",
+		"lastName": "Badziak",
+		"phoneNumber": "505966500",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Małgorzata",
+		"lastName": "Barszczyk",
+		"phoneNumber": "723786394",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natan",
+		"lastName": "Bębenek",
+		"phoneNumber": "880965727",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hubert",
+		"lastName": "Huzar",
+		"phoneNumber": "880965727",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Olaf",
+		"lastName": "Huzar",
+		"phoneNumber": "691912832",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kuba",
+		"lastName": "Kaczorowski",
+		"phoneNumber": "691912832",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kuba",
+		"lastName": "Kalinowski",
+		"phoneNumber": "888602424",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Karimow",
+		"phoneNumber": "881699961",
+		"club": "ARS"
+	},
+	{
+		"firstName": " Olivier",
+		"lastName": "Koczupinda",
+		"phoneNumber": "530736438",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Oliwier",
+		"lastName": "Krycia",
+		"phoneNumber": "502395854",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktor",
+		"lastName": "Krycia",
+		"phoneNumber": "502395854",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Stanisław",
+		"lastName": "Łukowiak",
+		"phoneNumber": "798468041",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Julian",
+		"lastName": "Mazgaj",
+		"phoneNumber": "886789883",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Cezary",
+		"lastName": "Mirowski",
+		"phoneNumber": "513733476",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Michał",
+		"lastName": "Muchalski",
+		"phoneNumber": "607584308",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Robert",
+		"lastName": "Osiecki",
+		"phoneNumber": "607432244",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wiktor",
+		"lastName": "Pater",
+		"phoneNumber": "608122122",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Stefania",
+		"lastName": "Pawlak",
+		"phoneNumber": "605681804",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kinga",
+		"lastName": "Polech ",
+		"phoneNumber": "608200925",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Apolonia",
+		"lastName": "Prugar",
+		"phoneNumber": "698791965",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Milana",
+		"lastName": "Pushkarczuk",
+		"phoneNumber": "881590531",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Tomasz",
+		"lastName": "Rokita",
+		"phoneNumber": "664600344",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Hubert",
+		"lastName": "Sapa",
+		"phoneNumber": "696314984",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kalina",
+		"lastName": "Sapa",
+		"phoneNumber": "696314984",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jan",
+		"lastName": "Sawicki",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jan",
+		"lastName": "Sobiegraj",
+		"phoneNumber": "501686017",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Piotr",
+		"lastName": "Stasiak",
+		"phoneNumber": "518581527",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Zofia",
+		"lastName": "Sulma",
+		"phoneNumber": "516318634",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jakub",
+		"lastName": "Wróbel",
+		"phoneNumber": "732008786",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Filip",
+		"lastName": "Wypych ",
+		"phoneNumber": "506747308",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Szymon",
+		"lastName": "Zając",
+		"phoneNumber": "515152165",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Sobiegraj",
+		"phoneNumber": "501686017",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Wojciech",
+		"lastName": "Cieśla",
+		"phoneNumber": "889440815",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Cichocka",
+		"phoneNumber": "726046625",
+		"club": "ARS"
+	},
+	{
+		"firstName": "Jakub",
+		"lastName": "Dudziński",
+		"phoneNumber": null,
+		"club": "ARS"
+	},
+	{
+		"firstName": "Kaja",
+		"lastName": "Konopielko",
+		"phoneNumber": null,
+		"club": "ARS"
 	}
 ]
