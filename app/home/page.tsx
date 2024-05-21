@@ -56,7 +56,13 @@ export default function HomePage() {
 					lg={4}
 					xl={3}>
 					<HomeCard
-						amount={isSuccess ? homeInfo.coaches.length || 0 : 0}
+						amount={
+							isSuccess
+								? homeInfo.coaches.length
+									? homeInfo.coaches.length
+									: 0 || 0
+								: 0
+						}
 						name='Trenerzy'
 						color='green'
 						url={
@@ -75,7 +81,13 @@ export default function HomePage() {
 					lg={4}
 					xl={3}>
 					<HomeCard
-						amount={isSuccess ? homeInfo.groups.length || 0 : 0}
+						amount={
+							isSuccess
+								? homeInfo.groups.length
+									? homeInfo.groups.length
+									: 0 || 0
+								: 0
+						}
 						name='Lokalizacje i Grupy'
 						color='indigo'
 						url='/home/groups'
@@ -88,7 +100,13 @@ export default function HomePage() {
 					lg={4}
 					xl={3}>
 					<HomeCard
-						amount={isSuccess ? homeInfo.participants.length || 0 : 0}
+						amount={
+							isSuccess
+								? homeInfo.participants.length
+									? homeInfo.participants.length
+									: 0 || 0
+								: 0
+						}
 						name='Uczestnicy'
 						color='orange'
 						url='/participants'
