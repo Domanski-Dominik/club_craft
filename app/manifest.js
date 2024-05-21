@@ -10,7 +10,7 @@ export default function manifest() {
 		orientation: "portrait",
 		icons: [
 			{
-				src: "icons/favicon.ico",
+				src: "favicon.ico",
 				sizes: "any",
 			},
 			{
