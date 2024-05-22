@@ -10,26 +10,26 @@ export default function manifest() {
 		orientation: "portrait",
 		icons: [
 			{
-				src: "favicon.ico",
+				src: "/favicon.ico",
 				sizes: "any",
 			},
 			{
-				src: "icons/favicon192x192.png",
+				src: "/icons/favicon192x192.png",
 				sizes: "192x192",
 				type: "image/png",
 			},
 			{
-				src: "icons/favicon180x180.png",
+				src: "/icons/favicon180x180.png",
 				sizes: "180x180",
 			},
 			{
-				src: "icons/favicon512x512.png",
+				src: "/icons/favicon512x512.png",
 				sizes: "512x512",
 				type: "image/png",
 				purpose: "any",
 			},
 			{
-				src: "icons/favicon512x512.png",
+				src: "/icons/favicon512x512.png",
 				sizes: "512x512",
 				type: "image/png",
 				purpose: "maskable",
