@@ -8,12 +8,5 @@ export default function manifest() {
 		background_color: "white",
 		theme_color: "white",
 		orientation: "portrait",
-		icons: [
-			{
-				src: "/favicon.ico",
-				sizes: "any",
-				type: "image/x-icon",
-			},
-		],
 	};
 }
