@@ -55,6 +55,29 @@ export default function RootLayout({
 				<meta
 					name='HandheldFriendly'
 					content='true'></meta>
+				<link
+					rel='icon'
+					href='/favicon.ico'
+					sizes='any'
+				/>
+				<link
+					rel='apple-touch-icon'
+					href='/apple180x180.png'
+					type='image/png'
+					sizes='180x180'
+				/>
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='32x32'
+					href='/favicon32x32.png'
+				/>
+				<link
+					rel='icon'
+					type='image/png'
+					sizes='16x16'
+					href='/favicon16x16.png'
+				/>
 			</head>
 			<ThemeRegistry>
 				<body>
