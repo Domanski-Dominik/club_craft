@@ -1,14 +1,63 @@
 import "@/styles/globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import TopNav from "@/components/navigation/Nav";
 import Provider from "@/context/Provider";
 import BottomNav from "@/components/navigation/BottomNav";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { Container, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+
+const APP_NAME = "ClubCraft";
+const APP_DEFAULT_TITLE = "ClubCraft";
+const APP_TITLE_TEMPLATE = "%s - PWA App";
+const APP_DESCRIPTION = "Zarządzaj swoim klubem!";
+
 export const metadata: Metadata = {
-	title: "ClubCraft",
-	description: "Organize, rule, and much more!",
+	applicationName: APP_NAME,
+	title: {
+		default: APP_DEFAULT_TITLE,
+		template: APP_TITLE_TEMPLATE,
+	},
+	description: APP_DESCRIPTION,
+	manifest: "/manifest.json",
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "default",
+		title: APP_DEFAULT_TITLE,
+		startupImage: [
+			"/public/apple_splash_750.png",
+			{
+				url: `/apple_splash_1536.png`,
+				media: "(device-width: 768px) and (device-height: 1024px)",
+			},
+		],
+	},
+	formatDetection: {
+		telephone: false,
+	},
+	openGraph: {
+		type: "website",
+		siteName: APP_NAME,
+		title: {
+			default: APP_DEFAULT_TITLE,
+			template: APP_TITLE_TEMPLATE,
+		},
+		description: APP_DESCRIPTION,
+	},
+	twitter: {
+		card: "summary",
+		title: {
+			default: APP_DEFAULT_TITLE,
+			template: APP_TITLE_TEMPLATE,
+		},
+		description: APP_DESCRIPTION,
+	},
+	other: {
+		"mobile-web-app-capable": "yes",
+	},
+};
+export const viewport: Viewport = {
+	themeColor: "#FFFFFF",
 };
 export default function RootLayout({
 	children,
@@ -33,6 +82,10 @@ export default function RootLayout({
 					href='https://fonts.googleapis.com/icon?family=Material+Icons'
 				/>
 				<meta
+					name='viewport'
+					content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
+				/>
+				<meta
 					name='apple-mobile-web-app-capable'
 					content='yes'
 				/>
@@ -44,18 +97,12 @@ export default function RootLayout({
 					name='apple-mobile-web-app-status-bar-style'
 					content='black'
 				/>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
-				/>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no, shrink-to-fit=no'
-				/>
+
 				<meta
 					name='HandheldFriendly'
 					content='true'
 				/>
+				{/*
 				<link
 					rel='icon'
 					href='/favicon.ico'
@@ -72,6 +119,42 @@ export default function RootLayout({
 					href='/icon?<generated>'
 					type='image/<generated>'
 					sizes='<generated>'
+				/>
+				*/}
+				<link
+					href='/apple_splash_2048.png'
+					sizes='2048x2732'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_1668.png'
+					sizes='1668x2224'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_1536.png'
+					sizes='1536x2048'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_1125.png'
+					sizes='1125x2436'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_1242.png'
+					sizes='1242x2208'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_750.png'
+					sizes='750x1334'
+					rel='apple-touch-startup-image'
+				/>
+				<link
+					href='/apple_splash_640.png'
+					sizes='640x1136'
+					rel='apple-touch-startup-image'
 				/>
 			</head>
 			<ThemeRegistry>

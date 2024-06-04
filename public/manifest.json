@@ -1,0 +1,54 @@
+{
+	"id": "/",
+	"name": "ClubCraft",
+	"short_name": "ClubCraft",
+	"description": "Zarządzaj swoim klubem!",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "white",
+	"theme_color": "white",
+	"orientation": "portrait",
+	"display_override": ["window-controls-overlay"],
+	"icons": [
+		{
+			"src": "/favicon192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon384x384.png",
+			"sizes": "384x384",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon.ico",
+			"sizes": "any"
+		},
+		{
+			"src": "/favicon16x16.png",
+			"sizes": "16x16",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon32x32.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon180x180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon512x512.png",
+			"sizes": "any",
+			"type": "image/png",
+			"purpose": "any "
+		}
+	]
+}
