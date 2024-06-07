@@ -548,7 +548,7 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 								<MobileDatePicker
 									label='Wybierz dzień'
 									value={date}
-									disableFuture
+									//disableFuture
 									onChange={handleDateChange}
 									sx={{ width: "100%" }}
 									slotProps={{ textField: { size: "small" } }}

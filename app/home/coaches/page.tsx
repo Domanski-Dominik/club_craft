@@ -231,7 +231,7 @@ const CoachesManage = () => {
 					</Typography>
 				</>
 			) : (
-				<Box sx={{ width: "100%", maxHeight: "70vh" }}>
+				<Box sx={{ width: "100%", mt: 3 }}>
 					<DataGrid
 						autoHeight
 						loading={loading}

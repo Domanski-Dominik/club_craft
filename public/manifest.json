@@ -5,7 +5,7 @@
 	"description": "Zarządzaj swoim klubem!",
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "white",
+	"background_color": "#161549",
 	"theme_color": "white",
 	"orientation": "portrait",
 	"display_override": ["window-controls-overlay"],
