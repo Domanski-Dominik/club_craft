@@ -189,8 +189,14 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			setEditedGroupId(null);
 			setAddingGroup(false);
 			setError("");
-			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
-			queryClient.invalidateQueries({ queryKey: ["participants"] });
+			queryClient.invalidateQueries({
+				queryKey: ["allGroups"],
+				refetchType: "all",
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["participants"],
+				refetchType: "all",
+			});
 		} else {
 			setError(message.error);
 		}
@@ -202,8 +208,14 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		};
 		const message = await deleteGr.mutateAsync(info);
 		if (!message.error) {
-			queryClient.invalidateQueries({ queryKey: ["allGroups"] });
-			queryClient.invalidateQueries({ queryKey: ["participants"] });
+			queryClient.invalidateQueries({
+				queryKey: ["allGroups"],
+				refetchType: "all",
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["participants"],
+				refetchType: "all",
+			});
 			const groups = row.participantgroup;
 			const newGroups = groups?.filter((g: any) => g.id !== info.groupId);
 			row.participantgroup = newGroups;
@@ -222,8 +234,14 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			};
 			const message = await editGr.mutateAsync(info);
 			if (!message.error) {
-				queryClient.invalidateQueries({ queryKey: ["allGroups"] });
-				queryClient.invalidateQueries({ queryKey: ["participants"] });
+				queryClient.invalidateQueries({
+					queryKey: ["allGroups"],
+					refetchType: "all",
+				});
+				queryClient.invalidateQueries({
+					queryKey: ["participants"],
+					refetchType: "all",
+				});
 				row.participantgroup.push(message);
 				const removedGroup = row.participantgroup;
 				const updatedGroups = removedGroup?.filter(

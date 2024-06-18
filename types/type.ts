@@ -36,21 +36,23 @@ export interface Participant {
 	participantgroup?: [];
 	status?: string;
 	active?: boolean;
+	attendanceDate?: string;
 }
 export interface Payment {
 	id: number;
 	amount: number;
-	paymentDate: String;
-	paymentMethod: String;
-	month: String;
+	paymentDate: string;
+	paymentMethod: string;
+	month: string;
 	description?: string;
 }
 
 export interface Attendance {
-	id: Number;
-	date: String;
-	groupId: Number;
+	id: number;
+	date: string;
+	groupId: number;
 	participant: Participant;
+	belongs: boolean;
 }
 export interface FormPay {
 	amount: string;
@@ -79,6 +81,8 @@ export interface DialogDeleteType extends Dialog {
 export interface DialogPresentType {
 	open: boolean;
 	onClose: (participant: Participant | null) => void;
+	groupId: number;
+	day: number;
 }
 export interface DialogGroupsType extends Dialog {
 	row: GridRowModel | null;

@@ -1,15 +1,13 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName, { ReversePolishName } from "@/context/PolishDayName";
 import ParticipantList from "@/components/participants/ParticipantList";
-import type { Participant } from "@/types/type";
 import { sortAndAddNumbers } from "@/functions/sorting";
 import ErrorLocations from "@/components/errors/Locations";
 
@@ -18,7 +16,7 @@ interface Props {
 		id: string;
 	};
 }
-
+//TODO: zrobić zabezpieczenia by nie móc podglądać grup nie ze swojego klubu
 const Group = ({ params }: Props) => {
 	const pages = [{ id: 1, title: "Lokalizacje", path: "/locations" }];
 	const { status } = useSession({
@@ -67,12 +65,6 @@ const Group = ({ params }: Props) => {
 			fetch(`/api/participant/${params.id}`).then((res) => res.json()),
 		select: (data) => sortAndAddNumbers(data, params.id, "normal"),
 	});
-	const workOutPrt = useQuery<Participant[] | []>({
-		queryKey: ["workout", params.id],
-		queryFn: () =>
-			fetch(`/api/presence/${params.id}`).then((res) => res.json()),
-		select: (data) => sortAndAddNumbers(data, params.id, "info"),
-	});
 
 	if (status === "loading" || participants.isLoading)
 		return (
@@ -108,7 +100,7 @@ const Group = ({ params }: Props) => {
 			<MobileNavigation
 				pages={breadcrumbs.isSuccess ? breadcrumbs.data : pages}
 			/>
-			{participants.data.length > 0 && workOutPrt.isSuccess && (
+			{participants.data.length > 0 && (
 				<Box
 					sx={{
 						minWidth: "95vw",
@@ -124,7 +116,11 @@ const Group = ({ params }: Props) => {
 					<ParticipantList
 						participants={participants.data}
 						groupId={groupId}
-						workOutPrt={workOutPrt.data}
+						day={
+							breadcrumbs.isSuccess
+								? ReversePolishName(breadcrumbs.data[2].title)
+								: 1
+						}
 					/>
 				</Box>
 			)}

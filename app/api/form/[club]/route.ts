@@ -20,6 +20,12 @@ export const GET = async (req: Request, { params }: Props) => {
 				},
 			},
 		});
+		if (!locs)
+			return Response.json(
+				{ error: "Nie znaleziono lokalizacji" },
+				{ status: 400 }
+			);
+
 		const formattedLoc = locs.map((loc) => {
 			const groups = loc.locationschedule.map((gr) => gr.group);
 			return {

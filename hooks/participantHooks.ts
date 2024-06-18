@@ -10,6 +10,7 @@ const updateAttendance = async (info: any) => {
 		body: JSON.stringify({
 			date: info.date,
 			isChecked: info.isChecked,
+			dateToRemove: info.dateToRemove,
 		}), // Przekaż zaktualizowane dane uczestnika
 	}).then((res) => res.json());
 };

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
 import { ReversePolishName } from "@/context/PolishDayName";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import {
 	Button,
 	Dialog,
@@ -17,6 +19,12 @@ import {
 	InputLabel,
 } from "@mui/material";
 import type { LocWithGroups, Group } from "@/types/type";
+import {
+	useAddGroupCoach,
+	usedeleteGroupCoach,
+	useEditGroupCoach,
+} from "@/hooks/coachesHooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	onClose,
@@ -37,11 +45,14 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string>("");
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 	const [error, setError] = useState("");
-
+	const queryClient = useQueryClient();
+	const addGroup = useAddGroupCoach();
+	const deleteGroup = usedeleteGroupCoach();
+	const editGroup = useEditGroupCoach();
 	const handleOptionClick = (value: string) => {
 		if (value === "yes") {
 			// Tutaj dodaj logikę zapisywania zmienionych danych
-			console.log("Zapisano zmiany dla grupy o id:", editedGroupId);
+			//console.log("Zapisano zmiany dla grupy o id:", editedGroupId);
 		}
 		setEditedGroupId(null);
 		onClose(value);
@@ -49,7 +60,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 
 	const handleEditClick = (groupId: string) => {
 		setAddingGroup(false);
-		console.log(groupId);
+		//console.log(groupId);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((loc) =>
 			loc.locationschedule.find((group) => group.id === Number(groupId))
@@ -170,55 +181,44 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const handleAddGroup = async () => {
 		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
-		try {
-			const response = await fetch(`/api/coaches/${row.club}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					coachId: coachId,
-					groupId: groupId,
-				}),
+		const message = await addGroup.mutateAsync({
+			club: row.club,
+			coachId: coachId,
+			groupId: groupId,
+		});
+		if (!message.error) {
+			row.coachedGroups.push(message);
+			setEditedGroupId(null);
+			setAddingGroup(false);
+			setError("");
+			queryClient.invalidateQueries({
+				queryKey: ["coaches"],
+				refetchType: "all",
 			});
-			const newGroup = await response.json();
-			console.log(newGroup);
-			if (newGroup.name) {
-				row.coachedGroups.push(newGroup);
-				setEditedGroupId(null);
-				setAddingGroup(false);
-				setError("");
-			}
-			setError(newGroup.error);
-		} catch (error: any) {
-			console.error(error);
-			setError(error.error);
+		} else {
+			setError(message.error);
 		}
 	};
 	const handleDelete = async () => {
 		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
-		try {
-			const response = await fetch(`/api/coaches/${row.club}`, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					coachId: coachId,
-					groupId: groupId,
-				}),
+		const message = await deleteGroup.mutateAsync({
+			club: row.club,
+			coachId: coachId,
+			groupId: groupId,
+		});
+		if (!message.error) {
+			const groups = row.coachedGroups;
+			const newGroups = groups?.filter((g: any) => g.id !== groupId);
+			row.coachedGroups = newGroups;
+			setEditedGroupId(null);
+			setError("");
+			queryClient.invalidateQueries({
+				queryKey: ["coaches"],
+				refetchType: "all",
 			});
-			if (response.ok) {
-				const groups = row.coachedGroups;
-				const newGroups = groups?.filter((g: any) => g.id !== groupId);
-				row.coachedGroups = newGroups;
-				setEditedGroupId(null);
-				setError("");
-			}
-		} catch (error: any) {
-			console.error(error);
-			setError(error.error);
+		} else {
+			setError(message.error);
 		}
 	};
 	const handleEditSave = async () => {
@@ -226,35 +226,28 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 			const coachId = row.id;
 			const groupIdToRemove = parseInt(editedGroupId, 10);
 			const groupToAdd = parseInt(selectedGroupId, 10);
-			try {
-				const response = await fetch(`/api/coaches/${row.club}`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						coachId: coachId,
-						groupIdToRemove: groupIdToRemove,
-						groupIdToAdd: groupToAdd,
-					}),
+			const message = await editGroup.mutateAsync({
+				club: row.club,
+				coachId: coachId,
+				groupIdToRemove: groupIdToRemove,
+				groupIdToAdd: groupToAdd,
+			});
+			if (!message.error) {
+				row.coachedGroups.push(message);
+				const removedGroup = row.coachedGroups;
+				const updatedGroups = removedGroup?.filter(
+					(g: any) => g.id !== editedGroupId
+				);
+				row.coachedGroups = updatedGroups;
+				setEditedGroupId(null);
+				setAddingGroup(false);
+				setError("");
+				queryClient.invalidateQueries({
+					queryKey: ["coaches"],
+					refetchType: "all",
 				});
-				const newGroup = await response.json();
-				console.log(newGroup);
-				if (newGroup.name) {
-					row.coachedGroups.push(newGroup);
-					const removedGroup = row.coachedGroups;
-					const updatedGroups = removedGroup?.filter(
-						(g: any) => g.id !== editedGroupId
-					);
-					row.coachedGroups = updatedGroups;
-					setEditedGroupId(null);
-					setAddingGroup(false);
-					setError("");
-				}
-				setError(newGroup.error);
-			} catch (error: any) {
-				console.error(error);
-				setError(error.error);
+			} else {
+				setError(message.error);
 			}
 		}
 	};
@@ -368,7 +361,10 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 								alignItems: "center",
 							}}>
 							<Button
-								onClick={() => setAddingGroup(false)}
+								onClick={() => {
+									setAddingGroup(false);
+									setError("");
+								}}
 								variant='outlined'
 								color='warning'
 								sx={{ marginBottom: 2 }}>
@@ -382,136 +378,139 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 						</div>
 					</div>
 				)}
-				{row.coachedGroups.map((group: any) => (
-					<div
-						key={group.id}
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-						}}>
-						{editedGroupId === group.id ? (
-							<Grid
-								container
-								spacing={2}
-								sx={{ my: 1 }}>
-								<Grid xs={10}>
-									<FormControl
-										fullWidth
-										size='small'>
-										<InputLabel id='loc'>Lokalizacja</InputLabel>
-										<Select
-											labelId='loc'
-											id='loc'
-											label='Lokalizacja'
-											defaultValue=''
-											value={selectedLocation?.id || ""}
-											onChange={handleLocationChange as any}>
-											{locWithGroups.length > 0 &&
-												locWithGroups.map((loc) => (
+				{row.role !== "owner" &&
+					row.coachedGroups.map((group: any) => (
+						<div
+							key={group.id}
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}>
+							{editedGroupId === group.id ? (
+								<Grid
+									container
+									spacing={2}
+									sx={{ my: 1 }}>
+									<Grid xs={10}>
+										<FormControl
+											fullWidth
+											size='small'>
+											<InputLabel id='loc'>Lokalizacja</InputLabel>
+											<Select
+												labelId='loc'
+												id='loc'
+												label='Lokalizacja'
+												defaultValue=''
+												value={selectedLocation?.id || ""}
+												onChange={handleLocationChange as any}>
+												{locWithGroups.length > 0 &&
+													locWithGroups.map((loc) => (
+														<MenuItem
+															key={loc.id}
+															value={`${loc.id}`}>
+															{loc.name}
+														</MenuItem>
+													))}
+											</Select>
+										</FormControl>
+									</Grid>
+									<Grid xs={10}>
+										<FormControl
+											fullWidth
+											size='small'>
+											<InputLabel id='day'>Dzień tygodnia</InputLabel>
+											<Select
+												labelId='day'
+												id='day'
+												label='Dzień tygodnia'
+												defaultValue=''
+												value={selectedDayOfWeek || ""}
+												onChange={handleDayOfWeekChange as any}>
+												{days.map((day) => (
 													<MenuItem
-														key={loc.id}
-														value={`${loc.id}`}>
-														{loc.name}
+														key={day}
+														value={day}>
+														{day}
 													</MenuItem>
 												))}
-										</Select>
-									</FormControl>
+											</Select>
+										</FormControl>
+									</Grid>
+									<Grid xs={10}>
+										<FormControl
+											fullWidth
+											size='small'>
+											<InputLabel id='group'>Grupa</InputLabel>
+											<Select
+												labelId='group'
+												id='group'
+												label='Grupa'
+												defaultValue=''
+												value={selectedGroupId || ""}
+												onChange={handleGroupChange as any}>
+												{groups &&
+													groups !== null &&
+													groups.map((group) => (
+														<MenuItem
+															key={group.timeS}
+															value={group.id}>
+															{group.name}
+														</MenuItem>
+													))}
+											</Select>
+										</FormControl>
+									</Grid>
 								</Grid>
-								<Grid xs={10}>
-									<FormControl
-										fullWidth
-										size='small'>
-										<InputLabel id='day'>Dzień tygodnia</InputLabel>
-										<Select
-											labelId='day'
-											id='day'
-											label='Dzień tygodnia'
-											defaultValue=''
-											value={selectedDayOfWeek || ""}
-											onChange={handleDayOfWeekChange as any}>
-											{days.map((day) => (
-												<MenuItem
-													key={day}
-													value={day}>
-													{day}
-												</MenuItem>
-											))}
-										</Select>
-									</FormControl>
-								</Grid>
-								<Grid xs={10}>
-									<FormControl
-										fullWidth
-										size='small'>
-										<InputLabel id='group'>Grupa</InputLabel>
-										<Select
-											labelId='group'
-											id='group'
-											label='Grupa'
-											defaultValue=''
-											value={selectedGroupId || ""}
-											onChange={handleGroupChange as any}>
-											{groups &&
-												groups !== null &&
-												groups.map((group) => (
-													<MenuItem
-														key={group.timeS}
-														value={group.id}>
-														{group.name}
-													</MenuItem>
-												))}
-										</Select>
-									</FormControl>
-								</Grid>
-							</Grid>
-						) : (
-							<Typography sx={{ my: 1.5 }}>
-								<span style={{ color: "darkviolet" }}>{group.location}, </span>
-								{PolishDayName(group.day)}:{" "}
-								<span style={{ fontWeight: "bold" }}>{group.name}</span>
-							</Typography>
-						)}
+							) : (
+								<Typography sx={{ my: 1.5 }}>
+									<span style={{ color: "darkviolet" }}>
+										{group.location},{" "}
+									</span>
+									{PolishDayName(group.day)}:{" "}
+									<span style={{ fontWeight: "bold" }}>{group.name}</span>
+								</Typography>
+							)}
 
-						{editedGroupId === group.id ? (
-							<div
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									justifyContent: "flex-end",
-									alignItems: "center",
-								}}>
-								<Button
-									onClick={handleCancelClick}
-									variant='outlined'
-									color='warning'
-									sx={{ marginBottom: 2 }}>
-									Anuluj
-								</Button>
-								<Button
-									onClick={handleDelete}
-									variant='outlined'
-									color='error'
-									sx={{ marginBottom: 2 }}>
-									Usuń
-								</Button>
-								<Button
-									onClick={handleEditSave}
-									variant='outlined'>
-									Zapisz
-								</Button>
-							</div>
-						) : (
-							<div>
-								<Button
-									onClick={() => handleEditClick(group.id)}
-									variant='outlined'>
-									Edytuj
-								</Button>
-							</div>
-						)}
-					</div>
-				))}
+							{editedGroupId === group.id ? (
+								<div
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										justifyContent: "flex-end",
+										alignItems: "center",
+									}}>
+									<Button
+										onClick={handleCancelClick}
+										variant='outlined'
+										color='warning'
+										sx={{ marginBottom: 2 }}>
+										Anuluj
+									</Button>
+									<Button
+										onClick={handleDelete}
+										variant='outlined'
+										color='error'
+										sx={{ marginBottom: 2 }}>
+										Usuń
+									</Button>
+									<Button
+										onClick={handleEditSave}
+										variant='outlined'>
+										Zapisz
+									</Button>
+								</div>
+							) : (
+								<div>
+									<Button
+										onClick={() => handleEditClick(group.id)}
+										variant='outlined'>
+										Edytuj
+									</Button>
+								</div>
+							)}
+						</div>
+					))}
 				{row.coachedGroups.length === 0 && row.role !== "owner" && (
 					<Typography
 						sx={{ mt: 1 }}
@@ -532,10 +531,17 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 				)}
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleAddGroupClick}>Dodaj grupę</Button>
 				<Button
+					startIcon={<AddIcon />}
+					onClick={handleAddGroupClick}
+					disabled={row.role === "owner"}
+					variant='contained'>
+					Dodaj grupę
+				</Button>
+				<Button
+					startIcon={<CloseIcon />}
 					onClick={() => handleOptionClick("no")}
-					color='warning'>
+					variant='outlined'>
 					Zamknij
 				</Button>
 			</DialogActions>

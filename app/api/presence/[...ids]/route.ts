@@ -7,7 +7,7 @@ interface Props {
 	};
 }
 export const PUT = async (req: Request, { params }: Props) => {
-	const { date, isChecked } = await req.json();
+	const { date, isChecked, dateToRemove } = await req.json();
 	const groupId = parseInt(params.ids[0], 10);
 	const participantId = parseInt(params.ids[1], 10);
 	//console.log("group: ", groupId, " participant: ", participantId, date);
@@ -44,7 +44,23 @@ export const PUT = async (req: Request, { params }: Props) => {
 							belongs: false,
 						},
 					});
-					return Response.json({ message: "Obrabia" }, { status: 200 });
+					if (dateToRemove) {
+						const existingAttendance = await prisma.attendance.findFirst({
+							where: {
+								participantId,
+								groupId,
+								date: dateToRemove,
+							},
+						});
+						await prisma.attendance.delete({
+							where: {
+								id: existingAttendance?.id,
+							},
+						});
+						return Response.json({ message: "Edytowano" }, { status: 200 });
+					} else {
+						return Response.json({ message: "Obrabia" }, { status: 200 });
+					}
 				}
 			} else {
 				return Response.json(

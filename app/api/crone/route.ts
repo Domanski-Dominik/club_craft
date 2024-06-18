@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 import { isWithinInterval, subDays, format, subMonths, parse } from "date-fns";
 
+const batchSize = 10;
 const updateParticipantStatus = async (participant: any) => {
 	const participantId = participant.id;
 
@@ -25,11 +26,11 @@ const updateParticipantStatus = async (participant: any) => {
 			);
 		}
 	);
-	console.log(
+	/*console.log(
 		participant.lastName,
 		recentAttendances,
 		hasPaymentForPreviousMonth
-	);
+	);*/
 	await prisma.participant.update({
 		where: { id: participantId },
 		data: {
@@ -59,7 +60,10 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 				},
 			},
 		});
-		await Promise.all(allParticipants.map(updateParticipantStatus));
+		for (let i = 0; i < allParticipants.length; i += batchSize) {
+			const batch = allParticipants.slice(i, i + batchSize);
+			await Promise.all(batch.map(updateParticipantStatus));
+		}
 		console.log("Skończyłem Crone Job");
 		return new NextResponse("Udało Się!", { status: 200 });
 	} catch (error) {

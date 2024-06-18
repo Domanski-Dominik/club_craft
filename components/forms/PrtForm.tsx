@@ -144,12 +144,12 @@ const ParticipantForm = () => {
 		} else if (formData.tel === "") {
 			newErrors.tel = "";
 		}
-		if (formData.groups.length === 0) {
+		/*if (formData.groups.length === 0) {
 			newErrors.group = "Wybierz grupę i kliknij + dodaj";
 			valid = false;
 		} else if (formData.groups.length > 0) {
 			newErrors.group = "";
-		}
+		}*/
 
 		// Walidacja pola email za pomocą wyrażenia regularnego
 		if (formData.email !== "") {

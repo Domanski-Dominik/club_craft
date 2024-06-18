@@ -60,6 +60,7 @@ import {
 } from "@/hooks/participantHooks";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
 	participants: Participant[];
@@ -96,6 +97,8 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const payment = usePayment();
 	const deletePrt = useDeletePrt();
 	const updatePrt = useUpdatePrt();
+	const queryClient = useQueryClient();
+
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	const hiddenFields = ["num", "actions", "hiddengroups"];
@@ -266,6 +269,14 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 						severity: "success",
 					});
 					setRows(rows.filter((row) => row.id !== selectedRow.id));
+					queryClient.invalidateQueries({
+						queryKey: ["allGroups"],
+						refetchType: "inactive",
+					});
+					queryClient.invalidateQueries({
+						queryKey: ["participants"],
+						refetchType: "inactive",
+					});
 				} else {
 					console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });

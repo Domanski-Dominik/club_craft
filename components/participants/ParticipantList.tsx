@@ -43,6 +43,7 @@ import DialogPresent from "../dialogs/DialogPresent";
 import { darken, lighten, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { getShouldDisableDate } from "@/functions/dates";
 import {
 	useAttendance,
 	useDeletePrt,
@@ -54,7 +55,7 @@ import { useRouter } from "next/navigation";
 type Props = {
 	participants: Participant[];
 	groupId: number;
-	workOutPrt: Participant[] | [];
+	day: number;
 };
 
 const formatDate = (date: Date) => {
@@ -150,14 +151,10 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 	},
 }));
 
-const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
+const ParticipantList = ({ participants, groupId, day }: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
-	const addedParticipantIds = new Set();
 	const gridRef = useGridApiRef();
-	const [workOutParticipants, setWorkOutParticpants] = useState<
-		Participant[] | []
-	>(workOutPrt);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [payDialogOpen, setPayDialogOpen] = useState(false);
 	const [presentDiaolgOpen, setPresentDialogOpen] = useState(false);
@@ -186,73 +183,36 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 	const updatePrt = useUpdatePrt();
 	const deletePrt = useDeletePrt();
 	const handleCloseSnackbar = () => setSnackbar(null);
+	const shouldDiableDay = getShouldDisableDate(day);
 
 	useEffect(() => {
-		//console.log("workOutPrt:", workOutPrt);
-		//console.log("rows:", rows);
-		if (workOutPrt.length > 0) {
-			// Znajdź uczestników, którzy są obecni w danym dniu
-			const participantsToAdd = workOutPrt.filter((p) =>
-				p.attendance?.some(
-					(a) => a.date === formatDate(date) && a.groupId === groupId
-				)
-			);
+		const setNearestPreviousDayOfWeek = (targetDayOfWeek: number) => {
+			const today = new Date();
+			const currentDayOfWeek = today.getDay();
 
-			// Dodaj tylko unikalnych uczestników, którzy jeszcze nie są w tablicy rows
-			participantsToAdd.forEach((participant) => {
-				if (!addedParticipantIds.has(participant.id)) {
-					addedParticipantIds.add(participant.id);
+			// Oblicz różnicę między obecnym dniem tygodnia a docelowym dniem tygodnia
+			let diffDays = currentDayOfWeek - targetDayOfWeek;
 
-					// Zaktualizuj tablicę rows, dodając nowego uczestnika
-					setRows((prevRows) => [
-						...prevRows,
-						{
-							...participant,
-						},
-					]);
-				}
-			});
-		}
-	}, []);
-
-	const handleDateChange = (newDate: Date | null) => {
-		if (newDate) {
-			if (workOutParticipants.length > 0) {
-				const updatedRows = [...rows];
-				const participantsToRemove = workOutParticipants.filter((p) => {
-					return !p.attendance?.some(
-						(a) => a.date === formatDate(newDate) && a.groupId === groupId
-					);
-				});
-				participantsToRemove.forEach((p) => {
-					const indexToRemove = rows.findIndex((row) => row.id === p.id);
-					if (indexToRemove !== -1) {
-						updatedRows.splice(indexToRemove, 1);
-					}
-				});
-				const participantsToAdd = workOutParticipants.filter((p) => {
-					return p.attendance?.some(
-						(a) => a.date === formatDate(newDate) && a.groupId === groupId
-					);
-				});
-				participantsToAdd.forEach((p) => {
-					// Sprawdź, czy uczestnik już istnieje w updatedRows
-					const exists = updatedRows.some((row) => row.id === p.id);
-
-					if (!exists) {
-						// Jeśli nie istnieje, dodaj uczestnika
-						updatedRows.push({
-							...p,
-							status: "info", // Ustaw dowolny status
-						});
-					}
-				});
-
-				setRows(updatedRows);
+			// Jeśli różnica jest zero, to ustaw dzisiejszy dzień
+			if (diffDays === 0) {
+				setDate(today);
+				return;
 			}
-			setDate(newDate);
-		}
-	};
+
+			// Jeśli różnica jest mniejsza niż zero, dodaj 7 dni, aby uzyskać najbliższy wcześniejszy dzień
+			if (diffDays < 0) {
+				diffDays += 7;
+			}
+
+			// Oblicz datę najbliższego wcześniejszego dnia
+			const nearestPreviousDay = new Date(today);
+			nearestPreviousDay.setDate(today.getDate() - diffDays);
+
+			// Ustaw nową datę
+			setDate(nearestPreviousDay);
+		};
+		setNearestPreviousDayOfWeek(day);
+	}, []);
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
@@ -275,16 +235,8 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 	const handlePresentDialogOpen = () => {
 		setPresentDialogOpen(true);
 	};
-	const handlePresentDialogChoice = (participant: Participant | null) => {
-		console.log(participant);
+	const handlePresentDialogChoice = () => {
 		setPresentDialogOpen(false);
-
-		if (participant !== null) {
-			setRows([
-				...rows,
-				{ ...participant, num: 0, groupId: groupId, status: "info" },
-			]);
-		}
 	};
 	const handleAddPayment = async (
 		form: FormPay | null,
@@ -549,9 +501,12 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 									label='Wybierz dzień'
 									value={date}
 									//disableFuture
-									onChange={handleDateChange}
+									onChange={(value) => {
+										if (value) setDate(value);
+									}}
 									sx={{ width: "100%" }}
 									slotProps={{ textField: { size: "small" } }}
+									shouldDisableDate={shouldDiableDay}
 								/>
 							</LocalizationProvider>
 						</Grid>
@@ -833,19 +788,6 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 						].attendance.filter(
 							(item: Attendance) => item.date !== formatDate(date)
 						);
-						if (updatedRows[rowIndex].status === "info") {
-							// Usuń uczestnika z workOutPrt
-							const updatedWorkOutPrt = workOutPrt.filter(
-								(participant) => participant.id !== updatedRows[rowIndex].id
-							);
-
-							// Usuń uczestnika z rows
-							updatedRows.splice(rowIndex, 1);
-
-							// Ustaw zaktualizowane wartości
-							setRows(updatedRows);
-							setWorkOutParticpants(updatedWorkOutPrt);
-						}
 					}
 					try {
 						const data = {
@@ -986,6 +928,8 @@ const ParticipantList = ({ participants, groupId, workOutPrt }: Props) => {
 			<DialogPresent
 				open={presentDiaolgOpen}
 				onClose={handlePresentDialogChoice}
+				groupId={groupId}
+				day={day}
 			/>
 		</>
 	);

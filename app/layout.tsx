@@ -102,7 +102,7 @@ export default function RootLayout({
 					name='HandheldFriendly'
 					content='true'
 				/>
-				{/*
+
 				<link
 					rel='icon'
 					href='/favicon.ico'
@@ -120,7 +120,7 @@ export default function RootLayout({
 					type='image/<generated>'
 					sizes='<generated>'
 				/>
-				*/}
+
 				<link
 					href='/apple_splash_2048.png'
 					sizes='2048x2732'
