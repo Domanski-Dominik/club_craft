@@ -10,8 +10,8 @@ const Import = () => {
 	};
 	return (
 		<>
-			<Button onClick={() => ImportP()}>Import</Button>
-			<Button onClick={() => crone()}>Crone job</Button>
+			<Button onClick={() => ImportP()} variant="contained">Import</Button>
+			<Button onClick={() => crone()} variant="contained">Crone job</Button>
 		</>
 	);
 };
