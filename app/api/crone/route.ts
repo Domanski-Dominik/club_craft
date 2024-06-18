@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 import { isWithinInterval, subDays, format, subMonths, parse } from "date-fns";
-
+export const maxDuration = 60;
 const batchSize = 10;
 const updateParticipantStatus = async (participant: any) => {
 	const participantId = participant.id;
