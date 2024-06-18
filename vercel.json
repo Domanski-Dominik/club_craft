@@ -4,11 +4,5 @@
 			"path": "/api/crone",
 			"schedule": "0 5 * * *"
 		}
-	],
-	"functions": {
-		"api/crone/*.ts": {
-			"memory": 1000,
-			"maxDuration": 60
-		}
-	}
+	]
 }
