@@ -39,6 +39,9 @@ const updateParticipantStatus = async (participant: any) => {
 	});
 };
 export default async function handler(req: NextRequest, res: NextResponse) {
+	if (req.method !== "GET" && req.method !== "POST") {
+		return new NextResponse("Method Not Allowed", { status: 405 });
+	}
 	try {
 		console.log("Rozpoczynam Crone Job");
 		const allParticipants = await prisma.participant.findMany({
