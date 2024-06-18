@@ -6,7 +6,7 @@
 		}
 	],
 	"functions": {
-		"/api/crone.ts": {
+		"/api/crone/route.ts": {
 			"memory": 3009,
 			"maxDuration": 60
 		}
