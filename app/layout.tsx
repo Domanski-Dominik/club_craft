@@ -6,6 +6,7 @@ import BottomNav from "@/components/navigation/BottomNav";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { Container, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { Analytics } from "@vercel/analytics/react";
 
 const APP_NAME = "ClubCraft";
 const APP_DEFAULT_TITLE = "ClubCraft";
@@ -185,6 +186,7 @@ export default function RootLayout({
 							<BottomNav />
 						</AppRouterCacheProvider>
 					</Provider>
+					<Analytics />
 				</body>
 			</ThemeRegistry>
 		</html>
