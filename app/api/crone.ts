@@ -7,10 +7,7 @@ const updateParticipantStatus = async (participant: any) => {
 	const participantId = participant.id;
 
 	const recentAttendances = participant.attendance.filter((a: any) => {
-		// Parsuj datę z formatu dd-mm-yyyy do obiektu Date
 		const attendanceDate = parse(a.date, "dd-MM-yyyy", new Date());
-
-		// Sprawdź, czy obecność jest w ostatnich 31 dniach
 		return isWithinInterval(attendanceDate, {
 			start: subDays(new Date(), 31),
 			end: new Date(),
@@ -26,11 +23,7 @@ const updateParticipantStatus = async (participant: any) => {
 			);
 		}
 	);
-	/*console.log(
-		participant.lastName,
-		recentAttendances,
-		hasPaymentForPreviousMonth
-	);*/
+
 	await prisma.participant.update({
 		where: { id: participantId },
 		data: {
@@ -38,10 +31,16 @@ const updateParticipantStatus = async (participant: any) => {
 		},
 	});
 };
-export default async function handler(req: NextRequest, res: NextResponse) {
-	if (req.method !== "GET" && req.method !== "POST") {
-		return new NextResponse("Method Not Allowed", { status: 405 });
-	}
+
+export const GET = async (req: NextRequest) => {
+	return await handleCronJob(req);
+};
+
+export const POST = async (req: NextRequest) => {
+	return await handleCronJob(req);
+};
+
+const handleCronJob = async (req: NextRequest) => {
 	try {
 		console.log("Rozpoczynam Crone Job");
 		const allParticipants = await prisma.participant.findMany({
@@ -91,4 +90,4 @@ export default async function handler(req: NextRequest, res: NextResponse) {
 		console.error(error);
 		return new NextResponse("Nie udało się", { status: 500 });
 	}
-}
+};
