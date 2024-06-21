@@ -55,7 +55,7 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 
 	const handleSubmit = async () => {
 		if (validateForm()) {
-			const response = await fetch("/api/profile/password", {
+			const response = await fetch("/api/user/password", {
 				method: "PUT",
 				body: JSON.stringify({
 					password: password,

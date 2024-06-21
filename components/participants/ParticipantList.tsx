@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
 	DataGrid,
-	plPL,
 	GridColDef,
 	GridActionsCellItem,
 	GridColumnVisibilityModel,
@@ -32,9 +31,9 @@ import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import pl from "date-fns/locale/pl";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
@@ -874,7 +873,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 				columns={columns}
 				density='compact'
 				rows={rows}
-				localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
+				//localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
 				disableColumnMenu
 				getRowHeight={() => "auto"}
 				editMode='row'

@@ -1,10 +1,9 @@
-import React from "react";
 import { GridValidRowModel } from "@mui/x-data-grid";
 const ExcelJS = require("exceljs");
 import { saveAs } from "file-saver";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { Participant } from "@/types/type";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 interface Props {
 	data: (GridValidRowModel | Participant)[];
 	date: any;

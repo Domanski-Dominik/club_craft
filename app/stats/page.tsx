@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Loading from "@/context/Loading";
@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { Participant } from "@/types/type";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import {
 	startOfMonth,
 	endOfMonth,
@@ -209,22 +209,3 @@ const Stats = () => {
 };
 
 export default Stats;
-/*
-const paymentData = participants.data.reduce((acc, participant) => {
-				participant.payments.forEach((payment) => {
-					if (!acc[payment.paymentDate]) {
-						acc[payment.paymentDate] = 0;
-					}
-					acc[payment.paymentDate] += payment.amount;
-				});
-				return acc;
-			}, {});
-
-			const data = Object.keys(paymentData).map((date) => ({
-				x: date,
-				y: paymentData[date],
-			}));
-			console.log(paymentData);
-			console.log(data);
-			setPaymentData(data);
-*/

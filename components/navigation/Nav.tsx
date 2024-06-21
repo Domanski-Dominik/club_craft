@@ -24,7 +24,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/navigation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WidgetsIcon from "@mui/icons-material/Widgets";
-import InfoIcon from "@mui/icons-material/Info";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const drawerWidth = 240;
 const navItems = [
@@ -33,6 +33,16 @@ const navItems = [
 		icon: <WidgetsIcon />,
 		link: "/home/manageGroups",
 	},
+	{
+		name: "Ustawienia",
+		icon: <SettingsIcon />,
+		link: "/settings",
+	},
+	// {
+	// 	name: "Typy zajęć",
+	// 	icon: <AppRegistrationIcon />,
+	// 	link: "/home/manageSportTypes",
+	// },
 	//{ name: "Informacje", icon: <InfoIcon />, link: "/home/info" },
 ];
 

@@ -1,20 +1,13 @@
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { Typography, Fab } from "@mui/material";
-import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import CachedIcon from "@mui/icons-material/Cached";
 
 interface Props {
-	pages: {
-		id: number;
-		title: string;
-		path: string;
-	}[];
 	message: string;
 }
-const ErrorLocations = (props: Props) => {
+const StandardError = (props: Props) => {
 	return (
 		<>
-			<MobileNavigation pages={props.pages} />
 			<WarningAmberIcon
 				color='error'
 				sx={{ width: 100, height: 100, m: 4 }}
@@ -37,4 +30,4 @@ const ErrorLocations = (props: Props) => {
 	);
 };
 
-export default ErrorLocations;
+export default StandardError;

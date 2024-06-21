@@ -50,7 +50,7 @@ export const useEditGroupCoach = () => {
 	return useMutation({ mutationFn: editGroup });
 };
 const changeRole = async (info: any) => {
-	return fetch("/api/admin", {
+	return fetch("/api/user/admin", {
 		method: "PUT",
 		headers: {
 			"Content-Type": "application/json",

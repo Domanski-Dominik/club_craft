@@ -19,7 +19,7 @@ const ResetPasswordtoken = ({ params }: Props) => {
 	const [data, setData] = useState<any>({});
 	useEffect(() => {
 		const VerifyUser = async () => {
-			const response = await fetch(`/api/register/resetPassword/${rtoken}`);
+			const response = await fetch(`/api/user/resetPassword/${rtoken}`);
 			const data = await response.json();
 			if (!data.error) {
 				setSuccess(true);

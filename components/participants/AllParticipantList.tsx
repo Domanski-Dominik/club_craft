@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
 	DataGrid,
-	plPL,
 	GridColDef,
 	GridActionsCellItem,
 	GridColumnVisibilityModel,
@@ -20,6 +19,7 @@ import {
 	GridFooterContainer,
 	GridFooter,
 } from "@mui/x-data-grid";
+import { plPL } from "@mui/x-date-pickers/locales";
 import {
 	Box,
 	Button,
@@ -43,13 +43,13 @@ import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import pl from "date-fns/locale/pl";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
 import ExportToExel from "../export/ExportToExel";
 import { sortAndAddNumbersAll } from "@/functions/sorting";
@@ -740,14 +740,10 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 						});
 					}}
 					columnVisibilityModel={columnVisibilityModel}
-					localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
 					slots={{
 						toolbar: CustomToolbar,
 						pagination: GridPagination,
 						footer: CustomFooter,
-					}}
-					slotProps={{
-						columnsPanel: { getTogglableColumns, disableHideAllButton: true },
 					}}
 					onColumnVisibilityModelChange={(newModel) =>
 						setColumnVisibilityModel(newModel)

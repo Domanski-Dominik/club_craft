@@ -1,7 +1,6 @@
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 import { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
-import { ReversePolishName } from "@/context/PolishDayName";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import {
 	Button,

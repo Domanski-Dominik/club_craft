@@ -58,7 +58,7 @@ export const User = ({ id }: Props) => {
 		}
 	};
 	const fetchData = async () => {
-		const response = await fetch(`/api/profile/${id}`, { method: "GET" });
+		const response = await fetch(`/api/user/profile/${id}`, { method: "GET" });
 		const data = await response.json();
 		console.log(data);
 		if (!data.error) {

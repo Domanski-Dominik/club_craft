@@ -1,4 +1,4 @@
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "./PolishDayName";
 import { Participant } from "@/types/type";
 import { GridValidRowModel } from "@mui/x-data-grid";
 

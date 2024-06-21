@@ -16,7 +16,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import plLocale from "@fullcalendar/core/locales/pl";
-import { EventClickArg, EventInput } from "@fullcalendar/core";
+import { EventClickArg } from "@fullcalendar/core";
 
 import {
 	FormControl,
@@ -39,7 +39,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { plPL } from "@mui/x-date-pickers/locales";
 

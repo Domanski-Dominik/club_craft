@@ -106,7 +106,7 @@ const Register = ({ club }: Props) => {
 		console.log(formData);
 		if (validateForm()) {
 			try {
-				const response = await fetch("/api/register", {
+				const response = await fetch("/api/user/register", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

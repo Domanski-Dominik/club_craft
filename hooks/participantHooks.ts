@@ -2,24 +2,27 @@ import { useMutation } from "@tanstack/react-query";
 
 const updateAttendance = async (info: any) => {
 	//console.log(info);
-	return fetch(`/api/presence/${info.groupId}/${info.participantId}`, {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			date: info.date,
-			isChecked: info.isChecked,
-			dateToRemove: info.dateToRemove,
-		}), // Przekaż zaktualizowane dane uczestnika
-	}).then((res) => res.json());
+	return fetch(
+		`/api/participant/presence/${info.groupId}/${info.participantId}`,
+		{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				date: info.date,
+				isChecked: info.isChecked,
+				dateToRemove: info.dateToRemove,
+			}), // Przekaż zaktualizowane dane uczestnika
+		}
+	).then((res) => res.json());
 };
 export const useAttendance = () => {
 	return useMutation({ mutationFn: updateAttendance });
 };
 const addPayment = async (info: any) => {
 	//console.log(info);
-	return fetch(`/api/payment/${info.participantId}`, {
+	return fetch(`/api/participant/payment/${info.participantId}`, {
 		method: "PUT",
 		headers: {
 			"Content-Type": "application/json",

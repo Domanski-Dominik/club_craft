@@ -6,7 +6,35 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+model club {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String?
+  phoneNumber     String?
+  paymentGroup    Int       @default(0)
+  optionGroup     String    @default("za miesiąc")
+  switchGroup     Boolean   @default(true)
+  paymentSolo     Int       @default(0)
+  optionSolo      String    @default("za miesiąc")
+  switchSolo      Boolean   @default(true)
+  paymentOneTime  Int       @default(0)
+  optionOneTime   String    @default("za zajęcia")
+  switchOneTime   Boolean   @default(true)
+  paymentCyclic   String    @default("co miesiąc")
+  workOut         Boolean   @default(true)
+  replacment      Boolean   @default(true)
+  clubconnect     clubconnect[]
+}
+model clubconnect {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  clubId    Int
+  club      club      @relation(fields: [clubId], references: [id])
+  user      user      @relation(fields: [userId], references: [id])
 
+  @@index([clubId])
+  @@index([userId])
+}
 model group {
   id        Int    @id @default(autoincrement())
   name      String
@@ -18,7 +46,7 @@ model group {
   price     Int    @default(0)
   locationschedule locationschedule[]
   participantgroup participantgroup[]
-  coaches          groupcoach[]     // Relacja do trenerów
+  coaches          groupcoach[]     
 }
 
 model groupcoach {
@@ -118,6 +146,7 @@ model user {
   image                     String?
   createdAt                 DateTime  @default(now())
   updatedAt                 DateTime?
+  phoneNumber               String?
   password                  String
   club                      String    @default("guest")
   role                      String    @default("guest")
@@ -128,6 +157,7 @@ model user {
   account                   account[]
   session                   session[]
   coachedGroups             groupcoach[] // Relacja do danych trenera
+  clubconnect               clubconnect[]
 }
 
 model verificationrequest {

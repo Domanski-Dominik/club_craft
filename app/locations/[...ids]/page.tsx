@@ -5,7 +5,7 @@ import CardsSkeleton from "@/components/skeletons/CardsSkeleton";
 import { Fab } from "@mui/material";
 import GrCard from "@/components/cards/GrCard";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import { useQuery } from "@tanstack/react-query";
 import ErrorLocations from "@/components/errors/Locations";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";

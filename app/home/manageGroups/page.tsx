@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Loading from "@/context/Loading";
 import { useUpdateGroup } from "@/hooks/scheduleHooks";
+import { styled } from "@mui/material/styles";
 import {
 	DataGrid,
 	GridColDef,
@@ -12,7 +13,7 @@ import {
 	GridRenderCellParams,
 	GridRowModel,
 } from "@mui/x-data-grid";
-import PolishDayName, { ColorName } from "@/context/PolishDayName";
+import PolishDayName, { ColorName } from "@/functions/PolishDayName";
 import {
 	Box,
 	Select,
@@ -22,6 +23,11 @@ import {
 	Snackbar,
 	Typography,
 	Fab,
+	Accordion,
+	AccordionSummary,
+	AccordionDetails,
+	AccordionProps,
+	AccordionSummaryProps,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -29,7 +35,21 @@ import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { plPL } from "@mui/x-date-pickers/locales";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+const StyledAccordionSummary = styled((props: AccordionSummaryProps) => (
+	<AccordionSummary
+		expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "2rem" }} />}
+		{...props}
+	/>
+))(({ theme }) => ({
+	backgroundColor: `${theme.palette.primary.light}`,
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+	padding: theme.spacing(2),
+	borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
 function SelectColorInputCell(props: GridRenderCellParams) {
 	const { id, value, field } = props;
 	const apiRef = useGridApiContext();
@@ -141,7 +161,6 @@ const ManageGroups = () => {
 	> | null>(null);
 	const handleCloseSnackbar = () => setSnackbar(null);
 	const queryClient = useQueryClient();
-	console.log(groups.data);
 	const processRowUpdate = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -211,9 +230,9 @@ const ManageGroups = () => {
 		},
 		{
 			field: "dayOfWeek",
-			headerName: "Dzień tygodnia",
+			headerName: "Dzień ",
 			type: "singleSelect",
-			sortable: false,
+			sortable: true,
 			editable: true,
 			minWidth: 100,
 			valueOptions: [
@@ -312,13 +331,25 @@ const ManageGroups = () => {
 				sx={{
 					height: "100%",
 					width: "100%",
+					px: 1,
 				}}>
-				<DataGrid
-					columns={cols}
-					rows={groups.data}
-					disableColumnMenu
-					processRowUpdate={processRowUpdate}
-				/>
+				<Accordion defaultExpanded>
+					<StyledAccordionSummary>
+						<Typography
+							variant='body1'
+							color={"white"}>
+							ZARZĄDZAJ GRUPAMI
+						</Typography>
+					</StyledAccordionSummary>
+					<StyledAccordionDetails>
+						<DataGrid
+							columns={cols}
+							rows={groups.data}
+							disableColumnMenu
+							processRowUpdate={processRowUpdate}
+						/>
+					</StyledAccordionDetails>
+				</Accordion>
 				{!!snackbar && (
 					<Snackbar
 						open

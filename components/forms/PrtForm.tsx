@@ -30,8 +30,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import type { Group, LocWithGroups } from "@/types/type";
-import PolishDayName from "@/context/PolishDayName";
-import { ReversePolishName } from "@/context/PolishDayName";
+import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 
 type NGroup = {
 	locId: string | number;
@@ -90,7 +89,9 @@ const ParticipantForm = () => {
 		try {
 			if (session?.user) {
 				setFormData({ ...formData, club: session.user.club });
-				const response = await fetch(`/api/form/${session?.user.club}`);
+				const response = await fetch(
+					`/api/components/form/${session?.user.club}`
+				);
 				if (response.ok) {
 					const data: LocWithGroups[] | [] | { error: string } =
 						await response.json();

@@ -6,7 +6,7 @@ import { Box, Button } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import PolishDayName, { ReversePolishName } from "@/context/PolishDayName";
+import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 import ParticipantList from "@/components/participants/ParticipantList";
 import { sortAndAddNumbers } from "@/functions/sorting";
 import ErrorLocations from "@/components/errors/Locations";

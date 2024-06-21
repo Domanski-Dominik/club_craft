@@ -1,6 +1,6 @@
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import pl from "date-fns/locale/pl";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";

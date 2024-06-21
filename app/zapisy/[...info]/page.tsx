@@ -8,10 +8,11 @@ const page = ({ params }: Props) => {
 	const clubName = params.info[0];
 	const season1 = params.info[1];
 	const season2 = params.info[2];
+	const seasonFull = `${season1}/${season2}`;
 	return (
 		<div>
 			{clubName}
-			{season1}/{season2}
+			{seasonFull}
 		</div>
 	);
 };

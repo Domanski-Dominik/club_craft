@@ -33,7 +33,9 @@ const Participants = () => {
 		queryKey: ["AllParticipantsLocs"],
 		enabled: !!session,
 		queryFn: () =>
-			fetch(`/api/form/${session?.user.club}`).then((res) => res.json()),
+			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
+				res.json()
+			),
 	});
 
 	if (

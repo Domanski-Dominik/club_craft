@@ -22,7 +22,7 @@ import {
 	Alert,
 } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import DialogAdmin from "@/components/dialogs/DialogAdmin";
 import DialogCoachGroups from "@/components/dialogs/DialogCoachGroups";
@@ -32,7 +32,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import Loading from "@/context/Loading";
 
-//TODO:  dodawanie/usuwanie praw aministratora
 const sortAndAddNumbers = (rows: GridValidRowModel[]) => {
 	const sortedRows = [...rows];
 	sortedRows.sort((a, b) => {
@@ -79,7 +78,7 @@ const CoachesManage = () => {
 		queryKey: ["locWithGr"],
 		enabled: !!session,
 		queryFn: async () => {
-			const res = await fetch(`/api/form/${session?.user.club}`);
+			const res = await fetch(`/api/components/form/${session?.user.club}`);
 			if (!res.ok) {
 				const errorData = await res.json();
 				throw new Error(errorData.error || "Nieznany błąd");
@@ -301,7 +300,7 @@ const CoachesManage = () => {
 					color='primary'
 					variant='extended'
 					onClick={addCoach}>
-					<AddIcon sx={{ mr: 1, mb: 1 }} />
+					<AddIcon sx={{ mr: 1 }} />
 					Dodaj trenera
 				</Fab>
 			</Box>
@@ -344,21 +343,3 @@ const CoachesManage = () => {
 };
 
 export default CoachesManage;
-/*
-<Grid
-				container
-				sx={{
-					mt: 2,
-					width: "100%",
-					justifyContent: "center",
-					justifyItems: "center",
-				}}>
-				<Grid
-					xs={12}
-					sx={{ mb: 2 }}>
-
-					</Grid>
-<Grid xs={12}>
-</Grid>
-</Grid>
-*/

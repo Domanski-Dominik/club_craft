@@ -2,7 +2,7 @@ import { Fab, Typography, Card, CardContent, Box, Avatar } from "@mui/material";
 import TodayIcon from "@mui/icons-material/Today";
 import { Group } from "@/types/type";
 import Grid from "@mui/material/Unstable_Grid2";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import LabelOffOutlinedIcon from "@mui/icons-material/LabelOffOutlined";
 

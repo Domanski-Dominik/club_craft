@@ -5,6 +5,9 @@ import { NextAppDirEmotionCacheProvider } from "./EmotionCache";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Roboto } from "next/font/google";
 import { useState, useEffect } from "react";
+import { plPL } from "@mui/x-data-grid/locales";
+import { plPL as pickersplPL } from "@mui/x-date-pickers/locales";
+import { plPL as coreplPL } from "@mui/material/locale";
 
 const roboto = Roboto({
 	weight: ["300", "400", "500", "700"],
@@ -12,15 +15,15 @@ const roboto = Roboto({
 	subsets: ["latin"],
 });
 
-const ThemeOptions: ThemeOptions = {
+const themeOptions: ThemeOptions = {
 	typography: {
 		fontFamily: roboto.style.fontFamily,
 		fontSize: 12,
 	},
 	palette: {
 		background: {
-			// pink
-			default: "#e1bee7",
+			default: "#E3CBE7",
+			//default: "#e1bee7",
 			//default: "#ffffff",
 		},
 		primary: {
@@ -49,7 +52,7 @@ const lightTheme: ThemeOptions = createTheme({
 const darkTheme: ThemeOptions = createTheme({
 	// Twój motyw ciemny
 });
-const theme = createTheme(ThemeOptions);
+const theme = createTheme(themeOptions, plPL, pickersplPL, coreplPL);
 
 export default function ThemeRegistry({
 	children,

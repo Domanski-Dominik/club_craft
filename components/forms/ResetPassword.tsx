@@ -18,7 +18,7 @@ const ResetPasswordForm = () => {
 	const [success, setSuccess] = useState(false);
 	const router = useRouter();
 	const handleSubmit = async () => {
-		const response = await fetch("/api/register/resetPassword", {
+		const response = await fetch("/api/user/resetPassword", {
 			method: "POST",
 			body: JSON.stringify({ email }),
 		});

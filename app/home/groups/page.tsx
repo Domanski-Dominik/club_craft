@@ -26,7 +26,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import GroupIcon from "@mui/icons-material/Group";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
-import PolishDayName from "@/context/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import Loading from "@/context/Loading";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
@@ -123,7 +123,7 @@ const GroupList = () => {
 		if (session?.user || status === "authenticated") {
 			if (session.user.role === "owner" || session.user.role === "admin") {
 				const response = await fetch(
-					`/api/grList/${session.user.role}/${session.user.club}`,
+					`/api/groups/grList/${session.user.role}/${session.user.club}`,
 					{
 						method: "GET",
 					}
@@ -142,7 +142,7 @@ const GroupList = () => {
 			}
 			if (session.user.role === "coach") {
 				const response = await fetch(
-					`/api/grList/${session.user.role}/${session.user.club}/${session.user.id}`,
+					`/api/groups/grList/${session.user.role}/${session.user.club}/${session.user.id}`,
 					{
 						method: "GET",
 					}
