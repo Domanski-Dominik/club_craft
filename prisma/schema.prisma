@@ -23,6 +23,9 @@ model club {
   paymentCyclic   String    @default("co miesiąc")
   workOut         Boolean   @default(true)
   replacment      Boolean   @default(true)
+  coachPayments   Boolean   @default(false)
+  coachEditPrt    Boolean   @default(false)
+  coachNewPrt     Boolean   @default(false)
   clubconnect     clubconnect[]
 }
 model clubconnect {
@@ -36,17 +39,47 @@ model clubconnect {
   @@index([userId])
 }
 model group {
-  id        Int    @id @default(autoincrement())
-  name      String
-  dayOfWeek Int
-  timeS     String
-  timeE     String
-  club      String @default("guest")
-  color     String @default("#3788d8")
-  price     Int    @default(0)
+  id               Int          @id @default(autoincrement())
+  name             String
+  dayOfWeek        Int?
+  timeS            String?
+  timeE            String?
+  club             String       @default("guest")
+  color            String       @default("#3788d8")
+  price            Int          @default(0)
+  firstLesson      String       @default("01-09-2024")
+  lastLesson       String       @default("22-06-2025")
+  participantCount Int          @default(0)
+  xClass           Int          @default(0)
+  payOption        String       @default("za miesiąc")
+  clientsPay       String       @default("co miesiąc")
+  signInfo         String       @default("")
+  type             String       @default("group")
+  breaks           Break[]
+  terms            Term[]
   locationschedule locationschedule[]
   participantgroup participantgroup[]
   coaches          groupcoach[]     
+}
+model Break {
+  id      Int      @id @default(autoincrement())
+  name    String
+  begin   String
+  end     String
+  group   group    @relation(fields: [groupId], references: [id])
+  groupId Int
+}
+
+model Term {
+  id        Int      @id @default(autoincrement())
+  dayOfWeek Int
+  timeS     String
+  timeE     String
+  effectiveDate DateTime // Data rozpoczęcia obowiązywania tego terminu
+  group     group    @relation(fields: [groupId], references: [id])
+  groupId   Int
+  locationId Int
+  location   locations @relation(fields: [locationId], references: [id])
 }
 
 model groupcoach {
@@ -69,6 +102,8 @@ model locations {
   street     String
   streetNr   String
   locationschedule locationschedule[]
+  terms  Term[]
+
 }
 
 model locationschedule {
@@ -89,7 +124,11 @@ model participant {
   email              String?
   phoneNumber        String?
   note               String?
+  birthday           String?
+  parentFirstName    String?
+  parentLastName     String?
   active             Boolean @default(false)
+  contactWithParent  Boolean @default(false)
   participantgroup   participantgroup[]  
   attendance         attendance[] 
   payments           payment_participant[]

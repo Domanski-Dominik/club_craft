@@ -1,27 +1,37 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-	Tabs,
-	Tab,
-	Box,
-	Accordion,
-	Typography,
-	Stack,
-	useTheme,
-	Divider,
-	Switch,
-	styled,
-	switchClasses,
-	TextField,
-	Button,
+  Tabs,
+  Tab,
+  Box,
+  Accordion,
+  Typography,
+  Stack,
+  useTheme,
+  Divider,
+  Switch,
+  styled,
+  switchClasses,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 import {
-	StyledAccordionSummary,
-	StyledAccordionDetails,
-} from "@/components/accordions/accordions";
+  StyledAccordionSummary,
+  StyledAccordionDetails,
+  Stack2,
+  StyledSwitch,
+  BoxSwitch,
+  TypographySwitch,
+  TypographyStack,
+} from "@/components/styled/StyledComponents";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUpdateClub } from "@/hooks/clubHooks";
 import Loading from "@/context/Loading";
 import StandardError from "@/components/errors/Standard";
@@ -30,456 +40,572 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface TabPanelProps {
-	children?: React.ReactNode;
-	index: number;
-	value: number;
+  children?: React.ReactNode;
+  index: number;
+  value: number;
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props;
 
-	return (
-		<div
-			role='tabpanel'
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-			style={{ width: "100%" }}>
-			{value === index && (
-				<Box sx={{ pt: 2, width: "100%", mb: 12 }}>{children}</Box>
-			)}
-		</div>
-	);
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+      style={{ width: "100%" }}>
+      {value === index && (
+        <Box sx={{ pt: 2, width: "100%", mb: 12 }}>{children}</Box>
+      )}
+    </div>
+  );
 }
 
 function a11yProps(index: number) {
-	return {
-		id: `simple-tab-${index}`,
-		"aria-controls": `simple-tabpanel-${index}`,
-	};
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
 }
-const StyledSwitch = styled(Switch)({
-	width: 80,
-	height: 48,
-	padding: 8,
-	[`& .${switchClasses.switchBase}`]: {
-		padding: 11,
-		color: "#ff6a00",
-	},
-	[`& .${switchClasses.thumb}`]: {
-		width: 26,
-		height: 26,
-		backgroundColor: "#fff",
-	},
-	[`& .${switchClasses.track}`]: {
-		background: "linear-gradient(to right, #ee0979, #ff6a00)",
-		opacity: "1 !important",
-		borderRadius: 20,
-		position: "relative",
-		"&:before, &:after": {
-			display: "inline-block",
-			position: "absolute",
-			top: "50%",
-			width: "50%",
-			transform: "translateY(-50%)",
-			color: "#fff",
-			textAlign: "center",
-			fontSize: "0.75rem",
-			fontWeight: 500,
-		},
-		"&:before": {
-			content: '"TAK"',
-			left: 4,
-			opacity: 0,
-		},
-		"&:after": {
-			content: '"NIE"',
-			right: 4,
-		},
-	},
-	[`& .${switchClasses.checked}`]: {
-		[`&.${switchClasses.switchBase}`]: {
-			color: "#185a9d",
-			transform: "translateX(32px)",
-			"&:hover": {
-				backgroundColor: "rgba(24,90,257,0.08)",
-			},
-		},
-		[`& .${switchClasses.thumb}`]: {
-			backgroundColor: "#fff",
-		},
-		[`& + .${switchClasses.track}`]: {
-			background: "linear-gradient(to right, #43cea2, #185a9d)",
-			"&:before": {
-				opacity: 1,
-			},
-			"&:after": {
-				opacity: 0,
-			},
-		},
-	},
+
+const BoxInput = styled(Box)({
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "flex-start",
 });
+
 const Settings = () => {
-	const [value, setValue] = useState(0);
-	const [editField, setEditField] = useState<string | null>(null);
-	const [formData, setFormData] = useState<{ [key: string]: any }>({});
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect(`/login`);
-		},
-	});
-	const theme = useTheme();
-	const useUpdate = useUpdateClub();
-	const clubInfo = useQuery({
-		queryKey: ["clubInfo"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`api/club/${session?.user.id}`).then((res) => res.json()),
-	});
-	console.log(clubInfo.data);
-	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-		setValue(newValue);
-	};
+  const [value, setValue] = useState(0);
+  const [editField, setEditField] = useState<string | null>(null);
+  const [formData, setFormData] = useState<{ [key: string]: any }>({});
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect(`/login`);
+    },
+  });
+  const theme = useTheme();
+  const useUpdate = useUpdateClub();
+  const queryClient = useQueryClient();
+  const clubInfo = useQuery({
+    queryKey: ["clubInfo"],
+    enabled: !!session,
+    queryFn: () =>
+      fetch(`api/club/${session?.user.id}`).then((res) => res.json()),
+  });
+  useEffect(() => {
+    if (clubInfo.data) {
+      setFormData({
+        email: clubInfo.data.email,
+        name: clubInfo.data.name,
+        optionGroup: clubInfo.data.optionGroup,
+        optionOneTime: clubInfo.data.optionOneTime,
+        optionSolo: clubInfo.data.optionSolo,
+        paymentCyclic: clubInfo.data.paymentCyclic,
+        paymentGroup: clubInfo.data.paymentGroup,
+        paymentOneTime: clubInfo.data.paymentOneTime,
+        paymentSolo: clubInfo.data.paymentSolo,
+        phoneNumber: clubInfo.data.phoneNumber,
+      });
+    }
+  }, [clubInfo.data]);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
-	const handleEditClick = (field: string) => {
-		setEditField(field);
-		setFormData({ ...formData, [field]: clubInfo.data[field] });
-	};
+  const handleEditClick = (field: string) => {
+    setEditField(field);
+    setFormData({ ...formData, [field]: clubInfo.data[field] });
+  };
 
-	const handleSaveClick = () => {
-		console.log(formData);
-		useUpdate.mutateAsync(formData);
-	};
+  const handleSaveClick = async () => {
+    console.log(formData);
+    setEditField(null);
+    const info = {
+      ...formData,
+      clubId: clubInfo.data.id,
+      userId: session?.user.id,
+    };
+    const message = await useUpdate.mutateAsync(info);
+    if (!message.error) {
+      queryClient.invalidateQueries({
+        queryKey: ["clubInfo"],
+        type: "all",
+      });
+    } else {
+      console.log(message.error);
+    }
+  };
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
-	if (clubInfo.isLoading || status === "loading") return <Loading />;
-	if (clubInfo.isError)
-		return <StandardError message={clubInfo.error.message} />;
-	if (clubInfo.data.error)
-		return <StandardError message={clubInfo.data.error} />;
-	return (
-		<Box sx={{ width: "calc(100% - 20px)", position: "absolute", top: 80 }}>
-			<Box
-				sx={{
-					width: "100%",
-					borderBottom: 1,
-					borderColor: "divider",
-				}}>
-				<Tabs
-					value={value}
-					onChange={handleChange}
-					aria-label='basic tabs example'
-					variant='scrollable'
-					scrollButtons='auto'>
-					<Tab
-						label='Ogólne'
-						{...a11yProps(0)}
-					/>
-					<Tab
-						label='Uprawnienia użytkowników'
-						{...a11yProps(1)}
-					/>
-					<Tab
-						label='Subskrybcja'
-						{...a11yProps(2)}
-					/>
-				</Tabs>
-			</Box>
-			<CustomTabPanel
-				value={value}
-				index={0}>
-				<Accordion
-					defaultExpanded
-					sx={{ width: "100%" }}
-					elevation={0}>
-					<StyledAccordionSummary>
-						<Typography
-							color={"white"}
-							variant='h6'>
-							USTAWIENIA KLUBU
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='flex-start'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								color={theme.palette.primary.main}
-								width='50%'>
-								Nazwa
-							</Typography>
-							<Typography width='50%'>{clubInfo.data.name}</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Email
-							</Typography>
-							<Typography width='50%'>{clubInfo.data.email}</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Numer Telefonu
-							</Typography>
-							{editField === "phoneNumber" ? (
-								<Box
-									width='50%'
-									display='flex'
-									flexWrap='wrap'
-									alignItems='center'>
-									<TextField
-										sx={{ minWidth: 100 }}
-										name='phoneNumber'
-										value={formData.phoneNumber}
-										onChange={handleInputChange}
-									/>
-									<CheckIcon
-										sx={{ m: 2, fontSize: 30 }}
-										color='success'
-									/>
-									<CloseIcon
-										sx={{ m: 2, fontSize: 30 }}
-										color='warning'
-										onClick={() => setEditField(null)}
-									/>
-								</Box>
-							) : (
-								<Box
-									width='50%'
-									display='flex'>
-									<Typography>
-										{clubInfo.data.phoneNumber
-											? clubInfo.data.phoneNumber
-											: "Nie zapisany"}
-									</Typography>
-									<EditIcon onClick={() => handleEditClick("phoneNumber")} />
-								</Box>
-							)}
-						</Stack>
-					</StyledAccordionDetails>
-				</Accordion>
-				<Accordion
-					defaultExpanded
-					sx={{ width: "100%" }}
-					elevation={0}>
-					<StyledAccordionSummary>
-						<Typography
-							color={"white"}
-							variant='h6'>
-							USTAWIENIA PŁATNOŚCI
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='flex-start'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								color={theme.palette.primary.main}
-								width='50%'>
-								Domyślna cena zajęć jednorazowych
-							</Typography>
-							<Typography width='25%'>0</Typography>
-							<Typography width='25%'>za zajęcia</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Domyślna cena zajęć indywidualnych
-							</Typography>
-							<Typography width='25%'>0</Typography>
-							<Typography width='25%'>za miesiąc</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Domyślna cena zajęć grupowych
-							</Typography>
-							<Typography width='25%'>0</Typography>
-							<Typography width='25%'>za miesiąc</Typography>
-						</Stack>
-					</StyledAccordionDetails>
-				</Accordion>
-				<Accordion
-					defaultExpanded
-					sx={{ width: "100%" }}
-					elevation={0}>
-					<StyledAccordionSummary>
-						<Typography
-							color={"white"}
-							variant='h6'>
-							STOPNIE ZAAWANSOWANIA
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='flex-start'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								color={theme.palette.primary.main}
-								width='100%'>
-								Początkujący
-							</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='100%'
-								color={theme.palette.primary.main}>
-								Średnio zaawansowany
-							</Typography>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='100%'
-								color={theme.palette.primary.main}>
-								Zaawansowany
-							</Typography>
-						</Stack>
-					</StyledAccordionDetails>
-				</Accordion>
-				<Accordion
-					defaultExpanded
-					sx={{ width: "100%" }}
-					elevation={0}>
-					<StyledAccordionSummary>
-						<Typography
-							color={"white"}
-							variant='h6'>
-							FUNKCJONALNOŚCI
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='flex-start'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								color={theme.palette.primary.main}
-								width='50%'>
-								Zajęcia indywidualne
-							</Typography>
-							<Box width='50%'>
-								<StyledSwitch />
-							</Box>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Zajęcia indywidualne jednorazowe
-							</Typography>
-							<Box width='50%'>
-								<StyledSwitch />
-							</Box>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Zastępstwa prowadzących
-							</Typography>
-							<Box width='50%'>
-								<StyledSwitch />
-							</Box>
-						</Stack>
-						<Divider variant='middle' />
-						<Stack
-							direction='row'
-							p={2}
-							justifyContent='space-evenly'
-							alignItems='center'>
-							<Typography
-								variant='h6'
-								width='50%'
-								color={theme.palette.primary.main}>
-								Odrabianie nieobecności
-							</Typography>
-							<Box width='50%'>
-								<StyledSwitch />
-							</Box>
-						</Stack>
-					</StyledAccordionDetails>
-				</Accordion>
-			</CustomTabPanel>
-			<CustomTabPanel
-				value={value}
-				index={1}>
-				Item Two
-			</CustomTabPanel>
-			<CustomTabPanel
-				value={value}
-				index={2}>
-				Item Three
-			</CustomTabPanel>
-		</Box>
-	);
+  const handleSwitchChange = (switchName: string) => async (event: any) => {
+    const checked = event.target.checked;
+    const info = {
+      [switchName]: checked,
+      clubId: clubInfo.data.id,
+      userId: session?.user.id,
+    };
+    const message = await useUpdate.mutateAsync(info);
+    if (!message.error) {
+      queryClient.invalidateQueries({
+        queryKey: ["clubInfo"],
+        type: "all",
+      });
+    } else {
+      console.log(message.error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  if (clubInfo.isLoading || status === "loading") return <Loading />;
+  if (clubInfo.isError)
+    return <StandardError message={clubInfo.error.message} />;
+  if (clubInfo.data.error)
+    return <StandardError message={clubInfo.data.error} />;
+
+  return (
+    <Box sx={{ width: "calc(100% - 20px)", position: "absolute", top: 80 }}>
+      <Box
+        sx={{
+          width: "100%",
+          borderBottom: 1,
+          borderColor: "divider",
+        }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          variant="scrollable"
+          scrollButtons="auto">
+          <Tab label="Ogólne" {...a11yProps(0)} />
+          <Tab label="Uprawnienia prowadzących" {...a11yProps(1)} />
+          <Tab label="Subskrybcja" {...a11yProps(2)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <Accordion defaultExpanded sx={{ width: "100%" }} elevation={0}>
+          <StyledAccordionSummary>
+            <Typography color={"white"} variant="h6">
+              Ustawienia klubu
+            </Typography>
+          </StyledAccordionSummary>
+          <StyledAccordionDetails>
+            <Stack2>
+              <TypographyStack>Nazwa</TypographyStack>
+              <Typography width="50%">{clubInfo.data.name}</Typography>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographyStack>Email</TypographyStack>
+              <Typography
+                width="50%"
+                sx={{
+                  width: "50%",
+                  wordWrap: "break-word", // Wrap long words
+                  whiteSpace: "normal", // Allow text to wrap normally
+                  overflowWrap: "break-word", // Ensure long words break
+                  hyphens: "auto", // Hyphenate words where possible
+                }}>
+                {clubInfo.data.email}
+              </Typography>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographyStack>Numer Telefonu</TypographyStack>
+              {editField === "phoneNumber" ? (
+                <BoxInput width="50%">
+                  <TextField
+                    sx={{ minWidth: 100 }}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                  />
+
+                  <CheckIcon
+                    sx={{ m: 2, fontSize: 30 }}
+                    color="success"
+                    onClick={() => handleSaveClick()}
+                  />
+                  <CloseIcon
+                    sx={{ m: 2, fontSize: 30 }}
+                    color="warning"
+                    onClick={() => setEditField(null)}
+                  />
+                </BoxInput>
+              ) : (
+                <BoxInput width="50%">
+                  <Typography>
+                    {clubInfo.data.phoneNumber
+                      ? clubInfo.data.phoneNumber
+                      : "Nie zapisany"}
+                  </Typography>
+                  <EditIcon
+                    sx={{ ml: 1 }}
+                    onClick={() => handleEditClick("phoneNumber")}
+                  />
+                </BoxInput>
+              )}
+            </Stack2>
+          </StyledAccordionDetails>
+        </Accordion>
+        <Accordion defaultExpanded sx={{ width: "100%" }} elevation={0}>
+          <StyledAccordionSummary>
+            <Typography color={"white"} variant="h6">
+              Ustawienia płatności
+            </Typography>
+          </StyledAccordionSummary>
+          <StyledAccordionDetails>
+            {clubInfo.data.switchOneTime && (
+              <>
+                <Stack2>
+                  <TypographyStack>
+                    Domyślna cena zajęć jednorazowych
+                  </TypographyStack>
+                  <BoxInput width="25%">
+                    {editField === "paymentOneTime" ? (
+                      <>
+                        <TextField
+                          sx={{ minWidth: 50 }}
+                          type="number"
+                          name="paymentOneTime"
+                          value={formData.paymentOneTime}
+                          onChange={handleInputChange}
+                        />
+                        <CheckIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="success"
+                          onClick={handleSaveClick}
+                        />
+                        <CloseIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="warning"
+                          onClick={() => setEditField(null)}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Typography mr={1}>
+                          {clubInfo.data.paymentOneTime}
+                        </Typography>
+                        <EditIcon
+                          sx={{ ml: 1 }}
+                          onClick={() => handleEditClick("paymentOneTime")}
+                        />
+                      </>
+                    )}
+                  </BoxInput>
+                  <Typography width="25%">
+                    {clubInfo.data.optionOneTime}
+                  </Typography>
+                </Stack2>
+                <Divider variant="middle" />
+              </>
+            )}
+            {clubInfo.data.switchSolo && (
+              <>
+                <Stack2>
+                  <TypographyStack>
+                    Domyślna cena zajęć indywidualnych
+                  </TypographyStack>
+                  <BoxInput width="25%" display="flex" flexWrap="wrap">
+                    {editField === "paymentSolo" ? (
+                      <>
+                        <TextField
+                          sx={{ minWidth: 50 }}
+                          type="number"
+                          name="paymentSolo"
+                          value={formData.paymentSolo}
+                          onChange={handleInputChange}
+                        />
+                        <CheckIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="success"
+                          onClick={() => handleSaveClick}
+                        />
+                        <CloseIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="warning"
+                          onClick={() => setEditField(null)}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Typography mr={1}>
+                          {clubInfo.data.paymentSolo}
+                        </Typography>
+                        <EditIcon
+                          sx={{ ml: 1 }}
+                          onClick={() => handleEditClick("paymentSolo")}
+                        />
+                      </>
+                    )}
+                  </BoxInput>
+                  <BoxInput width="25%" display="flex" flexWrap="wrap">
+                    {editField === "optionSolo" ? (
+                      <>
+                        <FormControl fullWidth>
+                          <InputLabel id="optionSolo">Za X</InputLabel>
+                          <Select
+                            value={formData.optionSolo}
+                            onChange={handleSelectChange}
+                            label="za X"
+                            id="optionSolo"
+                            name="optionSolo">
+                            <MenuItem value="za miesiąc">za miesiąc</MenuItem>
+                            <MenuItem value="za zajęcia">za zajęcia</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <CheckIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="success"
+                          onClick={handleSaveClick}
+                        />
+                        <CloseIcon
+                          sx={{ m: 2, fontSize: 30 }}
+                          color="warning"
+                          onClick={() => setEditField(null)}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Typography>{clubInfo.data.optionSolo}</Typography>
+                        <EditIcon
+                          sx={{ ml: 1 }}
+                          onClick={() => handleEditClick("optionSolo")}
+                        />
+                      </>
+                    )}
+                  </BoxInput>
+                </Stack2>
+                <Divider variant="middle" />
+              </>
+            )}
+            <Stack2>
+              <TypographyStack>Domyślna cena zajęć grupowych</TypographyStack>
+              <BoxInput width="25%">
+                {editField === "paymentGroup" ? (
+                  <>
+                    <TextField
+                      sx={{ minWidth: 50 }}
+                      type="number"
+                      name="paymentGroup"
+                      value={formData.paymentGroup}
+                      onChange={handleInputChange}
+                    />
+                    <CheckIcon
+                      sx={{ m: 2, fontSize: 30 }}
+                      color="success"
+                      onClick={() => handleSaveClick}
+                    />
+                    <CloseIcon
+                      sx={{ m: 2, fontSize: 30 }}
+                      color="warning"
+                      onClick={() => setEditField(null)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Typography mr={1}>{clubInfo.data.paymentGroup}</Typography>
+                    <EditIcon
+                      sx={{ ml: 1 }}
+                      onClick={() => handleEditClick("paymentGroup")}
+                    />
+                  </>
+                )}
+              </BoxInput>
+              <BoxInput width="25%">
+                {editField === "optionGroup" ? (
+                  <>
+                    <FormControl fullWidth>
+                      <InputLabel id="optionGroup">Za X</InputLabel>
+                      <Select
+                        value={formData.optionGroup}
+                        onChange={handleSelectChange}
+                        label="za X"
+                        id="optionGroup"
+                        name="optionGroup">
+                        <MenuItem value="za miesiąc">za miesiąc</MenuItem>
+                        <MenuItem value="za zajęcia">za zajęcia</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <CheckIcon
+                      sx={{ m: 2, fontSize: 30 }}
+                      color="success"
+                      onClick={handleSaveClick}
+                    />
+                    <CloseIcon
+                      sx={{ m: 2, fontSize: 30 }}
+                      color="warning"
+                      onClick={() => setEditField(null)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Typography>{clubInfo.data.optionGroup}</Typography>
+                    <EditIcon
+                      sx={{ ml: 1 }}
+                      onClick={() => handleEditClick("optionGroup")}
+                    />
+                  </>
+                )}
+              </BoxInput>
+            </Stack2>
+          </StyledAccordionDetails>
+        </Accordion>
+
+        <Accordion defaultExpanded sx={{ width: "100%" }} elevation={0}>
+          <StyledAccordionSummary>
+            <Typography color={"white"} variant="h6">
+              Funkcjonalności
+            </Typography>
+          </StyledAccordionSummary>
+          <StyledAccordionDetails>
+            <Stack2>
+              <TypographySwitch>Zajęcia jednorazowe</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.switchOneTime}
+                  onChange={handleSwitchChange("switchOneTime")}
+                />
+              </BoxSwitch>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographySwitch>Zajęcia indywidualne</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.switchSolo}
+                  onChange={handleSwitchChange("switchSolo")}
+                />
+              </BoxSwitch>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographySwitch>Zastępstwa prowadzących</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.replacment}
+                  onChange={handleSwitchChange("replacment")}
+                />
+              </BoxSwitch>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographySwitch>Odrabianie nieobecności</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.workOut}
+                  onChange={handleSwitchChange("workOut")}
+                />
+              </BoxSwitch>
+            </Stack2>
+          </StyledAccordionDetails>
+        </Accordion>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <Accordion defaultExpanded sx={{ width: "100%" }} elevation={0}>
+          <StyledAccordionSummary>
+            <Typography color={"white"} variant="h6">
+              Uprawnienia prowadzących
+            </Typography>
+          </StyledAccordionSummary>
+          <StyledAccordionDetails>
+            <Stack2>
+              <TypographySwitch>Podgląd płatności</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.coachPayments}
+                  onChange={handleSwitchChange("coachPayments")}
+                />
+              </BoxSwitch>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographySwitch>Edycja uczestników</TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.coachEditPrt}
+                  onChange={handleSwitchChange("coachEditPrt")}
+                />
+              </BoxSwitch>
+            </Stack2>
+            <Divider variant="middle" />
+            <Stack2>
+              <TypographySwitch>
+                Wprowadzanie nowych uczestników
+              </TypographySwitch>
+              <BoxSwitch>
+                <StyledSwitch
+                  checked={clubInfo.data.coachNewPrt}
+                  onChange={handleSwitchChange("coachNewPrt")}
+                />
+              </BoxSwitch>
+            </Stack2>
+          </StyledAccordionDetails>
+        </Accordion>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <Typography mt={20} variant="h2" align="center">
+          W przyszłości ...
+        </Typography>
+      </CustomTabPanel>
+    </Box>
+  );
 };
 
 export default Settings;
+/*
+        <Accordion defaultExpanded sx={{ width: "100%" }} elevation={0}>
+          <StyledAccordionSummary>
+            <Typography color={"white"} >
+              STOPNIE ZAAWANSOWANIA
+            </Typography>
+          </StyledAccordionSummary>
+          <StyledAccordionDetails>
+            <Stack
+              direction="row"
+              p={2}
+              justifyContent="flex-start"
+              alignItems="center">
+              <Typography
+                variant="h6"
+                color={theme.palette.primary.main}
+                width="100%">
+                Początkujący
+              </Typography>
+            </Stack>
+            <Divider variant="middle" />
+            <Stack
+              direction="row"
+              p={2}
+              justifyContent="space-evenly"
+              alignItems="center">
+              <Typography
+                variant="h6"
+                width="100%"
+                color={theme.palette.primary.main}>
+                Średnio zaawansowany
+              </Typography>
+            </Stack>
+            <Divider variant="middle" />
+            <Stack
+              direction="row"
+              p={2}
+              justifyContent="space-evenly"
+              alignItems="center">
+              <Typography
+                variant="h6"
+                width="100%"
+                color={theme.palette.primary.main}>
+                Zaawansowany
+              </Typography>
+            </Stack>
+          </StyledAccordionDetails>
+        </Accordion>
+         */
