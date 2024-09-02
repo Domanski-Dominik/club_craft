@@ -1,4 +1,5 @@
-import { DialogDeleteLocType } from "@/types/type";
+import React from "react";
+import { DialogDeleteGroupType } from "@/types/type";
 import {
 	Button,
 	Dialog,
@@ -9,11 +10,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PolishDayName from "@/functions/PolishDayName";
 
-const DialogDeleteLoc: React.FC<DialogDeleteLocType> = ({
+const DialogDeleteGroup: React.FC<DialogDeleteGroupType> = ({
 	onClose,
 	open,
-	loc,
+	group,
 }) => {
 	const handleClose = () => {
 		onClose("no");
@@ -21,18 +23,24 @@ const DialogDeleteLoc: React.FC<DialogDeleteLocType> = ({
 	const handleOptionClick = (value: string) => {
 		onClose(value);
 	};
-	if (loc === null) {
+	if (group === null) {
 		return null;
 	}
 	return (
 		<Dialog
 			open={open}
 			onClose={handleClose}>
-			<DialogTitle>Czy chcesz usunąć lokalizacje?</DialogTitle>
+			<DialogTitle>Czy chcesz usunąć grupę?</DialogTitle>
 			<DialogContent dividers>
 				<Typography>
-					Usuń <span style={{ fontWeight: "bold" }}>{loc.name}</span>z bazy
-					danych
+					Usuń <span style={{ fontWeight: "bold" }}>{group.name}</span>
+					<br />
+					{group.terms.map((t, index) => (
+						<React.Fragment key={index}>
+							({t.timeS}-{t.timeE} {PolishDayName(t.dayOfWeek)})
+						</React.Fragment>
+					))}
+					<br />z bazy danych
 				</Typography>
 			</DialogContent>
 			<DialogActions>
@@ -53,4 +61,4 @@ const DialogDeleteLoc: React.FC<DialogDeleteLocType> = ({
 	);
 };
 
-export default DialogDeleteLoc;
+export default DialogDeleteGroup;

@@ -23,6 +23,8 @@ export const GET = async (req: Request, { params }: Props) => {
 						},
 					},
 				},
+				terms: { include: { location: { select: { name: true } } } },
+				breaks: true,
 			},
 		});
 

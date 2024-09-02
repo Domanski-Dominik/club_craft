@@ -47,6 +47,10 @@ export const POST = async (req: Request) => {
 							},
 						},
 					},
+					terms: {
+						include: { location: { select: { name: true } } },
+					},
+					breaks: true,
 				},
 			});
 			if (!addedGroup) {
@@ -55,16 +59,9 @@ export const POST = async (req: Request) => {
 					{ status: 400 }
 				);
 			}
-			const formatGroup = {
-				day: addedGroup.dayOfWeek,
-				id: addedGroup.id,
-				name: addedGroup.name,
-				location: addedGroup.locationschedule
-					.map((obj) => obj.locations.name)
-					.join(""),
-			};
+
 			//console.log(formatGroup);
-			return new Response(JSON.stringify(formatGroup), { status: 200 });
+			return new Response(JSON.stringify(addedGroup), { status: 200 });
 		}
 	} catch (error: any) {
 		return Response.json({ error: error.message }, { status: error.code });
@@ -146,6 +143,10 @@ export const PUT = async (req: Request) => {
 							},
 						},
 					},
+					terms: {
+						include: { location: { select: { name: true } } },
+					},
+					breaks: true,
 				},
 			});
 			if (!addedGroup) {
@@ -154,16 +155,9 @@ export const PUT = async (req: Request) => {
 					{ status: 400 }
 				);
 			}
-			const formatGroup = {
-				day: addedGroup.dayOfWeek,
-				id: addedGroup.id,
-				name: addedGroup.name,
-				location: addedGroup.locationschedule
-					.map((obj) => obj.locations.name)
-					.join(""),
-			};
+
 			//console.log(formatGroup);
-			return new Response(JSON.stringify(formatGroup), { status: 200 });
+			return new Response(JSON.stringify(addedGroup), { status: 200 });
 		}
 	} catch (error: any) {
 		return Response.json({ error: error.message }, { status: error.code });

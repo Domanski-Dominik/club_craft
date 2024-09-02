@@ -1,6 +1,6 @@
 "use client";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ import {
 	InputAdornment,
 	Snackbar,
 	Alert,
+	Collapse,
 } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import PolishDayName from "@/functions/PolishDayName";
@@ -31,6 +32,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import Loading from "@/context/Loading";
+import { StyledDataGrid } from "@/components/styled/StyledComponents";
 
 const sortAndAddNumbers = (rows: GridValidRowModel[]) => {
 	const sortedRows = [...rows];
@@ -123,6 +125,17 @@ const CoachesManage = () => {
 			headerName: "#",
 			width: 40,
 			sortable: false,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
 		},
 		{
 			field: "surname",
@@ -130,9 +143,34 @@ const CoachesManage = () => {
 			minWidth: 100,
 			sortable: true,
 			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
 		},
 
-		{ field: "name", headerName: "Imię", minWidth: 100, flex: 1 },
+		{
+			field: "name",
+			headerName: "Imię",
+			minWidth: 100,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
+		},
 		{
 			field: "coachedGroups",
 			headerName: "Przypisane grupy",
@@ -146,13 +184,15 @@ const CoachesManage = () => {
 						sx={{ my: 0.5 }}
 						variant='body2'
 						key={gr.id}>
-						<span style={{ color: "darkviolet" }}>{gr.location},</span>
-						{"  "}
-						<span style={{ fontWeight: "normal" }}>
-							{PolishDayName(gr.day)}:
-						</span>
-						{"  "}
-						<span style={{ fontWeight: "bolder" }}>{gr.name}</span>
+						<span style={{ fontWeight: "bold" }}>{gr.name}, </span>
+						{gr.terms.map((t: any) => (
+							<React.Fragment key={t.id}>
+								<br />
+								<span style={{ color: "darkviolet" }}>{t.location.name}</span>
+								{", "}
+								{PolishDayName(t.dayOfWeek)} {t.timeS}-{t.timeE}
+							</React.Fragment>
+						))}
 					</Typography>
 				));
 				return (
@@ -193,7 +233,22 @@ const CoachesManage = () => {
 				);
 			},
 		},
-		{ field: "email", headerName: "Email", minWidth: 200, flex: 1 },
+		{
+			field: "email",
+			headerName: "Email",
+			minWidth: 200,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
+		},
 		{
 			field: "role",
 			headerName: "Uprawnienia",
@@ -205,19 +260,14 @@ const CoachesManage = () => {
 							display: "flex",
 							justifyContent: "space-between",
 							alignItems: "center",
+							height: "100%",
 						}}>
-						<Box
-							sx={{
-								width: 100,
-								whiteSpace: "pre-wrap",
-							}}>
-							<Typography
-								sx={{ mt: 1 }}
-								variant='body1'
-								color={params.row.role === "owner" ? "green" : "black"}>
-								{params.row.role === "owner" ? "Administrator" : "Trener"}
-							</Typography>
-						</Box>
+						<Typography
+							variant='body1'
+							color={params.row.role === "owner" ? "green" : "black"}>
+							{params.row.role === "owner" ? "Administrator" : "Trener"}
+						</Typography>
+
 						<GridActionsCellItem
 							icon={<SecurityIcon />}
 							label='Dodaj płatność'
@@ -254,19 +304,42 @@ const CoachesManage = () => {
 	if (coaches.isLoading || locWithGr.isLoading || session === undefined)
 		return <Loading />;
 	return (
-		<Box
-			sx={{
-				width: "100%",
-				mt: 3,
-			}}>
-			<MobileNavigation pages={pages} />
-			<DataGrid
-				autoHeight
-				rows={coaches.isSuccess ? coaches.data : []}
-				columns={columns}
-				disableColumnMenu
-				getRowHeight={() => "auto"}
-			/>
+		<>
+			<Box
+				sx={{
+					width: "100%",
+					mt: 3,
+					backgroundColor: "white",
+					borderRadius: 4,
+					p: 2,
+				}}>
+				<MobileNavigation pages={pages} />
+				<StyledDataGrid
+					rows={coaches.isSuccess ? coaches.data : []}
+					columns={columns}
+					disableColumnMenu
+					getRowHeight={() => "auto"}
+				/>
+				<Collapse in={showlink}>
+					<TextField
+						fullWidth
+						label='Link dla trenera'
+						value={`clubcraft.pl/register/${session?.user.club}`}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position='end'>
+									<IconButton onClick={copyToClipboard}>
+										<FileCopyIcon />
+									</IconButton>
+									<IconButton onClick={() => setShowLink(false)}>
+										<CloseIcon color='warning' />
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
+					/>
+				</Collapse>
+			</Box>
 			{selectedRow && (
 				<DialogCoachGroups
 					open={groupsDialogOpen}
@@ -304,27 +377,6 @@ const CoachesManage = () => {
 					Dodaj trenera
 				</Fab>
 			</Box>
-			{showlink && (
-				<>
-					<TextField
-						fullWidth
-						label='Link dla trenera'
-						value={`clubcraft.pl/register/${session?.user.club}`}
-						InputProps={{
-							endAdornment: (
-								<InputAdornment position='end'>
-									<IconButton onClick={copyToClipboard}>
-										<FileCopyIcon />
-									</IconButton>
-									<IconButton onClick={() => setShowLink(false)}>
-										<CloseIcon color='warning' />
-									</IconButton>
-								</InputAdornment>
-							),
-						}}
-					/>
-				</>
-			)}
 
 			<Snackbar
 				open={openSnackbar}
@@ -338,7 +390,7 @@ const CoachesManage = () => {
 					Skopiowano!
 				</Alert>
 			</Snackbar>
-		</Box>
+		</>
 	);
 };
 

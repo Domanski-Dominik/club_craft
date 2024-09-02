@@ -4,8 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import GroupForm from "@/components/forms/GroupForm";
-
-const AddClass = () => {
+interface Props {
+	params: {
+		id: string;
+	};
+}
+const EditClass = ({ params }: Props) => {
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -26,16 +30,22 @@ const AddClass = () => {
 				`/api/loc/club/${session?.user.club}/${session?.user.role}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
-	if (locs.isSuccess && clubInfo.isSuccess)
+	const group = useQuery({
+		queryKey: ["group", `${params.id}`],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/groups/gr/${params.id}`).then((res) => res.json()),
+	});
+	if (locs.isSuccess && clubInfo.isSuccess && group.isSuccess)
 		return (
 			<GroupForm
 				clubInfo={clubInfo.data}
 				locs={locs.data.length > 0 ? locs.data : []}
 				user={session?.user}
-				groupInfo={{}}
-				edit={false}
+				groupInfo={group.data}
+				edit={true}
 			/>
 		);
 };
 
-export default AddClass;
+export default EditClass;

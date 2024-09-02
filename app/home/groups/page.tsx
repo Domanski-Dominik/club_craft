@@ -33,8 +33,9 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
 import { useDeleteLoc } from "@/hooks/scheduleHooks";
 import { useQueryClient } from "@tanstack/react-query";
+import { Location } from "@/types/type";
 
-type Location = {
+interface LocationL extends Location {
 	id: number;
 	name: string;
 	locationschedule: {
@@ -44,7 +45,7 @@ type Location = {
 		timeE: string;
 		timeS: string;
 	}[];
-};
+}
 
 const GroupList = () => {
 	const router = useRouter();
@@ -53,14 +54,14 @@ const GroupList = () => {
 	const [loading, setLoading] = useState(true);
 	const [isOwner, setIsOwner] = useState(false);
 	const [error, setError] = useState("");
-	const [data, setData] = useState<Location[]>([]);
+	const [data, setData] = useState<LocationL[]>([]);
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
 			redirect("/login");
 		},
 	});
-	const [deleteLoc, setDeleteLoc] = useState<Location | null>(null);
+	const [deleteLoc, setDeleteLoc] = useState<LocationL | null>(null);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
 	const [openDays, setOpenDays] = useState<number[]>([]);
@@ -103,7 +104,7 @@ const GroupList = () => {
 			return newOpen;
 		});
 	};
-	const collectGroupsByDay = (location: Location) => {
+	const collectGroupsByDay = (location: LocationL) => {
 		const groupsByDay: { [key: number]: { name: string; id: string }[] } = {};
 
 		location.locationschedule.forEach((group) => {
@@ -341,7 +342,7 @@ const GroupList = () => {
 				{deleteLoc && (
 					<DialogDeleteLoc
 						open={dialogOpen}
-						name={deleteLoc?.name}
+						loc={deleteLoc}
 						onClose={handleChoice}
 					/>
 				)}

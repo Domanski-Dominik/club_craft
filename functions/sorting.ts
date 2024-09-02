@@ -49,7 +49,11 @@ export const sortAndAddNumbersAll = (
 				row.participantgroup.length > 0
 					? row.participantgroup
 							.map(
-								(g: any) => ` ${g.location} ${g.name} ${PolishDayName(g.day)}`
+								(g: any) =>
+									`${g.name} ${g.terms.map(
+										(t: any) =>
+											`${t.location.name} ${PolishDayName(t.dayOfWeek)}`
+									)}`
 							)
 							.join(",")
 					: "Nie przypisany do żadnej grupy",

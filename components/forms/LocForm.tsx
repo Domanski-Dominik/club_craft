@@ -117,213 +117,214 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 
 	return (
 		<>
-			{success === false && (
-				<Fade
-					in={!success}
-					timeout={1000}>
-					<Container>
-						<Typography
-							variant='h2'
-							align='center'
-							color='secondary'
-							sx={{
-								marginBottom: "1rem",
-							}}>
-							{type === "edit" ? "Edytuj " : "Utwórz "}
-							Lokalizacje
-						</Typography>
-						<Typography
-							variant='subtitle1'
-							align='center'
-							color={error === "" ? "" : "error"}
-							sx={{ marginBottom: "2rem" }}>
-							{error === ""
-								? type === "edit"
-									? "Edytuj wybraną lokalizacje!"
-									: "Utwórz nową lokalizację do swojego klubu!"
-								: error}
-						</Typography>
-						<Box
-							component='form'
-							onSubmit={handleSubmit}
-							id='formId'>
-							<Grid
-								container
-								spacing={2}
-								direction={"row"}
-								sx={{ justifyContent: "center" }}>
+			<Box sx={{ background: "white", p: 2, borderRadius: 4 }}>
+				{success === false && (
+					<Fade
+						in={!success}
+						timeout={1000}>
+						<Container>
+							<Typography
+								variant='h2'
+								align='center'
+								color='primary'
+								sx={{
+									marginBottom: "1rem",
+								}}>
+								{type === "edit" ? "Edytuj " : "Utwórz "}
+								Lokalizacje
+							</Typography>
+							<Typography
+								variant='subtitle1'
+								align='center'
+								color={error === "" ? "" : "error"}
+								sx={{ marginBottom: "2rem" }}>
+								{error === ""
+									? type === "edit"
+										? "Edytuj wybraną lokalizacje!"
+										: "Utwórz nową lokalizację do swojego klubu!"
+									: error}
+							</Typography>
+							<Box
+								component='form'
+								onSubmit={handleSubmit}
+								id='formId'>
 								<Grid
-									xs={12}
-									sm={12}
-									md={4}>
-									<FormControl fullWidth>
-										<TextField
-											id={"outlined-basic"}
-											type='text'
-											value={newLoc.name}
-											onChange={(e) =>
-												setNewLoc({ ...newLoc, name: e.target.value })
-											}
-											label='Nazwa Lokalizacji'
+									container
+									spacing={2}
+									direction={"row"}
+									sx={{ justifyContent: "center" }}>
+									<Grid
+										xs={12}
+										sm={12}
+										md={4}>
+										<FormControl fullWidth>
+											<TextField
+												id={"outlined-basic"}
+												type='text'
+												value={newLoc.name}
+												onChange={(e) =>
+													setNewLoc({ ...newLoc, name: e.target.value })
+												}
+												label='Nazwa Lokalizacji'
+												variant='outlined'
+												required
+												focused
+												placeholder='Nazwa lokalizacji'
+											/>
+										</FormControl>
+									</Grid>
+									<Grid
+										xs={8}
+										sm={8}
+										md={4}>
+										<FormControl fullWidth>
+											<TextField
+												id={"outlined-basic"}
+												type='text'
+												value={newLoc.street}
+												onChange={(e) =>
+													setNewLoc({ ...newLoc, street: e.target.value })
+												}
+												label='Ulica'
+												variant='outlined'
+												placeholder='Ulica'
+											/>
+										</FormControl>
+									</Grid>
+									<Grid
+										xs={4}
+										sm={4}
+										md={4}>
+										<FormControl fullWidth>
+											<TextField
+												id={"outlined-basic"}
+												type='text'
+												value={newLoc.streetNr}
+												onChange={(e) =>
+													setNewLoc({ ...newLoc, streetNr: e.target.value })
+												}
+												label='Numer'
+												variant='outlined'
+												placeholder='Numer'
+											/>
+										</FormControl>
+									</Grid>
+									<Grid
+										xs={6}
+										sm={6}
+										md={6}>
+										<FormControl fullWidth>
+											<TextField
+												id={"outlined-basic"}
+												type='text'
+												value={newLoc.city}
+												onChange={(e) =>
+													setNewLoc({ ...newLoc, city: e.target.value })
+												}
+												label='Miasto'
+												variant='outlined'
+												placeholder='Miasto'
+											/>
+										</FormControl>
+									</Grid>
+									<Grid
+										xs={6}
+										sm={6}
+										md={6}>
+										<FormControl fullWidth>
+											<TextField
+												id={"outlined-basic"}
+												value={postalCode}
+												onChange={handlePostalCodeChange}
+												label='Kod pocztowy'
+												variant='outlined'
+											/>
+											{!validFormat && (
+												<FormHelperText error>W formacie XX-YYY</FormHelperText>
+											)}
+										</FormControl>
+									</Grid>
+								</Grid>
+								<Grid
+									container
+									sx={{ marginTop: "1rem", justifyContent: "center" }}
+									spacing={2}>
+									<Grid
+										xs={6}
+										sm={6}
+										md={4}
+										lg={3}
+										xl={2}>
+										<Button
+											fullWidth
 											variant='outlined'
-											required
-											focused
-											placeholder='Nazwa lokalizacji'
-										/>
-									</FormControl>
+											onClick={() => router.push("/home")}
+											size='large'
+											startIcon={<CloseIcon />}
+											type='button'>
+											Anuluj
+										</Button>
+									</Grid>
+									<Grid
+										xs={6}
+										sm={6}
+										md={4}
+										lg={3}
+										xl={2}>
+										<Button
+											fullWidth
+											variant='contained'
+											type='submit'
+											size='large'
+											form='formId'
+											endIcon={<SendIcon />}
+											disabled={
+												!validFormat || newLoc.name === "" || isSending
+											}>
+											{type === "edit" ? "Zapisz" : "Dodaj"}
+										</Button>
+									</Grid>
 								</Grid>
-								<Grid
-									xs={8}
-									sm={8}
-									md={4}>
-									<FormControl fullWidth>
-										<TextField
-											id={"outlined-basic"}
-											type='text'
-											value={newLoc.street}
-											onChange={(e) =>
-												setNewLoc({ ...newLoc, street: e.target.value })
-											}
-											label='Ulica'
-											variant='outlined'
-											placeholder='Ulica'
-										/>
-									</FormControl>
-								</Grid>
-								<Grid
-									xs={4}
-									sm={4}
-									md={4}>
-									<FormControl fullWidth>
-										<TextField
-											id={"outlined-basic"}
-											type='text'
-											value={newLoc.streetNr}
-											onChange={(e) =>
-												setNewLoc({ ...newLoc, streetNr: e.target.value })
-											}
-											label='Numer'
-											variant='outlined'
-											placeholder='Numer'
-										/>
-									</FormControl>
-								</Grid>
-								<Grid
-									xs={6}
-									sm={6}
-									md={6}>
-									<FormControl fullWidth>
-										<TextField
-											id={"outlined-basic"}
-											type='text'
-											value={newLoc.city}
-											onChange={(e) =>
-												setNewLoc({ ...newLoc, city: e.target.value })
-											}
-											label='Miasto'
-											variant='outlined'
-											placeholder='Miasto'
-										/>
-									</FormControl>
-								</Grid>
-								<Grid
-									xs={6}
-									sm={6}
-									md={6}>
-									<FormControl fullWidth>
-										<TextField
-											id={"outlined-basic"}
-											value={postalCode}
-											onChange={handlePostalCodeChange}
-											label='Kod pocztowy'
-											variant='outlined'
-										/>
-										{!validFormat && (
-											<FormHelperText error>W formacie XX-YYY</FormHelperText>
-										)}
-									</FormControl>
-								</Grid>
-							</Grid>
-							<Grid
-								container
-								sx={{ marginTop: "1rem", justifyContent: "center" }}
-								spacing={2}>
-								<Grid
-									xs={6}
-									sm={6}
-									md={4}
-									lg={3}
-									xl={2}>
-									<Button
-										fullWidth
-										variant='outlined'
-										onClick={() => router.push("/locations")}
-										size='large'
-										startIcon={<CloseIcon />}
-										type='button'>
-										Anuluj
-									</Button>
-								</Grid>
-								<Grid
-									xs={6}
-									sm={6}
-									md={4}
-									lg={3}
-									xl={2}>
-									<Button
-										fullWidth
-										variant='contained'
-										type='submit'
-										size='large'
-										form='formId'
-										endIcon={<SendIcon />}
-										disabled={!validFormat || newLoc.name === "" || isSending}>
-										{type === "edit" ? "Zapisz" : "Dodaj"}
-									</Button>
-								</Grid>
-							</Grid>
+							</Box>
+						</Container>
+					</Fade>
+				)}
+
+				{success && (
+					<Fade
+						in={success}
+						timeout={1000}>
+						<Box textAlign='center'>
+							<CelebrationIcon
+								color='primary'
+								sx={{ fontSize: "8rem" }}
+							/>
+
+							<Typography
+								variant='h3'
+								mt={4}
+								color='blueviolet'
+								textAlign='center'>
+								{type === "edit"
+									? "Udało ci się zaktualizować lokalizacje"
+									: "Udało ci się zapisać nową lokalizacje"}
+							</Typography>
+							<Button
+								fullWidth
+								variant='contained'
+								onClick={() => router.push(`/home`)}
+								sx={{ mt: 6, mb: 2 }}>
+								wróć
+							</Button>
 						</Box>
-					</Container>
-				</Fade>
-			)}
+					</Fade>
+				)}
+			</Box>
 			{isSending && (
 				<LinearProgress
 					color='primary'
 					sx={{ position: "absolute", bottom: 80, width: "100%" }}
 				/>
-			)}
-			{success && (
-				<Fade
-					in={success}
-					timeout={1000}>
-					<Box textAlign='center'>
-						<CelebrationIcon
-							color='primary'
-							sx={{ fontSize: "8rem" }}
-						/>
-
-						<Typography
-							variant='h3'
-							mt={4}
-							color='blueviolet'
-							textAlign='center'>
-							{type === "edit"
-								? "Udało ci się zaktualizować lokalizacje"
-								: "Udało ci się zapisać nową lokalizacje"}
-						</Typography>
-						<Button
-							fullWidth
-							variant='contained'
-							onClick={() =>
-								type === "edit"
-									? router.push("/locations")
-									: router.push(`/locations/new/${id}`)
-							}
-							sx={{ mt: 6, mb: 2 }}>
-							{type === "edit" ? "Wróć do lokalizacji" : "Utwórz nowe grupy"}
-						</Button>
-					</Box>
-				</Fade>
 			)}
 		</>
 	);

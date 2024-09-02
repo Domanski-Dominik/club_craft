@@ -1,10 +1,11 @@
 import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
-import { useState } from "react";
+import React, { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import {
+	Box,
 	Button,
 	Dialog,
 	DialogActions,
@@ -16,6 +17,7 @@ import {
 	SelectChangeEvent,
 	FormControl,
 	InputLabel,
+	Stack,
 } from "@mui/material";
 import type { LocWithGroups, Group } from "@/types/type";
 import {
@@ -39,9 +41,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const [selectedLocation, setSelectedLocation] = useState<
 		LocWithGroups | null | undefined
 	>(null);
-	const [days, setDays] = useState<string[]>([]);
 	const [groups, setGroups] = useState<Group[] | null>();
-	const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string>("");
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 	const [error, setError] = useState("");
 	const queryClient = useQueryClient();
@@ -65,37 +65,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 			loc.locationschedule.find((group) => group.id === Number(groupId))
 		);
 		if (loc) setSelectedLocation(loc);
-		const day = row.coachedGroups.find((obj: any) => obj.id === groupId);
-		const daysOfWeek = loc?.locationschedule.map(
-			(schedule) => schedule.dayOfWeek
-		);
-		if (daysOfWeek) {
-			const sortedDaysOfWeek = daysOfWeek.slice().sort((a, b) => {
-				if (a === 0) return 1;
-				if (b === 0) return -1;
-				return a - b;
-			});
-			const uniqueDaysOfWeek = sortedDaysOfWeek.filter(
-				(value, index, array) => {
-					return index === array.indexOf(value);
-				}
-			);
-			//console.log(uniqueDaysOfWeek);
-			setDays(uniqueDaysOfWeek.map((day) => PolishDayName(day)));
-		}
-		if (day) setSelectedDayOfWeek(PolishDayName(day.day));
-		const groupsInLoc = loc?.locationschedule.filter(
-			(group) => group.dayOfWeek === day.day
-		);
-		groupsInLoc?.sort((a, b) => {
-			const timeA = a.timeS.split(":").map(Number);
-			const timeB = b.timeS.split(":").map(Number);
-			if (timeA[0] !== timeB[0]) {
-				return Number(timeA[0]) - Number(timeB[0]);
-			} else {
-				return Number(timeA[1]) - Number(timeB[1]);
-			}
-		});
+		const groupsInLoc = loc?.locationschedule;
 		setGroups(groupsInLoc);
 		setSelectedGroupId(groupId);
 	};
@@ -110,9 +80,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 		setEditedGroupId(null);
 		setSelectedLocation(null);
 		setSelectedGroupId("");
-		setSelectedDayOfWeek("");
 		setGroups([]);
-		setDays([]);
 	};
 
 	const handleLocationChange = (event: SelectChangeEvent) => {
@@ -123,48 +91,9 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 		);
 		//console.log(selectedLocationData);
 		setSelectedLocation(selectedLocationData);
-		const daysOfWeek = selectedLocationData?.locationschedule.map(
-			(schedule) => schedule.dayOfWeek
+		const groupsInLoc = selectedLocationData?.locationschedule.filter((group) =>
+			group.terms.filter((t) => t.locationId === id)
 		);
-		if (daysOfWeek) {
-			const sortedDaysOfWeek = daysOfWeek.slice().sort((a, b) => {
-				if (a === 0) return 1;
-				if (b === 0) return -1;
-				return a - b;
-			});
-			const uniqueDaysOfWeek = sortedDaysOfWeek.filter(
-				(value, index, array) => {
-					return index === array.indexOf(value);
-				}
-			);
-			//console.log(uniqueDaysOfWeek);
-			setDays(uniqueDaysOfWeek.map((day) => PolishDayName(day)));
-		}
-		setGroups([]);
-		setSelectedDayOfWeek("");
-		setSelectedGroupId("");
-	};
-
-	const handleDayOfWeekChange = (
-		event: React.ChangeEvent<{ value: string }>
-	) => {
-		//console.log(event.target.value);
-		setSelectedDayOfWeek(event.target.value);
-		const dayId = ReversePolishName(event.target.value);
-		//console.log(dayId);
-		const groupsInLoc = selectedLocation?.locationschedule.filter(
-			(group) => group.dayOfWeek === dayId
-		);
-		groupsInLoc?.sort((a, b) => {
-			const timeA = a.timeS.split(":").map(Number);
-			const timeB = b.timeS.split(":").map(Number);
-			if (timeA[0] !== timeB[0]) {
-				return Number(timeA[0]) - Number(timeB[0]);
-			} else {
-				return Number(timeA[1]) - Number(timeB[1]);
-			}
-		});
-		//console.log(groupsInLoc);
 		setGroups(groupsInLoc);
 		setSelectedGroupId("");
 	};
@@ -279,79 +208,83 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 							justifyContent: "space-between",
 							alignItems: "center",
 						}}>
-						<Grid
-							container
+						<Stack
+							direction={"column"}
+							width={"100%"}
+							pr={2}
 							spacing={2}>
-							<Grid xs={10}>
-								<FormControl
-									fullWidth
-									size='small'>
-									<InputLabel id='loc'>Lokalizacja</InputLabel>
-									<Select
-										labelId='loc'
-										id='loc'
-										label='Lokalizacja'
-										defaultValue=''
-										value={selectedLocation?.id || ""}
-										onChange={handleLocationChange as any}>
-										{locWithGroups.length > 0 &&
-											locWithGroups.map((loc) => (
-												<MenuItem
-													key={loc.id}
-													value={`${loc.id}`}>
-													{loc.name}
-												</MenuItem>
-											))}
-									</Select>
-								</FormControl>
-							</Grid>
-							<Grid xs={10}>
-								<FormControl
-									fullWidth
-									size='small'>
-									<InputLabel id='day'>Dzień tygodnia</InputLabel>
-									<Select
-										labelId='day'
-										id='day'
-										label='Dzień tygodnia'
-										defaultValue=''
-										value={selectedDayOfWeek || ""}
-										onChange={handleDayOfWeekChange as any}>
-										{days.map((day) => (
+							<FormControl
+								fullWidth
+								size='small'>
+								<InputLabel id='loc'>Lokalizacja</InputLabel>
+								<Select
+									labelId='loc'
+									id='loc'
+									label='Lokalizacja'
+									defaultValue=''
+									value={selectedLocation?.id || ""}
+									onChange={handleLocationChange as any}>
+									{locWithGroups.length > 0 &&
+										locWithGroups.map((loc) => (
 											<MenuItem
-												key={day}
-												value={day}>
-												{day}
+												key={loc.id}
+												divider
+												value={`${loc.id}`}>
+												{loc.name}
 											</MenuItem>
 										))}
-									</Select>
-								</FormControl>
-							</Grid>
-							<Grid xs={10}>
-								<FormControl
-									fullWidth
-									size='small'>
-									<InputLabel id='group'>Grupa</InputLabel>
-									<Select
-										labelId='group'
-										id='group'
-										label='Grupa'
-										defaultValue=''
-										value={selectedGroupId || ""}
-										onChange={handleGroupChange as any}>
-										{groups &&
-											groups !== null &&
-											groups.map((group) => (
-												<MenuItem
-													key={group.timeS}
-													value={group.id}>
-													{group.name}
-												</MenuItem>
-											))}
-									</Select>
-								</FormControl>
-							</Grid>
-						</Grid>
+								</Select>
+							</FormControl>
+
+							<FormControl
+								fullWidth
+								size='small'>
+								<InputLabel id='group'>Grupa</InputLabel>
+								<Select
+									labelId='group'
+									id='group'
+									label='Grupa'
+									defaultValue=''
+									MenuProps={{
+										slotProps: {
+											paper: {
+												style: {
+													maxHeight: 350,
+												},
+											},
+										},
+									}}
+									value={selectedGroupId || ""}
+									onChange={handleGroupChange as any}>
+									{groups &&
+										groups !== null &&
+										groups.map((group, index) => (
+											<MenuItem
+												key={index}
+												divider
+												value={group.id}>
+												<Box>
+													<Typography
+														variant='body1'
+														component='div'
+														sx={{ fontWeight: "bold" }}>
+														{group.name}
+													</Typography>
+													{group.terms.map((t, index) => (
+														<Typography
+															key={index}
+															variant='body2'
+															component='div'
+															sx={{ paddingLeft: "8px" }}>
+															{PolishDayName(t.dayOfWeek)} {t.timeS}-{t.timeE}
+														</Typography>
+													))}
+												</Box>
+											</MenuItem>
+										))}
+								</Select>
+							</FormControl>
+						</Stack>
 						<div
 							style={{
 								display: "flex",
@@ -387,87 +320,96 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 								alignItems: "center",
 							}}>
 							{editedGroupId === group.id ? (
-								<Grid
-									container
-									spacing={2}
-									sx={{ my: 1 }}>
-									<Grid xs={10}>
-										<FormControl
-											fullWidth
-											size='small'>
-											<InputLabel id='loc'>Lokalizacja</InputLabel>
-											<Select
-												labelId='loc'
-												id='loc'
-												label='Lokalizacja'
-												defaultValue=''
-												value={selectedLocation?.id || ""}
-												onChange={handleLocationChange as any}>
-												{locWithGroups.length > 0 &&
-													locWithGroups.map((loc) => (
-														<MenuItem
-															key={loc.id}
-															value={`${loc.id}`}>
-															{loc.name}
-														</MenuItem>
-													))}
-											</Select>
-										</FormControl>
-									</Grid>
-									<Grid xs={10}>
-										<FormControl
-											fullWidth
-											size='small'>
-											<InputLabel id='day'>Dzień tygodnia</InputLabel>
-											<Select
-												labelId='day'
-												id='day'
-												label='Dzień tygodnia'
-												defaultValue=''
-												value={selectedDayOfWeek || ""}
-												onChange={handleDayOfWeekChange as any}>
-												{days.map((day) => (
+								<Stack
+									direction={"column"}
+									width={"100%"}
+									pr={2}
+									spacing={2}>
+									<FormControl
+										fullWidth
+										size='small'>
+										<InputLabel id='loc'>Lokalizacja</InputLabel>
+										<Select
+											labelId='loc'
+											id='loc'
+											label='Lokalizacja'
+											defaultValue=''
+											value={selectedLocation?.id || ""}
+											onChange={handleLocationChange as any}>
+											{locWithGroups.length > 0 &&
+												locWithGroups.map((loc) => (
 													<MenuItem
-														key={day}
-														value={day}>
-														{day}
+														divider
+														key={loc.id}
+														value={`${loc.id}`}>
+														{loc.name}
 													</MenuItem>
 												))}
-											</Select>
-										</FormControl>
-									</Grid>
-									<Grid xs={10}>
-										<FormControl
-											fullWidth
-											size='small'>
-											<InputLabel id='group'>Grupa</InputLabel>
-											<Select
-												labelId='group'
-												id='group'
-												label='Grupa'
-												defaultValue=''
-												value={selectedGroupId || ""}
-												onChange={handleGroupChange as any}>
-												{groups &&
-													groups !== null &&
-													groups.map((group) => (
-														<MenuItem
-															key={group.timeS}
-															value={group.id}>
-															{group.name}
-														</MenuItem>
-													))}
-											</Select>
-										</FormControl>
-									</Grid>
-								</Grid>
+										</Select>
+									</FormControl>
+									<FormControl
+										fullWidth
+										size='small'>
+										<InputLabel id='group'>Grupa</InputLabel>
+										<Select
+											labelId='group'
+											id='group'
+											label='Grupa'
+											MenuProps={{
+												slotProps: {
+													paper: {
+														style: {
+															maxHeight: 350,
+														},
+													},
+												},
+											}}
+											defaultValue=''
+											value={selectedGroupId || ""}
+											onChange={handleGroupChange as any}>
+											{groups &&
+												groups !== null &&
+												groups.map((group, index) => (
+													<MenuItem
+														key={index}
+														divider
+														value={group.id}>
+														<Box>
+															<Typography
+																variant='body1'
+																component='div'
+																sx={{ fontWeight: "bold" }}>
+																{group.name}
+															</Typography>
+															{group.terms.map((t, index) => (
+																<Typography
+																	key={index}
+																	variant='body2'
+																	component='div'
+																	sx={{ paddingLeft: "8px" }}>
+																	{PolishDayName(t.dayOfWeek)} {t.timeS}-
+																	{t.timeE}
+																</Typography>
+															))}
+														</Box>
+													</MenuItem>
+												))}
+										</Select>
+									</FormControl>
+								</Stack>
 							) : (
 								<Typography sx={{ my: 1.5 }}>
-									<span style={{ color: "darkviolet" }}>
-										{group.location},{" "}
-									</span>
-									{PolishDayName(group.day)}:{" "}
-									<span style={{ fontWeight: "bold" }}>{group.name}</span>
+									<span style={{ fontWeight: "bold" }}>{group.name}, </span>
+									{group.terms.map((t: any) => (
+										<React.Fragment key={t.id}>
+											<br />
+											<span style={{ color: "darkviolet" }}>
+												{t.location.name}
+											</span>
+											<br />
+											{PolishDayName(t.dayOfWeek)} {t.timeS}-{t.timeE}
+										</React.Fragment>
+									))}
 								</Typography>
 							)}
 

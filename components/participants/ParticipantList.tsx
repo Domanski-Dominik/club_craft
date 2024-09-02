@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-	DataGrid,
 	GridColDef,
 	GridActionsCellItem,
 	GridColumnVisibilityModel,
@@ -22,7 +21,14 @@ import {
 	Checkbox,
 	Typography,
 } from "@mui/material";
-import type { Attendance, Participant, Payment, FormPay } from "@/types/type";
+import type {
+	Attendance,
+	Participant,
+	Payment,
+	FormPay,
+	Term,
+	GroupL,
+} from "@/types/type";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -39,7 +45,6 @@ import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import DialogPresent from "../dialogs/DialogPresent";
-import { darken, lighten, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { getShouldDisableDate } from "@/functions/dates";
@@ -50,11 +55,13 @@ import {
 	useUpdatePrt,
 } from "@/hooks/participantHooks";
 import { useRouter } from "next/navigation";
+import { StyledDataGrid } from "../styled/StyledComponents";
+import { parse } from "date-fns";
 
 type Props = {
 	participants: Participant[];
 	groupId: number;
-	day: number;
+	group: GroupL;
 };
 
 const formatDate = (date: Date) => {
@@ -63,94 +70,7 @@ const formatDate = (date: Date) => {
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
-const getBackgroundColor = (color: string, mode: string) =>
-	mode === "dark" ? darken(color, 0.7) : lighten(color, 0.7);
-
-const getHoverBackgroundColor = (color: string, mode: string) =>
-	mode === "dark" ? darken(color, 0.7) : lighten(color, 0.6);
-
-const getSelectedBackgroundColor = (color: string, mode: string) =>
-	mode === "dark" ? darken(color, 0.5) : lighten(color, 0.5);
-
-const getSelectedHoverBackgroundColor = (color: string, mode: string) =>
-	mode === "dark" ? darken(color, 0.4) : lighten(color, 0.4);
-
-const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-	"& .row-info": {
-		backgroundColor: getBackgroundColor(
-			theme.palette.info.main,
-			theme.palette.mode
-		),
-		"&:hover": {
-			backgroundColor: getHoverBackgroundColor(
-				theme.palette.info.main,
-				theme.palette.mode
-			),
-		},
-		"&.Mui-selected": {
-			backgroundColor: getSelectedBackgroundColor(
-				theme.palette.info.main,
-				theme.palette.mode
-			),
-			"&:hover": {
-				backgroundColor: getSelectedHoverBackgroundColor(
-					theme.palette.info.main,
-					theme.palette.mode
-				),
-			},
-		},
-	},
-	"& .row-external": {
-		backgroundColor: getBackgroundColor(
-			theme.palette.warning.main,
-			theme.palette.mode
-		),
-		"&:hover": {
-			backgroundColor: getHoverBackgroundColor(
-				theme.palette.warning.main,
-				theme.palette.mode
-			),
-		},
-		"&.Mui-selected": {
-			backgroundColor: getSelectedBackgroundColor(
-				theme.palette.warning.main,
-				theme.palette.mode
-			),
-			"&:hover": {
-				backgroundColor: getSelectedHoverBackgroundColor(
-					theme.palette.warning.main,
-					theme.palette.mode
-				),
-			},
-		},
-	},
-	"& .row-error": {
-		backgroundColor: getBackgroundColor(
-			theme.palette.error.main,
-			theme.palette.mode
-		),
-		"&:hover": {
-			backgroundColor: getHoverBackgroundColor(
-				theme.palette.error.main,
-				theme.palette.mode
-			),
-		},
-		"&.Mui-selected": {
-			backgroundColor: getSelectedBackgroundColor(
-				theme.palette.error.main,
-				theme.palette.mode
-			),
-			"&:hover": {
-				backgroundColor: getSelectedHoverBackgroundColor(
-					theme.palette.error.main,
-					theme.palette.mode
-				),
-			},
-		},
-	},
-}));
-
-const ParticipantList = ({ participants, groupId, day }: Props) => {
+const ParticipantList = ({ participants, groupId, group }: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
@@ -182,36 +102,75 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 	const updatePrt = useUpdatePrt();
 	const deletePrt = useDeletePrt();
 	const handleCloseSnackbar = () => setSnackbar(null);
-	const shouldDiableDay = getShouldDisableDate(day);
-
+	const shouldDisableDay = (date: Date) => {
+		return getShouldDisableDate(date, group.terms);
+	};
 	useEffect(() => {
-		const setNearestPreviousDayOfWeek = (targetDayOfWeek: number) => {
+		if (!group || !group.terms || !group.firstLesson) {
+			return;
+		}
+
+		const firstLessonDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
+
+		const setNearestPreviousDayOfWeek = (terms: Term[]) => {
 			const today = new Date();
-			const currentDayOfWeek = today.getDay();
+			let nearestDate: Date | null = null;
 
-			// Oblicz różnicę między obecnym dniem tygodnia a docelowym dniem tygodnia
-			let diffDays = currentDayOfWeek - targetDayOfWeek;
+			// Przeszukiwanie w przeszłości
+			terms.forEach((term) => {
+				const targetDayOfWeek = term.dayOfWeek;
+				const effectiveDate = new Date(term.effectiveDate);
+				const currentDayOfWeek = today.getDay();
 
-			// Jeśli różnica jest zero, to ustaw dzisiejszy dzień
-			if (diffDays === 0) {
-				setDate(today);
-				return;
+				let diffDays = currentDayOfWeek - targetDayOfWeek;
+
+				if (diffDays < 0) {
+					diffDays += 7; // Uwzględnij najbliższy poprzedni dzień
+				}
+
+				const nearestPreviousDay = new Date(today);
+				nearestPreviousDay.setDate(today.getDate() - diffDays);
+
+				// Sprawdzenie, czy nearestPreviousDay jest późniejszy niż effectiveDate i firstLesson
+				if (
+					nearestPreviousDay >= effectiveDate &&
+					nearestPreviousDay >= firstLessonDate &&
+					(nearestDate === null || nearestPreviousDay > nearestDate)
+				) {
+					nearestDate = nearestPreviousDay;
+				}
+			});
+
+			// Jeśli nearestDate jest null, spróbuj wybrać najbliższą przyszłą datę, która spełnia warunki
+			if (!nearestDate) {
+				terms.forEach((term) => {
+					const targetDayOfWeek = term.dayOfWeek;
+					const effectiveDate = new Date(term.effectiveDate);
+
+					let i = 0;
+					while (!nearestDate) {
+						// Kontynuujemy, dopóki nie znajdziemy odpowiedniej daty
+						const possibleDate = new Date(today);
+						possibleDate.setDate(today.getDate() + i);
+						if (
+							possibleDate.getDay() === targetDayOfWeek &&
+							possibleDate >= effectiveDate &&
+							possibleDate >= firstLessonDate
+						) {
+							nearestDate = possibleDate;
+						}
+
+						i++;
+					}
+				});
 			}
-
-			// Jeśli różnica jest mniejsza niż zero, dodaj 7 dni, aby uzyskać najbliższy wcześniejszy dzień
-			if (diffDays < 0) {
-				diffDays += 7;
+			if (nearestDate) {
+				setDate(nearestDate);
 			}
-
-			// Oblicz datę najbliższego wcześniejszego dnia
-			const nearestPreviousDay = new Date(today);
-			nearestPreviousDay.setDate(today.getDate() - diffDays);
-
-			// Ustaw nową datę
-			setDate(nearestPreviousDay);
 		};
-		setNearestPreviousDayOfWeek(day);
-	}, []);
+
+		setNearestPreviousDayOfWeek(group.terms);
+	}, [group]);
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
@@ -438,41 +397,28 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 		return (
 			<Grid
 				container
-				height={60}
 				width={"100%"}
 				paddingTop={2}
 				justifyContent='center'
 				alignItems={"center"}
 				mx={0}
-				mb={1}
-				spacing={1}>
+				pb={2}
+				spacing={1}
+				borderBottom={1}
+				borderColor={"rgba(224, 224, 224, 1)"}>
 				{!edit && (
 					<>
-						<Grid xs={4}>
-							<Button
-								fullWidth
-								variant='outlined'
-								size='medium'
-								sx={{ height: "37px" }}
-								onClick={() => {
-									setEdit(true);
-									setColumnVisibilityModel({
-										phoneNumber: true,
-										actions: true,
-										payment: true,
-										note: true,
-										regulamin: true,
-										info: true,
-									});
-								}}>
-								<EditIcon />
-								Edytuj
-							</Button>
+						<Grid xs={12}>
+							<Typography
+								align='center'
+								variant='h6'>
+								{group.name} - {group.locationName}
+							</Typography>
 						</Grid>
 						<Grid xs={4}>
 							<Button
 								fullWidth
-								variant='outlined'
+								variant='contained'
 								size='medium'
 								sx={{ height: "37px" }}
 								onClick={() => {
@@ -499,15 +445,37 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 								<MobileDatePicker
 									label='Wybierz dzień'
 									value={date}
-									//disableFuture
+									minDate={parse(group.firstLesson, "dd-MM-yyyy", new Date())}
+									maxDate={parse(group.lastLesson, "dd-MM-yyyy", new Date())}
 									onChange={(value) => {
 										if (value) setDate(value);
 									}}
 									sx={{ width: "100%" }}
 									slotProps={{ textField: { size: "small" } }}
-									shouldDisableDate={shouldDiableDay}
+									shouldDisableDate={shouldDisableDay}
 								/>
 							</LocalizationProvider>
+						</Grid>
+						<Grid xs={4}>
+							<Button
+								fullWidth
+								variant='contained'
+								size='medium'
+								sx={{ height: "37px" }}
+								onClick={() => {
+									setEdit(true);
+									setColumnVisibilityModel({
+										phoneNumber: true,
+										actions: true,
+										payment: true,
+										note: true,
+										regulamin: true,
+										info: true,
+									});
+								}}>
+								<EditIcon />
+								Edytuj
+							</Button>
 						</Grid>
 					</>
 				)}
@@ -526,6 +494,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 										note: false,
 										regulamin: false,
 										active: false,
+										info: false,
 									});
 								setMore(false);
 								gridRef.current.scroll({ left: 0 });
@@ -559,7 +528,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 		return (
 			<Grid
 				container
-				height={20}
+				height={25}
 				width={"100%"}
 				my={1}
 				mx={0}
@@ -683,6 +652,8 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 							display: "flex",
 							justifyContent: "space-between",
 							alignItems: "center",
+							alignContent: "center",
+							height: "100%",
 						}}>
 						<Box width={25}>
 							{Payed ? (
@@ -738,9 +709,18 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 			hideable: true,
 			renderCell: (params) => {
 				return (
-					<InfoOutlinedIcon
-						onClick={() => router.push(`/participant/${params.row.id}`)}
-					/>
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							alignContent: "center",
+							height: "100%",
+						}}>
+						<InfoOutlinedIcon
+							onClick={() => router.push(`/participant/${params.row.id}`)}
+						/>
+					</div>
 				);
 			},
 		},
@@ -838,6 +818,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 
 				return (
 					<Checkbox
+						id={params.row.id}
 						sx={{ width: "100%" }}
 						checked={!!isPresent}
 						onChange={(event) => handlePresenceChange(event)}
@@ -850,7 +831,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 		{
 			field: "note",
 			headerName: "Notatka",
-			minWidth: 150,
+			minWidth: 200,
 			editable: edit,
 			hideable: true,
 			flex: 1,
@@ -871,11 +852,10 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 			<StyledDataGrid
 				apiRef={gridRef}
 				columns={columns}
-				density='compact'
+				density='standard'
 				rows={rows}
 				//localeText={plPL.components.MuiDataGrid.defaultProps.localeText}
 				disableColumnMenu
-				getRowHeight={() => "auto"}
 				editMode='row'
 				slots={{ toolbar: CustomToolbar, footer: CustomFooter }}
 				columnVisibilityModel={columnVisibilityModel}
@@ -895,7 +875,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 				rowModesModel={rowModesModel}
 				onRowModesModelChange={handleRowModesModelChange}
 				onRowEditStop={handleRowEditStop}
-				getRowClassName={(params) => `row-${params.row.status}`}
+				//getRowClassName={(params) => `row-${params.row.status}`}
 			/>
 			{!!snackbar && (
 				<Snackbar
@@ -928,7 +908,7 @@ const ParticipantList = ({ participants, groupId, day }: Props) => {
 				open={presentDiaolgOpen}
 				onClose={handlePresentDialogChoice}
 				groupId={groupId}
-				day={day}
+				group={group}
 			/>
 		</>
 	);

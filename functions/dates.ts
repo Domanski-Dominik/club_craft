@@ -1,4 +1,5 @@
 import { startOfWeek } from "date-fns";
+import { Term } from "@/types/type";
 export function reverseDateFormat(dateString: string): string {
 	const parts = dateString.split("-");
 	if (parts.length === 3) {
@@ -10,17 +11,20 @@ export function reverseDateFormat(dateString: string): string {
 		return dateString; // Lub można zwrócić pusty string lub null, w zależności od wymagań
 	}
 }
-export const getShouldDisableDate = (dayOfWeek: number) => {
-	return (day: Date) => {
-		// Obliczenie daty startowej dla danej daty
-		const startOfWeekDate = startOfWeek(day);
+export const getShouldDisableDate = (date: Date, terms: Term[]) => {
+	if (!terms || terms.length === 0) {
+		return true; // Jeśli terms jest undefined lub puste, dzień powinien być wyłączony
+	}
+	const startOfWeekDate = startOfWeek(date);
 
-		// Sprawdzenie, czy data odpowiada wybranemu dniu tygodnia
-		const isDayOfWeek = day.getDay() === dayOfWeek;
+	return terms.every((term) => {
+		const termDayOfWeek = term.dayOfWeek;
+		const effectiveDate = term.effectiveDate;
 
-		// Sprawdzenie, czy data jest wcześniejsza niż start tygodnia
-		const isBeforeStartOfWeek = day < startOfWeekDate;
+		const isDayOfWeek = date.getDay() === termDayOfWeek;
+		const isBeforeEffectiveDate = date < effectiveDate;
+		const isBeforeStartOfWeek = date < startOfWeekDate;
 
-		return !isDayOfWeek || isBeforeStartOfWeek;
-	};
+		return !isDayOfWeek || isBeforeEffectiveDate || isBeforeStartOfWeek;
+	});
 };

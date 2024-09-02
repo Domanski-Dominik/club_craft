@@ -41,9 +41,9 @@ model clubconnect {
 model group {
   id               Int          @id @default(autoincrement())
   name             String
-  dayOfWeek        Int?
-  timeS            String?
-  timeE            String?
+  dayOfWeek        Int?         @default(0)
+  timeS            String?      @default("00:00")
+  timeE            String?      @default("00:00")
   club             String       @default("guest")
   color            String       @default("#3788d8")
   price            Int          @default(0)

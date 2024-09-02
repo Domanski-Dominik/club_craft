@@ -107,17 +107,7 @@ export const DELETE = async (req: Request) => {
 				{ status: 404 }
 			);
 		}
-		const groupIds = findLoc.locationschedule.map((gr) => gr.groupId);
 
-		const deleteParticipants = await prisma.participantgroup.deleteMany({
-			where: { groupId: { in: groupIds } },
-		});
-		if (!deleteParticipants) {
-			return NextResponse.json(
-				{ error: "Nie udało się usunąć relacji z uczestnikami" },
-				{ status: 500 }
-			);
-		}
 		const deleteSchedule = await prisma.locationschedule.deleteMany({
 			where: { locationId: id },
 		});
@@ -127,24 +117,14 @@ export const DELETE = async (req: Request) => {
 				{ status: 500 }
 			);
 		}
-		const deleteCoaches = await prisma.groupcoach.deleteMany({
-			where: { groupId: { in: groupIds } },
+		const deleteTerms = await prisma.term.deleteMany({
+			where: { locationId: id },
 		});
-		if (!deleteCoaches) {
+		if (!deleteTerms)
 			return NextResponse.json(
-				{ error: "Nie udało się usunąć relacji z trenerami" },
+				{ error: "Nie udało się usunąć terminów" },
 				{ status: 500 }
 			);
-		}
-		const deleteGroups = await prisma.group.deleteMany({
-			where: { id: { in: groupIds } },
-		});
-		if (!deleteGroups) {
-			return NextResponse.json(
-				{ error: "Nie udało się usunąć grup" },
-				{ status: 500 }
-			);
-		}
 		const deleteLoc = await prisma.locations.delete({
 			where: { id: id },
 		});

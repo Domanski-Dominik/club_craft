@@ -128,9 +128,8 @@ body {
 	overflow-x: auto;
 }
 
-.fc-view > table {
-	min-width: 800px;
-	width: 2000px;
+.fc-timeGridWeek-view > table {
+	min-width: 2000px;
 }
 
 .fc-time-grid .fc-slats {
@@ -146,4 +145,14 @@ body {
 	position: sticky;
 	left: 0;
 	background: white;
+}
+
+:root {
+	--fc-button-bg-color: #9c27b0;
+	--fc-button-border-color: #9c27b0;
+	--fc-button-text-color: white;
+	--fc-button-active-bg-color: #6d1b7b;
+	--fc-button-active-border-color: #6d1b7b;
+	--fc-button-hover-bg-color: #6d1b7b;
+	--fc-button-hover-border-color: #6d1b7b;
 }

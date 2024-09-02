@@ -47,7 +47,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 	onClose,
 	open,
 	groupId,
-	day,
+	group,
 }) => {
 	const [selected, setSelected] = useState<Option | null>(null);
 	const [editMode, setEditMode] = useState<number | null>(null);
@@ -56,7 +56,9 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 	const [changeDate, setChangeDate] = useState<Date>(new Date());
 	const [addDate, setAddDate] = useState<Date>(new Date());
 	const [editDate, setEditDate] = useState<Date>(new Date());
-	const shouldDisableDay = getShouldDisableDate(day);
+	const shouldDisableDay = (date: Date) => {
+		return getShouldDisableDate(date, group.terms);
+	};
 	const { data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -72,7 +74,8 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 	});
 	const workOutPrt = useQuery({
 		queryKey: ["workout", groupId],
-		queryFn: () => fetch(`/api/presence/${groupId}`).then((res) => res.json()),
+		queryFn: () =>
+			fetch(`/api/participant/presence/${groupId}`).then((res) => res.json()),
 		select: (data) => {
 			if (Array.isArray(data) && data.length !== 0) {
 				const filtered: Participant[] = data.flatMap((participant) =>
@@ -238,7 +241,8 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 							<MobileDatePicker
 								label='Wybierz dzień'
 								value={addDate}
-								//disableFuture
+								minDate={parse(group.firstLesson, "dd-MM-yyyy", new Date())}
+								maxDate={parse(group.lastLesson, "dd-MM-yyyy", new Date())}
 								onChange={(value) => {
 									if (value) setAddDate(value);
 								}}

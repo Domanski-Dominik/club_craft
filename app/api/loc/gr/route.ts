@@ -98,6 +98,24 @@ export const DELETE = async (req: Request) => {
 					{ status: 500 }
 				);
 			}
+			const deleteBreaks = await prisma.break.deleteMany({
+				where: { groupId: id },
+			});
+			if (!deleteBreaks) {
+				return Response.json(
+					{ error: "Nie udało się usunąć przerw" },
+					{ status: 500 }
+				);
+			}
+			const deleteTerms = await prisma.term.deleteMany({
+				where: { groupId: id },
+			});
+			if (!deleteTerms) {
+				return Response.json(
+					{ error: "Nie udało się usunąć terminów" },
+					{ status: 500 }
+				);
+			}
 			const deleteGroup = await prisma.group.deleteMany({
 				where: { id: id },
 			});
@@ -108,7 +126,6 @@ export const DELETE = async (req: Request) => {
 					{ status: 500 }
 				);
 			}
-
 			return new Response(JSON.stringify(deleteGroup), { status: 200 });
 		} else {
 			return Response.json(

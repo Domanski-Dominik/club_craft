@@ -4,12 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import {
-	dehydrate,
-	HydrationBoundary,
-	QueryClient,
-	useQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Typography } from "@mui/material";
 
 type Data = {
@@ -90,7 +85,7 @@ export default function HomePage() {
 						}
 						name='Lokalizacje i Grupy'
 						color='indigo'
-						url='/home/groups'
+						url='/home/manageGroups'
 					/>
 				</Grid>
 				<Grid
