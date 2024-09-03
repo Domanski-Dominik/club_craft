@@ -77,7 +77,7 @@ const CoachesManage = () => {
 		},
 	});
 	const locWithGr = useQuery({
-		queryKey: ["locWithGr"],
+		queryKey: ["locWithGroups"],
 		enabled: !!session,
 		queryFn: async () => {
 			const res = await fetch(`/api/components/form/${session?.user.club}`);

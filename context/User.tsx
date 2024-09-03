@@ -16,9 +16,11 @@ import {
 	Button,
 	Avatar,
 	Fab,
+	Box,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loading from "./Loading";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
 	id: string;
@@ -34,17 +36,18 @@ type Info = {
 };
 
 export const User = ({ id }: Props) => {
-	const [data, setData] = useState<Info | null>(null);
-	const [loading, setLoading] = useState(true);
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
-
+	const profile = useQuery({
+		queryKey: ["profile"],
+		queryFn: () => fetch(`/api/user/profile/${id}`).then((res) => res.json()),
+	});
 	const handleCloseSnackbar = () => setSnackbar(null);
 	const handleVerify = async () => {
-		if (data !== null) {
-			const email = data.email;
+		if (profile.data !== undefined) {
+			const email = profile.data.email;
 			const verify = await fetch("/api/auth/verifyEmail", {
 				method: "POST",
 				body: JSON.stringify({ email: email }),
@@ -57,153 +60,157 @@ export const User = ({ id }: Props) => {
 			}
 		}
 	};
-	const fetchData = async () => {
-		const response = await fetch(`/api/user/profile/${id}`, { method: "GET" });
-		const data = await response.json();
-		console.log(data);
-		if (!data.error) {
-			setData(data);
-		}
-		setLoading(false);
-	};
-	useEffect(() => {
-		fetchData();
-	}, []);
-	if (loading) return <Loading />;
-	return (
-		<>
-			{data !== null && (
-				<>
-					<Avatar
-						sx={{ width: 70, height: 70, mb: 2, bgcolor: "primary.main" }}>
-						<PersonIcon sx={{ width: 40, height: 40 }} />
-					</Avatar>
+	if (profile.isFetching) return <Loading />;
+	if (profile.isSuccess)
+		return (
+			<>
+				{profile.data !== undefined && (
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							backgroundColor: "white",
+							borderRadius: 4,
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+							alignContent: "center",
+							justifyItems: "center",
+							alignItems: "center",
+							p: 2,
+						}}>
+						<Avatar
+							sx={{ width: 70, height: 70, mb: 2, bgcolor: "primary.main" }}>
+							<PersonIcon sx={{ width: 40, height: 40, color: "white" }} />
+						</Avatar>
 
-					<List sx={{ width: "100%" }}>
-						<Divider component='li'>
-							<Chip
-								label='Imię i nazwisko'
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem>
-							<ListItemAvatar>
-								<PersonIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>
-								{data.name} {data.surname}
-							</ListItemText>
-						</ListItem>
-						<Divider component='li'>
-							<Chip
-								label='Email @'
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem>
-							<ListItemAvatar>
-								<EmailIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>{data.email}</ListItemText>
-						</ListItem>
+						<List sx={{ width: "100%" }}>
+							<Divider component='li'>
+								<Chip
+									label='Imię i nazwisko'
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem>
+								<ListItemAvatar>
+									<PersonIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>
+									{profile.data.name} {profile.data.surname}
+								</ListItemText>
+							</ListItem>
+							<Divider component='li'>
+								<Chip
+									label='Email @'
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem>
+								<ListItemAvatar>
+									<EmailIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>{profile.data.email}</ListItemText>
+							</ListItem>
 
-						<Divider component='li'>
-							<Chip
-								label='Klub'
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem>
-							<ListItemAvatar>
-								<GroupsIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>{data.club}</ListItemText>
-						</ListItem>
-						<Divider component='li'>
-							<Chip
-								label='Uprawnienia'
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem>
-							<ListItemAvatar>
-								<SecurityIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>
-								{data.role === "owner" ? "Założyciel" : "Trener"}
-							</ListItemText>
-						</ListItem>
-						<Divider component='li'>
-							<Chip
-								label='Data założenia konta'
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem>
-							<ListItemAvatar>
-								<CalendarMonthIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>{data.createdAt.substring(0, 10)}</ListItemText>
-						</ListItem>
-						<Divider component='li'>
-							<Chip
-								label='Zweryfikowany email '
-								size='small'
-								color='primary'
-								variant='outlined'
-							/>
-						</Divider>
-						<ListItem
-							secondaryAction={
-								data.emailVerified === null && (
-									<Button
-										onClick={handleVerify}
-										color='primary'>
-										Zweryfikuj
-									</Button>
-								)
-							}>
-							<ListItemAvatar>
-								<VerifiedIcon color='primary' />
-							</ListItemAvatar>
-							<ListItemText>
-								{data.emailVerified === null ? "Nie" : "Tak"}
-							</ListItemText>
-						</ListItem>
-					</List>
-					<Fab
-						variant='extended'
-						disabled
-						size='small'
-						color='primary'>
-						<EditIcon sx={{ mr: 1 }} />
-						Edytuj Profil
-					</Fab>
-				</>
-			)}
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={3000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
-		</>
-	);
+							<Divider component='li'>
+								<Chip
+									label='Klub'
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem>
+								<ListItemAvatar>
+									<GroupsIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>{profile.data.club}</ListItemText>
+							</ListItem>
+							<Divider component='li'>
+								<Chip
+									label='Uprawnienia'
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem>
+								<ListItemAvatar>
+									<SecurityIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>
+									{profile.data.role === "owner" ? "Założyciel" : "Trener"}
+								</ListItemText>
+							</ListItem>
+							<Divider component='li'>
+								<Chip
+									label='Data założenia konta'
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem>
+								<ListItemAvatar>
+									<CalendarMonthIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>
+									{profile.data.createdAt.substring(0, 10)}
+								</ListItemText>
+							</ListItem>
+							<Divider component='li'>
+								<Chip
+									label='Zweryfikowany email '
+									size='small'
+									color='primary'
+									variant='outlined'
+								/>
+							</Divider>
+							<ListItem
+								secondaryAction={
+									profile.data.emailVerified === null && (
+										<Button
+											onClick={handleVerify}
+											color='primary'>
+											Zweryfikuj
+										</Button>
+									)
+								}>
+								<ListItemAvatar>
+									<VerifiedIcon color='primary' />
+								</ListItemAvatar>
+								<ListItemText>
+									{profile.data.emailVerified === null ? "Nie" : "Tak"}
+								</ListItemText>
+							</ListItem>
+						</List>
+						<Fab
+							variant='extended'
+							disabled
+							size='small'
+							color='primary'>
+							<EditIcon sx={{ mr: 1 }} />
+							Edytuj Profil
+						</Fab>
+					</Box>
+				)}
+				{!!snackbar && (
+					<Snackbar
+						open
+						anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+						autoHideDuration={3000}
+						sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+						onClose={handleCloseSnackbar}>
+						<Alert
+							{...snackbar}
+							onClose={handleCloseSnackbar}
+						/>
+					</Snackbar>
+				)}
+			</>
+		);
 };

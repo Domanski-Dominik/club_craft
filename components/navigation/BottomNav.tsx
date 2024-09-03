@@ -96,12 +96,6 @@ export default function BottomNav() {
 					vertical: "bottom",
 					horizontal: "center",
 				}}>
-				<MenuItem onClick={() => handleMenuItemClick("add/onetime")}>
-					Zajęcia jednorazowe
-				</MenuItem>
-				<MenuItem onClick={() => handleMenuItemClick("add/solo")}>
-					Zajęcia indywidualne
-				</MenuItem>
 				<MenuItem onClick={() => handleMenuItemClick("add/group")}>
 					Zajęcia grupowe
 				</MenuItem>
@@ -112,3 +106,11 @@ export default function BottomNav() {
 		</>
 	);
 }
+/*
+<MenuItem onClick={() => handleMenuItemClick("add/onetime")}>
+					Zajęcia jednorazowe
+				</MenuItem>
+				<MenuItem onClick={() => handleMenuItemClick("add/solo")}>
+					Zajęcia indywidualne
+				</MenuItem>
+*/

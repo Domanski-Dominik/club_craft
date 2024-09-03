@@ -19,6 +19,7 @@ export const POST = async (req: Request) => {
 		type,
 		club,
 	} = await req.json();
+
 	console.log(
 		name,
 		color,
@@ -37,20 +38,23 @@ export const POST = async (req: Request) => {
 		type,
 		club
 	);
-	if (!name || !locId || !firstLesson || !lastLesson || club === "") {
+
+	if (!name || !firstLesson || !lastLesson || club === "") {
 		return Response.json({ error: "Brak wymaganych danych" }, { status: 400 });
 	}
-	try {
-		const findLoc = await prisma.locations.findUnique({
-			where: { id: locId },
-		});
 
-		if (!findLoc) {
-			return Response.json(
-				{ error: "Nie znaleziono lokalizacji" },
-				{ status: 404 }
-			);
-		}
+	try {
+		// Sprawdzenie, czy w każdym term jest prawidłowy locationId
+		const uniqueLocIds = new Set<number>(
+			terms
+				.filter((term: any) => term.locId && typeof term.locId === "number")
+				.map((term: any) => term.locId)
+		);
+
+		// Logowanie, aby zobaczyć, które locationId są unikalne
+		console.log("Unikalne locationId: ", [...uniqueLocIds]);
+
+		const uniqueLocIdsArray = [...uniqueLocIds]; // Bez mapowania, ponieważ locationId są już gotowe
 
 		const newGroup = await prisma.group.create({
 			data: {
@@ -68,6 +72,7 @@ export const POST = async (req: Request) => {
 				xClass: xClasses,
 			},
 		});
+
 		if (!newGroup) {
 			return Response.json(
 				{ error: "Nie udało się utworzyć grupy" },
@@ -75,40 +80,52 @@ export const POST = async (req: Request) => {
 			);
 		}
 
-		const newSchedule = await prisma.locationschedule.create({
-			data: {
-				locations: {
-					connect: { id: locId },
-				},
-				group: {
-					connect: { id: newGroup.id },
-				},
-			},
-		});
+		// Tworzenie harmonogramu dla lokalizacji
+		const newSchedule = await Promise.all(
+			uniqueLocIdsArray.map(async (locId) => {
+				return prisma.locationschedule.create({
+					data: {
+						locations: {
+							connect: { id: locId },
+						},
+						group: {
+							connect: { id: newGroup.id },
+						},
+					},
+				});
+			})
+		);
+
 		if (!newSchedule) {
 			return Response.json(
 				{ error: "Nie udało się dodać harmonogramu do lokalizacji" },
 				{ status: 500 }
 			);
 		}
+
+		// Tworzenie terminów
 		const newTerms = await prisma.term.createMany({
-			data: terms.map((term: any) => ({
-				dayOfWeek: term.dayOfWeek,
-				locationId:
-					typeof term.locId === "number" ? term.locId : parseInt(term.locId),
-				timeS: term.timeS,
-				timeE: term.timeE,
-				effectiveDate: new Date(), // Załóżmy, że wszystkie terminy zaczynają obowiązywać od teraz
-				groupId: newGroup.id, // Podaj właściwy ID grupy
-			})),
+			data: terms
+				.filter((term: any) => term.locId) // Pomiń terminy bez locationId
+				.map((term: any) => ({
+					dayOfWeek: term.dayOfWeek,
+					locationId: term.locId,
+					timeS: term.timeS,
+					timeE: term.timeE,
+					effectiveDate: new Date(), // Można tutaj użyć bardziej zaawansowanej logiki, jeśli potrzeba
+					groupId: newGroup.id,
+				})),
 			skipDuplicates: true, // opcjonalne, pomija duplikaty
 		});
+
 		if (!newTerms) {
 			return Response.json(
 				{ error: "Nie udało się zapisać terminów" },
 				{ status: 500 }
 			);
 		}
+
+		// Tworzenie przerw
 		if (breaks.length > 0) {
 			const newBreaks = await prisma.break.createMany({
 				data: breaks.map((b: any) => ({
@@ -126,15 +143,17 @@ export const POST = async (req: Request) => {
 				);
 			}
 		}
+
 		return new Response(JSON.stringify(newGroup), { status: 200 });
 	} catch (error: any) {
 		console.error("Błąd przy komunikacji z bazą danych:  ", error);
 		return Response.json(
 			{ error: "Wystąpił błąd przy komunikacji z bazą danych" },
-			{ status: error.status }
+			{ status: 500 }
 		);
 	}
 };
+
 export const DELETE = async (req: Request) => {
 	const { id } = await req.json();
 	//console.log("Id grupy to " + id);
@@ -260,7 +279,7 @@ export const PUT = async (req: Request) => {
 		club
 	);
 
-	if (!name || !locId || !firstLesson || !lastLesson || club === "") {
+	if (!name || !firstLesson || !lastLesson || club === "") {
 		return Response.json({ error: "Brak wymaganych danych" }, { status: 400 });
 	}
 

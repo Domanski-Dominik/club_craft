@@ -119,11 +119,11 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			setAddingGroup(false);
 			setError("");
 			queryClient.invalidateQueries({
-				queryKey: ["allGroups"],
+				queryKey: ["locWithGroups"],
 				refetchType: "all",
 			});
 			queryClient.invalidateQueries({
-				queryKey: ["participants"],
+				queryKey: ["allParticipants"],
 				refetchType: "all",
 			});
 		} else {
@@ -138,11 +138,11 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		const message = await deleteGr.mutateAsync(info);
 		if (!message.error) {
 			queryClient.invalidateQueries({
-				queryKey: ["allGroups"],
+				queryKey: ["locWithGroups"],
 				refetchType: "all",
 			});
 			queryClient.invalidateQueries({
-				queryKey: ["participants"],
+				queryKey: ["allParticipants"],
 				refetchType: "all",
 			});
 			const groups = row.participantgroup;
@@ -164,11 +164,11 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			const message = await editGr.mutateAsync(info);
 			if (!message.error) {
 				queryClient.invalidateQueries({
-					queryKey: ["allGroups"],
+					queryKey: ["locWithGroups"],
 					refetchType: "all",
 				});
 				queryClient.invalidateQueries({
-					queryKey: ["participants"],
+					queryKey: ["allParticipants"],
 					refetchType: "all",
 				});
 				row.participantgroup.push(message);

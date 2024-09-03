@@ -48,7 +48,7 @@ import {
 	TypographyStack,
 } from "../styled/StyledComponents";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAddPrt } from "@/hooks/participantHooks";
 import { format } from "date-fns";
 
@@ -77,7 +77,7 @@ type FormData = {
 
 const ParticipantForm = () => {
 	const router = useRouter();
-	const theme = useTheme();
+	const queryClient = useQueryClient();
 	const addPrt = useAddPrt();
 	const [succes, setSucces] = useState(false);
 	const { status, data: session } = useSession({
@@ -120,7 +120,7 @@ const ParticipantForm = () => {
 		birthDay: "",
 	});
 	const LocWithGroups = useQuery<LocWithGroups[]>({
-		queryKey: ["LocWithGroups"],
+		queryKey: ["locWithGroups"],
 		enabled: !!session,
 		queryFn: () =>
 			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
@@ -230,6 +230,14 @@ const ParticipantForm = () => {
 					});
 				} else {
 					setSucces(true);
+					queryClient.invalidateQueries({
+						queryKey: ["allParticipants"],
+						type: "all",
+					});
+					queryClient.invalidateQueries({
+						queryKey: ["participants"],
+						type: "all",
+					});
 				}
 			} catch (error) {
 				console.error(error);

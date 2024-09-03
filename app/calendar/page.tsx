@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -10,7 +10,22 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { formatISO, addWeeks, parse } from "date-fns";
-import { useMediaQuery, useTheme, Box } from "@mui/material";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import {
+	useMediaQuery,
+	useTheme,
+	Box,
+	Drawer,
+	FormControl,
+	Select,
+	InputLabel,
+	Typography,
+	SwipeableDrawer,
+	MenuItem,
+} from "@mui/material";
+import { CustomButtonInput } from "@fullcalendar/core/index.js";
+import { Stack2, TypographyStack } from "@/components/styled/StyledComponents";
+import { Location } from "@/types/type";
 
 function calculateEventDate(
 	date: Date,
@@ -54,6 +69,12 @@ function generateRecurringEvents(group: any, term: any): any[] {
 	return events;
 }
 const Calendar = () => {
+	const iOS =
+		typeof navigator !== "undefined" &&
+		/iPad|iPhone|iPod/.test(navigator.userAgent);
+	const [drawer, setDrawer] = useState(false);
+	const [selectedLocation, setSelectedLocation] = useState<string>("all");
+
 	const { status, data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
@@ -72,8 +93,23 @@ const Calendar = () => {
 				group.terms.flatMap((term: any) => generateRecurringEvents(group, term))
 			),
 	});
+	const locs = useQuery({
+		queryKey: ["locs"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(
+				`/api/loc/club/${session?.user.club}/${session?.user.role}/${session?.user.id}`
+			).then((res) => res.json()),
+	});
 	const theme = useTheme();
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+	const filteredEvents = groups.isSuccess
+		? selectedLocation === "all"
+			? groups.data
+			: groups.data.filter(
+					(event: any) => event.groupId === parseInt(selectedLocation, 10)
+			  )
+		: [];
 	return (
 		<Box
 			sx={{
@@ -89,6 +125,14 @@ const Calendar = () => {
 				borderRadius: 4,
 			}}>
 			<FullCalendar
+				customButtons={{
+					filter: {
+						text: "Filtruj",
+						click: function () {
+							setDrawer((prev) => !prev);
+						},
+					},
+				}}
 				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
 				aspectRatio={2}
 				expandRows={true}
@@ -104,14 +148,16 @@ const Calendar = () => {
 				dayHeaderFormat={{ weekday: "long" }}
 				initialView='timeGridDay'
 				height={"100%"}
-				events={groups.isSuccess ? groups.data : []}
+				events={filteredEvents}
+				nowIndicator
+				eventOrder={["-groupId", "title"]}
 				headerToolbar={{
 					start: "title",
 					center: "",
 					end: "timeGridWeek,timeGridDay,listWeek",
 				}}
 				footerToolbar={{
-					start: "",
+					start: "filter",
 					end: "today prev,next",
 				}}
 				views={{
@@ -133,14 +179,72 @@ const Calendar = () => {
 					minute: "2-digit",
 					omitZeroMinute: false,
 				}}
-				eventAdd={function () {
-					console.log("dodano event");
-				}}
-				eventChange={function () {}}
-				eventRemove={function () {}}
-
 				//eventClick={handleEventClick}
 			/>
+			<SwipeableDrawer
+				anchor='bottom'
+				open={drawer}
+				onClose={() => setDrawer((prev) => !prev)}
+				onOpen={() => setDrawer((prev) => !prev)}
+				disableBackdropTransition={!iOS}
+				disableDiscovery={iOS}>
+				<Box height={300}>
+					<Typography
+						align='center'
+						variant='h4'
+						color={theme.palette.primary.main}
+						sx={{
+							mt: 2,
+							display: "flex",
+							alignContent: "center",
+							justifyContent: "center",
+						}}>
+						Filtruj{" "}
+						<FilterAltIcon
+							color='primary'
+							fontSize='large'
+						/>
+					</Typography>
+					<Box sx={{ width: "100%", px: 5, py: 2 }}>
+						<Stack2>
+							<TypographyStack variant='h6'>Lokalizacje:</TypographyStack>
+							<Box width='50%'>
+								<FormControl fullWidth>
+									<InputLabel id='location'>Lokalizacja</InputLabel>
+									<Select
+										defaultValue='all'
+										value={selectedLocation}
+										onChange={(e) =>
+											setSelectedLocation(e.target.value as string | "all")
+										}>
+										<MenuItem value='all'>Wszystkie</MenuItem>
+										{locs.isSuccess &&
+											locs.data.length > 0 &&
+											locs.data.map((l: Location, index: number) => (
+												<MenuItem
+													key={index}
+													value={l.id}>
+													{l.name}
+												</MenuItem>
+											))}
+									</Select>
+								</FormControl>
+							</Box>
+						</Stack2>
+						<Stack2>
+							<TypographyStack variant='h6'>Typ zajęć:</TypographyStack>
+							<Box width='50%'>
+								<FormControl fullWidth>
+									<InputLabel id='classType'>Typ zajęć</InputLabel>
+									<Select defaultValue='all'>
+										<MenuItem value='all'>Wszystkie</MenuItem>
+									</Select>
+								</FormControl>
+							</Box>
+						</Stack2>
+					</Box>
+				</Box>
+			</SwipeableDrawer>
 		</Box>
 	);
 };

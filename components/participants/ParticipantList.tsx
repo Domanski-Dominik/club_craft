@@ -55,7 +55,7 @@ import {
 	useUpdatePrt,
 } from "@/hooks/participantHooks";
 import { useRouter } from "next/navigation";
-import { StyledDataGrid } from "../styled/StyledComponents";
+import { StyledDataGrid } from "../styled/StyledDataGrid";
 import { parse } from "date-fns";
 
 type Props = {

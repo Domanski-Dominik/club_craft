@@ -18,6 +18,7 @@ export const GET = async (req: Request, { params }: Props) => {
 						group: {
 							include: {
 								terms: true,
+								breaks: true,
 							},
 						},
 					},

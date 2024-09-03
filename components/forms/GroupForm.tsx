@@ -269,7 +269,7 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 			newErrors.name = "";
 		}
 
-		if (formData.locId === "") {
+		if (formData.locId === "" && !formData.diffrentPlaces) {
 			newErrors.locId = "Proszę wybrać lokalizację";
 			valid = false;
 		} else {
@@ -295,7 +295,7 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 			valid = false;
 		} else {
 			formData.terms.forEach((term, index) => {
-				if (!term.dayOfWeek) {
+				if (!term.dayOfWeek && term.dayOfWeek !== 0) {
 					newErrors.termsErrors[index] = {
 						...newErrors.termsErrors[index],
 						dayOfWeek: "Wybierz dzień tygodnia",
@@ -401,6 +401,7 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 	};
 	const handleSubmit = async () => {
 		const isOk = validate();
+		console.log(errors);
 		if (isOk) {
 			const info = {
 				...formData,
@@ -434,21 +435,38 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 				const message = await response.json();
 				if (!message.error) {
 					router.push("/home");
+					queryClient.invalidateQueries({
+						queryKey: ["locWithGroups"],
+						type: "all",
+					});
+					queryClient.invalidateQueries({
+						queryKey: ["locs"],
+						type: "all",
+					});
 				} else {
 					setErrors({ ...errors, server: message.error });
 				}
-			} else {
+			} else if (edit === false) {
 				const response = await fetch(`/api/groups`, {
 					method: "POST",
 					body: JSON.stringify(info),
 				});
 				const message = await response.json();
 				if (!message.error) {
+					queryClient.invalidateQueries({
+						queryKey: ["locWithGroups"],
+						type: "all",
+					});
+					queryClient.invalidateQueries({
+						queryKey: ["locs"],
+						type: "all",
+					});
 					router.push("/home");
 				} else {
 					setErrors({ ...errors, server: message.error });
 				}
 			}
+
 			queryClient.invalidateQueries({
 				queryKey: ["groups", "ManageGroups", "ManageGroupsLocations"],
 				type: "all",

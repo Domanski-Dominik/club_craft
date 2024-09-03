@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useState } from "react";
@@ -30,13 +30,13 @@ const Login = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			console.log("wszedłem  do funkcji", data);
+			//console.log("wszedłem  do funkcji", data);
 			const result = await signIn("credentials", {
 				...data,
 				redirect: false,
 			});
-			console.log(result);
-			console.log(session);
+			//console.log(result);
+			//console.log(session);
 			if (result?.error) {
 				throw new Error(result.error as string); // Użycie asercji typów
 			}
@@ -47,7 +47,12 @@ const Login = () => {
 	return (
 		<Container
 			component='main'
-			maxWidth='xs'>
+			maxWidth='xs'
+			sx={{
+				backgroundColor: "white",
+				borderRadius: 4,
+				py: 3,
+			}}>
 			<CssBaseline />
 			<Box
 				sx={{
@@ -56,8 +61,14 @@ const Login = () => {
 					flexDirection: "column",
 					alignItems: "center",
 				}}>
-				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-					<LockOutlinedIcon />
+				<Avatar
+					sx={{
+						m: 1,
+						bgcolor: "secondary.main",
+						width: 70,
+						height: 70,
+					}}>
+					<PersonIcon sx={{ width: 56, height: 56, color: "white" }} />
 				</Avatar>
 				<Typography
 					component='h1'

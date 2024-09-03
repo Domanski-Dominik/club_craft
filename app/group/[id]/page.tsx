@@ -1,13 +1,12 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
-import { Box, Fab } from "@mui/material";
+import { redirect } from "next/navigation";
+import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/context/Loading";
 import ParticipantList from "@/components/participants/ParticipantList";
 import { sortAndAddNumbers } from "@/functions/sorting";
-import AddIcon from "@mui/icons-material/Add";
 import StandardError from "@/components/errors/Standard";
 
 interface Props {
@@ -24,7 +23,6 @@ const Group = ({ params }: Props) => {
 		},
 	});
 	const groupId = parseInt(params.id, 10);
-	const router = useRouter();
 	const participants = useQuery({
 		queryKey: ["participants", params.id],
 		queryFn: () =>
@@ -40,26 +38,22 @@ const Group = ({ params }: Props) => {
 	if (status === "loading" || participants.isLoading) return <Loading />;
 	if (participants.isError || participants.data.length === 0)
 		return (
-			<>
-				<StandardError
-					message={
-						participants.isError
-							? participants.error.message
-							: "Nie znaleziono uczestników"
-					}
-				/>
-				<Fab
-					sx={{ mt: 2 }}
-					size='large'
-					variant='extended'
-					color='primary'
-					onClick={() => router.push(`/add`)}>
-					<AddIcon sx={{ mr: 1 }} />
-					Dodaj uczestników
-				</Fab>
-			</>
+			<StandardError
+				message={
+					participants.isError
+						? participants.error.message
+						: "Nie znaleziono uczestników"
+				}
+				addParticipants={true}
+			/>
 		);
-	if (group.isError) return <StandardError message={group.error.message} />;
+	if (group.isError)
+		return (
+			<StandardError
+				message={group.error.message}
+				addParticipants={true}
+			/>
+		);
 	return (
 		<>
 			{participants.data.length > 0 && group.isSuccess ? (

@@ -66,7 +66,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 		},
 	});
 	const allPrt = useQuery({
-		queryKey: ["AllPrt"],
+		queryKey: ["allParticipants"],
 		queryFn: () =>
 			fetch(`/api/participant/all/owner/${session?.user.club}`).then((res) =>
 				res.json()

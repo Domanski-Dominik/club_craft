@@ -8,10 +8,8 @@ import React from "react";
 import { redirect, useRouter } from "next/navigation";
 import type { Participant, LocWithGroups } from "@/types/type";
 import { Typography, Fab } from "@mui/material";
-import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 const Participants = () => {
 	const { status, data: session } = useSession({
@@ -22,7 +20,7 @@ const Participants = () => {
 	});
 	const router = useRouter();
 	const participants = useQuery<Participant[]>({
-		queryKey: ["AllParticipants"],
+		queryKey: ["allParticipants"],
 		enabled: !!session,
 		queryFn: () =>
 			fetch(
@@ -30,25 +28,16 @@ const Participants = () => {
 			).then((res) => res.json()),
 	});
 	const locWithGroups = useQuery<LocWithGroups[]>({
-		queryKey: ["AllParticipantsLocs"],
+		queryKey: ["locWithGroups"],
 		enabled: !!session,
 		queryFn: () =>
 			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
 				res.json()
 			),
 	});
-
-	if (
-		status === "loading" ||
-		participants.isFetching ||
-		locWithGroups.isFetching
-	)
+	if (participants.data === undefined || locWithGroups.data === undefined)
 		return <Loading />;
-	if (
-		participants.isError ||
-		participants.data === undefined ||
-		locWithGroups.data === undefined
-	) {
+	if (participants.isError) {
 		return (
 			<>
 				<WarningAmberIcon
@@ -74,31 +63,13 @@ const Participants = () => {
 			</>
 		);
 	}
-	if (participants.data.length === 0)
-		return (
-			<>
-				<PersonOffOutlinedIcon
-					sx={{ width: 100, height: 100, mb: 4 }}
-					color='secondary'
-				/>
-				<Typography
-					variant='h4'
-					align='center'>
-					Brak dodanych uczestników
-				</Typography>
-				<Fab
-					sx={{ mt: 5 }}
-					color='primary'
-					variant='extended'
-					onClick={() => router.push("/add")}>
-					<AddOutlinedIcon sx={{ mr: 1 }} />
-					Dodaj Uczestników
-				</Fab>
-			</>
-		);
-
 	return (
 		<AllParticipantList
+			loading={
+				status === "loading" ||
+				participants.isFetching ||
+				locWithGroups.isFetching
+			}
 			participants={participants.data}
 			locWithGroups={locWithGroups.data}
 			isOwner={session?.user.role === "owner"}

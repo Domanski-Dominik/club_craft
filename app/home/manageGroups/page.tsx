@@ -27,13 +27,9 @@ import {
 	Typography,
 	Fab,
 	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	AccordionProps,
-	AccordionSummaryProps,
 	Stack,
 } from "@mui/material";
-
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -46,6 +42,8 @@ import {
 import { Group, Location } from "@/types/type";
 import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
 import DialogDeleteGroup from "@/components/dialogs/DialogDeleteGroup";
+import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
+import StandardError from "@/components/errors/Standard";
 
 function SelectColorInputCell(props: GridRenderCellParams) {
 	const { id, value, field } = props;
@@ -96,15 +94,15 @@ const ManageGroups = () => {
 		},
 	});
 	const groups = useQuery({
-		queryKey: ["ManageGroups"],
+		queryKey: ["groups"],
 		enabled: !!session,
 		queryFn: () =>
-			fetch(`/api/loc/withGroups/${session?.user.club}`).then((res) =>
-				res.json()
-			),
+			fetch(
+				`/api/groups/calendar/${session?.user.role}/${session?.user.club}/${session?.user.id}`
+			).then((res) => res.json()),
 	});
 	const locs = useQuery({
-		queryKey: ["ManageGroupsLocations"],
+		queryKey: ["locs"],
 		enabled: !!session,
 		queryFn: () =>
 			fetch(`/api/loc/club/${session?.user.club}/owner`).then((res) =>
@@ -121,6 +119,7 @@ const ManageGroups = () => {
 	const handleCloseSnackbar = () => setSnackbar(null);
 	const queryClient = useQueryClient();
 	const router = useRouter();
+	console.log(groups.data);
 	const processRowUpdateGroup = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -219,7 +218,7 @@ const ManageGroups = () => {
 			headerName: "Nazwa grupy",
 			type: "string",
 			editable: true,
-			minWidth: 120,
+			minWidth: 150,
 			flex: 1,
 			renderCell: (params) => (
 				<Box
@@ -228,7 +227,11 @@ const ManageGroups = () => {
 						alignItems: "center",
 						height: "100%",
 					}}>
-					{params.value}
+					<Typography
+						my={2}
+						fontWeight={500}>
+						{params.value}
+					</Typography>
 				</Box>
 			),
 		},
@@ -236,7 +239,7 @@ const ManageGroups = () => {
 			field: "terms",
 			headerName: "Terminy",
 			flex: 1,
-			minWidth: 220,
+			minWidth: 250,
 			renderCell: (params) => {
 				return (
 					<Box
@@ -244,15 +247,19 @@ const ManageGroups = () => {
 							whiteSpace: "normal",
 							wordWrap: "break-word",
 							overflowWrap: "break-word",
-							my: 1,
+							display: "flex",
+							flexDirection: "column", // Zapewnia pionowe ułożenie elementów wewnątrz
+							justifyContent: "center", // Wyśrodkowanie w pionie
+							alignItems: "flex-start", // Wyśrodkowanie w pionie
+							height: "100%",
 						}}>
 						{params.row.terms.map((t: any, index: any) => (
 							<div key={index}>
-								<span style={{ color: "blueviolet", fontSize: "15px" }}>
+								<span style={{ color: "blueviolet", fontSize: "13px" }}>
 									{t.location.name}
 								</span>
 								,{" "}
-								<span style={{ fontSize: "15px" }}>
+								<span style={{ fontSize: "13px" }}>
 									{PolishDayName(t.dayOfWeek)} {t.timeS}-{t.timeE}
 								</span>
 							</div>
@@ -294,7 +301,7 @@ const ManageGroups = () => {
 			field: "actions",
 			headerName: "Akcje",
 			flex: 1,
-			minWidth: 90,
+			minWidth: 150,
 			renderCell: (params) => {
 				return (
 					<Stack
@@ -302,9 +309,13 @@ const ManageGroups = () => {
 							display: "flex",
 							alignItems: "center",
 							height: "100%",
+							justifyContent: "space-between",
 						}}
 						direction={"row"}
 						spacing={3}>
+						<ContentCopyIcon
+							onClick={() => router.push(`/add/group/${params.id}`)}
+						/>
 						<EditIcon
 							color='primary'
 							onClick={() => router.push(`/edit/group/${params.id}`)}
@@ -389,101 +400,99 @@ const ManageGroups = () => {
 			},
 		},
 	];
-	if (status === "loading" || groups.isFetching) return <Loading />;
+	if (status === "loading" || groups.isFetching || locs.isFetching)
+		return <Loading />;
 	if (groups.isError || groups.data === undefined) {
-		<>
-			<WarningAmberIcon
-				color='error'
-				sx={{ width: 100, height: 100, m: 4 }}
-			/>
-			<Typography
-				color={"red"}
-				variant='h4'>
-				{groups.isError ? groups.error.message : "Nie udało się pobrać grup"}
-			</Typography>
-			<Fab
-				onClick={() => window.location.reload()}
-				sx={{ mt: 4, mb: 1 }}
-				color='primary'
-				variant='extended'
-				size='small'>
-				<CachedOutlinedIcon sx={{ mr: 1 }} />
-				Odśwież stronę
-			</Fab>
-		</>;
-	}
-	if (groups.data)
 		return (
-			<Box
-				sx={{
-					height: "100%",
-					width: "100%",
-					px: 1,
-				}}>
-				<Accordion defaultExpanded>
-					<StyledAccordionSummary>
-						<Typography
-							variant='h6'
-							color={"white"}>
-							Zarządzaj lokalizacjami
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<DataGrid
-							columns={colsLocs}
-							rows={locs.data}
-							disableColumnMenu
-						/>
-					</StyledAccordionDetails>
-				</Accordion>
-				<Accordion defaultExpanded>
-					<StyledAccordionSummary>
-						<Typography
-							variant='h6'
-							color={"white"}>
-							Zarządzaj grupami
-						</Typography>
-					</StyledAccordionSummary>
-					<StyledAccordionDetails>
-						<DataGrid
-							getRowHeight={() => "auto"}
-							columns={colsGroup}
-							rows={groups.data}
-							disableColumnMenu
-							processRowUpdate={processRowUpdateGroup}
-						/>
-					</StyledAccordionDetails>
-				</Accordion>
-
-				{!!snackbar && (
-					<Snackbar
-						open
-						anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-						autoHideDuration={2000}
-						sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-						onClose={handleCloseSnackbar}>
-						<Alert
-							{...snackbar}
-							onClose={handleCloseSnackbar}
-						/>
-					</Snackbar>
-				)}
-				{deleteLoc && (
-					<DialogDeleteLoc
-						onClose={handleChoice}
-						loc={deleteLoc}
-						open={dialogLocOpen}
-					/>
-				)}
-				{deleteGroup && (
-					<DialogDeleteGroup
-						onClose={handleChoiceGroup}
-						group={deleteGroup}
-						open={dialogGroupOpen}
-					/>
-				)}
-			</Box>
+			<StandardError
+				message={
+					groups.isError ? groups.error.message : "Nie udało się pobrać grup"
+				}
+				addParticipants={false}
+			/>
 		);
+	}
+	if (locs.isError || locs.data === undefined) {
+		return (
+			<StandardError
+				message={
+					locs.isError ? locs.error.message : "Nie udało się pobrać lokalizacji"
+				}
+				addParticipants={false}
+			/>
+		);
+	}
+	return (
+		<Box
+			sx={{
+				height: "100%",
+				width: "100%",
+				px: 1,
+			}}>
+			<Accordion defaultExpanded>
+				<StyledAccordionSummary>
+					<Typography
+						variant='h6'
+						color={"white"}>
+						Zarządzaj lokalizacjami
+					</Typography>
+				</StyledAccordionSummary>
+				<StyledAccordionDetails>
+					<StyledDataGrid
+						columns={colsLocs}
+						rows={locs.data}
+						disableColumnMenu
+					/>
+				</StyledAccordionDetails>
+			</Accordion>
+			<Accordion defaultExpanded>
+				<StyledAccordionSummary>
+					<Typography
+						variant='h6'
+						color={"white"}>
+						Zarządzaj grupami
+					</Typography>
+				</StyledAccordionSummary>
+				<StyledAccordionDetails>
+					<StyledDataGrid
+						getRowHeight={() => "auto"}
+						columns={colsGroup}
+						rows={groups.data}
+						disableColumnMenu
+						processRowUpdate={processRowUpdateGroup}
+					/>
+				</StyledAccordionDetails>
+			</Accordion>
+
+			{!!snackbar && (
+				<Snackbar
+					open
+					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+					autoHideDuration={2000}
+					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
+					onClose={handleCloseSnackbar}>
+					<Alert
+						{...snackbar}
+						onClose={handleCloseSnackbar}
+					/>
+				</Snackbar>
+			)}
+			{deleteLoc && (
+				<DialogDeleteLoc
+					onClose={handleChoice}
+					loc={deleteLoc}
+					open={dialogLocOpen}
+				/>
+			)}
+			{deleteGroup && (
+				<DialogDeleteGroup
+					onClose={handleChoiceGroup}
+					group={deleteGroup}
+					open={dialogGroupOpen}
+				/>
+			)}
+		</Box>
+	);
 };
 
 export default ManageGroups;

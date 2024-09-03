@@ -25,12 +25,10 @@ const CreateLoc = () => {
 	if (status === "loading") return <Loading />;
 	if (status === "authenticated") {
 		return (
-			<>
-				<LocForm
-					locInfo={CreateLoc}
-					type={"create"}
-				/>
-			</>
+			<LocForm
+				locInfo={CreateLoc}
+				type={"create"}
+			/>
 		);
 	}
 };
