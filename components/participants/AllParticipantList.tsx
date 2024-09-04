@@ -351,7 +351,7 @@ const AllParticipantList = ({
 		return (
 			<GridToolbarContainer
 				sx={{ display: "flex", mt: 1, justifyContent: "space-around" }}>
-				<GridToolbarQuickFilter sx={{ width: 200 }} />
+				<GridToolbarQuickFilter sx={{ width: 170 }} />
 
 				<LocalizationProvider
 					dateAdapter={AdapterDateFns}
