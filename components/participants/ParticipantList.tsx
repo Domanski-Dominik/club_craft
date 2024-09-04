@@ -11,6 +11,7 @@ import {
 	GridRowModes,
 	GridRowEditStopReasons,
 	useGridApiRef,
+	GridRenderCellParams,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -56,7 +57,8 @@ import {
 } from "@/hooks/participantHooks";
 import { useRouter } from "next/navigation";
 import { StyledDataGrid } from "../styled/StyledDataGrid";
-import { parse } from "date-fns";
+import { getDay, parse } from "date-fns";
+import PolishDayName from "@/functions/PolishDayName";
 
 type Props = {
 	participants: Participant[];
@@ -179,6 +181,10 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 		if (params.reason === GridRowEditStopReasons.rowFocusOut) {
 			event.defaultMuiPrevented = true;
 		}
+		setRowModesModel({
+			...rowModesModel,
+			[params.id]: { mode: GridRowModes.View },
+		});
 	};
 	const handleEditClick = (id: GridRowId) => () => {
 		setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -412,7 +418,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 							<Typography
 								align='center'
 								variant='h6'>
-								{group.name} - {group.locationName}
+								{group.name} - {PolishDayName(getDay(date))}-{" "}
+								{group.locationName}
 							</Typography>
 						</Grid>
 						<Grid xs={4}>
@@ -571,6 +578,22 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 			headerName: "#",
 			width: 40,
 			sortable: false,
+			filterable: false,
+			hideable: false,
+			renderCell: (params: GridRenderCellParams) => {
+				const rowIndex =
+					params.api.getRowIndexRelativeToVisibleRows(params.id) + 1;
+				return (
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							height: "100%",
+						}}>
+						{rowIndex}
+					</Box>
+				);
+			},
 		},
 		{
 			field: "actions",
@@ -859,6 +882,12 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 				editMode='row'
 				slots={{ toolbar: CustomToolbar, footer: CustomFooter }}
 				columnVisibilityModel={columnVisibilityModel}
+				onCellDoubleClick={() => {
+					setEdit(true);
+					setColumnVisibilityModel({
+						actions: true,
+					});
+				}}
 				initialState={{
 					columns: {
 						columnVisibilityModel: {

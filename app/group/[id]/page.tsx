@@ -34,7 +34,7 @@ const Group = ({ params }: Props) => {
 		queryFn: () =>
 			fetch(`/api/groups/gr/${params.id}`).then((res) => res.json()),
 	});
-	console.log(group.data);
+	//console.log(group.data);
 	if (status === "loading" || participants.isLoading) return <Loading />;
 	if (participants.isError || participants.data.length === 0)
 		return (

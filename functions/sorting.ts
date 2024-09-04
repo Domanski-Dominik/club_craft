@@ -14,17 +14,17 @@ export const sortAndAddNumbers = (
 			}
 			return a.lastName.localeCompare(b.lastName);
 		});
-		if (status === "info") {
+		/*if (status === "info") {
 			const rowsWithNumbers = data.map((row: any) => {
 				return { ...row, num: 0, groupId: groupId, status: status };
 			});
 			return rowsWithNumbers;
-		} else if (status === "normal") {
-			const rowsWithNumbers = data.map((row: any, index: any) => {
-				return { ...row, num: index + 1, groupId: groupId, status: status };
-			});
-			return rowsWithNumbers;
-		}
+		} else if (status === "normal") {*/
+		const rowsWithNumbers = data.map((row: any, index: any) => {
+			return { ...row, groupId: groupId, status: status };
+		});
+		return rowsWithNumbers;
+		//}
 	}
 	return [];
 };
@@ -41,10 +41,9 @@ export const sortAndAddNumbersAll = (
 	});
 
 	// Dodaj numery do posortowanych uczestników
-	const rowsWithNumbers = sortedRows.map((row, index) => {
+	const rowsWithNumbers = sortedRows.map((row) => {
 		return {
 			...row,
-			num: index + 1,
 			hiddengroups:
 				row.participantgroup.length > 0
 					? row.participantgroup

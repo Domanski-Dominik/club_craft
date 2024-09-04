@@ -13,7 +13,6 @@ const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
 function ExportToExel({ data, date }: Props) {
-	console.log(data);
 	// Sortujemy dane według nazwiska, a jeśli są takie same, to według imienia
 	const sortedData = data.sort((a, b) => {
 		if (a.lastName === b.lastName) {
@@ -28,7 +27,7 @@ function ExportToExel({ data, date }: Props) {
 		{ header: "Imię", key: "firstName", width: 20, bold: true },
 		{ header: "Telefon", key: "phoneNumber", width: 20, bold: true },
 		{ header: "Umowa", key: "regulamin", width: 10 },
-		{ header: "Grupy", key: "groups", width: 40 },
+		{ header: "Grupy", key: "groups", width: 60 },
 		{ header: "Kwota", key: "amount", width: 10 },
 		{ header: `${formatDateMonth(date)}`, key: "info", width: 60 },
 		{ header: "Obecności", key: "attendance", width: 150 },
@@ -41,6 +40,7 @@ function ExportToExel({ data, date }: Props) {
 		pattern: "solid",
 		fgColor: { argb: "ffa4ffa4" },
 	};
+
 	sortedData.forEach((prt: any) => {
 		const row = sheet.addRow({
 			lastName: prt.lastName,
@@ -48,7 +48,19 @@ function ExportToExel({ data, date }: Props) {
 			phoneNumber: prt.phoneNumber,
 			regulamin: prt.regulamin ? "Tak" : "Nie",
 			groups: prt.participantgroup
-				.map((gr: any) => `${gr.location} ${PolishDayName(gr.day)} ${gr.name},`)
+				.map((g: any) => {
+					const groupName = g.name;
+					const terms = g.terms
+						.map(
+							(t: any) =>
+								`${t.location.name} ${PolishDayName(t.dayOfWeek)} ${t.timeS}-${
+									t.timeE
+								}`
+						)
+						.join("\n"); // Każdy termin zaczyna się od nowej linii
+
+					return `${groupName}\n${terms}`; // Dodajemy grupę oraz terminy oddzielone nową linią
+				})
 				.join("\n"),
 			attendance: prt.attendance
 				.filter((a: any) => {
@@ -59,6 +71,10 @@ function ExportToExel({ data, date }: Props) {
 				.join(", "),
 		});
 
+		const groupCell = row.getCell("groups");
+		groupCell.alignment = { wrapText: true };
+
+		//
 		const paymentsForDate = prt.payments.filter(
 			(payment: any) => formatDateMonth(date) === payment.month
 		);
@@ -76,10 +92,13 @@ function ExportToExel({ data, date }: Props) {
 			)
 			.join("\n");
 
-		const numGroups = prt.participantgroup.length;
+		const numTerms = prt.participantgroup.reduce(
+			(total: number, group: any) => total + group.terms.length,
+			1
+		);
 		//const numPayments = prt.payments.length;
 		const defaultRowHeight = 15; // Set your default row height here
-		const calculatedRowHeight = defaultRowHeight + (numGroups - 1) * 10; // Adjust the multiplier based on your preference
+		const calculatedRowHeight = defaultRowHeight + (numTerms - 1) * 10; // Adjust the multiplier based on your preference
 		row.height = Math.max(defaultRowHeight, calculatedRowHeight);
 	});
 

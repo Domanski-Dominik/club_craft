@@ -18,6 +18,7 @@ import {
 	GridToolbarQuickFilter,
 	GridFooterContainer,
 	GridFooter,
+	GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { styled } from "@mui/material";
 import {
@@ -350,7 +351,7 @@ const AllParticipantList = ({
 		return (
 			<GridToolbarContainer
 				sx={{ display: "flex", mt: 1, justifyContent: "space-around" }}>
-				<GridToolbarQuickFilter sx={{ width: "40vw" }} />
+				<GridToolbarQuickFilter sx={{ width: 200 }} />
 
 				<LocalizationProvider
 					dateAdapter={AdapterDateFns}
@@ -441,16 +442,20 @@ const AllParticipantList = ({
 			sortable: false,
 			filterable: false,
 			hideable: false,
-			renderCell: (params) => (
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						height: "100%",
-					}}>
-					{params.value}
-				</Box>
-			),
+			renderCell: (params: GridRenderCellParams) => {
+				const rowIndex =
+					params.api.getRowIndexRelativeToVisibleRows(params.id) + 1;
+				return (
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							height: "100%",
+						}}>
+						{rowIndex}
+					</Box>
+				);
+			},
 		},
 		{
 			field: "actions",
@@ -745,12 +750,31 @@ const AllParticipantList = ({
 				filterTextsRef.current.every((filter: any) =>
 					Object.entries(participant).some(([key, value]) => {
 						if (Array.isArray(value)) {
+							// Obsługa tablic, takich jak 'participantgroup' i inne
 							return value.some((item) => {
 								if (key === "participantgroup") {
-									const dayName = PolishDayName(item.day);
-									const flatString =
-										`${dayName} ${item.location} ${item.name}`.toLowerCase();
-									return flatString.includes(filter);
+									// Dla każdej grupy uczestnika
+									const flatStringGroup =
+										`${item.name} ${item.club} ${item.clientsPay}`.toLowerCase();
+									const flatStringLocation = item.locationschedule
+										?.map((schedule: any) => schedule.locations?.name || "")
+										.join(" ")
+										.toLowerCase();
+									const flatStringTerms = item.terms
+										?.map(
+											(term: any) =>
+												`${PolishDayName(term.dayOfWeek)} ${term.timeS}-${
+													term.timeE
+												} ${term.location?.name || ""}`
+										)
+										.join(" ")
+										.toLowerCase();
+
+									// Łączymy dane grupy, lokalizacji i terminów
+									const combinedString = `${flatStringGroup} ${flatStringLocation} ${flatStringTerms}`;
+
+									// Sprawdzamy, czy filtr znajduje się w danych grupy
+									return combinedString.includes(filter);
 								} else {
 									const flatString = Object.values(item)
 										.join(" ")
@@ -827,8 +851,19 @@ const AllParticipantList = ({
 							},
 						},
 						pagination: { paginationModel: { pageSize: 100 } },
+						filter: {
+							filterModel: {
+								items: [],
+								quickFilterExcludeHiddenColumns: false,
+							},
+						},
 					}}
 					onFilterModelChange={handleFilterModelChange}
+					slotProps={{
+						columnsManagement: {
+							getTogglableColumns,
+						},
+					}}
 				/>
 			</Box>
 			{!!snackbar && (
