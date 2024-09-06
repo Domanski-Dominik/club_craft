@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma/prisma";
+import { group } from "console";
 
 export const POST = async (req: Request) => {
 	const {
@@ -18,6 +19,7 @@ export const POST = async (req: Request) => {
 		xClasses,
 		type,
 		club,
+		coachId,
 	} = await req.json();
 
 	console.log(
@@ -36,7 +38,8 @@ export const POST = async (req: Request) => {
 		clientsPay,
 		xClasses,
 		type,
-		club
+		club,
+		coachId
 	);
 
 	if (!name || !firstLesson || !lastLesson || club === "") {
@@ -142,6 +145,19 @@ export const POST = async (req: Request) => {
 					{ status: 500 }
 				);
 			}
+		}
+		if (coachId !== "") {
+			const coach = await prisma.groupcoach.create({
+				data: {
+					userId: coachId,
+					groupId: newGroup.id,
+				},
+			});
+			if (!coach)
+				return Response.json(
+					{ error: "Nie udało się przypisać prowadzącego" },
+					{ status: 500 }
+				);
 		}
 
 		return new Response(JSON.stringify(newGroup), { status: 200 });
@@ -257,6 +273,7 @@ export const PUT = async (req: Request) => {
 		xClasses,
 		type,
 		club,
+		coachId,
 	} = await req.json();
 
 	console.log(
@@ -276,7 +293,8 @@ export const PUT = async (req: Request) => {
 		clientsPay,
 		xClasses,
 		type,
-		club
+		club,
+		coachId
 	);
 
 	if (!name || !firstLesson || !lastLesson || club === "") {
@@ -287,6 +305,9 @@ export const PUT = async (req: Request) => {
 		// Sprawdzenie, czy grupa istnieje
 		const existingGroup = await prisma.group.findUnique({
 			where: { id: id },
+			include: {
+				coaches: true,
+			},
 		});
 
 		if (!existingGroup) {
@@ -315,12 +336,12 @@ export const PUT = async (req: Request) => {
 			});
 
 			// Aktualizacja lokalizacji w harmonogramie (jeśli lokalizacja została zmieniona)
-			await prisma.locationschedule.updateMany({
+			/*await prisma.locationschedule.updateMany({
 				where: { groupId: id },
 				data: {
 					locationId: locId,
 				},
-			});
+			});*/
 
 			// Aktualizacja, dodanie lub usunięcie terminów
 			// Najpierw usunięcie istniejących terminów, które nie są już aktualne
@@ -329,7 +350,7 @@ export const PUT = async (req: Request) => {
 			});
 
 			// Następnie dodanie nowych terminów
-			const newTerms = await prisma.term.createMany({
+			await prisma.term.createMany({
 				data: terms.map((term: any) => ({
 					dayOfWeek: term.dayOfWeek,
 					locationId:
@@ -350,7 +371,7 @@ export const PUT = async (req: Request) => {
 
 			// Następnie dodanie nowych przerw
 			if (breaks.length > 0) {
-				const newBreaks = await prisma.break.createMany({
+				await prisma.break.createMany({
 					data: breaks.map((b: any) => ({
 						name: b.name,
 						begin: b.begin,
@@ -358,6 +379,24 @@ export const PUT = async (req: Request) => {
 						groupId: id,
 					})),
 					skipDuplicates: true,
+				});
+			}
+			if (coachId !== "") {
+				await Promise.all(
+					existingGroup.coaches.map(async (c) => {
+						return prisma.groupcoach.deleteMany({
+							where: {
+								userId: c.userId,
+								groupId: c.groupId,
+							},
+						});
+					})
+				);
+				await prisma.groupcoach.create({
+					data: {
+						userId: coachId,
+						groupId: existingGroup.id,
+					},
 				});
 			}
 

@@ -99,6 +99,7 @@ type FormData = {
 	xClasses: string;
 	club: string;
 	type: string;
+	coachId: string;
 };
 type Errors = {
 	server: string;
@@ -182,8 +183,9 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 		xClasses: "xClasses" in groupInfo ? groupInfo.xClasses : "0",
 		club: clubInfo !== undefined ? clubInfo.name : user.club,
 		type: "group",
+		coachId: "coachId" in groupInfo ? groupInfo.coachId : "",
 	});
-
+	//console.log(groupInfo);
 	const [errors, setErrors] = useState<Errors>({
 		server: "",
 		name: "",
@@ -434,7 +436,6 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 				});
 				const message = await response.json();
 				if (!message.error) {
-					router.push("/home");
 					queryClient.invalidateQueries({
 						queryKey: ["locWithGroups"],
 						type: "all",
@@ -443,6 +444,11 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 						queryKey: ["locs"],
 						type: "all",
 					});
+					queryClient.invalidateQueries({
+						queryKey: ["coaches"],
+						type: "all",
+					});
+					router.push("/home/manageGroups");
 				} else {
 					setErrors({ ...errors, server: message.error });
 				}
@@ -461,16 +467,15 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 						queryKey: ["locs"],
 						type: "all",
 					});
-					router.push("/home");
+					queryClient.invalidateQueries({
+						queryKey: ["coaches"],
+						type: "all",
+					});
+					router.push("/home/manageGroups");
 				} else {
 					setErrors({ ...errors, server: message.error });
 				}
 			}
-
-			queryClient.invalidateQueries({
-				queryKey: ["groups", "ManageGroups", "ManageGroupsLocations"],
-				type: "all",
-			});
 		}
 	};
 	return (
@@ -564,6 +569,40 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 							onChange={handleInputChange}
 						/>
 					</Stack2>
+					<Divider variant='middle' />
+					<Stack2>
+						<TypographyStack>Prowadzący:</TypographyStack>
+						<Box width='50%'>
+							<FormControl fullWidth>
+								<InputLabelStack id='coach-label'>Prowadzący</InputLabelStack>
+								<Select
+									labelId='coach-label'
+									id='coachId'
+									name='coachId'
+									label='Prowadzący'
+									size='small'
+									value={formData.coachId}
+									onChange={handleSelectChange}
+									MenuProps={{
+										PaperProps: {
+											style: {
+												maxHeight: 200, // Ustawienie maksymalnej wysokości menu
+											},
+										},
+									}}>
+									<MenuItem value=''>Brak</MenuItem>
+									{clubInfo.clubconnect.map((c: any) => (
+										<MenuItem
+											key={c.id}
+											value={c.id}>
+											{c.surname} {c.name}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</Box>
+					</Stack2>
+
 					<Collapse in={!formData.diffrentPlaces}>
 						<Divider variant='middle' />
 						<Stack2>

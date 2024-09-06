@@ -19,6 +19,8 @@ export const GET = async (req: Request, { params }: Props) => {
 					locationschedule: { include: { locations: true } },
 					terms: { include: { location: true } },
 					breaks: true,
+					participantgroup: { include: { participant: true } },
+					coaches: { include: { user: true } },
 				},
 			});
 			if (!groups)
@@ -27,13 +29,12 @@ export const GET = async (req: Request, { params }: Props) => {
 					{ status: 400 }
 				);
 			const formatedgroups = groups.map((g) => {
-				const locs = g.locationschedule.map((schedule) => ({
-					id: schedule.locations.id,
-					name: schedule.locations.name,
-				}));
+				const participants = g.participantgroup.map((p) => p.participant);
+				const coachesformat = g.coaches.map((c) => c.user);
 				return {
 					...g,
-					locationschedule: locs,
+					participantgroup: participants,
+					coaches: coachesformat,
 				};
 			});
 			return new Response(JSON.stringify(formatedgroups), { status: 200 });

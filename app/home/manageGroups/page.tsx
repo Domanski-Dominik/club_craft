@@ -298,6 +298,112 @@ const ManageGroups = () => {
 			},
 		},
 		{
+			field: "participantgroup",
+			headerName: "Uczestnicy",
+			flex: 2,
+			minWidth: 200,
+			renderCell: (params) => {
+				if (params.row.participantgroup.length > 0) {
+					const sorted = params.row.participantgroup.sort((a: any, b: any) => {
+						// Sort by last name
+						if (a.lastName.toLowerCase() > b.lastName.toLowerCase()) return 1;
+						if (a.lastName.toLowerCase() < b.lastName.toLowerCase()) return -1;
+
+						// If last names are the same, sort by first name
+						if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1;
+						if (a.firstName.toLowerCase() < b.firstName.toLowerCase())
+							return -1;
+
+						// If first names are the same, sort by id
+						return a.id - b.id;
+					});
+					return (
+						<Box
+							sx={{
+								whiteSpace: "normal",
+								wordWrap: "break-word",
+								overflowWrap: "break-word",
+								display: "flex",
+								flexDirection: "column", // Zapewnia pionowe ułożenie elementów wewnątrz
+								justifyContent: "center", // Wyśrodkowanie w pionie
+								alignItems: "flex-start", // Wyśrodkowanie w pionie
+								height: "100%",
+								py: 1,
+							}}>
+							{sorted.map((p: any, index: number) => (
+								<div key={index}>
+									{p.lastName} {p.firstName}
+								</div>
+							))}
+						</Box>
+					);
+				} else
+					return (
+						<Box
+							sx={{
+								whiteSpace: "normal",
+								wordWrap: "break-word",
+								overflowWrap: "break-word",
+								display: "flex",
+								flexDirection: "column", // Zapewnia pionowe ułożenie elementów wewnątrz
+								justifyContent: "center", // Wyśrodkowanie w pionie
+								alignItems: "flex-start", // Wyśrodkowanie w pionie
+								height: "100%",
+								py: 1,
+							}}>
+							Brak uczestników
+						</Box>
+					);
+			},
+		},
+		{
+			field: "coaches",
+			headerName: "Prowadzący",
+			flex: 2,
+			minWidth: 200,
+			renderCell: (params) => {
+				if (params.row.coaches.length > 0) {
+					return (
+						<Box
+							sx={{
+								whiteSpace: "normal",
+								wordWrap: "break-word",
+								overflowWrap: "break-word",
+								display: "flex",
+								flexDirection: "column", // Zapewnia pionowe ułożenie elementów wewnątrz
+								justifyContent: "center", // Wyśrodkowanie w pionie
+								alignItems: "flex-start", // Wyśrodkowanie w pionie
+								height: "100%",
+								py: 1,
+							}}>
+							{params.row.coaches.map((c: any, index: number) => (
+								<div key={index}>
+									{c.name} {c.surname}
+								</div>
+							))}
+						</Box>
+					);
+				} else {
+					return (
+						<Box
+							sx={{
+								whiteSpace: "normal",
+								wordWrap: "break-word",
+								overflowWrap: "break-word",
+								display: "flex",
+								flexDirection: "column", // Zapewnia pionowe ułożenie elementów wewnątrz
+								justifyContent: "center", // Wyśrodkowanie w pionie
+								alignItems: "flex-start", // Wyśrodkowanie w pionie
+								height: "100%",
+								py: 1,
+							}}>
+							Brak prowadzących
+						</Box>
+					);
+				}
+			},
+		},
+		{
 			field: "actions",
 			headerName: "Akcje",
 			flex: 1,
@@ -400,6 +506,9 @@ const ManageGroups = () => {
 			},
 		},
 	];
+	if (session?.user.role === "coach") {
+		redirect("/home");
+	}
 	if (status === "loading" || groups.isFetching || locs.isFetching)
 		return <Loading />;
 	if (groups.isError || groups.data === undefined) {
