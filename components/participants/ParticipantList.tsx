@@ -12,6 +12,7 @@ import {
 	GridRowEditStopReasons,
 	useGridApiRef,
 	GridRenderCellParams,
+	useGridApiContext,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -41,7 +42,12 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import pl from "date-fns/locale/pl";
 import { format } from "date-fns/format";
-import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+	MobileDatePicker,
+	LocalizationProvider,
+	DatePicker,
+} from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
@@ -72,6 +78,45 @@ const formatDate = (date: Date) => {
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
+const PickDate = ({
+	id,
+	value,
+	field,
+	gridRef,
+}: GridRenderCellParams & { gridRef: any }) => {
+	const handleChange = async (newDate: Date | null) => {
+		await gridRef.current.setEditCellValue({
+			id,
+			field,
+			value: newDate ? format(newDate, "dd-MM-yyyy") : null,
+		});
+		gridRef.current.stopCellEditMode({ id, field });
+	};
+	return (
+		<Box
+			sx={{
+				display: "flex",
+				alignItems: "center",
+				height: "100%",
+			}}>
+			<LocalizationProvider
+				dateAdapter={AdapterDateFns}
+				adapterLocale={pl}>
+				<DatePicker
+					label='Data urodzenia'
+					value={value ? parse(value, "dd-MM-yyyy", new Date()) : null}
+					onChange={handleChange}
+					sx={{ width: 100, my: 1 }}
+					slotProps={{ textField: { size: "small" } }}
+				/>
+			</LocalizationProvider>
+			<CloseIcon
+				onClick={() => handleChange(null)}
+				sx={{ ml: 1 }}
+			/>
+		</Box>
+	);
+};
 const ParticipantList = ({ participants, groupId, group }: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
@@ -94,6 +139,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 			regulamin: false,
 			active: false,
 			info: false,
+			parentFirstName: false,
+			parentLastName: false,
 		});
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
@@ -437,6 +484,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 										regulamin: !prev.regulamin,
 										active: !prev.active,
 										info: !prev.info,
+										parentLastName: !prev.parentLastName,
+										parentFirstName: !prev.parentFirstName,
 									}));
 									gridRef.current.scroll({ left: 0 });
 									setMore((prev) => !prev);
@@ -478,6 +527,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 										note: true,
 										regulamin: true,
 										info: true,
+										parentFirstName: true,
+										parentLastName: true,
 									});
 								}}>
 								<EditIcon />
@@ -502,6 +553,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 										regulamin: false,
 										active: false,
 										info: false,
+										parentFirstName: false,
+										parentLastName: false,
 									});
 								setMore(false);
 								gridRef.current.scroll({ left: 0 });
@@ -651,9 +704,132 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 		{
 			field: "firstName",
 			headerName: "Imię",
-			minWidth: 100,
+			minWidth: 90,
 			editable: edit,
 			flex: 1,
+		},
+		{
+			field: "birthday",
+			headerName: edit || more ? "Urodzony" : "",
+			minWidth: more ? (edit ? 140 : 110) : 40,
+			editable: edit,
+			hideable: true,
+			flex: 1,
+			sortable: false,
+			renderEditCell: (props: GridRenderCellParams) => (
+				<PickDate
+					{...props}
+					gridRef={gridRef}
+				/>
+			),
+			renderCell: (params) => {
+				const year = params.value ? params.value.split("-")[2] : "";
+				return (
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							height: "100%",
+						}}>
+						{more ? (params.value ? params.value : "") : year}
+					</Box>
+				);
+			},
+		},
+		{
+			field: "attendance",
+			headerName: "Obecność",
+			maxWidth: 74,
+			renderCell: (params) => {
+				const participantAttendance = params.row.attendance;
+
+				const isPresent = participantAttendance.find(
+					(item: Attendance) =>
+						item.date === formatDate(date) && item.groupId === groupId
+				);
+
+				const handlePresenceChange = async (event: any) => {
+					//console.log(event.target.checked);
+					const isChecked = event.target.checked;
+					const updatedRows = [...rows];
+					// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
+					const rowIndex = updatedRows.findIndex(
+						(row) => row.id === params.row.id
+					);
+
+					if (isChecked) {
+						// Jeśli isChecked to true, dodaj nowy obiekt Attendance
+						updatedRows[rowIndex].attendance.push({
+							date: formatDate(date),
+							groupId: groupId,
+						});
+					} else {
+						// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
+						updatedRows[rowIndex].attendance = updatedRows[
+							rowIndex
+						].attendance.filter(
+							(item: Attendance) => item.date !== formatDate(date)
+						);
+					}
+					try {
+						const data = {
+							groupId: groupId,
+							participantId: params.row.id,
+							date: formatDate(date),
+							isChecked: isChecked,
+						};
+						const message = await attendance.mutateAsync(data);
+						if (message.error) {
+							const updatedRows = [...rows];
+							// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
+							const rowIndex = updatedRows.findIndex(
+								(row) => row.id === params.row.id
+							);
+
+							if (!isChecked) {
+								// Jeśli isChecked to true, dodaj nowy obiekt Attendance
+								updatedRows[rowIndex].attendance.push({
+									date: formatDate(date),
+									groupId: groupId,
+								});
+							} else {
+								// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
+								updatedRows[rowIndex].attendance = updatedRows[
+									rowIndex
+								].attendance.filter(
+									(item: Attendance) => item.date !== formatDate(date)
+								);
+							}
+							setSnackbar({
+								children: message.error,
+								severity: "error",
+							});
+						} else {
+							setSnackbar({
+								children: message.message,
+								severity: "success",
+							});
+						}
+					} catch (error) {
+						console.error("Błąd podczas aktualizacji danych:", error);
+						setSnackbar({
+							children: "Wystąpił bład podczas komunikacją z bazą danych",
+							severity: "error",
+						});
+					}
+				};
+
+				return (
+					<Checkbox
+						id={params.row.id}
+						sx={{ width: "100%" }}
+						checked={!!isPresent}
+						onChange={(event) => handlePresenceChange(event)}
+					/>
+				);
+			},
+
+			sortable: false,
 		},
 		{
 			field: "payment",
@@ -756,101 +932,7 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 			type: "boolean",
 			sortable: false,
 		},
-		{
-			field: "attendance",
-			headerName: "Obecność",
-			maxWidth: 74,
-			renderCell: (params) => {
-				const participantAttendance = params.row.attendance;
 
-				const isPresent = participantAttendance.find(
-					(item: Attendance) =>
-						item.date === formatDate(date) && item.groupId === groupId
-				);
-
-				const handlePresenceChange = async (event: any) => {
-					//console.log(event.target.checked);
-					const isChecked = event.target.checked;
-					const updatedRows = [...rows];
-					// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
-					const rowIndex = updatedRows.findIndex(
-						(row) => row.id === params.row.id
-					);
-
-					if (isChecked) {
-						// Jeśli isChecked to true, dodaj nowy obiekt Attendance
-						updatedRows[rowIndex].attendance.push({
-							date: formatDate(date),
-							groupId: groupId,
-						});
-					} else {
-						// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
-						updatedRows[rowIndex].attendance = updatedRows[
-							rowIndex
-						].attendance.filter(
-							(item: Attendance) => item.date !== formatDate(date)
-						);
-					}
-					try {
-						const data = {
-							groupId: groupId,
-							participantId: params.row.id,
-							date: formatDate(date),
-							isChecked: isChecked,
-						};
-						const message = await attendance.mutateAsync(data);
-						if (message.error) {
-							const updatedRows = [...rows];
-							// Znajdź indeks wiersza dla którego chcesz zaktualizować attendance
-							const rowIndex = updatedRows.findIndex(
-								(row) => row.id === params.row.id
-							);
-
-							if (!isChecked) {
-								// Jeśli isChecked to true, dodaj nowy obiekt Attendance
-								updatedRows[rowIndex].attendance.push({
-									date: formatDate(date),
-									groupId: groupId,
-								});
-							} else {
-								// Jeśli isChecked to false, usuń obiekt Attendance o określonej dacie
-								updatedRows[rowIndex].attendance = updatedRows[
-									rowIndex
-								].attendance.filter(
-									(item: Attendance) => item.date !== formatDate(date)
-								);
-							}
-							setSnackbar({
-								children: message.error,
-								severity: "error",
-							});
-						} else {
-							setSnackbar({
-								children: message.message,
-								severity: "success",
-							});
-						}
-					} catch (error) {
-						console.error("Błąd podczas aktualizacji danych:", error);
-						setSnackbar({
-							children: "Wystąpił bład podczas komunikacją z bazą danych",
-							severity: "error",
-						});
-					}
-				};
-
-				return (
-					<Checkbox
-						id={params.row.id}
-						sx={{ width: "100%" }}
-						checked={!!isPresent}
-						onChange={(event) => handlePresenceChange(event)}
-					/>
-				);
-			},
-
-			sortable: false,
-		},
 		{
 			field: "note",
 			headerName: "Notatka",
@@ -868,6 +950,40 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 			hideable: true,
 			type: "boolean",
 			sortable: false,
+		},
+		{
+			field: "parentFirstName",
+			headerName: "Imię rodzica",
+			minWidth: 115,
+			editable: true,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
+		},
+		{
+			field: "parentLastName",
+			headerName: "Nazwisko rodzica",
+			minWidth: 120,
+			editable: true,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
 		},
 	];
 	return (
@@ -897,6 +1013,8 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 							note: false,
 							active: false,
 							info: false,
+							parentFirstName: false,
+							parentLastName: false,
 						},
 					},
 				}}

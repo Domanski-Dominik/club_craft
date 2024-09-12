@@ -1,1772 +1,1696 @@
 [
 	{
-		"firstName": "Hanna",
-		"lastName": "Bernatek",
-		"phoneNumber": "730127997",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Róża",
-		"lastName": "Olszewska",
-		"phoneNumber": "513140001",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Małgorzata",
-		"lastName": "Gryczyk",
-		"phoneNumber": "604607472",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Wałasz",
-		"phoneNumber": "513459191",
-		"club": "ARS"
-	},
-	{
 		"firstName": "Alicja",
-		"lastName": "Łosowska",
-		"phoneNumber": "661431899",
-		"club": "ARS"
+		"lastName": "Kucharczyk ",
+		"phoneNumber": "791607179",
+		"birthday": "17-07-2018",
+		"parentFirstName": "Joanna ",
+		"parentLastName": "Kucharczyk ",
+		"email": "j.gawron1@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Natalia",
-		"lastName": "Tatarczyńska",
-		"phoneNumber": "667273794",
-		"club": "ARS"
+		"firstName": "Lena",
+		"lastName": "Piętak",
+		"phoneNumber": "883566728",
+		"birthday": "04-08-2013",
+		"parentFirstName": "Monika",
+		"parentLastName": "Piętwk",
+		"email": "marko69@onet.eu",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Jagoda",
-		"lastName": "Toms",
-		"phoneNumber": "501001354",
-		"club": "ARS"
+		"lastName": "Bugajska ",
+		"phoneNumber": "695443434",
+		"birthday": "19-06-2017",
+		"parentFirstName": "Edyta ",
+		"parentLastName": "Bugajska ",
+		"email": "edzik12@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Iga ",
+		"lastName": "Michalska ",
+		"phoneNumber": "721038120",
+		"birthday": "19-10-2019",
+		"parentFirstName": "Katarzyna Michalska ",
+		"parentLastName": "Adrian Michalski ",
+		"email": "Michalska.kasia@yahoo.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Zuzanna",
-		"lastName": "Gabrek",
-		"phoneNumber": "883346723",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Milena",
-		"lastName": "Pazińska",
-		"phoneNumber": "606301902",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Halina",
-		"lastName": "Semeniuk",
-		"phoneNumber": "602339867",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jagoda",
-		"lastName": "Zwierzak",
-		"phoneNumber": "726221321",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nela",
-		"lastName": "Jovanovski",
-		"phoneNumber": "881436993",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwia",
-		"lastName": "Lelito",
-		"phoneNumber": "531630103",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Walczyńska",
-		"phoneNumber": "664160212",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marysia",
-		"lastName": "Kiryczuk",
-		"phoneNumber": "609446317",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Izabela",
-		"lastName": "Guździoł",
-		"phoneNumber": "782576876",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Bakalarz",
-		"phoneNumber": "505524606",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julia",
-		"lastName": "Zastawna",
-		"phoneNumber": "603214438",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Bober",
-		"phoneNumber": "506811014",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktoria",
-		"lastName": "Bronowska",
-		"phoneNumber": "790894884",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michał",
-		"lastName": "Drewniak",
-		"phoneNumber": "697175481",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lilia",
-		"lastName": "Michaluk",
-		"phoneNumber": "505431696",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Klara",
-		"lastName": "Baraniecka",
-		"phoneNumber": "725475334",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marcelina",
-		"lastName": "Blicharczyk",
-		"phoneNumber": "504553629",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nikodem",
-		"lastName": "Duszeńko",
-		"phoneNumber": "664081596",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Bianka",
-		"lastName": "Dykiert",
-		"phoneNumber": "510400099",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Głogowska",
-		"phoneNumber": "723622703",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zofia",
-		"lastName": "Kiszło",
-		"phoneNumber": "690315719",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Martyna",
-		"lastName": "Kopania",
-		"phoneNumber": "690315719",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzanna",
-		"lastName": "Kotwicka",
-		"phoneNumber": "607934880",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alicja",
-		"lastName": "Łosowska",
-		"phoneNumber": "888870818",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marcelina",
-		"lastName": "Martyniak",
-		"phoneNumber": "604486630",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kinga",
-		"lastName": "Mazurowska",
-		"phoneNumber": "665758301",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Luiza",
-		"lastName": "Pięciorak",
-		"phoneNumber": "889714197",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Gabrysia",
-		"lastName": "Tarkowska",
-		"phoneNumber": "609422657",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Wasiak",
-		"phoneNumber": "691802202",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwia",
-		"lastName": "Wirska",
-		"phoneNumber": "601583571",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Oleksy",
-		"phoneNumber": "660791309",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kamil",
-		"lastName": "Skrzypek",
-		"phoneNumber": "605330021",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michalina",
-		"lastName": "Stocka",
-		"phoneNumber": "605052312",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Kaczmar",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tymon",
-		"lastName": "Suder",
-		"phoneNumber": "782450776",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ela",
-		"lastName": "Mikulska",
-		"phoneNumber": "602522147",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwia",
-		"lastName": "Lelito",
-		"phoneNumber": "531630103",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksander",
-		"lastName": "Wirski",
-		"phoneNumber": "601583571",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alicja",
-		"lastName": "Węgrzyn",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Helenka",
-		"lastName": "Lisiecka",
-		"phoneNumber": "799799773",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Lisiecka",
-		"phoneNumber": "799799773",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzia",
-		"lastName": "Bakalarz",
-		"phoneNumber": "505524606",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ania",
-		"lastName": "Szal",
-		"phoneNumber": "514563350",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Brygida",
-		"lastName": "Mikulska",
-		"phoneNumber": "602522147",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Amelia",
-		"lastName": "Bienias",
-		"phoneNumber": "796185728",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Karolina",
-		"lastName": "Bób",
-		"phoneNumber": "667564015",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hanna",
-		"lastName": "Ciupryk",
-		"phoneNumber": "507132254",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Dębska",
-		"phoneNumber": "669505165",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Klara",
-		"lastName": "Dygoń",
-		"phoneNumber": "881549654",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Karolina",
-		"lastName": "Dykiert",
-		"phoneNumber": "883346723",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Małgorzata",
-		"lastName": "Gawlińska",
-		"phoneNumber": "723662703",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alicja",
-		"lastName": "Kotwińska",
-		"phoneNumber": "506649198",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kornelia",
-		"lastName": "Kroczak",
-		"phoneNumber": "601430178",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Lenart",
-		"phoneNumber": "512203702",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Helena",
-		"lastName": "Lis",
-		"phoneNumber": "510599991",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwia",
-		"lastName": "Martyniak",
-		"phoneNumber": "665758301",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Małgorzata",
-		"lastName": "Naryniecka",
-		"phoneNumber": "691214185",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Dominik",
-		"lastName": "Naryniecki",
-		"phoneNumber": "691214185",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jagoda",
-		"lastName": "Oleksy",
-		"phoneNumber": "601092510",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ania",
-		"lastName": "Spryś",
-		"phoneNumber": "535755400",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kornelia",
-		"lastName": "Stryjakiewicz",
-		"phoneNumber": "510659483",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julian",
-		"lastName": "Tarkowski",
-		"phoneNumber": "793322125",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ania",
-		"lastName": "Tarnowska",
-		"phoneNumber": "603524488",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julia",
-		"lastName": "Gruszyńska",
-		"phoneNumber": "502422727",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Łaska",
-		"lastName": "Łaska",
-		"phoneNumber": "502091735",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Emilia",
-		"lastName": "Motyl",
-		"phoneNumber": "510427085",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Michalska",
-		"phoneNumber": "721772245",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natalia",
-		"lastName": "Rosik",
-		"phoneNumber": "725518962",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kacper",
-		"lastName": "Krzyżanowski",
-		"phoneNumber": "600916523",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Lewińska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Czupil",
-		"phoneNumber": "795180765",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Onyśko",
-		"phoneNumber": "607639345",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Teodor",
-		"lastName": "Stańczak",
-		"phoneNumber": "609422657",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Olszewska",
-		"phoneNumber": "510024587",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natalia",
-		"lastName": "Bryda",
-		"phoneNumber": "886970606",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Małgorzata",
-		"lastName": "Babiarz",
-		"phoneNumber": "535499655",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Szlachetka",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzanna",
-		"lastName": "Malinowska",
-		"phoneNumber": "604486630",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktoria",
-		"lastName": "Wasilewska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Rostek",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Agata",
-		"lastName": "Laszczowska",
-		"phoneNumber": "693488449",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Amelka",
-		"lastName": "Milik",
-		"phoneNumber": "694515124",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksandra",
-		"lastName": "Bób",
-		"phoneNumber": "667564015",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Olena",
-		"lastName": "Riabchenko",
-		"phoneNumber": "733786856",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Barbara",
-		"lastName": "Lusar",
-		"phoneNumber": "500800964",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natalia",
-		"lastName": "Nikodem",
-		"phoneNumber": "790322875",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Szymkiewicz",
-		"phoneNumber": "665261733",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Weronika",
-		"lastName": "Pazińska",
-		"phoneNumber": "889714197",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Dolińska",
-		"phoneNumber": "537441492",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Anastazja",
-		"lastName": "Serafinowicz",
-		"phoneNumber": "882074680",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Gabriel",
-		"lastName": "Kobylecki",
-		"phoneNumber": "794367689",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natan",
-		"lastName": "Wróbel",
-		"phoneNumber": "606328806",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzanna",
-		"lastName": "Grzesik",
-		"phoneNumber": "603600925",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natalia",
-		"lastName": "Kulak",
-		"phoneNumber": "666084397",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Kanik",
-		"phoneNumber": "601069129",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktoria",
-		"lastName": "Pacholska",
-		"phoneNumber": "533554433",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jula",
-		"lastName": "Iżak vel Iżewska",
-		"phoneNumber": "691657767",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Agata",
-		"lastName": "Jarząbowicz",
-		"phoneNumber": "798030919",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Kasza",
-		"phoneNumber": "668463406",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Amelia",
-		"lastName": "Mac",
-		"phoneNumber": "793033366",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Matuszczak",
-		"phoneNumber": "889100551",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Amelia",
+		"lastName": "Misiurska",
+		"phoneNumber": "517572518, zaznaczyłam akrobatykę powietrzna , ale może być też sportowa dopiero zaczynamy z tematem ćwiczeń ale szarfę już uwielbia ćwiczy z siostrą ",
+		"birthday": "11-03-2020",
+		"parentFirstName": "Patrycja ",
+		"parentLastName": "Misiurska ",
+		"email": "patryska260593@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "LAURA",
+		"lastName": "WOJTAS",
+		"phoneNumber": "533252885",
+		"birthday": "23-11-2017",
+		"parentFirstName": "WIOLETA",
+		"parentLastName": "WOJTAS",
+		"email": "domosfera-sklep@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Gabriela ",
+		"lastName": "Frąk ",
+		"phoneNumber": "667258894",
+		"birthday": "26-02-2018",
+		"parentFirstName": "Katarzyna ",
+		"parentLastName": "Frąk ",
+		"email": "kasia.g@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Rózga",
+		"phoneNumber": "608424611",
+		"birthday": "14-09-2020",
+		"parentFirstName": "Dorota",
+		"parentLastName": "Król-Rózga",
+		"email": "Dorotakrol@poczta.fm",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Liliana",
+		"lastName": "Indyka",
+		"phoneNumber": "667599018",
+		"birthday": "14-10-2010",
+		"parentFirstName": "Paulina",
+		"parentLastName": "Indyka",
+		"email": "paulina77@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Grabda",
+		"phoneNumber": "600824665",
+		"birthday": "11-05-2017",
+		"parentFirstName": "Marta",
+		"parentLastName": "Grabda",
+		"email": "martagrabda@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Pola",
 		"lastName": "Nowak",
-		"phoneNumber": "726425492",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Iga",
-		"lastName": "Wienckiewicz",
-		"phoneNumber": "609023777",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zofia",
-		"lastName": "Zielińska",
-		"phoneNumber": "534295551",
-		"club": "ARS"
+		"phoneNumber": "881657197",
+		"birthday": "28-08-2020",
+		"parentFirstName": "Agata",
+		"parentLastName": "Jaworska",
+		"email": "agata.ciepielewska1@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Maja",
-		"lastName": "Kowalska",
-		"phoneNumber": "506626431",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktoria",
-		"lastName": " Holiantus",
-		"phoneNumber": "570530156",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nicola",
-		"lastName": "Rybarczyk",
-		"phoneNumber": "783544998",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Agata",
-		"lastName": "Borczuch",
-		"phoneNumber": "607321993",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Luiza",
-		"lastName": "Grzejda",
-		"phoneNumber": "530205295",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzia",
-		"lastName": "Bator",
-		"phoneNumber": "793768618",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Danusia",
-		"lastName": "Bator",
-		"phoneNumber": "793768618",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julia",
-		"lastName": "Błachuta",
-		"phoneNumber": "661680379",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksandra",
-		"lastName": "Błażejowska",
-		"phoneNumber": "501677109",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jagoda",
-		"lastName": "Chuczak",
-		"phoneNumber": "607679306",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ada",
-		"lastName": "Dzięcioł",
-		"phoneNumber": "695151620",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hanna",
-		"lastName": "Gmitruk",
-		"phoneNumber": "793144747",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Filip",
-		"lastName": "Rybarczyk",
-		"phoneNumber": "783544998",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Helena",
-		"lastName": "Guzikowska",
-		"phoneNumber": "792772422",
-		"club": "ARS"
+		"lastName": "Szaran ",
+		"phoneNumber": "500735715",
+		"birthday": "24-07-2017",
+		"parentFirstName": "Aneta",
+		"parentLastName": "Szaran ",
+		"email": "szaran.aneta@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Lena",
-		"lastName": "Latańska",
-		"phoneNumber": "782094360",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Martyna",
-		"lastName": "Milik",
-		"phoneNumber": "784061052",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktor",
-		"lastName": "Milik",
-		"phoneNumber": "784061052",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Anna",
-		"lastName": "Musiał",
-		"phoneNumber": "508287200",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zofia",
-		"lastName": "Musiał",
-		"phoneNumber": "508287200",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzanna",
-		"lastName": "Musiał",
-		"phoneNumber": "603847840",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Rozłąkowska",
-		"phoneNumber": "784006757",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Karlikowska",
-		"phoneNumber": "505039530",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kapitolina",
-		"lastName": "Udovruchenko",
-		"phoneNumber": "501677109",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Emilka",
-		"lastName": "Paczkowska",
-		"phoneNumber": "668822976",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nicola",
-		"lastName": "Kozłowska",
-		"phoneNumber": "721016472",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Kłysz",
-		"phoneNumber": "697577340",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alan",
-		"lastName": "Malcher",
-		"phoneNumber": "607301437",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Gabriela",
-		"lastName": "Kozica",
-		"phoneNumber": "667303058",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ada",
-		"lastName": "Woźniak",
-		"phoneNumber": "781261187",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Pola",
-		"lastName": "Wabnic",
-		"phoneNumber": "663861002",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nel",
-		"lastName": "Napiórkowska",
-		"phoneNumber": "696499587",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Klementyna",
-		"lastName": "Gauden",
-		"phoneNumber": "603464473",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hanna",
-		"lastName": "Braksator",
-		"phoneNumber": "502483950",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Weronika",
-		"lastName": "Kwak",
-		"phoneNumber": "792410341",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Martyna",
-		"lastName": "Stąporek",
-		"phoneNumber": "884999369",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Matylda",
-		"lastName": "Miśta",
-		"phoneNumber": "884898929",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maria",
-		"lastName": "Guzikowska",
-		"phoneNumber": "792772422",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwia",
-		"lastName": "Dębińska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Jakubowska",
-		"phoneNumber": "531260259",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marika",
-		"lastName": "Krala",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tymon",
-		"lastName": "Wabnic",
-		"phoneNumber": "663861002",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Nowicka",
-		"phoneNumber": "791791458",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Ewa",
-		"lastName": "Kostiv",
-		"phoneNumber": "793435886",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Karolina",
-		"lastName": "Kaczmarek",
-		"phoneNumber": "605480929",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hanna",
-		"lastName": "Gałka",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Franek",
-		"lastName": "Dębiński",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Lena",
-		"lastName": "Kozłowska",
-		"phoneNumber": "667457427",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maria",
-		"lastName": "Stanisz",
-		"phoneNumber": "660721730",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Karolina",
-		"lastName": "Majka",
-		"phoneNumber": "788695750",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marcelina",
-		"lastName": "Blabuś",
-		"phoneNumber": "667761810",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kasia",
-		"lastName": "Fedor",
-		"phoneNumber": "668630328",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksandra",
-		"lastName": "Konopka",
-		"phoneNumber": "508203631",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marcelina",
-		"lastName": "Tracińska",
-		"phoneNumber": "792466085",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alicja",
-		"lastName": "Kuler",
-		"phoneNumber": "66373658",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michalina",
-		"lastName": "Hałaj",
-		"phoneNumber": "501687447",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jaś",
-		"lastName": "Strub",
-		"phoneNumber": "796846841",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tytus",
-		"lastName": "Sawicki",
-		"phoneNumber": "503966956",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tymon",
-		"lastName": "Majecki",
-		"phoneNumber": "666401697",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hania",
-		"lastName": "Machał",
-		"phoneNumber": "791210707",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksandra",
-		"lastName": "Machał",
-		"phoneNumber": "791210707",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Galuś",
-		"phoneNumber": "793345605",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Amelka",
-		"lastName": "Radzymińska",
-		"phoneNumber": "793984464",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Helena",
-		"lastName": "Płoszaj",
-		"phoneNumber": "507804142",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzia",
-		"lastName": "Makarońska",
-		"phoneNumber": "606943171",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Gabrysia",
-		"lastName": "Makarońska",
-		"phoneNumber": "606943171",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jula",
-		"lastName": "Ćwiertnia",
-		"phoneNumber": "730676937",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Kryczka",
-		"phoneNumber": "690006024",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Trabski",
-		"phoneNumber": "783737644",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maks",
-		"lastName": "Pankała",
-		"phoneNumber": "604293439",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Magdalena",
-		"lastName": "Wadowska",
-		"phoneNumber": "606736895",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antonina",
-		"lastName": "Żurawska",
-		"phoneNumber": "604475857",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Mikołaj",
-		"lastName": "Górnicki",
-		"phoneNumber": "505270112",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktoria",
-		"lastName": "Mikos",
-		"phoneNumber": "692443046",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Dropińska",
-		"phoneNumber": "504754507",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Laura",
-		"lastName": "Turchan",
-		"phoneNumber": "519031147",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natalia",
-		"lastName": "Słoma",
-		"phoneNumber": "661349946",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michalina",
-		"lastName": "Maligranda",
-		"phoneNumber": "604209564",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Pola",
-		"lastName": "Pydzińska",
-		"phoneNumber": "604213140",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zosia",
-		"lastName": "Andrzejczak",
-		"phoneNumber": "692339956",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zuzanna",
-		"lastName": "Gołacka",
-		"phoneNumber": "603128048",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Leon",
-		"lastName": "Dobrowolski",
-		"phoneNumber": "604522755",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Dobrowolska",
-		"phoneNumber": "604522755",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Grzegorz",
-		"lastName": "Gawryś",
-		"phoneNumber": "694775927",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Mateusz",
-		"lastName": "Godzieszka",
-		"phoneNumber": "600758565",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Góra",
-		"phoneNumber": "600635321",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tymon",
-		"lastName": "Komarczewski",
-		"phoneNumber": "534458833",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Teodor",
-		"lastName": "Krukowski ",
-		"phoneNumber": "660450817",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Marchewka",
-		"phoneNumber": "607694155",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nikodem",
-		"lastName": "Niemczuk",
-		"phoneNumber": "661486208",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Szymon ",
-		"lastName": "Niemczuk",
-		"phoneNumber": "661486208",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksander",
-		"lastName": "Riabchenko",
-		"phoneNumber": "578656547",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Adam",
-		"lastName": "Skowroński",
-		"phoneNumber": "794181717",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jan",
-		"lastName": "Szczot",
-		"phoneNumber": "517170797",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Antoni",
-		"lastName": "Śnitek",
-		"phoneNumber": "601793137",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Adam",
-		"lastName": "Tołoczko",
-		"phoneNumber": "606257139",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maciej",
-		"lastName": "Kurtyka",
-		"phoneNumber": "601776302",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Iga",
-		"lastName": "Żurawiecka",
-		"phoneNumber": "793018938",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Stanisław",
-		"lastName": "Żychliński",
-		"phoneNumber": "668469345",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Olaf",
-		"lastName": "Huzar",
-		"phoneNumber": "691912832",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kuba",
-		"lastName": "Kaczorowski",
-		"phoneNumber": "609574600",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Dagmara",
-		"lastName": "Baraniecka",
-		"phoneNumber": "691383921",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Grzegorz",
-		"lastName": "Baraniecki",
-		"phoneNumber": "691383921",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maciej",
-		"lastName": "Baraniecki",
-		"phoneNumber": "691383921",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Maja",
-		"lastName": "Cielecka",
-		"phoneNumber": "603555030",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Barbara",
-		"lastName": "Ginter",
-		"phoneNumber": "606428984",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Olivia",
-		"lastName": "Karlińska",
-		"phoneNumber": "604530172",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Mateusz",
-		"lastName": "Kobylecki",
-		"phoneNumber": "794367689",
-		"club": "ARS"
+		"lastName": "Startek",
+		"phoneNumber": "600178133",
+		"birthday": "13-09-2017",
+		"parentFirstName": "Karolina",
+		"parentLastName": "Startek",
+		"email": "startekkarolina@gmail.com ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Joanna",
-		"lastName": "Majchrzak",
-		"phoneNumber": "601385206",
-		"club": "ARS"
+		"lastName": "Markiewicz ",
+		"phoneNumber": "517480668",
+		"birthday": "02-10-2016",
+		"parentFirstName": "Aneta",
+		"parentLastName": "Bernat",
+		"email": "aneta2604@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Karolina",
-		"lastName": "Pająk",
-		"phoneNumber": "603543954",
-		"club": "ARS"
+		"firstName": "Veronica ",
+		"lastName": "Dal Forno ",
+		"phoneNumber": "601849496",
+		"birthday": "28-08-2012",
+		"parentFirstName": "Eliza ",
+		"parentLastName": "Stanik ",
+		"email": "eliza.sdf@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Karolina",
-		"lastName": "Stefańska",
-		"phoneNumber": "607771916",
-		"club": "ARS"
+		"firstName": "Liliana",
+		"lastName": "Pęksyk",
+		"phoneNumber": "790284636",
+		"birthday": "10-09-2019",
+		"parentFirstName": "Julia",
+		"parentLastName": "Pęksyk",
+		"email": "lisayuly@yandex.ru",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Paulina",
-		"lastName": "Stefańska",
-		"phoneNumber": "607771916",
-		"club": "ARS"
+		"firstName": "Katarzyna",
+		"lastName": "Pietrzyk",
+		"phoneNumber": "501135056",
+		"birthday": "07-11-2018",
+		"parentFirstName": "Joanna",
+		"parentLastName": "Pietrzyk ",
+		"email": "jjstce@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Jakub",
-		"lastName": "Wdowiak",
-		"phoneNumber": "664128038",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Igor",
-		"lastName": "Witek",
-		"phoneNumber": "501979944",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aden",
-		"lastName": "Arik",
-		"phoneNumber": "602275800",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Aleksander",
-		"lastName": "Stańczak",
-		"phoneNumber": "502483897",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Alicja",
-		"lastName": "Purtak",
-		"phoneNumber": "792979041",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Bartłomiej",
-		"lastName": "Skrzypczak",
-		"phoneNumber": "783689678",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Bianka",
-		"lastName": "Rak",
-		"phoneNumber": "790431331",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Florian",
-		"lastName": "Banach ",
-		"phoneNumber": "726042625",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Franciszek",
-		"lastName": "Krupiński",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Franciszek",
-		"lastName": "Łucki",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Grzegorz",
-		"lastName": "Serek",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Krzysztof",
-		"lastName": "Serek",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Gustav",
-		"lastName": "Kołodziej",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hanna",
-		"lastName": "Pers",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kamil",
-		"lastName": "Purtak",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Leah",
-		"lastName": "Inglot",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marek",
-		"lastName": "Nowakowski",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jerzy",
-		"lastName": "Nowakowski",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Marysia",
-		"lastName": "Łukomska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Miłosz",
-		"lastName": "Nadurak",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nina",
-		"lastName": "Sienkiewicz",
-		"phoneNumber": "663850519",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Natan",
-		"lastName": "Sienkiewicz",
-		"phoneNumber": "663850519",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nela",
-		"lastName": "Jovanovski",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Nel",
-		"lastName": "Sawicka",
-		"phoneNumber": null,
-		"club": "ARS"
+		"firstName": "Agata",
+		"lastName": "Pietrzyk ",
+		"phoneNumber": "501135056",
+		"birthday": "10-07-2020",
+		"parentFirstName": "Joanna",
+		"parentLastName": "Pietrzyk ",
+		"email": "jjstce@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Oliwia",
-		"lastName": "Dębińska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Paulina",
-		"lastName": "Łęgosz",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tymon",
-		"lastName": "Śnitko",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktor",
-		"lastName": "Bernacki",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wojciech",
-		"lastName": "Kowalewski",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michalina",
-		"lastName": "Kowalewska",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wojciech",
-		"lastName": "Zima",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Grzegorz",
-		"lastName": "Wańkowicz",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Iga",
-		"lastName": "Szczupak",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Stefan",
-		"lastName": "Mielnik",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Franciszek",
-		"lastName": "Dębiński",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julian",
-		"lastName": "Banach ",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hubert",
-		"lastName": "Widziewicz",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Inka",
-		"lastName": "Badziak",
-		"phoneNumber": "505966500",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Małgorzata",
 		"lastName": "Barszczyk",
-		"phoneNumber": "723786394",
-		"club": "ARS"
+		"phoneNumber": "794991556",
+		"birthday": "17-09-2016",
+		"parentFirstName": "Kamila",
+		"parentLastName": "Barszczyk",
+		"email": "kamila73604@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Natan",
-		"lastName": "Bębenek",
-		"phoneNumber": "880965727",
-		"club": "ARS"
+		"firstName": "Oliwia ",
+		"lastName": "Żuchowska ",
+		"phoneNumber": "888123314",
+		"birthday": "12-05-2012",
+		"parentFirstName": "Karolina ",
+		"parentLastName": "Żuchowska ",
+		"email": "rybka_kb@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Hubert",
-		"lastName": "Huzar",
-		"phoneNumber": "880965727",
-		"club": "ARS"
+		"firstName": "KAJA",
+		"lastName": "NOWAK",
+		"phoneNumber": "570905027",
+		"birthday": "12-12-2020",
+		"parentFirstName": "RÓŻA ",
+		"parentLastName": "NOWAK",
+		"email": "Lamia156@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Olaf",
-		"lastName": "Huzar",
-		"phoneNumber": "691912832",
-		"club": "ARS"
+		"firstName": "Sara",
+		"lastName": "Banaś",
+		"phoneNumber": "601638377",
+		"birthday": "15-02-2015",
+		"parentFirstName": "Małgorzata",
+		"parentLastName": "Banaś",
+		"email": "banasgosia@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Kuba",
-		"lastName": "Kaczorowski",
-		"phoneNumber": "691912832",
-		"club": "ARS"
+		"firstName": "Liliana",
+		"lastName": "Banaś",
+		"phoneNumber": "601638377",
+		"birthday": "15-02-2015",
+		"parentFirstName": "Małgorzata",
+		"parentLastName": "Banaś",
+		"email": "banasgosia@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Kuba",
-		"lastName": "Kalinowski",
-		"phoneNumber": "888602424",
-		"club": "ARS"
+		"firstName": "Zuzanna",
+		"lastName": "Natora",
+		"phoneNumber": "509763419",
+		"birthday": "30-10-2011",
+		"parentFirstName": "Ilona",
+		"parentLastName": "Natora ",
+		"email": "Ilonanatora@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Natalia",
-		"lastName": "Karimow",
-		"phoneNumber": "881699961",
-		"club": "ARS"
+		"firstName": "Maria",
+		"lastName": "Łyczak",
+		"phoneNumber": "503426610",
+		"birthday": "14-08-2011",
+		"parentFirstName": "Anna",
+		"parentLastName": "Łyczak",
+		"email": "adamska.ania@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": " Olivier",
-		"lastName": "Koczupinda",
-		"phoneNumber": "530736438",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Oliwier",
-		"lastName": "Krycia",
-		"phoneNumber": "502395854",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktor",
-		"lastName": "Krycia",
-		"phoneNumber": "502395854",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Stanisław",
-		"lastName": "Łukowiak",
-		"phoneNumber": "798468041",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Julian",
-		"lastName": "Mazgaj",
-		"phoneNumber": "886789883",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Cezary",
-		"lastName": "Mirowski",
-		"phoneNumber": "513733476",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Michał",
-		"lastName": "Muchalski",
-		"phoneNumber": "607584308",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Robert",
-		"lastName": "Osiecki",
-		"phoneNumber": "607432244",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wiktor",
+		"firstName": "Aleksandra ",
 		"lastName": "Pater",
-		"phoneNumber": "608122122",
-		"club": "ARS"
+		"phoneNumber": "665579744",
+		"birthday": "21-05-2015",
+		"parentFirstName": "Marta",
+		"parentLastName": "Pater",
+		"email": "marta.pater.13@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Stefania",
-		"lastName": "Pawlak",
-		"phoneNumber": "605681804",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kinga",
-		"lastName": "Polech ",
-		"phoneNumber": "608200925",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Apolonia",
-		"lastName": "Prugar",
-		"phoneNumber": "698791965",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Milana",
-		"lastName": "Pushkarczuk",
-		"phoneNumber": "881590531",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Tomasz",
-		"lastName": "Rokita",
-		"phoneNumber": "664600344",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Hubert",
-		"lastName": "Sapa",
-		"phoneNumber": "696314984",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Kalina",
-		"lastName": "Sapa",
-		"phoneNumber": "696314984",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jan",
-		"lastName": "Sawicki",
-		"phoneNumber": null,
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jan",
-		"lastName": "Sobiegraj",
-		"phoneNumber": "501686017",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Piotr",
-		"lastName": "Stasiak",
-		"phoneNumber": "518581527",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Zofia",
-		"lastName": "Sulma",
-		"phoneNumber": "516318634",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Jakub",
-		"lastName": "Wróbel",
-		"phoneNumber": "732008786",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Filip",
-		"lastName": "Wypych ",
-		"phoneNumber": "506747308",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Szymon",
-		"lastName": "Zając",
-		"phoneNumber": "515152165",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Pola",
-		"lastName": "Sobiegraj",
-		"phoneNumber": "501686017",
-		"club": "ARS"
-	},
-	{
-		"firstName": "Wojciech",
-		"lastName": "Cieśla",
-		"phoneNumber": "889440815",
-		"club": "ARS"
+		"firstName": "Aleksandra",
+		"lastName": "Ratajska",
+		"phoneNumber": "504050389",
+		"birthday": "03-06-2014",
+		"parentFirstName": "Kasia",
+		"parentLastName": "Ratajska",
+		"email": "kasiaratajska@yahoo.co.uk",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Lena",
-		"lastName": "Cichocka",
-		"phoneNumber": "726046625",
-		"club": "ARS"
+		"lastName": "Żurowska ",
+		"phoneNumber": "669358524",
+		"birthday": "12-08-2017",
+		"parentFirstName": "Kamila",
+		"parentLastName": "Żurowska",
+		"email": "zurowskakamila@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
-		"firstName": "Jakub",
-		"lastName": "Dudziński",
-		"phoneNumber": null,
-		"club": "ARS"
+		"firstName": "Lena ",
+		"lastName": "Żurowska ",
+		"phoneNumber": "669358524",
+		"birthday": "12-08-2017",
+		"parentFirstName": "Kamila ",
+		"parentLastName": "Żurowska ",
+		"email": "zurowskakamila@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Nikola",
+		"lastName": "Jóźwik ",
+		"phoneNumber": "793706036",
+		"birthday": "27-10-2013",
+		"parentFirstName": "Luiza",
+		"parentLastName": "Jóźwik ",
+		"email": "piotrek90juzio@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	},
 	{
 		"firstName": "Kaja",
-		"lastName": "Konopielko",
-		"phoneNumber": null,
-		"club": "ARS"
+		"lastName": "Stefańska ",
+		"phoneNumber": "602883093",
+		"birthday": "31-12-2019",
+		"parentFirstName": "Anna",
+		"parentLastName": "Spadło",
+		"email": "anna_spadlo@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Skrzypczyk ",
+		"phoneNumber": "694422209",
+		"birthday": "04-10-2019",
+		"parentFirstName": "Klaudia",
+		"parentLastName": "Kwiecień",
+		"email": "Kwiecienk66@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Jan",
+		"lastName": " Parcheta",
+		"phoneNumber": "693520707",
+		"birthday": "12-06-2019",
+		"parentFirstName": "Piotr Parcheta",
+		"parentLastName": "Blanka koszarska-Parcheta",
+		"email": "blanka.kosza@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Helena",
+		"lastName": "Hashhash ",
+		"phoneNumber": "534896600",
+		"birthday": "12-09-2019",
+		"parentFirstName": "Monika ",
+		"parentLastName": "Niewiadomska ",
+		"email": "Monika19niewiadomska@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Barbara ",
+		"lastName": "Łyżwa ",
+		"phoneNumber": "790311961",
+		"birthday": "24-04-2018",
+		"parentFirstName": "Karolina ",
+		"parentLastName": "Łyżwa ",
+		"email": "karolina200@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Olszewska",
+		"phoneNumber": "574078014",
+		"birthday": "15-08-2014",
+		"parentFirstName": "Klaudia",
+		"parentLastName": "Olszewska",
+		"email": "klaudiaolszewska01@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Olszewska",
+		"phoneNumber": "574078014",
+		"birthday": "01-07-2018",
+		"parentFirstName": "Klaudia",
+		"parentLastName": "Olszewska",
+		"email": "klaudiaolszewska01@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Kornelia",
+		"lastName": "Linek",
+		"phoneNumber": "793527007",
+		"birthday": "02-09-2015",
+		"parentFirstName": "Aneta",
+		"parentLastName": "Linek",
+		"email": "anet.linek@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Emma",
+		"lastName": "Linek",
+		"phoneNumber": "793527007",
+		"birthday": "26-03-2018",
+		"parentFirstName": "Aneta",
+		"parentLastName": "Linek",
+		"email": "anet.linek@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Józwik ",
+		"phoneNumber": "605767025",
+		"birthday": "25-03-2016",
+		"parentFirstName": "Arkadiusz ",
+		"parentLastName": "Józwik ",
+		"email": "ajozwik.86@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Nina",
+		"lastName": "Kalinowska ",
+		"phoneNumber": "504826215",
+		"birthday": "20-04-2015",
+		"parentFirstName": "Ewa",
+		"parentLastName": "Kalinowska ",
+		"email": "Lapsiak@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Sofya",
+		"lastName": "Maskalenka ",
+		"phoneNumber": "504773783",
+		"birthday": "24-01-2018",
+		"parentFirstName": "Tatsiana ",
+		"parentLastName": "Mardas",
+		"email": "Mardas.tanya@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Sepiół",
+		"phoneNumber": "600227501",
+		"birthday": "23-05-2014",
+		"parentFirstName": "Wieslawa",
+		"parentLastName": "Sepiół",
+		"email": "wiki95@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Łodej ",
+		"phoneNumber": "692215213",
+		"birthday": "19-09-2017",
+		"parentFirstName": "Inga",
+		"parentLastName": "Łodej",
+		"email": "inga0576@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Marcelina",
+		"lastName": "Sikora",
+		"phoneNumber": "537883435",
+		"birthday": "18-02-2019",
+		"parentFirstName": "Ewelina",
+		"parentLastName": "Sikora",
+		"email": "ewelina.adamczyk1@tlen.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Antonina",
+		"lastName": "Kędzia",
+		"phoneNumber": "697646490",
+		"birthday": "25-04-2017",
+		"parentFirstName": "Sara",
+		"parentLastName": "Kędzia",
+		"email": "kedziasara@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Aleksandra",
+		"lastName": "Kędzia",
+		"phoneNumber": "697646490",
+		"birthday": "10-02-2019",
+		"parentFirstName": "Sara",
+		"parentLastName": "Kędzia",
+		"email": "kedziasara@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Grzyb",
+		"phoneNumber": "799027288",
+		"birthday": "17-01-2015",
+		"parentFirstName": "Martyna",
+		"parentLastName": "Grzyb",
+		"email": "ekler220@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Skupniewicz ",
+		"phoneNumber": "790428402",
+		"birthday": "06-07-2018",
+		"parentFirstName": "Marta",
+		"parentLastName": "Skupniewicz ",
+		"email": "martagaluszkiewicz97@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Barbara",
+		"lastName": "Basiaga",
+		"phoneNumber": "510285185",
+		"birthday": "12-12-2020",
+		"parentFirstName": "Marzena",
+		"parentLastName": "Mączyńska ",
+		"email": "maczynskam@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Janda ",
+		"phoneNumber": "609881240",
+		"birthday": "07-09-2011",
+		"parentFirstName": "Barbara",
+		"parentLastName": "Janda",
+		"email": "barbara_janda@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Vivian",
+		"lastName": "Jastrzębowska",
+		"phoneNumber": "880436935",
+		"birthday": "04-10-2019",
+		"parentFirstName": "Karolina",
+		"parentLastName": "Konwa",
+		"email": "karolinakonwa.kk@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Wiktoria ",
+		"lastName": "Krzysztoń",
+		"phoneNumber": "533725133",
+		"birthday": "19-07-2019",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Krzysztoń ",
+		"email": "m.krzyszton86@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Marcelina",
+		"lastName": "Szwajcer ",
+		"phoneNumber": "510264535",
+		"birthday": "18-02-2017",
+		"parentFirstName": "Gabriela ",
+		"parentLastName": "Zielińska ",
+		"email": "gabi200577@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Wojciechowska",
+		"phoneNumber": "503079712",
+		"birthday": "11-11-2016",
+		"parentFirstName": "Paulina ",
+		"parentLastName": " Wojciechowska",
+		"email": "paulina.woj03@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Sofiia",
+		"lastName": "Voloboieva ",
+		"phoneNumber": "883459525",
+		"birthday": "17-10-2017",
+		"parentFirstName": "Alla ",
+		"parentLastName": "Voloboieva ",
+		"email": "allavoloboeva2503@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia ",
+		"lastName": "Borkowska ",
+		"phoneNumber": "503458030",
+		"birthday": "24-05-2016",
+		"parentFirstName": "Sylwia ",
+		"parentLastName": "Borkowska ",
+		"email": "sylwia1003@interia.eu",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Nadia",
+		"lastName": "Matuszczyk ",
+		"phoneNumber": "721729515",
+		"birthday": "06-05-2014",
+		"parentFirstName": "Patrycja ",
+		"parentLastName": "Matuszczyk ",
+		"email": "matuszczyk-patrycja@wp.pl ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zuzanna ",
+		"lastName": "Stachowicz ",
+		"phoneNumber": "535-562-390",
+		"birthday": "20-06-2018",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Stachowicz ",
+		"email": "magdalena.stachowicz@onet.eu",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zofia",
+		"lastName": "Wiśnios",
+		"phoneNumber": "533944652",
+		"birthday": "30-09-2014",
+		"parentFirstName": "Karolina ",
+		"parentLastName": "Wiśnios ",
+		"email": "Karolinagor7@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelka",
+		"lastName": "Wrońska ",
+		"phoneNumber": "793005218",
+		"birthday": "05-01-2017",
+		"parentFirstName": "Dariusz",
+		"parentLastName": "Wronski",
+		"email": "iwona.21.835@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Laura ",
+		"lastName": "Nowak",
+		"phoneNumber": "504976263",
+		"birthday": "15-06-2015",
+		"parentFirstName": "Małgorzata ",
+		"parentLastName": "Nowak",
+		"email": "gosia.nowak@int.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Nowak",
+		"phoneNumber": "504976263",
+		"birthday": "09-05-2017",
+		"parentFirstName": "Małgorzata",
+		"parentLastName": "Nowak",
+		"email": "gosia.nowak@int.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "MAJA",
+		"lastName": "MAJCHER ",
+		"phoneNumber": "573936315",
+		"birthday": "06-05-2014",
+		"parentFirstName": "Anna",
+		"parentLastName": "Majcher ",
+		"email": "amajcher@onet.pl ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "aniela",
+		"lastName": "stanisławek",
+		"phoneNumber": "600374039",
+		"birthday": "24-09-2018",
+		"parentFirstName": "anna",
+		"parentLastName": "barszcz ",
+		"email": "anna-barszcz7@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "LENA",
+		"lastName": "MADEJ",
+		"phoneNumber": "512582369",
+		"birthday": "11-02-2019",
+		"parentFirstName": "KATARZYNA",
+		"parentLastName": "MADEJ",
+		"email": "majusia2422@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Fijałkowska ",
+		"phoneNumber": "881203620",
+		"birthday": "04-02-2015",
+		"parentFirstName": "Karolina",
+		"parentLastName": "Fijałkowska",
+		"email": "karolina.024@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Kos",
+		"phoneNumber": "537947078",
+		"birthday": "05-11-2018",
+		"parentFirstName": "Agnieszka ",
+		"parentLastName": "Kos",
+		"email": "agnieszka.kos92@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Wiktoria Magdalena ",
+		"lastName": "Stęplowska",
+		"phoneNumber": "793283385",
+		"birthday": "23-07-2014",
+		"parentFirstName": "Magdalena Anna ",
+		"parentLastName": "Stęplowska ",
+		"email": "magdalenasteplowska79@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Nikola Anna",
+		"lastName": "Stęplowska ",
+		"phoneNumber": "793283385",
+		"birthday": "30-05-2019",
+		"parentFirstName": "Magdalena Anna ",
+		"parentLastName": "Stęplowska ",
+		"email": "magdalenasteplowska79@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Adrianna",
+		"lastName": "Kozieł ",
+		"phoneNumber": "536257927",
+		"birthday": "21-12-2011",
+		"parentFirstName": "Joanna",
+		"parentLastName": "Kozieł",
+		"email": "Joanna.kuzi@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja ",
+		"lastName": "Margula ",
+		"phoneNumber": "791465909",
+		"birthday": "01-03-2019",
+		"parentFirstName": "Angelika ",
+		"parentLastName": "Margula ",
+		"email": "angelikamargula89@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Bębas",
+		"phoneNumber": "516489626",
+		"birthday": "06-06-2013",
+		"parentFirstName": "Marta",
+		"parentLastName": "Bębas",
+		"email": "turekmarta@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Sajecka",
+		"phoneNumber": "607108288",
+		"birthday": "13-06-2012",
+		"parentFirstName": "Dominika",
+		"parentLastName": "Sajecka",
+		"email": "Dominika.sajecka@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Jan",
+		"lastName": "Mazurkiewicz ",
+		"phoneNumber": "608339037",
+		"birthday": "15-08-2019",
+		"parentFirstName": "Karolina",
+		"parentLastName": "Mazurkiewicz",
+		"email": "kfafara1997@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Jop",
+		"phoneNumber": "668320218",
+		"birthday": "11-04-2014",
+		"parentFirstName": "Kamila",
+		"parentLastName": "Jop",
+		"email": "Ola_jop@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Bielecka",
+		"phoneNumber": "509594715",
+		"birthday": "25-09-2017",
+		"parentFirstName": "Marta",
+		"parentLastName": "Bielecka",
+		"email": "martaagatowska88@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Blanka ",
+		"lastName": "Pocheć ",
+		"phoneNumber": "502553206",
+		"birthday": "02-05-2019",
+		"parentFirstName": "Edyta ",
+		"parentLastName": "Pocheć ",
+		"email": "Leon41@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelia ",
+		"lastName": "Bogucka ",
+		"phoneNumber": "505496304",
+		"birthday": "09-11-2012",
+		"parentFirstName": "Katarzyna ",
+		"parentLastName": "Bogucka ",
+		"email": "vkasia1@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Barbara",
+		"lastName": "Wrona",
+		"phoneNumber": "604617998",
+		"birthday": "31-07-2013",
+		"parentFirstName": "Katarzyna ",
+		"parentLastName": "Wrona",
+		"email": "k_wrona@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Marta",
+		"lastName": "Zielińska ",
+		"phoneNumber": "504565748",
+		"birthday": "18-09-2018",
+		"parentFirstName": "Kinga ",
+		"parentLastName": "Zielińska ",
+		"email": "rozalska-kinga@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Bianka",
+		"lastName": "Zawadzka ",
+		"phoneNumber": "691432242",
+		"birthday": "03-07-2017",
+		"parentFirstName": "Monika ",
+		"parentLastName": "Zawadzka ",
+		"email": "Nenssi-18@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Mia",
+		"lastName": "Czarnecka",
+		"phoneNumber": "510317461",
+		"birthday": "24-01-2020",
+		"parentFirstName": "Natalia",
+		"parentLastName": "Czarnecka",
+		"email": "Nataliaczarneckaaa@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Emilia",
+		"lastName": "Wierzbińska",
+		"phoneNumber": "510317461",
+		"birthday": "16-09-2011",
+		"parentFirstName": "Joanna",
+		"parentLastName": "Wierzbińska",
+		"email": "Nataliaczarneckaaa@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Diana",
+		"lastName": "Łopuszyńska",
+		"phoneNumber": "602215005",
+		"birthday": "11-01-2017",
+		"parentFirstName": "Karol",
+		"parentLastName": "Łopuszyński ",
+		"email": "karol7506@gmail.com ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Iga",
+		"lastName": "Pożoga ",
+		"phoneNumber": "723546168",
+		"birthday": "28-06-2017",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Pożoga ",
+		"email": "magpoz87@wp.pl ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zuzanna ",
+		"lastName": "Ślusarska",
+		"phoneNumber": "796109456",
+		"birthday": "04-10-2014",
+		"parentFirstName": "Małgorzata ",
+		"parentLastName": "Ślusarska",
+		"email": "gosiax4@interia.eu",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Miernik",
+		"phoneNumber": "731918035",
+		"birthday": "20-01-2016",
+		"parentFirstName": "Magdalena",
+		"parentLastName": "Ziółkowska",
+		"email": "mziolkowska31@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Miernik",
+		"phoneNumber": "731918035",
+		"birthday": "11-03-2017",
+		"parentFirstName": "Magdalena",
+		"parentLastName": "Ziółkowska",
+		"email": "mziolkowska31@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Grzegorz",
+		"lastName": "Wesołowski",
+		"phoneNumber": "506920972",
+		"birthday": "21-08-2015",
+		"parentFirstName": "Agnieszka ",
+		"parentLastName": "Wesołowska ",
+		"email": "Agnieszkaw.7@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Urszula",
+		"lastName": "Wesołowska ",
+		"phoneNumber": "506920972",
+		"birthday": "03-10-2017",
+		"parentFirstName": "Agnieszka ",
+		"parentLastName": "Wesołowska ",
+		"email": "Agnieszkaw.7@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Malicka",
+		"phoneNumber": "739664364",
+		"birthday": "03-08-2017",
+		"parentFirstName": "Angelika",
+		"parentLastName": "Malicka",
+		"email": "angelika.zysko@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Antonina",
+		"lastName": "Murzyn",
+		"phoneNumber": "883416197",
+		"birthday": "07-09-2017",
+		"parentFirstName": "Aleksandra",
+		"parentLastName": "Libera-Murzyn",
+		"email": "liberaaleksandra2@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Bartłomiej",
+		"lastName": "Fechtner",
+		"phoneNumber": "661473883",
+		"birthday": "12-08-2014",
+		"parentFirstName": "Agnieszka",
+		"parentLastName": "Fechtner",
+		"email": "agakaczma@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Suchecka",
+		"phoneNumber": "606361996",
+		"birthday": "10-08-2013",
+		"parentFirstName": "Ewelina",
+		"parentLastName": "Suchecka",
+		"email": "ewelina135@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Amelia",
+		"lastName": "Domagała ",
+		"phoneNumber": "782148832",
+		"birthday": "22-05-2017",
+		"parentFirstName": "Katarzyna ",
+		"parentLastName": "Domagała ",
+		"email": "Kasia.mr@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Antonina",
+		"lastName": "Mazur",
+		"phoneNumber": "884324000",
+		"birthday": "04-07-2019",
+		"parentFirstName": "Ewelina, Dawid",
+		"parentLastName": "Mazur",
+		"email": "ewelka2007@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Derlatka ",
+		"phoneNumber": "504394855",
+		"birthday": "01-08-2015",
+		"parentFirstName": "Martyna",
+		"parentLastName": "Derlatka",
+		"email": "majla33@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Alicja",
+		"lastName": "Nowak",
+		"phoneNumber": "721028062",
+		"birthday": "07-03-2017",
+		"parentFirstName": "Renata",
+		"parentLastName": "Nowak",
+		"email": "annow72@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Matylda ",
+		"lastName": "Kasicka ",
+		"phoneNumber": "511637762",
+		"birthday": "03-10-2018",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Kasicka ",
+		"email": "Magdalenakasicka@interia.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "MARY",
+		"lastName": "IWEKA",
+		"phoneNumber": "792008238",
+		"birthday": "07-11-2012",
+		"parentFirstName": "KATARZYNA ",
+		"parentLastName": "Kościołek- Iweka ",
+		"email": "katarzynaiweka@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Kuropatwa",
+		"phoneNumber": "695067795",
+		"birthday": "04-02-2012",
+		"parentFirstName": "Angelika",
+		"parentLastName": "Kuropatwa",
+		"email": "angelika.kuropatwa@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Łucja ",
+		"lastName": " Strzelec ",
+		"phoneNumber": "793010797",
+		"birthday": "03-10-2019",
+		"parentFirstName": "Ewa ",
+		"parentLastName": "Strzelec ",
+		"email": "ewa.strzelec@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Kozera",
+		"phoneNumber": "514101464",
+		"birthday": "12-01-2017",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Kozera",
+		"email": "Madzia93@int.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Cukierska ",
+		"phoneNumber": "518963911",
+		"birthday": "09-10-2019",
+		"parentFirstName": "Nina",
+		"parentLastName": "Cukierska ",
+		"email": "ninakrol21@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Bodzan",
+		"phoneNumber": "695455165",
+		"birthday": "07-06-2024",
+		"parentFirstName": "Joanna",
+		"parentLastName": " Bodzan",
+		"email": "joannabodzan@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Aleksandra ",
+		"lastName": "Pietrzyk ",
+		"phoneNumber": "505453610",
+		"birthday": "02-08-2019",
+		"parentFirstName": "Martyna ",
+		"parentLastName": "Pietrzyk ",
+		"email": "m_sawickaaa@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Blanka ",
+		"lastName": "Pocheć ",
+		"phoneNumber": "502553206",
+		"birthday": "02-05-2019",
+		"parentFirstName": "Edyta ",
+		"parentLastName": "Pocheć ",
+		"email": "Leon41@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Sara",
+		"lastName": " Witkowska ",
+		"phoneNumber": "537238042",
+		"birthday": "21-03-2014",
+		"parentFirstName": "Luiza",
+		"parentLastName": "Witkowska ",
+		"email": "klaudia845@tlen.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maria",
+		"lastName": "Maciąg",
+		"phoneNumber": "531196305",
+		"birthday": "16-11-2020",
+		"parentFirstName": "Milena",
+		"parentLastName": "Maciąg",
+		"email": "chrusciel-milena@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Nina",
+		"lastName": "Filipek ",
+		"phoneNumber": "666607063",
+		"birthday": "03-02-2016",
+		"parentFirstName": "Joanna ",
+		"parentLastName": "Filipek ",
+		"email": "joanna.filipek1986@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maria",
+		"lastName": "Barszcz ",
+		"phoneNumber": "607620610",
+		"birthday": "18-12-2015",
+		"parentFirstName": "Julita",
+		"parentLastName": "Barszcz",
+		"email": "Julita.jas1@vp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Barszcz",
+		"phoneNumber": "607620610",
+		"birthday": "05-07-2019",
+		"parentFirstName": "Julita",
+		"parentLastName": "Barszcz",
+		"email": "Julita.jas1@vp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Daria",
+		"lastName": "Kopacz",
+		"phoneNumber": "513033177",
+		"birthday": "29-01-2020",
+		"parentFirstName": "Magdalena",
+		"parentLastName": "Samiec",
+		"email": "Madzia.samiec@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Hanna",
+		"lastName": "Adamska",
+		"phoneNumber": "730103730",
+		"birthday": "19-05-2018",
+		"parentFirstName": "Agnieszka ",
+		"parentLastName": "Kierepka ",
+		"email": "Kierepkaagnieszka@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Marcelina ",
+		"lastName": "Dudek ",
+		"phoneNumber": "660411636",
+		"birthday": "07-02-2020",
+		"parentFirstName": "Ewelina ",
+		"parentLastName": "Dudek ",
+		"email": "ewelinakazimierczak.pl@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zosia",
+		"lastName": "Walendzik",
+		"phoneNumber": "793309797",
+		"birthday": "04-07-2017",
+		"parentFirstName": "Aleksandra",
+		"parentLastName": "Walendzik",
+		"email": "aleksandranojek@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Liliana",
+		"lastName": "Dziama",
+		"phoneNumber": "533800015",
+		"birthday": "02-06-2014",
+		"parentFirstName": "Paulina Dziama",
+		"parentLastName": "Paulina Dziama",
+		"email": "paulina.dziama@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Weronika",
+		"lastName": "Koliesnikova",
+		"phoneNumber": "575463228",
+		"birthday": "08-01-2019",
+		"parentFirstName": "Karyna",
+		"parentLastName": "Koliesnikova ",
+		"email": "karina.kolesnikowa2021@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Lidia",
+		"lastName": "Nowak",
+		"phoneNumber": "600275374",
+		"birthday": "31-05-2012",
+		"parentFirstName": "Renata",
+		"parentLastName": "Nowak",
+		"email": "renata2709@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Valeriia",
+		"lastName": "Pohudina ",
+		"phoneNumber": "536379221",
+		"birthday": "17-02-2013",
+		"parentFirstName": "Liubov ",
+		"parentLastName": "Pohudina ",
+		"email": "drogaltseva92@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Valeria",
+		"lastName": "Silivetska",
+		"phoneNumber": "575463228",
+		"birthday": "02-06-2012",
+		"parentFirstName": "Olena",
+		"parentLastName": "Silivetska",
+		"email": "karina.kolesnikowa2021@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Rozalia ",
+		"lastName": "Rogozińska ",
+		"phoneNumber": "882055575",
+		"birthday": "17-05-2019",
+		"parentFirstName": "Karolina ",
+		"parentLastName": "Zięba Rogozińska ",
+		"email": "zieba.karo@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Kornelia",
+		"lastName": "Ciździel",
+		"phoneNumber": "511706622",
+		"birthday": "24-10-2019",
+		"parentFirstName": "Patrycja",
+		"parentLastName": "Ciździel",
+		"email": "patrycja.cizdziel@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Martyna",
+		"lastName": "Czarnecka",
+		"phoneNumber": "532505665",
+		"birthday": "14-01-2013",
+		"parentFirstName": "Maga",
+		"parentLastName": "Czarnecka",
+		"email": "Magda.dib@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Dominika",
+		"lastName": "Kula",
+		"phoneNumber": "663680334",
+		"birthday": "30-09-2015",
+		"parentFirstName": "Katarzyna",
+		"parentLastName": "Kula",
+		"email": "k8szczygiel@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Natalia",
+		"lastName": "Kula",
+		"phoneNumber": "663680334",
+		"birthday": "04-01-2019",
+		"parentFirstName": "Katarzyna",
+		"parentLastName": "Kula",
+		"email": "k8szczygiel@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Pilch",
+		"phoneNumber": "509745225",
+		"birthday": "29-04-2015",
+		"parentFirstName": "Magdalena ",
+		"parentLastName": "Pilch",
+		"email": "magdalena.pilch@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Kozak",
+		"phoneNumber": "660848512",
+		"birthday": "10-12-2015",
+		"parentFirstName": "Milena",
+		"parentLastName": "Skorupa-Kozak ",
+		"email": "kozakbartosz@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Michalina",
+		"lastName": "Janiec ",
+		"phoneNumber": "785533848",
+		"birthday": "24-05-2020",
+		"parentFirstName": "Kamila",
+		"parentLastName": "Janiec",
+		"email": "kamila_glowacka_21@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Marcel",
+		"lastName": "Surdy",
+		"phoneNumber": "530370106",
+		"birthday": "12-07-2016",
+		"parentFirstName": "Monika",
+		"parentLastName": "Sokół",
+		"email": "monas1@op.pl ",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Martyna",
+		"lastName": "Pacholec",
+		"phoneNumber": "732587742",
+		"birthday": "15-07-2018",
+		"parentFirstName": "Paulina",
+		"parentLastName": "Kochan",
+		"email": "Paulinakochan98@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Emilia",
+		"lastName": "Siepietowska ",
+		"phoneNumber": "519455787",
+		"birthday": "29-09-2017",
+		"parentFirstName": "Judyta",
+		"parentLastName": "Siepietowska ",
+		"email": "Siepietowska7@02.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zuzanna",
+		"lastName": "Szlęzak ",
+		"phoneNumber": "572591923",
+		"birthday": "02-07-2014",
+		"parentFirstName": "Angelika",
+		"parentLastName": "Szlęzak ",
+		"email": "ang2601@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Łucja ",
+		"lastName": "Strzelec ",
+		"phoneNumber": "793010797",
+		"birthday": "03-10-2019",
+		"parentFirstName": "Ewa ",
+		"parentLastName": "Strzelec ",
+		"email": "ewa.strzelec@onet.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Zosia ",
+		"lastName": "Jaśkiewicz ",
+		"phoneNumber": "506459889",
+		"birthday": "03-01-2016",
+		"parentFirstName": "Dominika ",
+		"parentLastName": "Jaśkiewicz ",
+		"email": "dominika.kustra91@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Antosia ",
+		"lastName": "Jaśkiewicz ",
+		"phoneNumber": "506459889",
+		"birthday": "09-03-2018",
+		"parentFirstName": "Dominika",
+		"parentLastName": "Jaśkiewicz ",
+		"email": "dominika.kustra91@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Maja",
+		"lastName": "Chamera",
+		"phoneNumber": "669818803",
+		"birthday": "11-06-2017",
+		"parentFirstName": "Żaneta ",
+		"parentLastName": "Chamera ",
+		"email": "zaneta.chamera@vp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Pola",
+		"lastName": "Kurowska",
+		"phoneNumber": "727017608511211008",
+		"birthday": "09-07-2012",
+		"parentFirstName": "Mariusz",
+		"parentLastName": "Kurowski",
+		"email": "mkurowski1@poczta.fm",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Iga",
+		"lastName": "Glebowicz ",
+		"phoneNumber": "512118392",
+		"birthday": "16-09-2018",
+		"parentFirstName": "Beata",
+		"parentLastName": "Glebowicz ",
+		"email": "beciulkach@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Julia",
+		"lastName": "Kliber ",
+		"phoneNumber": "697155759",
+		"birthday": "06-12-2018",
+		"parentFirstName": "Agnieszka ",
+		"parentLastName": "Kliber ",
+		"email": "cebenkoaga@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Emilia",
+		"lastName": "Żuchowska ",
+		"phoneNumber": "512267462",
+		"birthday": "02-03-2019",
+		"parentFirstName": "Sylwia ",
+		"parentLastName": "Żuchowska ",
+		"email": "Zuchowskasylwia6@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Rozalia",
+		"lastName": "Król",
+		"phoneNumber": "882848854",
+		"birthday": "11-09-2016",
+		"parentFirstName": "Paulina",
+		"parentLastName": "Król",
+		"email": "Krolpaulina1001@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Laura",
+		"lastName": "Bobrowska ",
+		"phoneNumber": "535086174",
+		"birthday": "07-02-2016",
+		"parentFirstName": "Milena ",
+		"parentLastName": "Bobrowska ",
+		"email": "milena_300@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia ",
+		"lastName": "Dankowska ",
+		"phoneNumber": "792573944",
+		"birthday": "23-04-2014",
+		"parentFirstName": "Katarzyna",
+		"parentLastName": " Dankowska",
+		"email": "kasiadankowska7@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Franciszek",
+		"lastName": "Pawlik",
+		"phoneNumber": "516457641",
+		"birthday": "10-11-2016",
+		"parentFirstName": "Kamila",
+		"parentLastName": "Pawlik",
+		"email": "skwarekkamila@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Oliwia",
+		"lastName": "Tomczyk",
+		"phoneNumber": "669277651",
+		"birthday": "25-09-2018",
+		"parentFirstName": "Aleksandra",
+		"parentLastName": "Tomczyk",
+		"email": "Slapek.aleksandra@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Wojciech",
+		"lastName": "Latała",
+		"phoneNumber": "661064699",
+		"birthday": "01-01-2020",
+		"parentFirstName": "Alicja ",
+		"parentLastName": "Latała",
+		"email": "alicja.latala@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "OLIWIA",
+		"lastName": "DANKOWSKA",
+		"phoneNumber": "792573944",
+		"birthday": "23-04-2014",
+		"parentFirstName": "KATARZYNA",
+		"parentLastName": "DANKOWSKA",
+		"email": "kasiadankowska7@o2.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": " Nadia",
+		"lastName": "Michalska ",
+		"phoneNumber": "531942171",
+		"birthday": "15-11-2016",
+		"parentFirstName": "Katarzyna",
+		"parentLastName": "Michalska ",
+		"email": "Kjk1789@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Lena",
+		"lastName": "Pikus",
+		"phoneNumber": "508524802",
+		"birthday": "24-02-2020",
+		"parentFirstName": "Paulina",
+		"parentLastName": "Pikus",
+		"email": "Paula.mikos@wp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Alicja ",
+		"lastName": "Łyżwa ",
+		"phoneNumber": "790311961",
+		"birthday": "28-10-2014",
+		"parentFirstName": "Karolina ",
+		"parentLastName": "Łyzwa",
+		"email": "karolina200@op.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Antoni",
+		"lastName": "Kopyś ",
+		"phoneNumber": "668580307",
+		"birthday": "03-02-2020",
+		"parentFirstName": "Marcin Kopyś ",
+		"parentLastName": "Izabela Nowak ",
+		"email": "2izanowak@gmail.com",
+		"club": "AKROSTAR",
+		"contactWithParent": true
+	},
+	{
+		"firstName": "Alicja ",
+		"lastName": "Maj",
+		"phoneNumber": "880605295",
+		"birthday": "21-11-2019",
+		"parentFirstName": "Izabela",
+		"parentLastName": "Maj",
+		"email": "iza.powalek@vp.pl",
+		"club": "AKROSTAR",
+		"contactWithParent": true
 	}
 ]

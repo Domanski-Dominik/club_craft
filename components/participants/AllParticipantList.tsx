@@ -47,7 +47,8 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import pl from "date-fns/locale/pl";
 import { format } from "date-fns/format";
-import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import CloseIcon from "@mui/icons-material/Close";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/functions/PolishDayName";
@@ -63,6 +64,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { StyledDataGrid } from "../styled/StyledDataGrid";
+import { parse } from "date-fns";
 
 type Props = {
 	participants: Participant[];
@@ -73,6 +75,45 @@ type Props = {
 
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
+};
+const PickDate = ({
+	id,
+	value,
+	field,
+	gridRef,
+}: GridRenderCellParams & { gridRef: any }) => {
+	const handleChange = async (newDate: Date | null) => {
+		await gridRef.current.setEditCellValue({
+			id,
+			field,
+			value: newDate ? format(newDate, "dd-MM-yyyy") : null,
+		});
+		gridRef.current.stopCellEditMode({ id, field });
+	};
+	return (
+		<Box
+			sx={{
+				display: "flex",
+				alignItems: "center",
+				height: "100%",
+			}}>
+			<LocalizationProvider
+				dateAdapter={AdapterDateFns}
+				adapterLocale={pl}>
+				<DatePicker
+					label='Data urodzenia'
+					value={value ? parse(value, "dd-MM-yyyy", new Date()) : null}
+					onChange={handleChange}
+					sx={{ width: 100, my: 1 }}
+					slotProps={{ textField: { size: "small" } }}
+				/>
+			</LocalizationProvider>
+			<CloseIcon
+				onClick={() => handleChange(null)}
+				sx={{ ml: 1 }}
+			/>
+		</Box>
+	);
 };
 
 const AllParticipantList = ({
@@ -356,7 +397,7 @@ const AllParticipantList = ({
 				<LocalizationProvider
 					dateAdapter={AdapterDateFns}
 					adapterLocale={pl}>
-					<MobileDatePicker
+					<DatePicker
 						label='Wybierz Miesiąc'
 						value={date}
 						onChange={(newDate) => {
@@ -535,6 +576,31 @@ const AllParticipantList = ({
 						height: "100%",
 					}}>
 					{params.value}
+				</Box>
+			),
+		},
+		{
+			field: "birthday",
+			headerName: "Urodzony",
+			minWidth: edit ? 140 : 110,
+			editable: true,
+			hideable: true,
+			flex: 1,
+			sortable: false,
+			renderEditCell: (props: GridRenderCellParams) => (
+				<PickDate
+					{...props}
+					gridRef={gridRef}
+				/>
+			),
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value ? params.value : ""}
 				</Box>
 			),
 		},
@@ -733,6 +799,40 @@ const AllParticipantList = ({
 			hideable: true,
 			type: "boolean",
 			sortable: true,
+		},
+		{
+			field: "parentFirstName",
+			headerName: "Imię rodzica",
+			minWidth: 115,
+			editable: true,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
+		},
+		{
+			field: "parentLastName",
+			headerName: "Nazwisko rodzica",
+			minWidth: 120,
+			editable: true,
+			flex: 1,
+			renderCell: (params) => (
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						height: "100%",
+					}}>
+					{params.value}
+				</Box>
+			),
 		},
 		{ field: "hiddengroups", headerName: "Ukryta ", hideable: true },
 	];

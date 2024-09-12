@@ -88,6 +88,9 @@ export const PUT = async (req: Request, { params }: Props) => {
 				phoneNumber: prtUpdate.phoneNumber,
 				note: prtUpdate.note,
 				regulamin: prtUpdate.regulamin,
+				birthday: prtUpdate.birthday,
+				parentFirstName: prtUpdate.parentFirstName,
+				parentLastName: prtUpdate.parentLastName,
 			},
 		});
 		if (!update) {
