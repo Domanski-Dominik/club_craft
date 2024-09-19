@@ -1,6 +1,10 @@
 <mxfile host="65bd71144e">
     <diagram id="Lj2lymCUz71HBlOgkDSw" name="Page-1">
+<<<<<<< HEAD
         <mxGraphModel dx="1269" dy="1575" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+=======
+        <mxGraphModel dx="1088" dy="1504" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+>>>>>>> alter
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -16,7 +20,11 @@
                 <mxCell id="5" value="Lokalizacje z grupami&lt;br&gt;/api/components/form/[club]&lt;br&gt;queryKey: [&quot;locWithGroups&quot;]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
                     <mxGeometry x="90" y="120" width="180" height="60" as="geometry"/>
                 </mxCell>
+<<<<<<< HEAD
                 <mxCell id="10" value="/add&lt;br&gt;/home/coaches&lt;br&gt;/participants" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+=======
+                <mxCell id="10" value="/add&lt;br&gt;/home/coaches&lt;br&gt;/participants&lt;br&gt;/stats" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+>>>>>>> alter
                     <mxGeometry x="120" y="-50" width="120" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="/add/group&lt;br style=&quot;color: rgb(240, 240, 240);&quot;&gt;&lt;span style=&quot;color: rgb(240, 240, 240);&quot;&gt;/add/group/[id]&lt;br&gt;/edit/group/[id]&lt;br&gt;/calendar&lt;br&gt;/home/manageGroups&lt;br&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
@@ -28,7 +36,11 @@
                 <mxCell id="17" value="Info klubowe&lt;br&gt;/api/club&lt;br&gt;queryKey: [&quot;clubInfo&quot;]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
                     <mxGeometry x="500" y="120" width="120" height="60" as="geometry"/>
                 </mxCell>
+<<<<<<< HEAD
                 <mxCell id="18" value="add/group&lt;br&gt;add/group/[id]&lt;br&gt;edit/group/[id]&lt;br&gt;/settings" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+=======
+                <mxCell id="18" value="add/group&lt;br&gt;add/group/[id]&lt;br&gt;edit/group/[id]&lt;br&gt;/settings&lt;br&gt;/participants" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+>>>>>>> alter
                     <mxGeometry x="500" y="-50" width="120" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="22" value="" style="edgeStyle=none;html=1;" parent="1" source="20" target="21" edge="1">
@@ -85,6 +97,7 @@
                 <mxCell id="40" value="/locations/edit/[id]" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
                     <mxGeometry x="-60" y="-35" width="120" height="60" as="geometry"/>
                 </mxCell>
+<<<<<<< HEAD
                 <mxCell id="45" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="42" target="44">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
@@ -119,6 +132,42 @@
                     <mxGeometry x="-490" y="200" width="200" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="56" value="DialogPresent&lt;br&gt;/group/id" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+=======
+                <mxCell id="45" value="" style="edgeStyle=none;html=1;" parent="1" source="42" target="44" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Uczestnik&lt;br&gt;/api/participant/solo/[id]&lt;br&gt;queryKey: [&quot;participant&quot;,id]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+                    <mxGeometry x="-280" y="120" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="/participant/[id]" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="-260" y="-35" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="" style="edgeStyle=none;html=1;" parent="1" source="46" target="49" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Wszyscy uczestnicy&lt;br&gt;/api/participant/all/[info]&lt;br&gt;queryKey: [&quot;allParticipants&quot;]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+                    <mxGeometry x="-100" y="200" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="/participants&lt;br&gt;/stats&lt;br&gt;Dialog present" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="-80" y="340" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="edgeStyle=none;html=1;" parent="1" source="51" target="53" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Profil&lt;br&gt;/api/user/profile/[id]&lt;br&gt;queryKey: ['profile&quot;]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+                    <mxGeometry x="-265" y="200" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="/profile" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="-255" y="340" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="" style="edgeStyle=none;html=1;" parent="1" source="55" target="56" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="Odarabiający&lt;br&gt;/api/participant/presence/groupId&lt;br&gt;queryKey: [&quot;workout&quot;,groupId]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+                    <mxGeometry x="-490" y="200" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="DialogPresent&lt;br&gt;/group/id" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+>>>>>>> alter
                     <mxGeometry x="-450" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>

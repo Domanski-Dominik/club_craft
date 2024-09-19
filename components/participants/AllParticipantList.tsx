@@ -70,7 +70,7 @@ type Props = {
 	participants: Participant[];
 	locWithGroups: LocWithGroups[];
 	isOwner: boolean;
-	loading: boolean;
+	clubInfo: any;
 };
 
 const formatDateMonth = (date: Date) => {
@@ -116,11 +116,7 @@ const PickDate = ({
 	);
 };
 
-const AllParticipantList = ({
-	participants,
-	locWithGroups,
-	loading,
-}: Props) => {
+const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
@@ -917,7 +913,6 @@ const AllParticipantList = ({
 					apiRef={gridRef}
 					columns={columns}
 					rows={rows}
-					loading={loading}
 					pagination
 					disableColumnMenu
 					density='compact'

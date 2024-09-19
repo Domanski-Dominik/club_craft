@@ -39,16 +39,7 @@ export const GET = async (req: Request, { params }: Props) => {
 					},
 					payments: {
 						include: {
-							payment: {
-								select: {
-									id: true,
-									amount: true,
-									description: true,
-									paymentDate: true,
-									paymentMethod: true,
-									month: true,
-								},
-							},
+							payment: true,
 						},
 					},
 				},
@@ -104,10 +95,7 @@ export const GET = async (req: Request, { params }: Props) => {
 											participantgroup: {
 												include: {
 													group: {
-														select: {
-															id: true,
-															name: true,
-															dayOfWeek: true,
+														include: {
 															locationschedule: {
 																include: {
 																	locations: {
@@ -115,6 +103,12 @@ export const GET = async (req: Request, { params }: Props) => {
 																	},
 																},
 															},
+															terms: {
+																include: {
+																	location: { select: { name: true } },
+																},
+															},
+															breaks: true,
 														},
 													},
 												},
@@ -146,7 +140,6 @@ export const GET = async (req: Request, { params }: Props) => {
 				}
 			});
 			const sortedParticipants = Array.from(uniqueParticipants.values());
-
 			const participants = sortedParticipants.map((object) => {
 				const paymentsArray = object.payments.map(
 					(paymentParticipant: any) => ({
@@ -158,14 +151,11 @@ export const GET = async (req: Request, { params }: Props) => {
 						month: paymentParticipant.payment.month,
 					})
 				);
-				const groups = object.participantgroup.map((gr: any) => ({
-					id: gr.groupId,
-					name: gr.group.name,
-					day: gr.group.dayOfWeek,
-					location: gr.group.locationschedule
-						.map((loc: any) => loc.locations.name)
-						.join(", "),
-				}));
+				const groups = object.participantgroup.map((gr: any) => {
+					return {
+						...gr.group,
+					};
+				});
 				return {
 					...object,
 					payments: paymentsArray,
