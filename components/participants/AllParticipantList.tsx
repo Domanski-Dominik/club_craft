@@ -67,6 +67,7 @@ type Props = {
 	participants: Participant[];
 	locWithGroups: LocWithGroups[];
 	isOwner: boolean;
+	clubInfo: any;
 };
 
 const formatDateMonth = (date: Date) => {

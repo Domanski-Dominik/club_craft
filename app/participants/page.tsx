@@ -21,6 +21,12 @@ const Participants = () => {
 		},
 	});
 	const router = useRouter();
+	const clubInfo = useQuery({
+		queryKey: ["clubInfo"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`api/club/${session?.user.id}`).then((res) => res.json()),
+	});
 	const participants = useQuery<Participant[]>({
 		queryKey: ["AllParticipants"],
 		enabled: !!session,
@@ -29,6 +35,7 @@ const Participants = () => {
 				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
+	console.log(participants.data);
 	const locWithGroups = useQuery<LocWithGroups[]>({
 		queryKey: ["AllParticipantsLocs"],
 		enabled: !!session,
@@ -99,9 +106,10 @@ const Participants = () => {
 
 	return (
 		<AllParticipantList
-			participants={participants.data}
+			participants={participants.data.length > 0 ? participants.data : []}
 			locWithGroups={locWithGroups.data}
 			isOwner={session?.user.role === "owner"}
+			clubInfo={clubInfo.data}
 		/>
 	);
 };
