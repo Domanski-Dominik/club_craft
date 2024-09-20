@@ -44,6 +44,7 @@ import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
 import DialogDeleteGroup from "@/components/dialogs/DialogDeleteGroup";
 import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
 import StandardError from "@/components/errors/Standard";
+import NotAllowed from "@/components/errors/NotAllowed";
 
 function SelectColorInputCell(props: GridRenderCellParams) {
 	const { id, value, field } = props;
@@ -119,7 +120,6 @@ const ManageGroups = () => {
 	const handleCloseSnackbar = () => setSnackbar(null);
 	const queryClient = useQueryClient();
 	const router = useRouter();
-	console.log(groups.data);
 	const processRowUpdateGroup = async (
 		newRow: GridRowModel,
 		oldRow: GridRowModel
@@ -506,9 +506,7 @@ const ManageGroups = () => {
 			},
 		},
 	];
-	if (session?.user.role === "coach") {
-		redirect("/home");
-	}
+	if (session?.user.role === "coach") return <NotAllowed />;
 	if (status === "loading" || groups.isFetching || locs.isFetching)
 		return <Loading />;
 	if (groups.isError || groups.data === undefined) {

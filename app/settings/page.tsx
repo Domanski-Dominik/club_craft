@@ -38,13 +38,14 @@ import StandardError from "@/components/errors/Standard";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import NotAllowed from "@/components/errors/NotAllowed";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
 	index: number;
 	value: number;
 }
-
+//TODO:Dodać czy może trener dodawać edytować grupy
 function CustomTabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props;
 
@@ -93,7 +94,7 @@ const Settings = () => {
 		queryKey: ["clubInfo"],
 		enabled: !!session,
 		queryFn: () =>
-			fetch(`api/club/${session?.user.id}`).then((res) => res.json()),
+			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
 	});
 	useEffect(() => {
 		if (clubInfo.data) {
@@ -178,7 +179,7 @@ const Settings = () => {
 				addParticipants={false}
 			/>
 		);
-
+	if (session.user.role === "coach") return <NotAllowed />;
 	return (
 		<Box sx={{ width: "calc(100% - 20px)", position: "absolute", top: 80 }}>
 			<Box

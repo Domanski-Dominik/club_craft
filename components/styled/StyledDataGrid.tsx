@@ -1,8 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import { Box, Fab } from "@mui/material";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { useRouter } from "next/navigation";
 
 const StyledGridOverlayNoResults = styled("div")(({ theme }) => ({
 	display: "flex",

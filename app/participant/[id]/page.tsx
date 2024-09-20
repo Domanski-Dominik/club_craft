@@ -48,6 +48,12 @@ const ParticipantInfo = ({ params }: Props) => {
 			redirect("/login");
 		},
 	});
+	const clubInfo = useQuery({
+		queryKey: ["clubInfo"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
+	});
 	const participant = useQuery({
 		queryKey: ["participant", params.id],
 		queryFn: () =>
@@ -146,27 +152,36 @@ const ParticipantInfo = ({ params }: Props) => {
 						</Box>
 					</Box>
 				</Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={6}
-					xl={4}
-					sx={{ minHeight: "400px" }}>
-					<Box
-						sx={{
-							height: "100%",
-							backgroundColor: "white",
-							borderRadius: 4,
-							p: 1.5,
-						}}>
-						<StyledDataGrid
-							columns={columns}
-							rows={participant.data.payments}
-							disableColumnMenu
-						/>
-					</Box>
-				</Grid>
+				{clubInfo.isSuccess ? (
+					clubInfo.data.coachPayments || session.user.role === "owner" ? (
+						<Grid
+							xs={12}
+							sm={6}
+							md={6}
+							lg={6}
+							xl={4}
+							sx={{ minHeight: "400px" }}>
+							<Box
+								sx={{
+									height: "100%",
+									backgroundColor: "white",
+									borderRadius: 4,
+									p: 1.5,
+								}}>
+								<StyledDataGrid
+									columns={columns}
+									rows={participant.data.payments}
+									disableColumnMenu
+								/>
+							</Box>
+						</Grid>
+					) : (
+						<></>
+					)
+				) : (
+					<></>
+				)}
+
 				<Grid
 					xs={12}
 					sm={12}

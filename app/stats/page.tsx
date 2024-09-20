@@ -44,6 +44,7 @@ import {
 	StyledTabs,
 	TypographyStack,
 } from "@/components/styled/StyledComponents";
+import NotAllowed from "@/components/errors/NotAllowed";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -205,15 +206,7 @@ const Stats = () => {
 				{participants.error.message}
 			</Typography>
 		);
-	if (session.user.role === "coach")
-		return (
-			<Typography
-				color={"red"}
-				variant='h3'
-				align='center'>
-				Nie masz uprawnień do tej strony
-			</Typography>
-		);
+	if (session.user.role === "coach") return <NotAllowed />;
 	return (
 		<Box
 			sx={{

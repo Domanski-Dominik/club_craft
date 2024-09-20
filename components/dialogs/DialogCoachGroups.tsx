@@ -475,7 +475,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 				<Button
 					startIcon={<AddIcon />}
 					onClick={handleAddGroupClick}
-					disabled={row.role === "owner"}
+					disabled={row.role === "owner" || addingGroup}
 					variant='contained'>
 					Dodaj grupę
 				</Button>

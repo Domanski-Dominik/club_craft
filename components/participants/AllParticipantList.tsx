@@ -20,7 +20,6 @@ import {
 	GridFooter,
 	GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { styled } from "@mui/material";
 import {
 	Box,
 	Button,
@@ -65,6 +64,8 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { StyledDataGrid } from "../styled/StyledDataGrid";
 import { parse } from "date-fns";
+
+//TODO: Zmienić na grid2 custom toolbar
 
 type Props = {
 	participants: Participant[];
@@ -116,7 +117,12 @@ const PickDate = ({
 	);
 };
 
-const AllParticipantList = ({ participants, locWithGroups }: Props) => {
+const AllParticipantList = ({
+	participants,
+	locWithGroups,
+	clubInfo,
+	isOwner,
+}: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
@@ -142,7 +148,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 	const deletePrt = useDeletePrt();
 	const updatePrt = useUpdatePrt();
 	const queryClient = useQueryClient();
-
+	console.log(clubInfo);
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	const hiddenFields = ["num", "actions", "hiddengroups"];
@@ -388,7 +394,7 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 		return (
 			<GridToolbarContainer
 				sx={{ display: "flex", mt: 1, justifyContent: "space-around" }}>
-				<GridToolbarQuickFilter sx={{ width: 170 }} />
+				<GridToolbarQuickFilter sx={{ width: 150 }} />
 
 				<LocalizationProvider
 					dateAdapter={AdapterDateFns}
@@ -408,47 +414,50 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 					/>
 				</LocalizationProvider>
 				<GridToolbarColumnsButton />
-				{edit ? (
-					<Button
-						variant='text'
-						size='medium'
-						sx={{ marginLeft: 1, marginRight: 1 }}
-						onClick={() => {
-							setColumnVisibilityModel({
-								actions: false,
-								hiddengroups: false,
-							});
-							const newModesModel: GridRowModesModel = {};
-							rows.forEach((row) => {
-								newModesModel[row.id] = { mode: GridRowModes.View };
-							});
-							setRowModesModel(newModesModel);
-							setEdit((prev) => !prev);
-						}}>
-						<CheckIcon />
-						Zakończ edycje
-					</Button>
-				) : (
-					<Button
-						variant='text'
-						size='medium'
-						sx={{ marginLeft: 1, marginRight: 1 }}
-						onClick={() => {
-							setEdit(true);
-							gridRef.current.scroll({ left: 0 });
-							setColumnVisibilityModel({
-								actions: true,
-								hiddengroups: false,
-							});
-						}}>
-						<EditIcon />
-						Edytuj
+				{(isOwner || clubInfo.coachEditPrt) &&
+					(edit ? (
+						<Button
+							variant='text'
+							size='medium'
+							sx={{ marginLeft: 1, marginRight: 1 }}
+							onClick={() => {
+								setColumnVisibilityModel({
+									actions: false,
+									hiddengroups: false,
+								});
+								const newModesModel: GridRowModesModel = {};
+								rows.forEach((row) => {
+									newModesModel[row.id] = { mode: GridRowModes.View };
+								});
+								setRowModesModel(newModesModel);
+								setEdit((prev) => !prev);
+							}}>
+							<CheckIcon />
+							Zakończ edycje
+						</Button>
+					) : (
+						<Button
+							variant='text'
+							size='medium'
+							sx={{ marginLeft: 1, marginRight: 1 }}
+							onClick={() => {
+								setEdit(true);
+								gridRef.current.scroll({ left: 0 });
+								setColumnVisibilityModel({
+									actions: true,
+									hiddengroups: false,
+								});
+							}}>
+							<EditIcon />
+							Edytuj
+						</Button>
+					))}
+				{isOwner && (
+					<Button onClick={Export}>
+						<IosShareIcon />
+						Exportuj
 					</Button>
 				)}
-				<Button onClick={Export}>
-					<IosShareIcon />
-					Exportuj
-				</Button>
 			</GridToolbarContainer>
 		);
 	}
@@ -635,46 +644,80 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 				);
 				//console.log(paymentPrt, Payed);
 				return (
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-							height: "100%",
-						}}>
-						<Box width={40}>
-							{Payed ? (
-								<Typography
-									variant='body2'
-									fontWeight='bold'>
-									{Payed.amount}
-								</Typography>
-							) : (
-								<Typography
-									variant='body2'
-									fontWeight='bold'
-									color='error'>
-									0
-								</Typography>
-							)}
-						</Box>
+					<>
+						{clubInfo.coachPayments || isOwner ? (
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									height: "100%",
+								}}>
+								<Box width={40}>
+									{Payed ? (
+										<Typography
+											variant='body2'
+											fontWeight='bold'>
+											{Payed.amount}
+										</Typography>
+									) : (
+										<Typography
+											variant='body2'
+											fontWeight='bold'
+											color='error'>
+											0
+										</Typography>
+									)}
+								</Box>
 
-						{Payed ? (
-							<GridActionsCellItem
-								icon={<CreditCardIcon />}
-								label='Dodaj płatność'
-								onClick={handlePayDialogOpen(params.row)}
-								color='inherit'
-							/>
+								{Payed ? (
+									<GridActionsCellItem
+										icon={<CreditCardIcon />}
+										label='Dodaj płatność'
+										onClick={handlePayDialogOpen(params.row)}
+										color='inherit'
+									/>
+								) : (
+									<GridActionsCellItem
+										icon={<AddCardIcon />}
+										label='Dodaj płatność'
+										onClick={handlePayDialogOpen(params.row)}
+										color='inherit'
+									/>
+								)}
+							</Box>
 						) : (
-							<GridActionsCellItem
-								icon={<AddCardIcon />}
-								label='Dodaj płatność'
-								onClick={handlePayDialogOpen(params.row)}
-								color='inherit'
-							/>
+							<>
+								{Payed ? (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											height: "100%",
+										}}>
+										<CheckIcon
+											color='success'
+											fontSize='small'
+										/>
+									</Box>
+								) : (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											height: "100%",
+										}}>
+										<CancelIcon
+											color='error'
+											fontSize='small'
+										/>
+									</Box>
+								)}
+							</>
 						)}
-					</Box>
+					</>
 				);
 			},
 		},
@@ -923,11 +966,13 @@ const AllParticipantList = ({ participants, locWithGroups }: Props) => {
 					onRowEditStop={handleRowEditStop}
 					getRowHeight={() => "auto"}
 					onCellDoubleClick={() => {
-						setEdit(true);
-						setColumnVisibilityModel({
-							actions: true,
-							hiddengroups: false,
-						});
+						if (isOwner || clubInfo.coachEditPrt) {
+							setEdit(true);
+							setColumnVisibilityModel({
+								actions: true,
+								hiddengroups: false,
+							});
+						}
 					}}
 					columnVisibilityModel={columnVisibilityModel}
 					slots={{

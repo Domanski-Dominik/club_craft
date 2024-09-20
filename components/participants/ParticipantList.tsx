@@ -70,6 +70,8 @@ type Props = {
 	participants: Participant[];
 	groupId: number;
 	group: GroupL;
+	clubInfo: any;
+	isOwner: boolean;
 };
 
 const formatDate = (date: Date) => {
@@ -117,7 +119,13 @@ const PickDate = ({
 		</Box>
 	);
 };
-const ParticipantList = ({ participants, groupId, group }: Props) => {
+const ParticipantList = ({
+	participants,
+	groupId,
+	group,
+	clubInfo,
+	isOwner,
+}: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
@@ -469,7 +477,7 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 								{group.locationName}
 							</Typography>
 						</Grid>
-						<Grid xs={4}>
+						<Grid xs={isOwner || clubInfo.coachEditPrt ? 4 : 6}>
 							<Button
 								fullWidth
 								variant='contained'
@@ -494,7 +502,7 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 								{more ? "Mniej" : "Więcej"}
 							</Button>
 						</Grid>
-						<Grid xs={4}>
+						<Grid xs={isOwner || clubInfo.coachEditPrt ? 4 : 6}>
 							<LocalizationProvider
 								dateAdapter={AdapterDateFns}
 								adapterLocale={pl}>
@@ -512,29 +520,31 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 								/>
 							</LocalizationProvider>
 						</Grid>
-						<Grid xs={4}>
-							<Button
-								fullWidth
-								variant='contained'
-								size='medium'
-								sx={{ height: "37px" }}
-								onClick={() => {
-									setEdit(true);
-									setColumnVisibilityModel({
-										phoneNumber: true,
-										actions: true,
-										payment: true,
-										note: true,
-										regulamin: true,
-										info: true,
-										parentFirstName: true,
-										parentLastName: true,
-									});
-								}}>
-								<EditIcon />
-								Edytuj
-							</Button>
-						</Grid>
+						{(isOwner || clubInfo.coachEditPrt) && (
+							<Grid xs={4}>
+								<Button
+									fullWidth
+									variant='contained'
+									size='medium'
+									sx={{ height: "37px" }}
+									onClick={() => {
+										setEdit(true);
+										setColumnVisibilityModel({
+											phoneNumber: true,
+											actions: true,
+											payment: true,
+											note: true,
+											regulamin: true,
+											info: true,
+											parentFirstName: true,
+											parentLastName: true,
+										});
+									}}>
+									<EditIcon />
+									Edytuj
+								</Button>
+							</Grid>
+						)}
 					</>
 				)}
 				{edit && (
@@ -595,7 +605,7 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 				py={0.5}
 				borderTop={1}
 				borderColor={"rgba(224, 224, 224, 1)"}
-				spacing={0.1}>
+				spacing={0}>
 				<Grid xs={4}>
 					<Typography
 						variant='body1'
@@ -846,47 +856,80 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 				);
 				//console.log(paymentPrt, Payed);
 				return (
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-							alignContent: "center",
-							height: "100%",
-						}}>
-						<Box width={25}>
-							{Payed ? (
-								<Typography
-									variant='body2'
-									fontWeight='bold'>
-									{Payed.amount}
-								</Typography>
-							) : (
-								<Typography
-									variant='body2'
-									fontWeight='bold'
-									color='error'>
-									0
-								</Typography>
-							)}
-						</Box>
+					<>
+						{clubInfo.coachPayments || isOwner ? (
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+									height: "100%",
+								}}>
+								<Box width={40}>
+									{Payed ? (
+										<Typography
+											variant='body2'
+											fontWeight='bold'>
+											{Payed.amount}
+										</Typography>
+									) : (
+										<Typography
+											variant='body2'
+											fontWeight='bold'
+											color='error'>
+											0
+										</Typography>
+									)}
+								</Box>
 
-						{Payed ? (
-							<GridActionsCellItem
-								icon={<CreditCardIcon />}
-								label='Dodaj płatność'
-								onClick={handlePayDialogOpen(params.row)}
-								color='inherit'
-							/>
+								{Payed ? (
+									<GridActionsCellItem
+										icon={<CreditCardIcon />}
+										label='Dodaj płatność'
+										onClick={handlePayDialogOpen(params.row)}
+										color='inherit'
+									/>
+								) : (
+									<GridActionsCellItem
+										icon={<AddCardIcon />}
+										label='Dodaj płatność'
+										onClick={handlePayDialogOpen(params.row)}
+										color='inherit'
+									/>
+								)}
+							</Box>
 						) : (
-							<GridActionsCellItem
-								icon={<AddCardIcon />}
-								label='Dodaj płatność'
-								onClick={handlePayDialogOpen(params.row)}
-								color='inherit'
-							/>
+							<>
+								{Payed ? (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											height: "100%",
+										}}>
+										<CheckIcon
+											color='success'
+											fontSize='small'
+										/>
+									</Box>
+								) : (
+									<Box
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											height: "100%",
+										}}>
+										<CancelIcon
+											color='error'
+											fontSize='small'
+										/>
+									</Box>
+								)}
+							</>
 						)}
-					</Box>
+					</>
 				);
 			},
 		},
@@ -999,10 +1042,12 @@ const ParticipantList = ({ participants, groupId, group }: Props) => {
 				slots={{ toolbar: CustomToolbar, footer: CustomFooter }}
 				columnVisibilityModel={columnVisibilityModel}
 				onCellDoubleClick={() => {
-					setEdit(true);
-					setColumnVisibilityModel({
-						actions: true,
-					});
+					if (isOwner || clubInfo.coachEditPrt) {
+						setEdit(true);
+						setColumnVisibilityModel({
+							actions: true,
+						});
+					}
 				}}
 				initialState={{
 					columns: {

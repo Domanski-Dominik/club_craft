@@ -23,6 +23,12 @@ const Group = ({ params }: Props) => {
 		},
 	});
 	const groupId = parseInt(params.id, 10);
+	const clubInfo = useQuery({
+		queryKey: ["clubInfo"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
+	});
 	const participants = useQuery({
 		queryKey: ["participants", params.id],
 		queryFn: () =>
@@ -70,6 +76,8 @@ const Group = ({ params }: Props) => {
 						participants={participants.data}
 						groupId={groupId}
 						group={group.data}
+						clubInfo={clubInfo.isSuccess ? clubInfo.data : {}}
+						isOwner={session.user.role === "owner"}
 					/>
 				</Box>
 			) : (

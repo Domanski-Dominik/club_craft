@@ -4,7 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@mui/material";
 
 type Data = {
@@ -36,6 +36,17 @@ export default function HomePage() {
 				`/api/home/${session?.user.role}/${session?.user.club}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
+	const clubInfo = useQuery({
+		queryKey: ["clubInfo"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
+		staleTime: 100000,
+	});
+	const queryClient = useQueryClient();
+	if (clubInfo.isSuccess) {
+		queryClient.setQueryData(["clubInfo"], clubInfo.data);
+	}
 	return (
 		<>
 			<MobileNavigation pages={pages} />
