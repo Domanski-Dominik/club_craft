@@ -19,7 +19,6 @@ import {
 	Select,
 	InputLabelProps,
 	InputLabel,
-	colors,
 	Tabs,
 	Tab,
 	TabProps,

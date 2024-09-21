@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid2";
 import { useRouter, redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import type { Location } from "@/types/type";
@@ -157,10 +157,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 									spacing={2}
 									direction={"row"}
 									sx={{ justifyContent: "center" }}>
-									<Grid
-										xs={12}
-										sm={12}
-										md={4}>
+									<Grid size={{ xs: 12, sm: 12, md: 4 }}>
 										<FormControl fullWidth>
 											<TextField
 												id={"outlined-basic"}
@@ -177,10 +174,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 											/>
 										</FormControl>
 									</Grid>
-									<Grid
-										xs={8}
-										sm={8}
-										md={4}>
+									<Grid size={{ xs: 8, sm: 8, md: 4 }}>
 										<FormControl fullWidth>
 											<TextField
 												id={"outlined-basic"}
@@ -195,10 +189,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 											/>
 										</FormControl>
 									</Grid>
-									<Grid
-										xs={4}
-										sm={4}
-										md={4}>
+									<Grid size={{ xs: 4, sm: 4, md: 4 }}>
 										<FormControl fullWidth>
 											<TextField
 												id={"outlined-basic"}
@@ -213,10 +204,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 											/>
 										</FormControl>
 									</Grid>
-									<Grid
-										xs={6}
-										sm={6}
-										md={6}>
+									<Grid size={{ xs: 6, sm: 6, md: 6 }}>
 										<FormControl fullWidth>
 											<TextField
 												id={"outlined-basic"}
@@ -231,10 +219,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 											/>
 										</FormControl>
 									</Grid>
-									<Grid
-										xs={6}
-										sm={6}
-										md={6}>
+									<Grid size={{ xs: 6, sm: 6, md: 6 }}>
 										<FormControl fullWidth>
 											<TextField
 												id={"outlined-basic"}
@@ -253,12 +238,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 									container
 									sx={{ marginTop: "1rem", justifyContent: "center" }}
 									spacing={2}>
-									<Grid
-										xs={6}
-										sm={6}
-										md={4}
-										lg={3}
-										xl={2}>
+									<Grid size={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 2 }}>
 										<Button
 											fullWidth
 											variant='outlined'
@@ -269,12 +249,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 											Anuluj
 										</Button>
 									</Grid>
-									<Grid
-										xs={6}
-										sm={6}
-										md={4}
-										lg={3}
-										xl={2}>
+									<Grid size={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 2 }}>
 										<Button
 											fullWidth
 											variant='contained'

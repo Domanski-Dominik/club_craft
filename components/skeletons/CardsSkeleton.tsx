@@ -1,15 +1,10 @@
 import React from "react";
 import { Card, Skeleton, CardContent, Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Grid2";
 
 const CardS = () => {
 	return (
-		<Grid
-			xs={12}
-			sm={6}
-			md={6}
-			lg={4}
-			xl={3}>
+		<Grid size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
 			<Card variant='outlined'>
 				<CardContent
 					style={{

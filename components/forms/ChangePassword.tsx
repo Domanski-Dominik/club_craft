@@ -7,7 +7,7 @@ import {
 	Typography,
 	Avatar,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CelebrationIcon from "@mui/icons-material/Celebration";
@@ -120,10 +120,13 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 						component={"form"}
 						spacing={2}>
 						<Grid
-							xs={12}
-							sm={12}
-							md={6}
-							lg={3}>
+							size={{
+								xs: 12,
+								sm: 12,
+								md: 6,
+								lg: 3,
+								xl: 3,
+							}}>
 							<FormControl fullWidth>
 								<TextField
 									id={"outlined-basic"}
@@ -139,10 +142,13 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 							<Typography color='error'>{errors.password}</Typography>
 						</Grid>
 						<Grid
-							xs={12}
-							sm={12}
-							md={6}
-							lg={3}>
+							size={{
+								xs: 12,
+								sm: 12,
+								md: 6,
+								lg: 3,
+								xl: 3,
+							}}>
 							<FormControl fullWidth>
 								<TextField
 									id={"outlined-basic"}
@@ -158,10 +164,13 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 							<Typography color='error'>{errors.confirmPassword}</Typography>
 						</Grid>
 						<Grid
-							xs={6}
-							sm={6}
-							md={6}
-							lg={3}>
+							size={{
+								xs: 6,
+								sm: 6,
+								md: 6,
+								lg: 3,
+								xl: 3,
+							}}>
 							<Button
 								fullWidth
 								variant='outlined'
@@ -170,10 +179,13 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 							</Button>
 						</Grid>
 						<Grid
-							xs={6}
-							sm={6}
-							md={6}
-							lg={3}>
+							size={{
+								xs: 6,
+								sm: 6,
+								md: 6,
+								lg: 3,
+								xl: 3,
+							}}>
 							<Button
 								fullWidth
 								variant='contained'

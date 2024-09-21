@@ -35,7 +35,7 @@ import {
 	TimePicker,
 } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 import DialogLoc from "@/components/dialogs/DialogLoc";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";

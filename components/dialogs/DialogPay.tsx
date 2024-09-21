@@ -1,5 +1,5 @@
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 import { format } from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useState } from "react";
@@ -168,14 +168,14 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 		});
 	};
 	return (
-        (<Dialog
+		<Dialog
 			open={open}
 			onClose={handleClose}
 			scroll='paper'>
-            <DialogTitle>
+			<DialogTitle>
 				Płatność {row.firstName} {row.lastName}
 			</DialogTitle>
-            <DialogContent dividers>
+			<DialogContent dividers>
 				{addingPayment && (
 					<Grid
 						sx={{ marginTop: 0.1, marginBottom: 1 }}
@@ -194,12 +194,12 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								required
 								fullWidth
 								slotProps={{
-                                    input: {
-                                        endAdornment: (
-                                            <InputAdornment position='end'>zł</InputAdornment>
-                                        ),
-                                    }
-                                }}
+									input: {
+										endAdornment: (
+											<InputAdornment position='end'>zł</InputAdornment>
+										),
+									},
+								}}
 							/>
 							<Typography color='error'>{errors.amount}</Typography>
 						</Grid>
@@ -299,12 +299,12 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 										required
 										fullWidth
 										slotProps={{
-                                            input: {
-                                                endAdornment: (
-                                                    <InputAdornment position='end'>zł</InputAdornment>
-                                                ),
-                                            }
-                                        }}
+											input: {
+												endAdornment: (
+													<InputAdornment position='end'>zł</InputAdornment>
+												),
+											},
+										}}
 									/>
 									<Typography color='error'>{errors.amount}</Typography>
 								</Grid>
@@ -411,7 +411,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 					</div>
 				))}
 			</DialogContent>
-            <DialogActions>
+			<DialogActions>
 				<Grid
 					container
 					sx={{ justifyContent: "space-around" }}>
@@ -437,7 +437,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 					</Grid>
 				</Grid>
 			</DialogActions>
-        </Dialog>)
-    );
+		</Dialog>
+	);
 };
 export default DialogPay;

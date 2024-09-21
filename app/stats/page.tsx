@@ -9,15 +9,11 @@ import {
 	Box,
 	FormControl,
 	Typography,
-	Tab,
-	Tabs,
 	Select,
 	InputLabel,
 	MenuItem,
 	Collapse,
 	Divider,
-	Accordion,
-	AccordionDetails,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart } from "@mui/x-charts/BarChart";
@@ -31,7 +27,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import {
 	startOfMonth,
 	endOfMonth,
-	eachDayOfInterval,
 	isWithinInterval,
 	parse,
 	getMonth,
@@ -39,11 +34,8 @@ import {
 	getYear,
 	format,
 } from "date-fns";
-import pl from "date-fns/locale/pl";
-import Grid from "@mui/material/Grid2";
-import SelectInput, {
-	SelectChangeEvent,
-} from "@mui/material/Select/SelectInput";
+import { pl } from "date-fns/locale/pl";
+import { SelectChangeEvent } from "@mui/material/Select/SelectInput";
 import {
 	Stack2,
 	StyledAccordion,

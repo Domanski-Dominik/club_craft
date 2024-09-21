@@ -2,7 +2,7 @@
 import Loading from "@/context/Loading";
 import { Typography, Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Grid2";
 import { GridColDef } from "@mui/x-data-grid";
 import AttendanceCalendar from "@/components/calendars/AttendanceCalendar";
 import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
@@ -91,12 +91,7 @@ const ParticipantInfo = ({ params }: Props) => {
 				spacing={2}
 				paddingTop={2}
 				width={"100%"}>
-				<Grid
-					xs={12}
-					sm={12}
-					md={12}
-					lg={12}
-					xl={12}>
+				<Grid size={12}>
 					<Box
 						sx={{
 							backgroundColor: "white",
@@ -111,11 +106,13 @@ const ParticipantInfo = ({ params }: Props) => {
 					</Box>
 				</Grid>
 				<Grid
-					xs={12}
-					sm={6}
-					md={6}
-					lg={6}
-					xl={4}>
+					size={{
+						xs: 12,
+						sm: 6,
+						md: 6,
+						lg: 6,
+						xl: 4,
+					}}>
 					<Box
 						sx={{
 							backgroundColor: "white",
@@ -155,11 +152,13 @@ const ParticipantInfo = ({ params }: Props) => {
 				{clubInfo.isSuccess ? (
 					clubInfo.data.coachPayments || session.user.role === "owner" ? (
 						<Grid
-							xs={12}
-							sm={6}
-							md={6}
-							lg={6}
-							xl={4}
+							size={{
+								xs: 12,
+								sm: 6,
+								md: 6,
+								lg: 6,
+								xl: 4,
+							}}
 							sx={{ minHeight: "400px" }}>
 							<Box
 								sx={{
@@ -183,11 +182,13 @@ const ParticipantInfo = ({ params }: Props) => {
 				)}
 
 				<Grid
-					xs={12}
-					sm={12}
-					md={12}
-					lg={12}
-					xl={4}
+					size={{
+						xs: 12,
+						sm: 12,
+						md: 12,
+						lg: 12,
+						xl: 4,
+					}}
 					sx={{ minHeight: "400px" }}>
 					<Box
 						sx={{

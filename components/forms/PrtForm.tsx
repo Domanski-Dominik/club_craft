@@ -3,7 +3,7 @@
 import React from "react";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 import {
 	Box,
 	Typography,

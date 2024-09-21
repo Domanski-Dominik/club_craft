@@ -14,7 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAttendance } from "@/hooks/participantHooks";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
 import { getShouldDisableDate } from "@/functions/dates";

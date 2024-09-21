@@ -40,7 +40,7 @@ import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import pl from "date-fns/locale/pl";
+import { pl } from "date-fns/locale/pl";
 import { format } from "date-fns/format";
 import CloseIcon from "@mui/icons-material/Close";
 import {
