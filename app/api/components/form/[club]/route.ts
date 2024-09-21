@@ -13,11 +13,17 @@ export const GET = async (req: Request, { params }: Props) => {
 		const locs = await prisma.locations.findMany({
 			where: { club: club },
 			include: {
-				locationschedule: {
-					select: {
+				terms: {
+					include: {
 						group: {
 							include: {
-								terms: true,
+								terms: {
+									include: {
+										location: {
+											select: { name: true },
+										},
+									},
+								},
 								breaks: true,
 							},
 						},
@@ -32,10 +38,13 @@ export const GET = async (req: Request, { params }: Props) => {
 			);
 
 		const formattedLoc = locs.map((loc) => {
-			const groups = loc.locationschedule.map((gr) => gr.group);
+			const termsGroups = loc.terms.map((term) => term.group);
+			const uniqueGroups = Array.from(
+				new Map(termsGroups.map((group) => [group.id, group])).values()
+			);
 			return {
 				...loc,
-				locationschedule: groups,
+				groups: uniqueGroups,
 			};
 		});
 		//console.log(formattedLoc);

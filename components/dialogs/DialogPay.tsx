@@ -168,14 +168,14 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 		});
 	};
 	return (
-		<Dialog
+        (<Dialog
 			open={open}
 			onClose={handleClose}
 			scroll='paper'>
-			<DialogTitle>
+            <DialogTitle>
 				Płatność {row.firstName} {row.lastName}
 			</DialogTitle>
-			<DialogContent dividers>
+            <DialogContent dividers>
 				{addingPayment && (
 					<Grid
 						sx={{ marginTop: 0.1, marginBottom: 1 }}
@@ -193,11 +193,13 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								onChange={handleChange("amount")}
 								required
 								fullWidth
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position='end'>zł</InputAdornment>
-									),
-								}}
+								slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position='end'>zł</InputAdornment>
+                                        ),
+                                    }
+                                }}
 							/>
 							<Typography color='error'>{errors.amount}</Typography>
 						</Grid>
@@ -296,11 +298,13 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 										onChange={handleChange("amount")}
 										required
 										fullWidth
-										InputProps={{
-											endAdornment: (
-												<InputAdornment position='end'>zł</InputAdornment>
-											),
-										}}
+										slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>zł</InputAdornment>
+                                                ),
+                                            }
+                                        }}
 									/>
 									<Typography color='error'>{errors.amount}</Typography>
 								</Grid>
@@ -407,7 +411,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 					</div>
 				))}
 			</DialogContent>
-			<DialogActions>
+            <DialogActions>
 				<Grid
 					container
 					sx={{ justifyContent: "space-around" }}>
@@ -433,7 +437,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 					</Grid>
 				</Grid>
 			</DialogActions>
-		</Dialog>
-	);
+        </Dialog>)
+    );
 };
 export default DialogPay;

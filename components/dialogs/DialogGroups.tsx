@@ -1,7 +1,7 @@
 import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 import React, { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Grid2";
 import {
 	Button,
 	Dialog,
@@ -63,10 +63,10 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		//console.log(locWithGroups);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((schedule) =>
-			schedule.locationschedule.find((group) => group.id === Number(groupId))
+			schedule.groups.find((group) => group.id === Number(groupId))
 		);
 		if (loc) setSelectedLocation(loc);
-		const groupsInLoc = loc?.locationschedule;
+		const groupsInLoc = loc?.groups;
 		setGroups(groupsInLoc);
 		setSelectedGroupId(groupId);
 	};
@@ -92,7 +92,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		);
 		//console.log(selectedLocationData);
 		setSelectedLocation(selectedLocationData);
-		const groupsInLoc = selectedLocationData?.locationschedule.filter((group) =>
+		const groupsInLoc = selectedLocationData?.groups.filter((group) =>
 			group.terms.filter((t) => t.locationId === id)
 		);
 		setGroups(groupsInLoc);
@@ -339,7 +339,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 								container
 								spacing={2}
 								sx={{ my: 1 }}>
-								<Grid xs={10}>
+								<Grid size={10}>
 									<FormControl
 										fullWidth
 										size='small'>
@@ -372,7 +372,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 										</Select>
 									</FormControl>
 								</Grid>
-								<Grid xs={10}>
+								<Grid size={10}>
 									<FormControl
 										fullWidth
 										size='small'>

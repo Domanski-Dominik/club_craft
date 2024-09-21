@@ -50,7 +50,7 @@ import {
 } from "@mui/x-date-pickers";
 import DialogPay from "../dialogs/DialogPay";
 import DialogDelete from "../dialogs/DialogDelete";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
+import Grid from "@mui/material/Grid2";
 import DialogPresent from "../dialogs/DialogPresent";
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -469,7 +469,7 @@ const ParticipantList = ({
 				borderColor={"rgba(224, 224, 224, 1)"}>
 				{!edit && (
 					<>
-						<Grid xs={12}>
+						<Grid size={{ xs: 12 }}>
 							<Typography
 								align='center'
 								variant='h6'>
@@ -477,7 +477,7 @@ const ParticipantList = ({
 								{group.locationName}
 							</Typography>
 						</Grid>
-						<Grid xs={isOwner || clubInfo.coachEditPrt ? 4 : 6}>
+						<Grid size={{ xs: isOwner || clubInfo.coachEditPrt ? 4 : 6 }}>
 							<Button
 								fullWidth
 								variant='contained'
@@ -502,7 +502,7 @@ const ParticipantList = ({
 								{more ? "Mniej" : "Więcej"}
 							</Button>
 						</Grid>
-						<Grid xs={isOwner || clubInfo.coachEditPrt ? 4 : 6}>
+						<Grid size={{ xs: isOwner || clubInfo.coachEditPrt ? 4 : 6 }}>
 							<LocalizationProvider
 								dateAdapter={AdapterDateFns}
 								adapterLocale={pl}>
@@ -521,7 +521,7 @@ const ParticipantList = ({
 							</LocalizationProvider>
 						</Grid>
 						{(isOwner || clubInfo.coachEditPrt) && (
-							<Grid xs={4}>
+							<Grid size={{ xs: 4 }}>
 								<Button
 									fullWidth
 									variant='contained'
@@ -548,7 +548,7 @@ const ParticipantList = ({
 					</>
 				)}
 				{edit && (
-					<Grid xs={12}>
+					<Grid size={{ xs: 12 }}>
 						<Button
 							fullWidth
 							variant='outlined'
@@ -606,7 +606,7 @@ const ParticipantList = ({
 				borderTop={1}
 				borderColor={"rgba(224, 224, 224, 1)"}
 				spacing={0}>
-				<Grid xs={4}>
+				<Grid size={{ xs: 4 }}>
 					<Typography
 						variant='body1'
 						align='center'>
@@ -615,7 +615,7 @@ const ParticipantList = ({
 						{rows.length}
 					</Typography>
 				</Grid>
-				<Grid xs={4}>
+				<Grid size={{ xs: 4 }}>
 					<Typography
 						variant='body1'
 						align='center'>
@@ -623,7 +623,7 @@ const ParticipantList = ({
 						{rows.length}
 					</Typography>
 				</Grid>
-				<Grid xs={4}>
+				<Grid size={{ xs: 4 }}>
 					<Button
 						onClick={handlePresentDialogOpen}
 						fullWidth

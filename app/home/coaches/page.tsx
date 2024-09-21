@@ -303,29 +303,29 @@ const CoachesManage = () => {
 	}
 	if (coaches.isLoading || locWithGr.isLoading || session === undefined)
 		return <Loading />;
-	return (
-		<>
-			<Box
-				sx={{
-					width: "100%",
-					mt: 3,
-					backgroundColor: "white",
-					borderRadius: 4,
-					p: 2,
-				}}>
-				<MobileNavigation pages={pages} />
-				<StyledDataGrid
-					rows={coaches.isSuccess ? coaches.data : []}
-					columns={columns}
-					disableColumnMenu
-					getRowHeight={() => "auto"}
-				/>
-				<Collapse in={showlink}>
-					<TextField
-						fullWidth
-						label='Link dla trenera'
-						value={`clubcraft.pl/register/${session?.user.club}`}
-						InputProps={{
+	return (<>
+        <Box
+            sx={{
+                width: "100%",
+                mt: 3,
+                backgroundColor: "white",
+                borderRadius: 4,
+                p: 2,
+            }}>
+            <MobileNavigation pages={pages} />
+            <StyledDataGrid
+                rows={coaches.isSuccess ? coaches.data : []}
+                columns={columns}
+                disableColumnMenu
+                getRowHeight={() => "auto"}
+            />
+            <Collapse in={showlink}>
+                <TextField
+                    fullWidth
+                    label='Link dla trenera'
+                    value={`clubcraft.pl/register/${session?.user.club}`}
+                    slotProps={{
+                        input: {
 							endAdornment: (
 								<InputAdornment position='end'>
 									<IconButton onClick={copyToClipboard}>
@@ -336,62 +336,61 @@ const CoachesManage = () => {
 									</IconButton>
 								</InputAdornment>
 							),
-						}}
-					/>
-				</Collapse>
-			</Box>
-			{selectedRow && (
-				<DialogCoachGroups
-					open={groupsDialogOpen}
-					row={selectedRow}
-					onClose={() => {
-						setGroupsDialogOpen(false);
-						setSelectedRow(null);
-					}}
-					locWithGroups={locWithGr.data}
-				/>
-			)}
-			{selectedRow && (
-				<DialogAdmin
-					open={adminDialogOpen}
-					row={selectedRow}
-					onClose={() => {
-						setAdminDialogOpen(false);
-						setSelectedRow(null);
-					}}
-				/>
-			)}
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					mt: 3,
-					mb: 3,
-				}}>
-				<Fab
-					size='large'
-					color='primary'
-					variant='extended'
-					onClick={addCoach}>
-					<AddIcon sx={{ mr: 1 }} />
-					Dodaj trenera
-				</Fab>
-			</Box>
-
-			<Snackbar
-				open={openSnackbar}
-				autoHideDuration={3000}
-				onClose={handleCloseSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-				sx={{ position: "absolute", bottom: 90 }}>
-				<Alert
-					onClose={handleCloseSnackbar}
-					severity='success'>
-					Skopiowano!
-				</Alert>
-			</Snackbar>
-		</>
-	);
+						}
+                    }}
+                />
+            </Collapse>
+        </Box>
+        {selectedRow && (
+            <DialogCoachGroups
+                open={groupsDialogOpen}
+                row={selectedRow}
+                onClose={() => {
+                    setGroupsDialogOpen(false);
+                    setSelectedRow(null);
+                }}
+                locWithGroups={locWithGr.data}
+            />
+        )}
+        {selectedRow && (
+            <DialogAdmin
+                open={adminDialogOpen}
+                row={selectedRow}
+                onClose={() => {
+                    setAdminDialogOpen(false);
+                    setSelectedRow(null);
+                }}
+            />
+        )}
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: 3,
+                mb: 3,
+            }}>
+            <Fab
+                size='large'
+                color='primary'
+                variant='extended'
+                onClick={addCoach}>
+                <AddIcon sx={{ mr: 1 }} />
+                Dodaj trenera
+            </Fab>
+        </Box>
+        <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            sx={{ position: "absolute", bottom: 90 }}>
+            <Alert
+                onClose={handleCloseSnackbar}
+                severity='success'>
+                Skopiowano!
+            </Alert>
+        </Snackbar>
+    </>);
 };
 
 export default CoachesManage;

@@ -148,7 +148,6 @@ const AllParticipantList = ({
 	const deletePrt = useDeletePrt();
 	const updatePrt = useUpdatePrt();
 	const queryClient = useQueryClient();
-	console.log(clubInfo);
 	const handleCloseSnackbar = () => setSnackbar(null);
 
 	const hiddenFields = ["num", "actions", "hiddengroups"];

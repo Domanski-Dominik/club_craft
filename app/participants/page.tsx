@@ -30,7 +30,6 @@ const Participants = () => {
 				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
 			).then((res) => res.json()),
 	});
-	console.log(participants.data);
 	const locWithGroups = useQuery<LocWithGroups[]>({
 		queryKey: ["locWithGroups"],
 		enabled: !!session,
@@ -39,20 +38,27 @@ const Participants = () => {
 				res.json()
 			),
 	});
-	if (participants.data === undefined || locWithGroups.data === undefined)
+	if (
+		participants.data === undefined ||
+		locWithGroups.data === undefined ||
+		clubInfo.data === undefined
+	)
 		return <Loading />;
-	if (participants.isError)
+	if (participants.isError || locWithGroups.isError || clubInfo.isError)
 		return (
 			<StandardError
 				message={
 					participants.isError
 						? participants.error.message
-						: "Nie udało się pobrać uczestników lub grup"
+						: locWithGroups.isError
+						? locWithGroups.error.message
+						: clubInfo.isError
+						? clubInfo.error.message
+						: "Nie udało się pobrać uczestników, grup lub informacji o klubie"
 				}
 				addParticipants={true}
 			/>
 		);
-
 	return (
 		<AllParticipantList
 			participants={participants.data.length > 0 ? participants.data : []}

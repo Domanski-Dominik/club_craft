@@ -119,7 +119,7 @@ export interface DialogDeleteGroupType extends Dialog {
 	onClose: (value: string) => void;
 }
 export interface LocWithGroups extends Location {
-	locationschedule: Group[] | [];
+	groups: Group[] | [];
 }
 export interface User {
 	id: String;

@@ -270,8 +270,8 @@ const ParticipantForm = () => {
 			const selectedLocationData = LocWithGroups.data.find(
 				(location) => location.id === id
 			);
-			const groupsInLoc = selectedLocationData?.locationschedule.filter(
-				(group) => group.terms.filter((t) => t.locationId === id)
+			const groupsInLoc = selectedLocationData?.groups.filter((group) =>
+				group.terms.filter((t) => t.locationId === id)
 			);
 			setGroups(groupsInLoc);
 			//console.log(selectedLocationData);
@@ -665,10 +665,9 @@ const ParticipantForm = () => {
 												startIcon={<AddIcon />}
 												onClick={() => {
 													if (selectedLocation) {
-														const foundGroup =
-															selectedLocation?.locationschedule.find(
-																(group) => group.id === Number(selectedGroupId)
-															);
+														const foundGroup = selectedLocation?.groups.find(
+															(group) => group.id === Number(selectedGroupId)
+														);
 														if (foundGroup) {
 															addGroup({
 																locName: selectedLocation?.name,

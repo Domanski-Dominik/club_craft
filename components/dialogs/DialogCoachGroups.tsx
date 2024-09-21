@@ -1,7 +1,6 @@
 import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 import React, { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
-import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -62,10 +61,10 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 		//console.log(groupId);
 		setEditedGroupId(groupId);
 		const loc = locWithGroups.find((loc) =>
-			loc.locationschedule.find((group) => group.id === Number(groupId))
+			loc.groups.find((group) => group.id === Number(groupId))
 		);
 		if (loc) setSelectedLocation(loc);
-		const groupsInLoc = loc?.locationschedule;
+		const groupsInLoc = loc?.groups;
 		setGroups(groupsInLoc);
 		setSelectedGroupId(groupId);
 	};
@@ -91,7 +90,7 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 		);
 		//console.log(selectedLocationData);
 		setSelectedLocation(selectedLocationData);
-		const groupsInLoc = selectedLocationData?.locationschedule.filter((group) =>
+		const groupsInLoc = selectedLocationData?.groups.filter((group) =>
 			group.terms.filter((t) => t.locationId === id)
 		);
 		setGroups(groupsInLoc);
