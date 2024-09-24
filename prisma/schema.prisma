@@ -26,6 +26,11 @@ model club {
   coachPayments   Boolean   @default(false)
   coachEditPrt    Boolean   @default(false)
   coachNewPrt     Boolean   @default(false)
+  subscriptionId   String?   // Przechowuje ID subskrypcji Stripe
+  subscriptionPlan String?   // Przechowuje typ subskrypcji (standard/plus/platinum)
+  subscriptionStatus String? // Status subskrypcji np. "active", "canceled"
+  customerId      String?
+  customerEmail   String?
   clubconnect     clubconnect[]
 }
 model clubconnect {
@@ -41,9 +46,6 @@ model clubconnect {
 model group {
   id               Int          @id @default(autoincrement())
   name             String
-  dayOfWeek        Int?         @default(0)
-  timeS            String?      @default("00:00")
-  timeE            String?      @default("00:00")
   club             String       @default("guest")
   color            String       @default("#3788d8")
   price            Int          @default(0)

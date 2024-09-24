@@ -37,9 +37,6 @@ export const GET = async (req: Request, { params }: Props) => {
 		const group = {
 			id: schedule.groupId,
 			name: schedule.group.name,
-			dayOfWeek: schedule.group.dayOfWeek,
-			timeS: schedule.group.timeS,
-			timeE: schedule.group.timeE,
 			locationName: schedule.locations.name,
 			locationId: schedule.locationId,
 			club: schedule.group.club,

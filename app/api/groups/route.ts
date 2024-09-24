@@ -1,5 +1,4 @@
 import { prisma } from "@/prisma/prisma";
-import { group } from "console";
 
 export const POST = async (req: Request) => {
 	const {

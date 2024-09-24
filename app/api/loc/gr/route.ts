@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/prisma";
 
-export const POST = async (req: Request) => {
+/*export const POST = async (req: Request) => {
 	const { name, dayOfWeek, timeS, timeE, locationId, club, color } =
 		await req.json();
 	//console.log(name, dayOfWeek, timeS, timeE, locationId, club);
@@ -23,9 +23,6 @@ export const POST = async (req: Request) => {
 		const newGroup = await prisma.group.create({
 			data: {
 				name: String(name),
-				dayOfWeek: Number(dayOfWeek),
-				timeS: String(timeS),
-				timeE: String(timeE),
 				club: String(club),
 				color: String(color),
 			},
@@ -55,7 +52,7 @@ export const POST = async (req: Request) => {
 			{ status: error.status }
 		);
 	}
-};
+};*/
 export const DELETE = async (req: Request) => {
 	const { id } = await req.json();
 	//console.log("Id grupy to " + id);
@@ -206,10 +203,6 @@ export const PUT = async (req: Request) => {
 			where: { id: id },
 			data: {
 				name: name !== undefined ? String(name) : existingGroup.name,
-				dayOfWeek:
-					dayOfWeek !== undefined ? Number(dayOfWeek) : existingGroup.dayOfWeek,
-				timeS: timeS !== undefined ? String(timeS) : existingGroup.timeS,
-				timeE: timeE !== undefined ? String(timeE) : existingGroup.timeE,
 				color: color !== undefined ? String(color) : existingGroup.color,
 				price: price !== undefined ? price : existingGroup.price,
 			},

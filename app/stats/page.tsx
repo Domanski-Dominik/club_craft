@@ -1020,7 +1020,7 @@ const Stats = () => {
 					<BarChart
 						xAxis={attendance.xAxis}
 						dataset={attendance.data}
-						height={350}
+						height={40}
 						series={attendance.series}
 						borderRadius={5}
 					/>

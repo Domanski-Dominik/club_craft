@@ -52,7 +52,6 @@ const handleCronJob = async (req: NextRequest) => {
 							select: {
 								id: true,
 								name: true,
-								dayOfWeek: true,
 								locationschedule: {
 									include: {
 										locations: {

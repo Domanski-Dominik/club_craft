@@ -19,6 +19,7 @@ import {
 	FormControl,
 	InputLabel,
 	SelectChangeEvent,
+	Grid2,
 } from "@mui/material";
 import {
 	StyledAccordionSummary,
@@ -39,6 +40,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import NotAllowed from "@/components/errors/NotAllowed";
+import PaymentCard from "@/components/cards/PaymentCard";
+import { constants } from "@/constants/constants";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -48,7 +51,9 @@ interface TabPanelProps {
 //TODO:Dodać czy może trener dodawać edytować grupy
 function CustomTabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props;
-
+	<script
+		async
+		src='https://js.stripe.com/v3/buy-button.js'></script>;
 	return (
 		<div
 			role='tabpanel'
@@ -56,9 +61,11 @@ function CustomTabPanel(props: TabPanelProps) {
 			id={`simple-tabpanel-${index}`}
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
-			style={{ width: "100%" }}>
+			style={{ width: "100%", height: "100%" }}>
 			{value === index && (
-				<Box sx={{ pt: 2, width: "100%", mb: 12 }}>{children}</Box>
+				<Box sx={{ pt: 2, width: "100%", mb: 12, height: "100%" }}>
+					{children}
+				</Box>
 			)}
 		</div>
 	);
@@ -164,6 +171,7 @@ const Settings = () => {
 	const handleSelectChange = (e: SelectChangeEvent) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
+
 	if (clubInfo.isLoading || status === "loading") return <Loading />;
 	if (clubInfo.isError)
 		return (
@@ -205,6 +213,10 @@ const Settings = () => {
 					<Tab
 						label='Subskrybcja'
 						{...a11yProps(2)}
+					/>
+					<Tab
+						label='Zarządzaj subskrybcją'
+						{...a11yProps(3)}
 					/>
 				</Tabs>
 			</Box>
@@ -603,12 +615,91 @@ const Settings = () => {
 			<CustomTabPanel
 				value={value}
 				index={2}>
-				<Typography
-					mt={20}
-					variant='h2'
-					align='center'>
-					W przyszłości ...
-				</Typography>
+				<Box
+					sx={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: "white",
+						borderRadius: 3,
+						p: 3,
+					}}>
+					<Grid2
+						container
+						spacing={2}>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<PaymentCard
+								variant='Darmowy'
+								amount={0}
+								participants={50}
+								coaches={1}
+								clubEmail={clubInfo.data.email}
+								clubId={clubInfo.data.id}
+								clubName={clubInfo.data.name}
+							/>
+						</Grid2>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<PaymentCard
+								variant='Standard'
+								amount={100}
+								participants={100}
+								coaches={3}
+								/*paymentLink={
+									constants.paymentLinks.subscription100 +
+									"?prefilled_email=" +
+									session.user.email
+								}*/
+								clubEmail={clubInfo.data.email}
+								clubId={clubInfo.data.id}
+								clubName={clubInfo.data.name}
+							/>
+						</Grid2>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<PaymentCard
+								variant='Plus'
+								amount={200}
+								coaches={10}
+								participants={250}
+								clubEmail={clubInfo.data.email}
+								clubId={clubInfo.data.id}
+								clubName={clubInfo.data.name}
+							/>
+						</Grid2>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<PaymentCard
+								variant='Gold'
+								amount={400}
+								coaches={25}
+								participants={500}
+								clubEmail={clubInfo.data.email}
+								clubId={clubInfo.data.id}
+								clubName={clubInfo.data.name}
+							/>
+						</Grid2>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<PaymentCard
+								variant='Platinum'
+								amount={600}
+								coaches={0}
+								participants={0}
+								clubEmail={clubInfo.data.email}
+								clubId={clubInfo.data.id}
+								clubName={clubInfo.data.name}
+							/>
+						</Grid2>
+					</Grid2>
+				</Box>
+			</CustomTabPanel>
+			<CustomTabPanel
+				value={value}
+				index={3}>
+				<Box
+					sx={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: "white",
+						borderRadius: 3,
+						p: 3,
+					}}></Box>
 			</CustomTabPanel>
 		</Box>
 	);

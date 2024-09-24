@@ -33,9 +33,6 @@ export const GET = async (req: Request, { params }: Props) => {
 			return {
 				id: schedule.group.id,
 				name: schedule.group.name,
-				dayOfWeek: schedule.group.dayOfWeek,
-				timeS: schedule.group.timeS,
-				timeE: schedule.group.timeE,
 				color: schedule.group.color,
 			};
 		});

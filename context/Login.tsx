@@ -73,7 +73,7 @@ const Login = () => {
 				<Typography
 					component='h1'
 					variant='h4'>
-					Zaloguj się
+					Witaj ponownie
 				</Typography>
 				<Box
 					component='form'
