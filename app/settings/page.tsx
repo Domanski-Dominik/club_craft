@@ -20,6 +20,8 @@ import {
 	InputLabel,
 	SelectChangeEvent,
 	Grid2,
+	Card,
+	CardContent,
 } from "@mui/material";
 import {
 	StyledAccordionSummary,
@@ -627,6 +629,36 @@ const Settings = () => {
 						container
 						spacing={2}>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
+							<Card>
+								<CardContent
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										justifyContent: "space-between",
+										gap: 2,
+										height: "290px",
+									}}>
+									<Typography
+										variant='h4'
+										align='center'>
+										Zarządzaj
+									</Typography>
+
+									<Typography
+										variant='h4'
+										align='center'>
+										subskrybcją
+									</Typography>
+									<Divider variant='middle' />
+									<Button
+										variant='contained'
+										href={constants.customerBillingManage}>
+										Zarządzaj
+									</Button>
+								</CardContent>
+							</Card>
+						</Grid2>
+						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
 							<PaymentCard
 								variant='Darmowy'
 								amount={0}
@@ -635,6 +667,7 @@ const Settings = () => {
 								clubEmail={clubInfo.data.email}
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
+								active={clubInfo.data.subscriptionPlan === null}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -643,14 +676,10 @@ const Settings = () => {
 								amount={100}
 								participants={100}
 								coaches={3}
-								/*paymentLink={
-									constants.paymentLinks.subscription100 +
-									"?prefilled_email=" +
-									session.user.email
-								}*/
 								clubEmail={clubInfo.data.email}
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
+								active={clubInfo.data.subscriptionPlan === "Standard"}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -662,6 +691,7 @@ const Settings = () => {
 								clubEmail={clubInfo.data.email}
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
+								active={clubInfo.data.subscriptionPlan === "Plus"}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -673,6 +703,7 @@ const Settings = () => {
 								clubEmail={clubInfo.data.email}
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
+								active={clubInfo.data.subscriptionPlan === "Gold"}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -684,22 +715,11 @@ const Settings = () => {
 								clubEmail={clubInfo.data.email}
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
+								active={clubInfo.data.subscriptionPlan === "Platinum"}
 							/>
 						</Grid2>
 					</Grid2>
 				</Box>
-			</CustomTabPanel>
-			<CustomTabPanel
-				value={value}
-				index={3}>
-				<Box
-					sx={{
-						width: "100%",
-						height: "100%",
-						backgroundColor: "white",
-						borderRadius: 3,
-						p: 3,
-					}}></Box>
 			</CustomTabPanel>
 		</Box>
 	);

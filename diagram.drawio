@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Lj2lymCUz71HBlOgkDSw" name="Page-1">
-        <mxGraphModel dx="1088" dy="1504" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2013" dy="1703" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -16,7 +16,7 @@
                 <mxCell id="5" value="Lokalizacje z grupami&lt;br&gt;/api/components/form/[club]&lt;br&gt;queryKey: [&quot;locWithGroups&quot;]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
                     <mxGeometry x="90" y="120" width="180" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="10" value="/add&lt;br&gt;/home/coaches&lt;br&gt;/participants&lt;br&gt;/stats" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="10" value="/add&lt;br&gt;/home/coaches&lt;br&gt;/participants&lt;br&gt;/stats&lt;br&gt;/group" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="-50" width="120" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="/add/group&lt;br style=&quot;color: rgb(240, 240, 240);&quot;&gt;&lt;span style=&quot;color: rgb(240, 240, 240);&quot;&gt;/add/group/[id]&lt;br&gt;/edit/group/[id]&lt;br&gt;/calendar&lt;br&gt;/home/manageGroups&lt;br&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">

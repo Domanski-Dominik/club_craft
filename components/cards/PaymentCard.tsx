@@ -1,4 +1,11 @@
-import { Button, Card, CardContent, Divider, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Card,
+	CardContent,
+	Divider,
+	Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 
 interface PaymentCardProps {
@@ -9,6 +16,7 @@ interface PaymentCardProps {
 	clubName: string;
 	clubId: string;
 	clubEmail: string;
+	active: boolean;
 }
 const PaymentCard = ({
 	variant,
@@ -16,7 +24,7 @@ const PaymentCard = ({
 	participants,
 	coaches,
 	clubName,
-	clubEmail,
+	active,
 	clubId,
 }: PaymentCardProps) => {
 	const [loading, setLoading] = useState(false);
@@ -33,7 +41,6 @@ const PaymentCard = ({
 					variant,
 					clubName,
 					clubId,
-					clubEmail,
 				}),
 			});
 
@@ -52,53 +59,63 @@ const PaymentCard = ({
 		}
 	};
 	return (
-		<Card sx={{ border: 1, borderColor: "divider" }}>
-			<CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-				<Typography
-					align='center'
-					variant='h6'>
-					{variant}
-				</Typography>
-				<Typography
-					align='center'
-					variant='h3'>
-					{amount} zł<span style={{ fontSize: "15px" }}>/miesiąc</span>
-				</Typography>
-				<Divider variant='middle' />
-				{participants === 0 ? (
+		<Box
+			sx={{
+				padding: "2px", // Daje miejsce na ramkę
+				background: active
+					? "linear-gradient(45deg, #ffb326, #bb15ed)"
+					: "divider", // Gradient
+				borderRadius: "6px", // Zaokrąglone rogi dla efektu karty
+			}}>
+			<Card>
+				<CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 					<Typography
 						align='center'
-						fontWeight={"bold"}>
-						Brak limitu uczestników
+						variant='h6'>
+						{variant}
 					</Typography>
-				) : (
-					<Typography align='center'>
-						Do <span style={{ fontWeight: "bold" }}>{participants}</span>{" "}
-						uczestników
-					</Typography>
-				)}
-
-				<Divider variant='middle' />
-				{coaches === 0 ? (
 					<Typography
 						align='center'
-						fontWeight={"bold"}>
-						Brak limitu trenerów
+						variant='h3'>
+						{amount} zł<span style={{ fontSize: "15px" }}>/miesiąc</span>
 					</Typography>
-				) : (
-					<Typography align='center'>
-						Do <span style={{ fontWeight: "bold" }}>{coaches}</span>
-						{coaches === 1 ? " dodatkowego trenera" : " dodatkowych trenerów"}
-					</Typography>
-				)}
+					<Divider variant='middle' />
+					{participants === 0 ? (
+						<Typography
+							align='center'
+							fontWeight={"bold"}>
+							Brak limitu uczestników
+						</Typography>
+					) : (
+						<Typography align='center'>
+							Do <span style={{ fontWeight: "bold" }}>{participants}</span>{" "}
+							uczestników
+						</Typography>
+					)}
 
-				<Button
-					variant='contained'
-					onClick={handleCheckout}>
-					{loading ? "Przekierowywanie..." : "Subskrybuj"}
-				</Button>
-			</CardContent>
-		</Card>
+					<Divider variant='middle' />
+					{coaches === 0 ? (
+						<Typography
+							align='center'
+							fontWeight={"bold"}>
+							Brak limitu trenerów
+						</Typography>
+					) : (
+						<Typography align='center'>
+							Do <span style={{ fontWeight: "bold" }}>{coaches}</span>
+							{coaches === 1 ? " dodatkowego trenera" : " dodatkowych trenerów"}
+						</Typography>
+					)}
+
+					<Button
+						variant='contained'
+						disabled={active}
+						onClick={handleCheckout}>
+						{loading ? "Przekierowywanie..." : "Subskrybuj"}
+					</Button>
+				</CardContent>
+			</Card>
+		</Box>
 	);
 };
 

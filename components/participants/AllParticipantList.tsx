@@ -809,6 +809,16 @@ const AllParticipantList = ({
 				);
 			},
 		},
+
+		{
+			field: "active",
+			headerName: "Aktywny",
+			width: 100,
+			editable: false,
+			hideable: true,
+			type: "boolean",
+			sortable: true,
+		},
 		{
 			field: "note",
 			headerName: "Notatka",
@@ -828,15 +838,6 @@ const AllParticipantList = ({
 					{params.value}
 				</Box>
 			),
-		},
-		{
-			field: "active",
-			headerName: "Aktywny",
-			width: 100,
-			editable: false,
-			hideable: true,
-			type: "boolean",
-			sortable: true,
 		},
 		{
 			field: "parentFirstName",

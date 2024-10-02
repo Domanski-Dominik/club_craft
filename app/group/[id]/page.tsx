@@ -8,6 +8,7 @@ import Loading from "@/context/Loading";
 import ParticipantList from "@/components/participants/ParticipantList";
 import { sortAndAddNumbers } from "@/functions/sorting";
 import StandardError from "@/components/errors/Standard";
+import { LocWithGroups } from "@/types/type";
 
 interface Props {
 	params: {
@@ -39,6 +40,14 @@ const Group = ({ params }: Props) => {
 		queryKey: ["group", params.id],
 		queryFn: () =>
 			fetch(`/api/groups/gr/${params.id}`).then((res) => res.json()),
+	});
+	const locWithGroups = useQuery<LocWithGroups[]>({
+		queryKey: ["locWithGroups"],
+		enabled: !!session,
+		queryFn: () =>
+			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
+				res.json()
+			),
 	});
 	//console.log(group.data);
 	if (status === "loading" || participants.isLoading) return <Loading />;
@@ -78,6 +87,13 @@ const Group = ({ params }: Props) => {
 						group={group.data}
 						clubInfo={clubInfo.isSuccess ? clubInfo.data : {}}
 						isOwner={session.user.role === "owner"}
+						locWithGroups={
+							locWithGroups.data
+								? locWithGroups.data.length > 0
+									? locWithGroups.data
+									: []
+								: []
+						}
 					/>
 				</Box>
 			) : (

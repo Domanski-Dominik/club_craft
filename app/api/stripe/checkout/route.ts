@@ -7,14 +7,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 });
 
 export async function POST(req: Request) {
-	const { variant, clubName, clubId, clubEmail } = await req.json();
-	console.log(variant, clubEmail, clubId, clubName);
+	const { variant, clubName, clubId } = await req.json();
+	//console.log(variant, clubId, clubName);
 	try {
 		// Tworzenie sesji płatności
 		const session = await stripe.checkout.sessions.create({
-			payment_method_types: ["card"],
+			//payment_method_types: ["card"],
 			mode: "subscription", // lub 'payment' dla jednorazowych płatności
-			customer_email: clubEmail,
 			line_items: [
 				{
 					price: getPriceIdByPlan(variant), // Cena subskrypcji lub produktu
@@ -43,9 +42,11 @@ const getPriceIdByPlan = (plan: string): string => {
 	switch (plan) {
 		case "Standard":
 			return process.env.STRIPE_STANDARD_PRICE_ID as string;
-		case "plus":
+		case "Plus":
 			return process.env.STRIPE_PLUS_PRICE_ID as string;
-		case "platinum":
+		case "Gold":
+			return process.env.STRIPE_GOLD_PRICE_ID as string;
+		case "Platinum":
 			return process.env.STRIPE_PLATINUM_PRICE_ID as string;
 		default:
 			throw new Error("Niepoprawny plan");

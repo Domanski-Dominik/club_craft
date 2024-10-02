@@ -110,6 +110,9 @@ export interface DialogGroupsType extends Dialog {
 	onClose: (value: string) => void;
 	locWithGroups: LocWithGroups[];
 }
+export interface DialogMoveToGroupType extends DialogGroupsType {
+	groupId: number;
+}
 export interface DialogDeleteLocType extends Dialog {
 	loc: Location;
 	onClose: (value: string) => void;

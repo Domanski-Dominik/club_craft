@@ -37,11 +37,32 @@ const handleCompletedCheckoutSession = async (
 		return false;
 	}
 };
+const handleCreateCustomer = async (event: Stripe.CustomerCreatedEvent) => {
+	try {
+		const session = event.data.object;
+		console.log("create customer", session);
+		/*const customer = await stripe.customers.create({
+			metadata: {
+				clubId : clubId
+			}
+		})*/
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};
 const handleCustomerSubscriptionUpdate = async (
 	event: Stripe.CustomerSubscriptionUpdatedEvent
 ) => {
 	try {
-	} catch (error) {}
+		const session = event.data.object;
+		console.log("customer subcription update", session);
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
 };
 async function updateClubSubscription(
 	subscriptionId: string,
@@ -95,17 +116,25 @@ export async function POST(req: NextRequest) {
 					{ status: 500 }
 				);
 			return NextResponse.json({ status: 200 });
+		case "customer.created":
+			const createCustomer = await handleCreateCustomer(event);
+			if (!createCustomer)
+				return NextResponse.json(
+					{ error: "Nie udało się utworzyć klienta" },
+					{ status: 500 }
+				);
+			return NextResponse.json({ status: 200 });
 		case "customer.subscription.deleted":
 			console.log("Subskrypcja usunięta");
 			return NextResponse.json({ status: 200 });
 
 		case "customer.subscription.updated":
-			/*const updated = await handleCustomerSubscriptionUpdate(event);
+			const updated = await handleCustomerSubscriptionUpdate(event);
 			if (!updated)
 				return NextResponse.json(
 					{ error: "Nie udało się zaktualizować subskrybcji klienta" },
 					{ status: 500 }
-				);*/
+				);
 			return NextResponse.json({ status: 200 });
 
 		default:

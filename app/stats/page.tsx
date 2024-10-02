@@ -777,8 +777,7 @@ const Stats = () => {
 						xAxis={payment.xAxis}
 						series={payment.series}
 						dataset={payment.data}
-						height={400}
-						borderRadius={5}
+						height={350}
 					/>
 				</Box>
 			</CustomTabPanel>
@@ -1020,9 +1019,8 @@ const Stats = () => {
 					<BarChart
 						xAxis={attendance.xAxis}
 						dataset={attendance.data}
-						height={40}
+						height={390}
 						series={attendance.series}
-						borderRadius={5}
 					/>
 				</Box>
 			</CustomTabPanel>

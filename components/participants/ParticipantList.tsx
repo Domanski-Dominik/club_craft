@@ -30,6 +30,7 @@ import type {
 	FormPay,
 	Term,
 	GroupL,
+	LocWithGroups,
 } from "@/types/type";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EditIcon from "@mui/icons-material/Edit";
@@ -65,6 +66,8 @@ import { useRouter } from "next/navigation";
 import { StyledDataGrid } from "../styled/StyledDataGrid";
 import { getDay, parse } from "date-fns";
 import PolishDayName from "@/functions/PolishDayName";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import DialogMoveToGroup from "../dialogs/DialogMoveToGroup";
 
 type Props = {
 	participants: Participant[];
@@ -72,6 +75,7 @@ type Props = {
 	group: GroupL;
 	clubInfo: any;
 	isOwner: boolean;
+	locWithGroups: LocWithGroups[];
 };
 
 const formatDate = (date: Date) => {
@@ -125,13 +129,17 @@ const ParticipantList = ({
 	group,
 	clubInfo,
 	isOwner,
+	locWithGroups,
 }: Props) => {
 	const router = useRouter();
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const gridRef = useGridApiRef();
-	const [dialogOpen, setDialogOpen] = useState(false);
-	const [payDialogOpen, setPayDialogOpen] = useState(false);
-	const [presentDiaolgOpen, setPresentDialogOpen] = useState(false);
+	const [dialogsOpen, setDialogsOpen] = useState({
+		pay: false,
+		present: false,
+		delete: false,
+		move: false,
+	});
 	const [edit, setEdit] = useState(false);
 	const [more, setMore] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
@@ -149,6 +157,7 @@ const ParticipantList = ({
 			info: false,
 			parentFirstName: false,
 			parentLastName: false,
+			move: false,
 		});
 	const [snackbar, setSnackbar] = useState<Pick<
 		AlertProps,
@@ -249,13 +258,26 @@ const ParticipantList = ({
 	};
 	const handlePayDialogOpen = (row: GridRowModel) => () => {
 		setSelectedRow(row);
-		setPayDialogOpen(true);
+		setDialogsOpen({ ...dialogsOpen, pay: true });
+	};
+	const handleMoveDialogOpen = (row: GridRowModel) => () => {
+		setSelectedRow(row);
+		setDialogsOpen({ ...dialogsOpen, move: true });
 	};
 	const handlePresentDialogOpen = () => {
-		setPresentDialogOpen(true);
+		setDialogsOpen({ ...dialogsOpen, present: true });
 	};
 	const handlePresentDialogChoice = () => {
-		setPresentDialogOpen(false);
+		setDialogsOpen({ ...dialogsOpen, present: false });
+	};
+	const handleMoveDialogChoice = (close: string) => {
+		setDialogsOpen({ ...dialogsOpen, move: false });
+		if (close === "no") {
+			setSelectedRow(null);
+		} else {
+			const updatedRows = rows.filter((row) => row.id !== parseInt(close, 10));
+			setRows(updatedRows);
+		}
 	};
 	const handleAddPayment = async (
 		form: FormPay | null,
@@ -263,7 +285,7 @@ const ParticipantList = ({
 		action: "save" | "delete" | null
 	) => {
 		//console.log(form, row);
-		setPayDialogOpen(false);
+		setDialogsOpen({ ...dialogsOpen, pay: false });
 		if (form !== null && row !== null && action !== null) {
 			try {
 				if (selectedRow) {
@@ -370,13 +392,13 @@ const ParticipantList = ({
 	};
 	const handleDeleteClick = (row: GridRowModel) => () => {
 		setSelectedRow(row);
-		setDialogOpen(true);
+		setDialogsOpen({ ...dialogsOpen, delete: true });
 		//setRows(rows.filter((row) => row.id !== id));
 		//console.log(row);
 	};
 	const handleChoice = async (value: string) => {
 		//console.log(value);
-		setDialogOpen(false);
+		setDialogsOpen({ ...dialogsOpen, delete: false });
 		if (value === "yes" && selectedRow !== null) {
 			try {
 				const data = {
@@ -494,6 +516,7 @@ const ParticipantList = ({
 										info: !prev.info,
 										parentLastName: !prev.parentLastName,
 										parentFirstName: !prev.parentFirstName,
+										move: !prev.move,
 									}));
 									gridRef.current.scroll({ left: 0 });
 									setMore((prev) => !prev);
@@ -538,6 +561,7 @@ const ParticipantList = ({
 											info: true,
 											parentFirstName: true,
 											parentLastName: true,
+											move: true,
 										});
 									}}>
 									<EditIcon />
@@ -565,6 +589,7 @@ const ParticipantList = ({
 										info: false,
 										parentFirstName: false,
 										parentLastName: false,
+										move: false,
 									});
 								setMore(false);
 								gridRef.current.scroll({ left: 0 });
@@ -954,7 +979,7 @@ const ParticipantList = ({
 					<div
 						style={{
 							display: "flex",
-							justifyContent: "space-between",
+							justifyContent: "center",
 							alignItems: "center",
 							alignContent: "center",
 							height: "100%",
@@ -962,6 +987,29 @@ const ParticipantList = ({
 						<InfoOutlinedIcon
 							onClick={() => router.push(`/participant/${params.row.id}`)}
 						/>
+					</div>
+				);
+			},
+		},
+		{
+			field: "move",
+			headerName: "Przenieś",
+			width: 70,
+			editable: false,
+			sortable: false,
+			hideable: true,
+			renderCell: (params) => {
+				return (
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							alignContent: "center",
+							height: "100%",
+							width: "100%",
+						}}>
+						<EditCalendarIcon onClick={handleMoveDialogOpen(params.row)} />
 					</div>
 				);
 			},
@@ -1083,21 +1131,30 @@ const ParticipantList = ({
 				</Snackbar>
 			)}
 			{selectedRow && (
+				<DialogMoveToGroup
+					open={dialogsOpen.move}
+					row={selectedRow}
+					onClose={handleMoveDialogChoice}
+					locWithGroups={locWithGroups}
+					groupId={groupId}
+				/>
+			)}
+			{selectedRow && (
 				<DialogDelete
-					open={dialogOpen}
+					open={dialogsOpen.delete}
 					row={selectedRow}
 					onClose={handleChoice}
 				/>
 			)}
 			{selectedRow && (
 				<DialogPay
-					open={payDialogOpen}
+					open={dialogsOpen.pay}
 					row={selectedRow}
 					onClose={handleAddPayment}
 				/>
 			)}
 			<DialogPresent
-				open={presentDiaolgOpen}
+				open={dialogsOpen.present}
 				onClose={handlePresentDialogChoice}
 				groupId={groupId}
 				group={group}

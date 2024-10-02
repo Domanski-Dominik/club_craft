@@ -273,7 +273,24 @@ const ParticipantForm = () => {
 			const groupsInLoc = selectedLocationData?.groups.filter((group) =>
 				group.terms.filter((t) => t.locationId === id)
 			);
-			setGroups(groupsInLoc);
+			if (groupsInLoc) {
+				const sortedGroups = groupsInLoc.sort((a, b) => {
+					// Sprawdź, czy grupy mają przypisane terminy (zakładam, że każda grupa ma przynajmniej jeden termin)
+					const dayOfWeekA = a.terms?.[0]?.dayOfWeek || 0; // Jeśli brak terminu, domyślnie ustaw na 0 (np. niedziela)
+					const dayOfWeekB = b.terms?.[0]?.dayOfWeek || 0;
+
+					// Jeśli dni tygodnia są różne, sortuj według dnia tygodnia
+					if (dayOfWeekA !== dayOfWeekB) {
+						return dayOfWeekA - dayOfWeekB;
+					}
+
+					// Jeśli dni tygodnia są takie same, sortuj według nazwy grupy
+					return a.name.localeCompare(b.name);
+				});
+				setGroups(sortedGroups);
+			} else {
+				setGroups(groupsInLoc);
+			}
 			//console.log(selectedLocationData);
 			setSelectedLocation(selectedLocationData);
 			setSelectedGroupId("");
