@@ -1,4 +1,3 @@
-import { metadata } from "@/app/layout";
 import { prisma } from "@/prisma/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -57,7 +56,18 @@ const handleCustomerSubscriptionUpdate = async (
 ) => {
 	try {
 		const session = event.data.object;
-		console.log("customer subcription update", session);
+		const customerID = session.customer;
+		const customer = await stripe.customers.retrieve(customerID as string);
+		const subcriptionCancel = session.cancel_at; // zwraca null lub czas kiedy subskybrcja nie będzie już ważna
+		const email = (customer as any).email;
+		console.log("customer subcription update", session, email);
+		updateClubSubscription(
+			session.id,
+			email,
+			session.customer as string,
+			"active",
+			session.metadata
+		);
 		return true;
 	} catch (error) {
 		console.error(error);

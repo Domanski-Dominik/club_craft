@@ -7,7 +7,7 @@ import {
 	Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-
+import { useQueryClient } from "@tanstack/react-query";
 interface PaymentCardProps {
 	amount: number;
 	coaches: number;
@@ -17,6 +17,7 @@ interface PaymentCardProps {
 	clubId: string;
 	clubEmail: string;
 	active: boolean;
+	subscriptionId: string;
 }
 const PaymentCard = ({
 	variant,
@@ -26,9 +27,10 @@ const PaymentCard = ({
 	clubName,
 	active,
 	clubId,
+	subscriptionId,
 }: PaymentCardProps) => {
 	const [loading, setLoading] = useState(false);
-
+	const queryClient = useQueryClient();
 	const handleCheckout = async () => {
 		setLoading(true);
 
@@ -41,14 +43,20 @@ const PaymentCard = ({
 					variant,
 					clubName,
 					clubId,
+					subscriptionId,
 				}),
 			});
 
 			const data = await response.json();
-
-			if (data.url) {
+			if (data.url || data.success) {
 				// Przekierowanie na stronę Stripe Checkout
-				window.location.href = data.url;
+				if (data.url) {
+					window.location.href = data.url;
+				}
+				queryClient.invalidateQueries({
+					queryKey: ["clubInfo"],
+					refetchType: "all",
+				});
 			} else {
 				console.error("Błąd podczas tworzenia sesji:", data.error);
 			}
@@ -111,7 +119,13 @@ const PaymentCard = ({
 						variant='contained'
 						disabled={active}
 						onClick={handleCheckout}>
-						{loading ? "Przekierowywanie..." : "Subskrybuj"}
+						{subscriptionId
+							? loading
+								? "Zmieniamy twój plan..."
+								: "Subskrybuj"
+							: loading
+							? "Przekierowywanie..."
+							: "Subskrybuj"}
 					</Button>
 				</CardContent>
 			</Card>

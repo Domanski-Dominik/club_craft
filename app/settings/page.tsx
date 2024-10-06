@@ -216,10 +216,6 @@ const Settings = () => {
 						label='Subskrybcja'
 						{...a11yProps(2)}
 					/>
-					<Tab
-						label='Zarządzaj subskrybcją'
-						{...a11yProps(3)}
-					/>
 				</Tabs>
 			</Box>
 			<CustomTabPanel
@@ -668,6 +664,7 @@ const Settings = () => {
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
 								active={clubInfo.data.subscriptionPlan === null}
+								subscriptionId={clubInfo.data.subscriptionId}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -680,6 +677,7 @@ const Settings = () => {
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
 								active={clubInfo.data.subscriptionPlan === "Standard"}
+								subscriptionId={clubInfo.data.subscriptionId}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -692,6 +690,7 @@ const Settings = () => {
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
 								active={clubInfo.data.subscriptionPlan === "Plus"}
+								subscriptionId={clubInfo.data.subscriptionId}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -704,6 +703,7 @@ const Settings = () => {
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
 								active={clubInfo.data.subscriptionPlan === "Gold"}
+								subscriptionId={clubInfo.data.subscriptionId}
 							/>
 						</Grid2>
 						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
@@ -716,6 +716,7 @@ const Settings = () => {
 								clubId={clubInfo.data.id}
 								clubName={clubInfo.data.name}
 								active={clubInfo.data.subscriptionPlan === "Platinum"}
+								subscriptionId={clubInfo.data.subscriptionId}
 							/>
 						</Grid2>
 					</Grid2>
