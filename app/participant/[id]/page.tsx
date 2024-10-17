@@ -1,14 +1,14 @@
-"use client";
 import Loading from "@/context/Loading";
 import { Typography, Box } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import Grid from "@mui/material/Grid2";
-import { GridColDef } from "@mui/x-data-grid";
 import AttendanceCalendar from "@/components/calendars/AttendanceCalendar";
-import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-
+import ParticipantPaymentsDataGrid from "@/components/datagrids/ParticipantPaymentsDataGrid";
+import { auth } from "@/auth";
+import { unstable_cache } from "next/cache";
+import { getClubInfo } from "@/server/get-actions";
+import { handleResult } from "@/functions/promiseResults";
+import StandardError from "@/components/errors/Standard";
+import { getParticipantById } from "@/server/participant-actions";
 const tableStyle = {
 	width: "100%",
 	border: "1px solid #dddddd",
@@ -41,50 +41,34 @@ interface Props {
 		id: string;
 	};
 }
-const ParticipantInfo = ({ params }: Props) => {
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const clubInfo = useQuery({
-		queryKey: ["clubInfo"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
-	});
-	const participant = useQuery({
-		queryKey: ["participant", params.id],
-		queryFn: () =>
-			fetch(`/api/participant/solo/${params.id}`).then((res) => res.json()),
-	});
-	const columns: GridColDef[] = [
-		{
-			field: "amount",
-			headerName: "Kwota",
-			flex: 1,
-		},
-		{
-			field: "month",
-			headerName: "Miesiąc",
-			flex: 1,
-		},
-		{
-			field: "paymentDate",
-			headerName: "Dzień Wpłaty",
-			flex: 1,
-			sortable: false,
-		},
-		{
-			field: "description",
-			headerName: "Opis",
-			flex: 1,
-		},
-	];
-	//console.log(participant.data);
-	if (participant.isLoading || status === "loading") return <Loading />;
-	if (participant.isSuccess)
+const getCachedClubInfo = unstable_cache(
+	async (sesssion) => getClubInfo(sesssion),
+	["participant-clubInfo"],
+	{
+		tags: ["club"],
+	}
+);
+const ParticipantInfo = async ({ params }: Props) => {
+	const session = await auth();
+	const [clubInfoResult, participantResult] = await Promise.allSettled([
+		getCachedClubInfo(session),
+		getParticipantById(parseInt(params.id, 10)),
+	]);
+	const clubInfo = handleResult(clubInfoResult, "clubInfo");
+	const participant = handleResult(participantResult, "particiapnt");
+	if (!clubInfo || !participant) {
+		return (
+			<StandardError
+				message={
+					clubInfo
+						? "Nie udało się pobrać informacji o uczestniku"
+						: "Nie udało się pobrać info o klubie"
+				}
+				addParticipants={false}
+			/>
+		);
+	}
+	if (session) {
 		return (
 			<Grid
 				container
@@ -101,7 +85,7 @@ const ParticipantInfo = ({ params }: Props) => {
 						<Typography
 							variant='h4'
 							align='center'>
-							{participant.data.firstName} {participant.data.lastName}
+							{participant.firstName} {participant.lastName}
 						</Typography>
 					</Box>
 				</Grid>
@@ -115,11 +99,12 @@ const ParticipantInfo = ({ params }: Props) => {
 					}}>
 					<Box
 						sx={{
+							height: "100%",
 							backgroundColor: "white",
 							borderRadius: 4,
 							p: 1.5,
 						}}>
-						<AttendanceCalendar events={participant.data.attendance} />
+						<AttendanceCalendar events={participant.attendance} />
 						<Box sx={{ mt: 2 }}>
 							<div
 								style={{
@@ -149,34 +134,26 @@ const ParticipantInfo = ({ params }: Props) => {
 						</Box>
 					</Box>
 				</Grid>
-				{clubInfo.isSuccess ? (
-					clubInfo.data.coachPayments || session.user.role === "owner" ? (
-						<Grid
-							size={{
-								xs: 12,
-								sm: 6,
-								md: 6,
-								lg: 6,
-								xl: 4,
-							}}
-							sx={{ minHeight: "400px" }}>
-							<Box
-								sx={{
-									height: "100%",
-									backgroundColor: "white",
-									borderRadius: 4,
-									p: 1.5,
-								}}>
-								<StyledDataGrid
-									columns={columns}
-									rows={participant.data.payments}
-									disableColumnMenu
-								/>
-							</Box>
-						</Grid>
-					) : (
-						<></>
-					)
+				{clubInfo.coachPayments || session.user.role === "owner" ? (
+					<Grid
+						size={{
+							xs: 12,
+							sm: 6,
+							md: 6,
+							lg: 6,
+							xl: 4,
+						}}
+						sx={{ minHeight: "400px" }}>
+						<Box
+							sx={{
+								height: "100%",
+								backgroundColor: "white",
+								borderRadius: 4,
+								p: 1.5,
+							}}>
+							<ParticipantPaymentsDataGrid payments={participant.payments} />
+						</Box>
+					</Grid>
 				) : (
 					<></>
 				)}
@@ -201,35 +178,32 @@ const ParticipantInfo = ({ params }: Props) => {
 							<tbody>
 								<tr>
 									<td style={tdStyleRight}>Telefon:</td>
-									<td style={tdStyle}>{participant.data.phoneNumber}</td>
+									<td style={tdStyle}>{participant.phoneNumber}</td>
 								</tr>
 								<tr>
 									<td style={tdStyleRight}>Email:</td>
 									<td style={tdStyle}>
-										{participant.data.email === null
+										{participant.email === null
 											? "brak maila"
-											: participant.data.email}
+											: participant.email}
 									</td>
 								</tr>
 								<tr>
 									<td style={tdStyleRight}>Regulamin:</td>
 									<td style={tdStyle}>
-										{participant.data.regulamin ? "tak" : "nie"}
+										{participant.regulamin ? "tak" : "nie"}
 									</td>
 								</tr>
 								<tr>
 									<td style={tdStyleRight}>Aktywny:</td>
-									<td style={tdStyle}>
-										{participant.data.active ? "tak" : "nie"}
-									</td>
+									<td style={tdStyle}>{participant.active ? "tak" : "nie"}</td>
 								</tr>
 								<tr>
 									<td style={tdStyleLastRight}>Notatka:</td>
 									<td style={tdStyleLast}>
-										{participant.data.note === null ||
-										participant.data.note === ""
+										{participant.note === null || participant.note === ""
 											? "brak notatki"
-											: participant.data.note}
+											: participant.note}
 									</td>
 								</tr>
 							</tbody>
@@ -238,6 +212,9 @@ const ParticipantInfo = ({ params }: Props) => {
 				</Grid>
 			</Grid>
 		);
+	} else {
+		return <Loading />;
+	}
 };
 
 export default ParticipantInfo;

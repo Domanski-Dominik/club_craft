@@ -32,6 +32,7 @@ import {
 } from "@/hooks/participantHooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { Stack2, TypographyStack } from "../styled/StyledComponents";
+import { updateParticipantGroup } from "@/server/participant-actions";
 
 const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 	onClose,
@@ -144,21 +145,9 @@ const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 			groupIdToRemove: groupId,
 			groupIdToAdd: parseInt(selectedGroupId, 10),
 		};
-		const message = await editGr.mutateAsync(info);
-		if (!message.error) {
+		const message = await updateParticipantGroup(info);
+		if (!("error" in message)) {
 			setError("");
-			queryClient.invalidateQueries({
-				queryKey: ["locWithGroups"],
-				refetchType: "all",
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["allParticipants"],
-				refetchType: "all",
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["participants", `${groupId}`],
-				refetchType: "active",
-			});
 			onClose(String(row.id));
 		} else {
 			setError(message.error);

@@ -1,49 +1,31 @@
-"use client";
 import HomeCard from "@/components/cards/HomeCard";
 import Grid from "@mui/material/Grid2";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import MobileNavigation from "@/components/navigation/BreadCrumbs";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Typography } from "@mui/material";
+import { getHomeInfo } from "@/server/get-actions";
+import StandardError from "@/components/errors/Standard";
+import { unstable_cache } from "next/cache";
+import { auth } from "@/auth";
+import { handleResult } from "@/functions/promiseResults";
 
-type HomeData = {
-	groups: any[];
-	loc: any[];
-	participants: any[];
-	coaches: any[];
-	role: string;
-};
-
-export default function HomePage() {
-	const pages = [{ id: 1, title: "Klub", path: "/home" }];
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-
-	const {
-		data: homeInfo,
-		isSuccess,
-		isError,
-		error,
-	} = useQuery<HomeData>({
-		queryKey: ["home"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(
-				`/api/home/${session?.user.role}/${session?.user.club}/${session?.user.id}`
-			).then((res) => res.json()),
-	});
-
-	const getAmount = (field: keyof HomeData) =>
-		isSuccess ? homeInfo?.[field]?.length || 0 : 0;
-
+const getCachedHomeInfo = unstable_cache(
+	async (sesssion) => getHomeInfo(sesssion),
+	["homeInfo"]
+);
+export default async function HomePage() {
+	const session = await auth();
+	const [homeInfoResult] = await Promise.allSettled([
+		getCachedHomeInfo(session),
+	]);
+	const homeInfo = handleResult(homeInfoResult, "homeInfo");
+	if (!homeInfo) {
+		return (
+			<StandardError
+				message='Nie udało się pobrać info'
+				addParticipants={false}
+			/>
+		);
+	}
 	return (
 		<>
-			<MobileNavigation pages={pages} />
 			<Grid
 				container
 				spacing={1}
@@ -51,7 +33,7 @@ export default function HomePage() {
 				width={"100%"}>
 				<Grid size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
 					<HomeCard
-						amount={getAmount("coaches")}
+						amount={homeInfo.coaches}
 						name='Trenerzy'
 						color='green'
 						url={homeInfo?.role === "owner" ? "/home/coaches" : "/home"}
@@ -60,8 +42,8 @@ export default function HomePage() {
 
 				<Grid size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
 					<HomeCard
-						amount={getAmount("groups")}
-						name='Lokalizacje i Grupy'
+						amount={homeInfo.groups}
+						name='Grupy'
 						color='indigo'
 						url='/home/manageGroups'
 					/>
@@ -69,16 +51,13 @@ export default function HomePage() {
 
 				<Grid size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
 					<HomeCard
-						amount={getAmount("participants")}
+						amount={homeInfo.groups}
 						name='Uczestnicy'
 						color='orange'
 						url='/participants'
 					/>
 				</Grid>
 			</Grid>
-			{isError && (
-				<Typography color={"red"}>{(error as Error).message}</Typography>
-			)}
 		</>
 	);
 }

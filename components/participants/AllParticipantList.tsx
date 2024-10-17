@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import {
 	useGridApiContext,
@@ -19,6 +20,7 @@ import {
 	GridFooterContainer,
 	GridFooter,
 	GridRenderCellParams,
+	GridValueGetter,
 } from "@mui/x-data-grid";
 import {
 	Box,
@@ -53,7 +55,7 @@ import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/functions/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
 import ExportToExel from "../export/ExportToExel";
-import { sortAndAddNumbersAll } from "@/functions/sorting";
+import { sortAll } from "@/functions/sorting";
 import {
 	useDeletePrt,
 	usePayment,
@@ -132,7 +134,7 @@ const AllParticipantList = ({
 	const [edit, setEdit] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
 	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
-		sortAndAddNumbersAll(participants)
+		sortAll(participants)
 	);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
@@ -369,7 +371,7 @@ const AllParticipantList = ({
 						children: message.message,
 						severity: "success",
 					});
-					setRows(sortAndAddNumbersAll(updatedRows));
+					setRows(sortAll(updatedRows));
 					return updatedRow;
 				} else {
 					//console.log(message);
@@ -634,7 +636,14 @@ const AllParticipantList = ({
 			flex: 1,
 			hideable: true,
 			editable: false,
-			sortable: false,
+			sortable: true,
+			valueGetter: (value, row) => {
+				const paymentPrt = row.payments;
+				const Payed = paymentPrt.find(
+					(p: any) => p.month === formatDateMonth(date)
+				);
+				return Payed ? Payed.amount : 0; // Return the value used for sorting
+			},
 			renderCell: (params) => {
 				const paymentPrt = params.row.payments;
 

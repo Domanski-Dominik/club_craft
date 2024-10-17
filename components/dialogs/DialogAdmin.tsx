@@ -1,5 +1,4 @@
 import { DialogDeleteType } from "@/types/type";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
 	Button,
@@ -9,12 +8,10 @@ import {
 	DialogTitle,
 	Typography,
 } from "@mui/material";
-import { useChangeRole } from "@/hooks/coachesHooks";
+import { changeRole } from "@/server/coaches-actions";
 
 const DialogAdmin: React.FC<DialogDeleteType> = ({ onClose, open, row }) => {
 	const [error, setError] = useState("");
-	const changeRole = useChangeRole();
-	const queryClient = useQueryClient();
 	const handleClose = () => {
 		onClose("no");
 	};
@@ -25,16 +22,9 @@ const DialogAdmin: React.FC<DialogDeleteType> = ({ onClose, open, row }) => {
 		return null;
 	}
 	const changeRoleClick = async (role: string) => {
-		const message = await changeRole.mutateAsync({
-			userId: row.id,
-			role: role,
-		});
-		if (!message.error) {
+		const message = await changeRole({ userId: row.id, role: role });
+		if (!("error" in message)) {
 			row.role = message.role;
-			queryClient.invalidateQueries({
-				queryKey: ["coaches"],
-				refetchType: "all",
-			});
 			setError("");
 		} else {
 			setError(message.error);

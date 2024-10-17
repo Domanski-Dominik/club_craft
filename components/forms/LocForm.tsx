@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Loading from "@/context/Loading";
+"use client";
+import React, { useState } from "react";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import {
 	FormControl,
@@ -15,11 +15,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import Grid from "@mui/material/Grid2";
-import { useRouter, redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import type { Location } from "@/types/type";
-import { useAddLoc, useEditLoc } from "@/hooks/scheduleHooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { addLoc, updateLoc } from "@/server/loc-action";
 
 type Props = {
 	locInfo: Location;
@@ -28,10 +26,6 @@ type Props = {
 
 const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 	const router = useRouter();
-	const addLoc = useAddLoc();
-	const editLoc = useEditLoc();
-	const queryClient = useQueryClient();
-	const [id, setId] = useState();
 	const [success, setSuccess] = useState(false);
 	const [postalCode, setPostalCode] = useState(locInfo.postalCode);
 	const [error, setError] = useState("");
@@ -45,12 +39,6 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 		club: locInfo.club,
 	});
 	const [isSending, setIsSending] = useState(false);
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
 	const [validFormat, setValidFormat] = useState(true);
 	const handlePostalCodeChange = (
 		event: React.ChangeEvent<HTMLInputElement>
@@ -73,32 +61,21 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 			// Obsługa przesłania formularza
 			//console.log("Formularz został przesłany.");
 			if (type === "edit") {
-				const message = await editLoc.mutateAsync(newLoc);
-				if (!message.error) {
-					console.log(message);
+				const message = await updateLoc(newLoc);
+				if (!("error" in message)) {
 					setSuccess(true);
 					setIsSending(false);
-					queryClient.invalidateQueries({ queryKey: ["locations"] });
 				} else {
 					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
 					setError(message.error);
 					setIsSending(false);
 				}
 			} else {
-				const message = await addLoc.mutateAsync(newLoc);
-				if (!message.error) {
+				const message = await addLoc(newLoc);
+				if (!("error" in message)) {
 					//console.log(message);
-					setId(message.id);
 					setSuccess(true);
 					setIsSending(false);
-					queryClient.invalidateQueries({
-						queryKey: ["locs"],
-						refetchType: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["locWithGroups"],
-						type: "all",
-					});
 				} else {
 					console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");
 					setError(message.error);
@@ -110,15 +87,6 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 			setIsSending(false);
 		}
 	};
-	if (status === "loading") return <Loading />;
-	useEffect(() => {
-		if (session?.user.club !== undefined) {
-			setNewLoc({ ...newLoc, club: session?.user.club });
-		} else {
-			setNewLoc({ ...newLoc, club: "guest" });
-		}
-	}, [session]);
-
 	return (
 		<>
 			<Box sx={{ background: "white", p: 2, borderRadius: 4 }}>
@@ -291,7 +259,7 @@ const LocForm: React.FC<Props> = ({ locInfo, type }: Props) => {
 							<Button
 								fullWidth
 								variant='contained'
-								onClick={() => router.push(`/home`)}
+								onClick={() => router.push(`/home/manageGroups`)}
 								sx={{ mt: 6, mb: 2 }}>
 								wróć
 							</Button>

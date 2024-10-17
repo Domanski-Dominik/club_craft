@@ -1,106 +1,120 @@
-"use client";
-
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { Box } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/context/Loading";
 import ParticipantList from "@/components/participants/ParticipantList";
 import { sortAndAddNumbers } from "@/functions/sorting";
 import StandardError from "@/components/errors/Standard";
 import { LocWithGroups } from "@/types/type";
+import { auth } from "@/auth";
+import {
+	getClubInfo,
+	getGroupById,
+	getLocs,
+	getLocsWithGroups,
+} from "@/server/get-actions";
+import { unstable_cache } from "next/cache";
+import { handleResult } from "@/functions/promiseResults";
+import { getParticipantsByGroupId } from "@/server/participant-actions";
+import { Session } from "next-auth";
 
 interface Props {
 	params: {
 		id: string;
 	};
 }
-//TODO: zrobić zabezpieczenia by nie móc podglądać grup nie ze swojego klubu
-const Group = ({ params }: Props) => {
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const groupId = parseInt(params.id, 10);
-	const clubInfo = useQuery({
-		queryKey: ["clubInfo"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
-	});
-	const participants = useQuery({
-		queryKey: ["participants", params.id],
-		queryFn: () =>
-			fetch(`/api/participant/${params.id}`).then((res) => res.json()),
-		select: (data) => sortAndAddNumbers(data, params.id, "normal"),
-	});
-	const group = useQuery({
-		queryKey: ["group", params.id],
-		queryFn: () =>
-			fetch(`/api/groups/gr/${params.id}`).then((res) => res.json()),
-	});
-	const locWithGroups = useQuery<LocWithGroups[]>({
-		queryKey: ["locWithGroups"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
-				res.json()
-			),
-	});
-	//console.log(group.data);
-	if (status === "loading" || participants.isLoading) return <Loading />;
-	if (participants.isError || participants.data.length === 0)
+const getCachedLocsWithGroups = unstable_cache(
+	async (session) => getLocsWithGroups(session),
+	["group-id-locs-with-groups"],
+	{
+		tags: ["locs"],
+	}
+);
+const getCachedClubInfo = unstable_cache(
+	async (session) => getClubInfo(session),
+	["group-id-club"],
+	{
+		tags: ["club"],
+	}
+);
+const createGetCachedParticipants = (
+	groupId: number,
+	session: Session | null
+) =>
+	unstable_cache(
+		async () => getParticipantsByGroupId(groupId, session),
+		[`group-id-${groupId}-participants`],
+		{
+			tags: ["participants"],
+		}
+	);
+
+const createGetCachedGroup = (groupId: number, session: Session | null) =>
+	unstable_cache(
+		async () => getGroupById(groupId, session),
+		[`group-id-${groupId}-group`],
+		{
+			tags: ["groups"],
+		}
+	);
+const Group = async ({ params }: Props) => {
+	const session = await auth();
+	const groupId = parseInt(params.id, 10); // Zakładam, że `params.groupId` jest stringiem
+	const getCachedParticipants = createGetCachedParticipants(groupId, session);
+	const getCachedGroup = createGetCachedGroup(groupId, session);
+	const [
+		locsWithGroupsResults,
+		clubInfoResults,
+		participantsResults,
+		groupResults,
+	] = await Promise.allSettled([
+		getCachedLocsWithGroups(session),
+		getCachedClubInfo(session),
+		getCachedParticipants(),
+		getCachedGroup(),
+	]);
+	const locsWithGroups = handleResult(locsWithGroupsResults, "locations");
+	const club = handleResult(clubInfoResults, "clubs");
+	const participants = handleResult(participantsResults, "participants");
+	const group = handleResult(groupResults, "groups");
+	if (!locsWithGroups || !club || !participants || !group)
 		return (
 			<StandardError
 				message={
-					participants.isError
-						? participants.error.message
-						: "Nie znaleziono uczestników"
+					!locsWithGroups
+						? "Błąd przy pobieraniu lokalizacji"
+						: !club
+						? "Błąd przy pobieraniu informacji o klubie"
+						: !participants
+						? "Błąd przy pobieraniu uczestników grupy"
+						: "Błąd przy pobieraniu informacji o grupie"
 				}
-				addParticipants={true}
+				addParticipants={false}
 			/>
 		);
-	if (group.isError)
-		return (
-			<StandardError
-				message={group.error.message}
-				addParticipants={true}
-			/>
-		);
-	return (
-		<>
-			{participants.data.length > 0 && group.isSuccess ? (
-				<Box
-					sx={{
-						height: "calc(100vh - 180px)",
-						width: "calc(100% - 10px)",
-						backgroundColor: "white",
-						borderRadius: 4,
-						mb: 1,
-						px: 1,
-					}}>
-					<ParticipantList
-						participants={participants.data}
-						groupId={groupId}
-						group={group.data}
-						clubInfo={clubInfo.isSuccess ? clubInfo.data : {}}
-						isOwner={session.user.role === "owner"}
-						locWithGroups={
-							locWithGroups.data
-								? locWithGroups.data.length > 0
-									? locWithGroups.data
-									: []
-								: []
-						}
-					/>
-				</Box>
-			) : (
-				<Loading />
-			)}
-		</>
+	const formattedparticipants = sortAndAddNumbers(
+		participants,
+		params.id,
+		"normal"
 	);
+	if (session)
+		return (
+			<Box
+				sx={{
+					height: "calc(100vh - 180px)",
+					width: "calc(100% - 10px)",
+					backgroundColor: "white",
+					borderRadius: 4,
+					mb: 1,
+					px: 1,
+				}}>
+				<ParticipantList
+					participants={formattedparticipants}
+					groupId={groupId}
+					group={group}
+					clubInfo={club}
+					isOwner={session.user.role === "owner"}
+					locWithGroups={locsWithGroups}
+				/>
+			</Box>
+		);
 };
 
 export default Group;

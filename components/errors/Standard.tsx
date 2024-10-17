@@ -1,3 +1,4 @@
+"use client";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import AddIcon from "@mui/icons-material/Add";
 import { Typography, Fab, Box } from "@mui/material";

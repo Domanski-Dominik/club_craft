@@ -25,7 +25,6 @@ import {
 	Collapse,
 	Stack,
 } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,6 +38,7 @@ import { pl } from "date-fns/locale/pl";
 import DialogLoc from "@/components/dialogs/DialogLoc";
 import { format } from "date-fns/format";
 import { parse } from "date-fns";
+import { addGroup, updateGroup } from "@/server/group-actions";
 
 const colorsOptions = [
 	{ value: "#3788d8", label: "Niebieski" },
@@ -129,7 +129,6 @@ type Props = {
 };
 const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 	const [openDialogLoc, setOpenDialogLoc] = useState(false);
 	const [formData, setFormData] = useState<FormData>({
 		name: "name" in groupInfo ? groupInfo.name : "",
@@ -403,7 +402,7 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 	};
 	const handleSubmit = async () => {
 		const isOk = validate();
-		console.log(errors);
+		//console.log(errors);
 		if (isOk) {
 			const info = {
 				...formData,
@@ -430,47 +429,15 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 				id: groupInfo.id,
 			};
 			if (edit) {
-				const response = await fetch(`/api/groups`, {
-					method: "PUT",
-					body: JSON.stringify(info),
-				});
-				const message = await response.json();
-				if (!message.error) {
-					queryClient.invalidateQueries({
-						queryKey: ["locWithGroups"],
-						type: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["locs"],
-						type: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["coaches"],
-						type: "all",
-					});
+				const message = await updateGroup(info);
+				if (!("error" in message)) {
 					router.push("/home/manageGroups");
 				} else {
 					setErrors({ ...errors, server: message.error });
 				}
 			} else if (edit === false) {
-				const response = await fetch(`/api/groups`, {
-					method: "POST",
-					body: JSON.stringify(info),
-				});
-				const message = await response.json();
-				if (!message.error) {
-					queryClient.invalidateQueries({
-						queryKey: ["locWithGroups"],
-						type: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["locs"],
-						type: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["coaches"],
-						type: "all",
-					});
+				const message = await addGroup(info);
+				if (!("error" in message)) {
 					router.push("/home/manageGroups");
 				} else {
 					setErrors({ ...errors, server: message.error });
@@ -1143,10 +1110,6 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 				club={clubInfo !== undefined ? clubInfo.name : user.club}
 				onClose={() => {
 					setOpenDialogLoc((prev) => !prev);
-					queryClient.refetchQueries({
-						queryKey: ["locs"],
-						type: "all",
-					});
 				}}
 			/>
 		</Box>

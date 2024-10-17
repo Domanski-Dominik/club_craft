@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { DialogLocType, Location } from "@/types/type";
+import { DialogLocType } from "@/types/type";
 import {
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogTitle,
 	Typography,
 	Button,
 	TextField,
 	Divider,
-	FormHelperText,
 	CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,12 +17,9 @@ import {
 	StyledDialogTitle,
 	TypographyStack,
 } from "../styled/StyledComponents";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAddLoc } from "@/hooks/scheduleHooks";
+import { addLoc } from "@/server/loc-action";
 
 const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
-	const addLoc = useAddLoc();
-	const queryClient = useQueryClient();
 	const [isSending, setIsSending] = useState(false);
 	const [formData, setFormData] = useState({
 		name: "",
@@ -77,19 +72,9 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 		const isOk = validCheck();
 		if (isOk) {
 			setIsSending(true);
-
-			const message = await addLoc.mutateAsync(formData);
-			if (!message.error) {
-				console.log(message);
+			const message = await addLoc(formData);
+			if (!("error" in message)) {
 				setIsSending(false);
-				queryClient.invalidateQueries({
-					queryKey: ["locs"],
-					refetchType: "all",
-				});
-				queryClient.invalidateQueries({
-					queryKey: ["locWithGroups"],
-					refetchType: "all",
-				});
 				handleClose();
 			} else {
 				console.error("Wystąpił błąd podczas tworzenia nowej lokalizacji.");

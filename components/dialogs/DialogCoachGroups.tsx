@@ -1,4 +1,4 @@
-import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import React, { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,11 +20,10 @@ import {
 } from "@mui/material";
 import type { LocWithGroups, Group } from "@/types/type";
 import {
-	useAddGroupCoach,
-	usedeleteGroupCoach,
-	useEditGroupCoach,
-} from "@/hooks/coachesHooks";
-import { useQueryClient } from "@tanstack/react-query";
+	addCoachGroup,
+	deleteCoachGroup,
+	updateCoachGroup,
+} from "@/server/coaches-actions";
 
 const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	onClose,
@@ -43,10 +42,6 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const [groups, setGroups] = useState<Group[] | null>();
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 	const [error, setError] = useState("");
-	const queryClient = useQueryClient();
-	const addGroup = useAddGroupCoach();
-	const deleteGroup = usedeleteGroupCoach();
-	const editGroup = useEditGroupCoach();
 	const handleOptionClick = (value: string) => {
 		if (value === "yes") {
 			// Tutaj dodaj logikę zapisywania zmienionych danych
@@ -125,20 +120,16 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const handleAddGroup = async () => {
 		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
-		const message = await addGroup.mutateAsync({
+		const message = await addCoachGroup({
 			club: row.club,
 			coachId: coachId,
 			groupId: groupId,
 		});
-		if (!message.error) {
+		if (!("error" in message)) {
 			row.coachedGroups.push(message);
 			setEditedGroupId(null);
 			setAddingGroup(false);
 			setError("");
-			queryClient.invalidateQueries({
-				queryKey: ["coaches"],
-				refetchType: "all",
-			});
 		} else {
 			setError(message.error);
 		}
@@ -146,21 +137,16 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 	const handleDelete = async () => {
 		const coachId = row.id;
 		const groupId = parseInt(selectedGroupId, 10);
-		const message = await deleteGroup.mutateAsync({
-			club: row.club,
+		const message = await deleteCoachGroup({
 			coachId: coachId,
 			groupId: groupId,
 		});
-		if (!message.error) {
+		if (!("error" in message)) {
 			const groups = row.coachedGroups;
 			const newGroups = groups?.filter((g: any) => g.id !== groupId);
 			row.coachedGroups = newGroups;
 			setEditedGroupId(null);
 			setError("");
-			queryClient.invalidateQueries({
-				queryKey: ["coaches"],
-				refetchType: "all",
-			});
 		} else {
 			setError(message.error);
 		}
@@ -170,13 +156,13 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 			const coachId = row.id;
 			const groupIdToRemove = parseInt(editedGroupId, 10);
 			const groupToAdd = parseInt(selectedGroupId, 10);
-			const message = await editGroup.mutateAsync({
+			const message = await updateCoachGroup({
 				club: row.club,
 				coachId: coachId,
 				groupIdToRemove: groupIdToRemove,
 				groupIdToAdd: groupToAdd,
 			});
-			if (!message.error) {
+			if (!("error" in message)) {
 				row.coachedGroups.push(message);
 				const removedGroup = row.coachedGroups;
 				const updatedGroups = removedGroup?.filter(
@@ -186,10 +172,6 @@ const DialogCoachGroups: React.FC<DialogGroupsType> = ({
 				setEditedGroupId(null);
 				setAddingGroup(false);
 				setError("");
-				queryClient.invalidateQueries({
-					queryKey: ["coaches"],
-					refetchType: "all",
-				});
 			} else {
 				setError(message.error);
 			}

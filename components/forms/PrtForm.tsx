@@ -48,10 +48,16 @@ import {
 	TypographyStack,
 } from "../styled/StyledComponents";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAddPrt } from "@/hooks/participantHooks";
 import { format } from "date-fns";
+import { Session } from "next-auth";
+import { addParticipant } from "@/server/participant-actions";
 
+type Props = {
+	locWithGroups: any;
+	session: Session;
+};
 type NGroup = {
 	locId: string | number;
 	locName: string;
@@ -61,11 +67,11 @@ type NGroup = {
 };
 type FormData = {
 	email: string;
-	name: string;
-	surname: string;
+	firstName: string;
+	lastName: string;
 	club: string;
-	tel: string;
-	groups: (number | string)[];
+	phoneNumber: string;
+	groups: number[];
 	regulamin: boolean;
 	contactWithParent: boolean;
 	parentFirstName: string;
@@ -75,17 +81,9 @@ type FormData = {
 	birthday: Date | null;
 };
 
-const ParticipantForm = () => {
+const ParticipantForm = (props: Props) => {
 	const router = useRouter();
-	const queryClient = useQueryClient();
-	const addPrt = useAddPrt();
 	const [succes, setSucces] = useState(false);
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
 	const [selectedLocation, setSelectedLocation] = useState<
 		LocWithGroups | null | undefined
 	>(null); // Wybrana lokalizacja
@@ -95,10 +93,10 @@ const ParticipantForm = () => {
 	const [selectedGroupId, setSelectedGroupId] = useState<string>("");
 	const [formData, setFormData] = useState<FormData>({
 		email: "",
-		name: "",
-		surname: "",
-		club: "",
-		tel: "",
+		firstName: "",
+		lastName: "",
+		club: props.session.user.club,
+		phoneNumber: "",
 		groups: [],
 		regulamin: false,
 		contactWithParent: false,
@@ -110,46 +108,32 @@ const ParticipantForm = () => {
 	});
 	const [errors, setErrors] = useState({
 		email: "",
-		tel: "",
-		name: "",
-		surname: "",
+		phoneNumber: "",
+		firstName: "",
+		lastName: "",
 		serverError: "",
 		group: "",
 		parentFirstName: "",
 		parentLastName: "",
 		birthDay: "",
 	});
-	const LocWithGroups = useQuery<LocWithGroups[]>({
-		queryKey: ["locWithGroups"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
-				res.json()
-			),
-	});
-
-	useEffect(() => {
-		if (session?.user) {
-			setFormData({ ...formData, club: session.user.club });
-		}
-	}, [session]);
 
 	const validateForm = () => {
 		let valid = true;
 		const newErrors = { ...errors };
 
-		if (formData.name.trim() === "") {
-			newErrors.name = "Podaj imię uczestnika";
+		if (formData.firstName.trim() === "") {
+			newErrors.firstName = "Podaj imię uczestnika";
 			valid = false;
-		} else if (formData.name !== "") {
-			newErrors.name = "";
+		} else if (formData.firstName !== "") {
+			newErrors.firstName = "";
 		}
 
-		if (formData.surname.trim() === "") {
-			newErrors.surname = "Podaj nazwisko uczestnika";
+		if (formData.lastName.trim() === "") {
+			newErrors.lastName = "Podaj nazwisko uczestnika";
 			valid = false;
 		} else {
-			newErrors.surname = "";
+			newErrors.lastName = "";
 		}
 		if (formData.parentFirstName.trim() === "" && formData.contactWithParent) {
 			newErrors.parentFirstName = "Podaj imię opiekuna";
@@ -163,19 +147,20 @@ const ParticipantForm = () => {
 		} else {
 			newErrors.parentLastName = "";
 		}
-		if (formData.tel !== "") {
+		if (formData.phoneNumber !== "") {
 			const hasOnlyDigits = /^\d+$/; // Sprawdzenie czy składa się tylko z cyfr
-			if (!hasOnlyDigits.test(formData.tel.replace(/\s/g, ""))) {
-				newErrors.tel = "Numer telefonu powinien składać się tylko z cyfr";
+			if (!hasOnlyDigits.test(formData.phoneNumber.replace(/\s/g, ""))) {
+				newErrors.phoneNumber =
+					"Numer telefonu powinien składać się tylko z cyfr";
 				valid = false;
-			} else if (formData.tel.replace(/\s/g, "").length !== 9) {
-				newErrors.tel = "Numer telefonu powinien składać się z 9 cyfr";
+			} else if (formData.phoneNumber.replace(/\s/g, "").length !== 9) {
+				newErrors.phoneNumber = "Numer telefonu powinien składać się z 9 cyfr";
 				valid = false;
 			} else {
-				newErrors.tel = "";
+				newErrors.phoneNumber = "";
 			}
-		} else if (formData.tel === "") {
-			newErrors.tel = "";
+		} else if (formData.phoneNumber === "") {
+			newErrors.phoneNumber = "";
 		}
 		/*if (formData.groups.length === 0) {
 			newErrors.group = "Wybierz grupę i kliknij + dodaj";
@@ -214,30 +199,22 @@ const ParticipantForm = () => {
 						? format(formData.birthday, "dd-MM-yyyy")
 						: null,
 				};
-				const message = await addPrt.mutateAsync(info);
+				const message = await addParticipant(info);
 				console.log(message);
-				if (message.error) {
+				if ("error" in message) {
 					setErrors({
 						parentFirstName: "",
 						parentLastName: "",
 						birthDay: "",
 						email: "",
-						tel: "",
-						name: "",
-						surname: "",
+						phoneNumber: "",
+						firstName: "",
+						lastName: "",
 						group: "",
 						serverError: `${message.error}`,
 					});
 				} else {
 					setSucces(true);
-					queryClient.invalidateQueries({
-						queryKey: ["allParticipants"],
-						type: "all",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["participants"],
-						type: "all",
-					});
 				}
 			} catch (error) {
 				console.error(error);
@@ -246,9 +223,9 @@ const ParticipantForm = () => {
 					parentLastName: "",
 					birthDay: "",
 					email: "",
-					tel: "",
-					name: "",
-					surname: "",
+					phoneNumber: "",
+					firstName: "",
+					lastName: "",
 					group: "",
 					serverError: "Wystąpił błąd podczas dodawania uczestnika",
 				});
@@ -264,37 +241,34 @@ const ParticipantForm = () => {
 		setFormData({ ...formData, [name]: value });
 	};
 	const handleLocationChange = (event: SelectChangeEvent) => {
-		//console.log(event.target.value);
-		if (LocWithGroups.isSuccess) {
-			const id = parseInt(event.target.value, 10);
-			const selectedLocationData = LocWithGroups.data.find(
-				(location) => location.id === id
-			);
-			const groupsInLoc = selectedLocationData?.groups.filter((group) =>
-				group.terms.filter((t) => t.locationId === id)
-			);
-			if (groupsInLoc) {
-				const sortedGroups = groupsInLoc.sort((a, b) => {
-					// Sprawdź, czy grupy mają przypisane terminy (zakładam, że każda grupa ma przynajmniej jeden termin)
-					const dayOfWeekA = a.terms?.[0]?.dayOfWeek || 0; // Jeśli brak terminu, domyślnie ustaw na 0 (np. niedziela)
-					const dayOfWeekB = b.terms?.[0]?.dayOfWeek || 0;
+		const id = parseInt(event.target.value, 10);
+		const selectedLocationData = props.locWithGroups.find(
+			(location: any) => location.id === id
+		);
+		const groupsInLoc = selectedLocationData?.groups.filter((group: Group) =>
+			group.terms.filter((t) => t.locationId === id)
+		);
+		if (groupsInLoc) {
+			const sortedGroups = groupsInLoc.sort((a: any, b: any) => {
+				// Sprawdź, czy grupy mają przypisane terminy (zakładam, że każda grupa ma przynajmniej jeden termin)
+				const dayOfWeekA = a.terms?.[0]?.dayOfWeek || 0; // Jeśli brak terminu, domyślnie ustaw na 0 (np. niedziela)
+				const dayOfWeekB = b.terms?.[0]?.dayOfWeek || 0;
 
-					// Jeśli dni tygodnia są różne, sortuj według dnia tygodnia
-					if (dayOfWeekA !== dayOfWeekB) {
-						return dayOfWeekA - dayOfWeekB;
-					}
+				// Jeśli dni tygodnia są różne, sortuj według dnia tygodnia
+				if (dayOfWeekA !== dayOfWeekB) {
+					return dayOfWeekA - dayOfWeekB;
+				}
 
-					// Jeśli dni tygodnia są takie same, sortuj według nazwy grupy
-					return a.name.localeCompare(b.name);
-				});
-				setGroups(sortedGroups);
-			} else {
-				setGroups(groupsInLoc);
-			}
-			//console.log(selectedLocationData);
-			setSelectedLocation(selectedLocationData);
-			setSelectedGroupId("");
+				// Jeśli dni tygodnia są takie same, sortuj według nazwy grupy
+				return a.name.localeCompare(b.name);
+			});
+			setGroups(sortedGroups);
+		} else {
+			setGroups(groupsInLoc);
 		}
+		//console.log(selectedLocationData);
+		setSelectedLocation(selectedLocationData);
+		setSelectedGroupId("");
 	};
 
 	const handleGroupChange = (event: React.ChangeEvent<{ value: string }>) => {
@@ -306,8 +280,7 @@ const ParticipantForm = () => {
 			setErrors({ ...errors, group: "Wybierz nową grupę" });
 		} else {
 			setSelectedGroups([...selectedGroups, group]);
-			console.log(group);
-			const id = [group.groupId];
+			const id = [Number(group.groupId)];
 			setFormData((prevData) => ({
 				...prevData,
 				groups: [...prevData.groups, ...id],
@@ -320,7 +293,7 @@ const ParticipantForm = () => {
 		const updatedGroups = selectedGroups.filter(
 			(group) => group.groupId !== groupId
 		);
-		const ids = updatedGroups.map((group) => group.groupId);
+		const ids = updatedGroups.map((group) => Number(group.groupId));
 		console.log(formData, updatedGroups, ids);
 		setFormData({ ...formData, groups: ids });
 		setSelectedGroups(updatedGroups);
@@ -329,9 +302,9 @@ const ParticipantForm = () => {
 		setFormData({
 			...formData,
 			email: "",
-			name: "",
-			surname: "",
-			tel: "",
+			firstName: "",
+			lastName: "",
+			phoneNumber: "",
 			groups: [],
 			regulamin: false,
 			contactWithParent: false,
@@ -346,9 +319,9 @@ const ParticipantForm = () => {
 			parentLastName: "",
 			birthDay: "",
 			email: "",
-			tel: "",
-			name: "",
-			surname: "",
+			phoneNumber: "",
+			firstName: "",
+			lastName: "",
 			serverError: "",
 			group: "",
 		});
@@ -375,16 +348,16 @@ const ParticipantForm = () => {
 							<Stack2>
 								<TypographyStack>Imię:</TypographyStack>
 								<TextField
-									name='name'
+									name='firstName'
 									required
 									sx={{ width: "50%" }}
 									autoComplete='off'
-									id='name'
+									id='firstName'
 									label='Imię'
 									onChange={handleInputChange}
 								/>
 							</Stack2>
-							<Typography color='error'>{errors.name}</Typography>
+							<Typography color='error'>{errors.firstName}</Typography>
 							<Divider variant='middle' />
 							<Stack2>
 								<TypographyStack>Nazwisko:</TypographyStack>
@@ -392,13 +365,13 @@ const ParticipantForm = () => {
 									required
 									sx={{ width: "50%" }}
 									autoComplete='off'
-									id='surname'
+									id='lastName'
 									label='Nazwisko'
-									name='surname'
+									name='lastName'
 									onChange={handleInputChange}
 								/>
 							</Stack2>
-							<Typography color='error'>{errors.surname}</Typography>
+							<Typography color='error'>{errors.lastName}</Typography>
 							<Divider variant='middle' />
 							<Stack2>
 								<TypographyStack>Data urodzenia:</TypographyStack>
@@ -439,13 +412,13 @@ const ParticipantForm = () => {
 									<TextField
 										sx={{ width: "50%" }}
 										autoComplete='off'
-										id='tel'
-										label='Numer Telefonu'
-										name='tel'
+										id='phoneNumber'
+										label='Numer telefonu'
+										name='phoneNumber'
 										onChange={handleInputChange}
 									/>
 								</Stack2>
-								<Typography color='error'>{errors.tel}</Typography>
+								<Typography color='error'>{errors.phoneNumber}</Typography>
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Email:</TypographyStack>
@@ -505,13 +478,13 @@ const ParticipantForm = () => {
 									<TextField
 										sx={{ width: "50%" }}
 										autoComplete='off'
-										id='tel'
-										label='Numer Telefonu'
-										name='tel'
+										id='phoneNumber'
+										label='Numer telefonu'
+										name='phoneNumber'
 										onChange={handleInputChange}
 									/>
 								</Stack2>
-								<Typography color='error'>{errors.tel}</Typography>
+								<Typography color='error'>{errors.phoneNumber}</Typography>
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Email:</TypographyStack>
@@ -590,167 +563,155 @@ const ParticipantForm = () => {
 								</Typography>
 							</StyledAccordionSummaryNoExpand>
 							<StyledAccordionDetails>
-								{LocWithGroups.isSuccess && LocWithGroups.data.length > 0 ? (
-									<>
-										<Stack2>
-											<TypographyStack>Lokalizacja:</TypographyStack>
-											<Box width='50%'>
-												<FormControl fullWidth>
-													<InputLabel id='loc'>Lokalizacja</InputLabel>
-													<Select
-														labelId='loc'
-														id='loc'
-														label='Lokalizacja'
-														defaultValue=''
-														value={selectedLocation?.id || ""}
-														onChange={handleLocationChange as any}>
-														{LocWithGroups.isSuccess &&
-															LocWithGroups.data.length > 0 &&
-															LocWithGroups.data.map((loc) => (
-																<MenuItem
-																	key={loc.id}
-																	value={`${loc.id}`}>
-																	{loc.name}
-																</MenuItem>
-															))}
-													</Select>
-												</FormControl>
-											</Box>
-										</Stack2>
-										<Divider variant='middle' />
+								<>
+									<Stack2>
+										<TypographyStack>Lokalizacja:</TypographyStack>
+										<Box width='50%'>
+											<FormControl fullWidth>
+												<InputLabel id='loc'>Lokalizacja</InputLabel>
+												<Select
+													labelId='loc'
+													id='loc'
+													label='Lokalizacja'
+													defaultValue=''
+													value={selectedLocation?.id || ""}
+													onChange={handleLocationChange as any}>
+													{props.locWithGroups.map((loc: any) => (
+														<MenuItem
+															key={loc.id}
+															value={`${loc.id}`}>
+															{loc.name}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+										</Box>
+									</Stack2>
+									<Divider variant='middle' />
 
-										<Stack2>
-											<TypographyStack>Grupa:</TypographyStack>
-											<Box width='50%'>
-												<FormControl fullWidth>
-													<InputLabel id='group'>Grupa</InputLabel>
-													<Select
-														labelId='group'
-														id='group'
-														label='Grupa'
-														defaultValue=''
-														MenuProps={{
-															slotProps: {
-																paper: {
-																	style: {
-																		maxHeight: 350,
-																	},
+									<Stack2>
+										<TypographyStack>Grupa:</TypographyStack>
+										<Box width='50%'>
+											<FormControl fullWidth>
+												<InputLabel id='group'>Grupa</InputLabel>
+												<Select
+													labelId='group'
+													id='group'
+													label='Grupa'
+													defaultValue=''
+													MenuProps={{
+														slotProps: {
+															paper: {
+																style: {
+																	maxHeight: 350,
 																},
 															},
-														}}
-														value={selectedGroupId || ""}
-														onChange={handleGroupChange as any}>
-														{groups &&
-															groups !== null &&
-															groups.map((group, index) => (
-																<MenuItem
-																	key={index}
-																	divider
-																	value={group.id}>
-																	<Box>
+														},
+													}}
+													value={selectedGroupId || ""}
+													onChange={handleGroupChange as any}>
+													{groups &&
+														groups !== null &&
+														groups.map((group, index) => (
+															<MenuItem
+																key={index}
+																divider
+																value={group.id}>
+																<Box>
+																	<Typography
+																		variant='body1'
+																		component='div'
+																		sx={{ fontWeight: "bold" }}>
+																		{group.name}
+																	</Typography>
+																	{group.terms.map((t, index) => (
 																		<Typography
-																			variant='body1'
+																			key={index}
+																			variant='body2'
 																			component='div'
-																			sx={{ fontWeight: "bold" }}>
-																			{group.name}
+																			sx={{ paddingLeft: "8px" }}>
+																			{PolishDayName(t.dayOfWeek)} {t.timeS}-
+																			{t.timeE}
 																		</Typography>
-																		{group.terms.map((t, index) => (
-																			<Typography
-																				key={index}
-																				variant='body2'
-																				component='div'
-																				sx={{ paddingLeft: "8px" }}>
-																				{PolishDayName(t.dayOfWeek)} {t.timeS}-
-																				{t.timeE}
-																			</Typography>
-																		))}
-																	</Box>
-																</MenuItem>
-															))}
-													</Select>
-												</FormControl>
-											</Box>
-										</Stack2>
-										<Divider variant='middle' />
-										<Stack2>
-											<Button
-												fullWidth
-												size='large'
-												variant='outlined'
-												disabled={selectedGroupId === ""}
-												sx={{ height: "100%" }}
-												startIcon={<AddIcon />}
-												onClick={() => {
-													if (selectedLocation) {
-														const foundGroup = selectedLocation?.groups.find(
-															(group) => group.id === Number(selectedGroupId)
-														);
-														if (foundGroup) {
-															addGroup({
-																locName: selectedLocation?.name,
-																locId: selectedLocation?.id,
-																dayOfWeek: selectedDayOfWeek,
-																groupId: selectedGroupId,
-																groupName: foundGroup.name,
-															});
-														}
+																	))}
+																</Box>
+															</MenuItem>
+														))}
+												</Select>
+											</FormControl>
+										</Box>
+									</Stack2>
+									<Divider variant='middle' />
+									<Stack2>
+										<Button
+											fullWidth
+											size='large'
+											variant='outlined'
+											disabled={selectedGroupId === ""}
+											sx={{ height: "100%" }}
+											startIcon={<AddIcon />}
+											onClick={() => {
+												if (selectedLocation) {
+													const foundGroup = selectedLocation?.groups.find(
+														(group) => group.id === Number(selectedGroupId)
+													);
+													if (foundGroup) {
+														addGroup({
+															locName: selectedLocation?.name,
+															locId: selectedLocation?.id,
+															dayOfWeek: selectedDayOfWeek,
+															groupId: selectedGroupId,
+															groupName: foundGroup.name,
+														});
 													}
-												}}>
-												Dodaj
-											</Button>
-										</Stack2>
-										<Divider variant='middle' />
-										{errors.group !== "" && (
-											<Typography color='error'>{errors.group}</Typography>
-										)}
-										<Stack2>
-											<List
-												sx={{
-													border: 1,
-													borderColor: "blueviolet",
-													borderRadius: 2,
-													width: "100%",
-												}}>
-												{selectedGroups.length <= 0 && (
-													<Typography align='center'>
-														Brak dodanych grup
+												}
+											}}>
+											Dodaj
+										</Button>
+									</Stack2>
+									<Divider variant='middle' />
+									{errors.group !== "" && (
+										<Typography color='error'>{errors.group}</Typography>
+									)}
+									<Stack2>
+										<List
+											sx={{
+												border: 1,
+												borderColor: "blueviolet",
+												borderRadius: 2,
+												width: "100%",
+											}}>
+											{selectedGroups.length <= 0 && (
+												<Typography align='center'>
+													Brak dodanych grup
+												</Typography>
+											)}
+											{selectedGroups.map((group) => (
+												<ListItem
+													key={group.groupId}
+													sx={{ justifyContent: "space-between" }}>
+													<Typography
+														color={"darkviolet"}
+														variant='subtitle1'>
+														{group.locName}
 													</Typography>
-												)}
-												{selectedGroups.map((group) => (
-													<ListItem
-														key={group.groupId}
-														sx={{ justifyContent: "space-between" }}>
-														<Typography
-															color={"darkviolet"}
-															variant='subtitle1'>
-															{group.locName}
-														</Typography>
-														<Typography
-															variant='subtitle1'
-															fontWeight={"bold"}>
-															{group.groupName}
-														</Typography>
-														<Button
-															size='small'
-															variant='outlined'
-															color='error'
-															onClick={() => removeGroup(group.groupId)}>
-															Usuń
-														</Button>
-													</ListItem>
-												))}
-											</List>
-										</Stack2>
-									</>
-								) : (
-									<>
-										<Typography variant='h6'>
-											{LocWithGroups.isSuccess
-												? "Brak dodanych grup, najpierw je utwórz"
-												: "Błąd w trakcie pobierania grup"}
-										</Typography>
-									</>
-								)}
+													<Typography
+														variant='subtitle1'
+														fontWeight={"bold"}>
+														{group.groupName}
+													</Typography>
+													<Button
+														size='small'
+														variant='outlined'
+														color='error'
+														onClick={() => removeGroup(group.groupId)}>
+														Usuń
+													</Button>
+												</ListItem>
+											))}
+										</List>
+									</Stack2>
+								</>
 							</StyledAccordionDetails>
 						</Accordion>
 					</Collapse>
@@ -811,3 +772,12 @@ const ParticipantForm = () => {
 };
 
 export default ParticipantForm;
+/*
+<>
+										<Typography variant='h6'>
+											{LocWithGroups.isSuccess
+												? "Brak dodanych grup, najpierw je utwórz"
+												: "Błąd w trakcie pobierania grup"}
+										</Typography>
+									</>
+*/

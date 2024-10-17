@@ -1,4 +1,4 @@
-import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
+import PolishDayName from "@/functions/PolishDayName";
 import React, { useState } from "react";
 import { DialogGroupsType } from "@/types/type";
 import Grid from "@mui/material/Grid2";
@@ -22,13 +22,12 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import type { LocWithGroups, Group, Term } from "@/types/type";
+import type { LocWithGroups, Group } from "@/types/type";
 import {
-	useUpdatePrtGr,
-	useDeletePrtGr,
-	useEditPrtGr,
-} from "@/hooks/participantHooks";
-import { useQueryClient } from "@tanstack/react-query";
+	addParticipantGroup,
+	deleteParticipantGroup,
+	updateParticipantGroup,
+} from "@/server/participant-actions";
 
 const DialogGroups: React.FC<DialogGroupsType> = ({
 	onClose,
@@ -39,11 +38,6 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 	if (row === null) {
 		return null;
 	}
-	console.log(row);
-	const updateGr = useUpdatePrtGr();
-	const deleteGr = useDeletePrtGr();
-	const editGr = useEditPrtGr();
-	const queryClient = useQueryClient();
 	const [addingGroup, setAddingGroup] = useState(false);
 	const [editedGroupId, setEditedGroupId] = useState<string | null>(null);
 	const [selectedLocation, setSelectedLocation] = useState<
@@ -129,20 +123,12 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			participantId: row.id,
 			groupId: parseInt(selectedGroupId, 10),
 		};
-		const message = await updateGr.mutateAsync(info);
-		if (!message.error) {
+		const message = await addParticipantGroup(info);
+		if (!("error" in message)) {
 			row.participantgroup.push(message);
 			setEditedGroupId(null);
 			setAddingGroup(false);
 			setError("");
-			queryClient.invalidateQueries({
-				queryKey: ["locWithGroups"],
-				refetchType: "all",
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["allParticipants"],
-				refetchType: "all",
-			});
 		} else {
 			setError(message.error);
 		}
@@ -152,16 +138,8 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			participantId: row.id,
 			groupId: parseInt(selectedGroupId, 10),
 		};
-		const message = await deleteGr.mutateAsync(info);
-		if (!message.error) {
-			queryClient.invalidateQueries({
-				queryKey: ["locWithGroups"],
-				refetchType: "all",
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["allParticipants"],
-				refetchType: "all",
-			});
+		const message = await deleteParticipantGroup(info);
+		if (!("error" in message)) {
 			const groups = row.participantgroup;
 			const newGroups = groups?.filter((g: any) => g.id !== info.groupId);
 			row.participantgroup = newGroups;
@@ -176,18 +154,10 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 			const info = {
 				participantId: row.id,
 				groupIdToRemove: parseInt(editedGroupId, 10),
-				groupToAdd: parseInt(selectedGroupId, 10),
+				groupIdToAdd: parseInt(selectedGroupId, 10),
 			};
-			const message = await editGr.mutateAsync(info);
-			if (!message.error) {
-				queryClient.invalidateQueries({
-					queryKey: ["locWithGroups"],
-					refetchType: "all",
-				});
-				queryClient.invalidateQueries({
-					queryKey: ["allParticipants"],
-					refetchType: "all",
-				});
+			const message = await updateParticipantGroup(info);
+			if (!("error" in message)) {
 				row.participantgroup.push(message);
 				const removedGroup = row.participantgroup;
 				const updatedGroups = removedGroup?.filter(

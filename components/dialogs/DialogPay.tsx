@@ -15,12 +15,11 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	Box,
-	Grid,
 	SelectChangeEvent,
 	Typography,
 	InputAdornment,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -182,10 +181,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 						container
 						columnSpacing={1}
 						rowSpacing={1.5}>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<TextField
 								label='Kwota'
 								type='number'
@@ -203,10 +199,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 							/>
 							<Typography color='error'>{errors.amount}</Typography>
 						</Grid>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<TextField
 								label='Opis'
 								value={paymentData.description}
@@ -214,10 +207,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								fullWidth
 							/>
 						</Grid>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<FormControl fullWidth>
 								<InputLabel>Metoda płatności</InputLabel>
 								<Select
@@ -230,10 +220,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<LocalizationProvider
 								dateAdapter={AdapterDateFns}
 								adapterLocale={pl}>
@@ -246,10 +233,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								/>
 							</LocalizationProvider>
 						</Grid>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<Button
 								fullWidth
 								variant='outlined'
@@ -258,10 +242,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								Anuluj
 							</Button>
 						</Grid>
-						<Grid
-							item
-							xs={6}
-							sm={6}>
+						<Grid size={6}>
 							<Button
 								fullWidth
 								onClick={handleSubmit}
@@ -286,10 +267,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								container
 								columnSpacing={2}
 								rowSpacing={1.5}>
-								<Grid
-									item
-									xs={12}
-									sm={12}>
+								<Grid size={12}>
 									<TextField
 										label='Kwota'
 										type='number'
@@ -308,10 +286,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 									/>
 									<Typography color='error'>{errors.amount}</Typography>
 								</Grid>
-								<Grid
-									item
-									xs={12}
-									sm={12}>
+								<Grid size={12}>
 									<LocalizationProvider
 										dateAdapter={AdapterDateFns}
 										adapterLocale={pl}>
@@ -325,10 +300,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 										/>
 									</LocalizationProvider>
 								</Grid>
-								<Grid
-									item
-									xs={12}
-									sm={12}>
+								<Grid size={12}>
 									<FormControl fullWidth>
 										<InputLabel>Metoda płatności</InputLabel>
 										<Select
@@ -342,10 +314,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 										</Select>
 									</FormControl>
 								</Grid>
-								<Grid
-									item
-									xs={12}
-									sm={12}>
+								<Grid size={12}>
 									<TextField
 										label='Opis'
 										size='small'

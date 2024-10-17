@@ -1,51 +1,60 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { getClubInfo, getLocs } from "@/server/get-actions";
 import GroupForm from "@/components/forms/GroupForm";
+import { auth } from "@/auth";
+import { unstable_cache } from "next/cache";
+import { handleResult } from "@/functions/promiseResults";
+import StandardError from "@/components/errors/Standard";
+import { getGroupById } from "@/server/get-actions";
 interface Props {
 	params: {
 		id: string;
 	};
 }
-const AddClassClone = ({ params }: Props) => {
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const clubInfo = useQuery({
-		queryKey: ["clubInfo"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
-	});
-	const locs = useQuery({
-		queryKey: ["locs"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(
-				`/api/loc/club/${session?.user.club}/${session?.user.role}/${session?.user.id}`
-			).then((res) => res.json()),
-	});
-	const group = useQuery({
-		queryKey: ["group", `${params.id}`],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/groups/gr/${params.id}`).then((res) => res.json()),
-	});
-	if (locs.isSuccess && clubInfo.isSuccess && group.isSuccess)
+const getCachedLocs = unstable_cache(
+	async (session) => getLocs(session),
+	["add-group-locs"],
+	{
+		tags: ["locs"],
+	}
+);
+const getCachedClubInfo = unstable_cache(
+	async (session) => getClubInfo(session),
+	["add-group-club"],
+	{
+		tags: ["club"],
+	}
+);
+const AddClassClone = async ({ params }: Props) => {
+	const session = await auth();
+	const [locsResults, clubInfoResults] = await Promise.allSettled([
+		getCachedLocs(session),
+		getCachedClubInfo(session),
+	]);
+	const club = handleResult(clubInfoResults, "clubs");
+	const locs = handleResult(locsResults, "locations");
+	const group = await getGroupById(parseInt(params.id), session);
+	if (!locs || !club || !group)
 		return (
-			<GroupForm
-				clubInfo={clubInfo.data}
-				locs={locs.data.length > 0 ? locs.data : []}
-				user={session?.user}
-				groupInfo={group.data}
-				edit={false}
+			<StandardError
+				message={
+					!locs
+						? "Błąd przy pobieraniu lokalizacji"
+						: !club
+						? "Błąd przy pobieraniu informacji o klubie"
+						: "Błąd przy pobieraniu informacji o grupie"
+				}
+				addParticipants={false}
 			/>
 		);
+	return (
+		<GroupForm
+			clubInfo={club}
+			locs={locs.length > 0 ? locs : []}
+			user={session?.user}
+			groupInfo={group}
+			edit={false}
+		/>
+	);
 };
 
 export default AddClassClone;

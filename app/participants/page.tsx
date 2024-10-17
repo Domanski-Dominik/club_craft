@@ -1,5 +1,3 @@
-"use client";
-
 import AllParticipantList from "@/components/participants/AllParticipantList";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/context/Loading";
@@ -8,63 +6,62 @@ import React from "react";
 import { redirect } from "next/navigation";
 import type { Participant, LocWithGroups } from "@/types/type";
 import StandardError from "@/components/errors/Standard";
+import { auth } from "@/auth";
+import {
+	getAllParticipants,
+	getClubInfo,
+	getLocsWithGroups,
+} from "@/server/get-actions";
+import { unstable_cache } from "next/cache";
+import { handleResult } from "@/functions/promiseResults";
 
-const Participants = () => {
-	const { status, data: session } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
-	const clubInfo = useQuery({
-		queryKey: ["clubInfo"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/club/${session?.user.id}`).then((res) => res.json()),
-	});
-	const participants = useQuery<Participant[]>({
-		queryKey: ["allParticipants"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(
-				`/api/participant/all/${session?.user.role}/${session?.user.club}/${session?.user.id}`
-			).then((res) => res.json()),
-	});
-	const locWithGroups = useQuery<LocWithGroups[]>({
-		queryKey: ["locWithGroups"],
-		enabled: !!session,
-		queryFn: () =>
-			fetch(`/api/components/form/${session?.user.club}`).then((res) =>
-				res.json()
-			),
-	});
-	if (
-		participants.data === undefined ||
-		locWithGroups.data === undefined ||
-		clubInfo.data === undefined
-	)
-		return <Loading />;
-	if (participants.isError || locWithGroups.isError || clubInfo.isError)
+const getCachedLocsWithGroups = unstable_cache(
+	async (session) => getLocsWithGroups(session),
+	["participants-all-locs"],
+	{
+		tags: ["locs"],
+	}
+);
+const getCachedClubInfo = unstable_cache(
+	async (session) => getClubInfo(session),
+	["participants-all-groups"],
+	{
+		tags: ["club"],
+	}
+);
+const getCachedAllParticipants = unstable_cache(
+	async (session) => getAllParticipants(session, session.user.id),
+	["participants-all"],
+	{
+		tags: ["participants"],
+	}
+);
+const Participants = async () => {
+	const session = await auth();
+	const [clubInfoResult, locsWithGroupsResult, participantsResult] =
+		await Promise.allSettled([
+			getCachedClubInfo(session),
+			getCachedLocsWithGroups(session),
+			getCachedAllParticipants(session),
+		]);
+	const locsWithGroups = handleResult(locsWithGroupsResult, "locations");
+	const clubInfo = handleResult(clubInfoResult, "clubInfo");
+	const participants = handleResult(participantsResult, "participants");
+
+	if (!locsWithGroups || !clubInfo || !participants)
 		return (
 			<StandardError
-				message={
-					participants.isError
-						? participants.error.message
-						: locWithGroups.isError
-						? locWithGroups.error.message
-						: clubInfo.isError
-						? clubInfo.error.message
-						: "Nie udało się pobrać uczestników, grup lub informacji o klubie"
-				}
-				addParticipants={true}
+				message='Błąd przy pobieraniu danych'
+				addParticipants={false}
 			/>
 		);
+
 	return (
 		<AllParticipantList
-			participants={participants.data.length > 0 ? participants.data : []}
-			locWithGroups={locWithGroups.data}
+			participants={participants}
+			locWithGroups={locsWithGroups}
 			isOwner={session?.user.role === "owner"}
-			clubInfo={clubInfo.data}
+			clubInfo={clubInfo}
 		/>
 	);
 };

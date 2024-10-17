@@ -1,18 +1,10 @@
-"use client";
-
 import LocForm from "@/components/forms/LocForm";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import Loading from "@/context/Loading";
 import { Location } from "@/types/type";
+import { auth } from "@/auth";
+import Loading from "@/context/Loading";
 
-const CreateLoc = () => {
-	const { status } = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/login");
-		},
-	});
+const CreateLoc = async () => {
+	const session = await auth();
 	const CreateLoc: Location = {
 		id: 0,
 		name: "",
@@ -22,14 +14,15 @@ const CreateLoc = () => {
 		streetNr: "",
 		club: "",
 	};
-	if (status === "loading") return <Loading />;
-	if (status === "authenticated") {
+	if (session) {
 		return (
 			<LocForm
 				locInfo={CreateLoc}
 				type={"create"}
 			/>
 		);
+	} else {
+		return <Loading />;
 	}
 };
 

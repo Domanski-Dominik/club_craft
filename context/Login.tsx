@@ -16,6 +16,8 @@ import { useState } from "react";
 import { redirect } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { DEAFAULT_LOGIN_REDIRECT } from "@/routes";
+import { login } from "@/server/authorize";
 
 const Login = () => {
 	const [data, setData] = useState({
@@ -23,23 +25,10 @@ const Login = () => {
 		password: "",
 	});
 	const [error, setError] = useState("");
-	const session = useSession();
-	const { status } = useSession();
-	if (status === "authenticated") redirect("/home");
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			//console.log("wszedłem  do funkcji", data);
-			const result = await signIn("credentials", {
-				...data,
-				redirect: false,
-			});
-			//console.log(result);
-			//console.log(session);
-			if (result?.error) {
-				throw new Error(result.error as string); // Użycie asercji typów
-			}
+			login(data);
 		} catch (error: any) {
 			setError(error.message); // Ustaw błąd, jeśli wystąpił podczas logowania
 		}
