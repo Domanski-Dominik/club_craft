@@ -22,30 +22,15 @@ function calculateEventDate(
 	// Ustaw godzinę
 	const [hours, minutes] = time.split(":").map(Number);
 	eventDate.setHours(hours, minutes, 0, 0);
-	// Sprawdzenie, czy strefa czasowa jest inna niż Europe/Warsaw
-	const currentOffset = new Date().getTimezoneOffset();
-	const polandOffset = getPolandOffset(eventDate);
-	const needsOffset = currentOffset !== polandOffset;
 
-	// Dodaj przesunięcie tylko, jeśli strefa czasowa jest inna niż polska
-	if (needsOffset) {
-		const isDST = isDaylightSavingTime(eventDate);
-		const offset = isDST ? 2 : 1; // UTC+2 dla czasu letniego, UTC+1 dla standardowego
-		eventDate.setHours(eventDate.getHours() + offset);
-	}
+	// Konwertuj datę do strefy Europe/Warsaw bez dodatkowego przesunięcia
+	const eventDateInPolishTime = new Date(
+		eventDate.toLocaleString("en-US", { timeZone: "Europe/Warsaw" })
+	);
 
-	return formatISO(eventDate, { representation: "complete" });
+	return formatISO(eventDateInPolishTime, { representation: "complete" });
 }
-function isDaylightSavingTime(date: Date): boolean {
-	const january = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
-	const july = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
-	return date.getTimezoneOffset() < Math.max(january, july);
-}
-// Funkcja do pobierania przesunięcia dla Polski w zależności od pory roku
-function getPolandOffset(date: Date): number {
-	const isDST = isDaylightSavingTime(date);
-	return isDST ? -120 : -60; // -120 minut (UTC+2) dla czasu letniego, -60 (UTC+1) dla standardowego
-}
+
 function generateRecurringEvents(group: any, term: any): any[] {
 	const startDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
 	const endDate = parse(group.lastLesson, "dd-MM-yyyy", new Date());

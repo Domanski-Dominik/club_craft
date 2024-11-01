@@ -176,7 +176,7 @@ export default async function RootLayout({
 								}}>
 								{children}
 							</Container>
-							{session && <BottomNav />}
+							{session?.user && <BottomNav />}
 						</AppRouterCacheProvider>
 					</Provider>
 					<Analytics />
