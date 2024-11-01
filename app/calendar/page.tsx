@@ -15,21 +15,21 @@ function calculateEventDate(
 	const timeZone = "Europe/Warsaw";
 
 	// Obliczenie nowej daty, przesuwając do odpowiedniego dnia tygodnia
-	const dayDifference = (dayOfWeek + 7 - baseDate.getDay()) % 7;
-	let targetDate = new Date(
-		baseDate.getFullYear(),
-		baseDate.getMonth(),
-		baseDate.getDate() + dayDifference
+	const dayDifference = (dayOfWeek + 7 - baseDate.getUTCDay()) % 7;
+	const targetDate = new Date(
+		baseDate.getUTCFullYear(),
+		baseDate.getUTCMonth(),
+		baseDate.getUTCDate() + dayDifference
 	);
 
 	// Ustaw godzinę i minuty z ciągu `time`
 	const [hours, minutes] = time.split(":").map(Number);
-	targetDate.setHours(hours);
-	targetDate.setMinutes(minutes);
-	targetDate.setSeconds(0);
-	targetDate.setMilliseconds(0);
+	targetDate.setUTCHours(hours);
+	targetDate.setUTCMinutes(minutes);
+	targetDate.setUTCSeconds(0);
+	targetDate.setUTCMilliseconds(0);
 
-	// Ustawienie daty jako strefy czasowej Warszawy
+	// Konwersja na polską strefę czasową
 	const zonedDate = toZonedTime(targetDate, timeZone);
 
 	// Formatowanie daty w polskiej strefie czasowej
@@ -38,12 +38,14 @@ function calculateEventDate(
 
 function generateRecurringEvents(group: any, term: any): any[] {
 	const timeZone = "Europe/Warsaw";
-	const startDate = toDate(parse(group.firstLesson, "dd-MM-yyyy", new Date()), {
-		timeZone,
-	});
-	const endDate = toDate(parse(group.lastLesson, "dd-MM-yyyy", new Date()), {
-		timeZone,
-	});
+	const startDate = toZonedTime(
+		parse(group.firstLesson, "dd-MM-yyyy", new Date()),
+		timeZone
+	);
+	const endDate = toZonedTime(
+		parse(group.lastLesson, "dd-MM-yyyy", new Date()),
+		timeZone
+	);
 	const events = [];
 
 	let currentDate = startDate;
