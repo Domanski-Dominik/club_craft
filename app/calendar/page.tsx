@@ -5,7 +5,7 @@ import StandardError from "@/components/errors/Standard";
 import { handleResult } from "@/functions/promiseResults";
 import { auth } from "@/auth";
 import { unstable_cache } from "next/cache";
-import { toZonedTime } from "date-fns-tz";
+import { formatInTimeZone } from "date-fns-tz";
 
 function calculateEventDate(
 	date: Date,
@@ -23,17 +23,15 @@ function calculateEventDate(
 	// Ustaw godzinę
 	const [hours, minutes] = time.split(":").map(Number);
 	eventDate.setHours(hours, minutes, 0, 0);
-	const eventDateInPolishTime = toZonedTime(eventDate, timeZone);
+	const formattedDate = formatInTimeZone(
+		eventDate,
+		timeZone,
+		"yyyy-MM-dd'T'HH:mm:ssXXX"
+	);
 
-	return formatISO(eventDateInPolishTime, { representation: "complete" });
+	return formattedDate;
 }
-// Funkcja obliczająca przesunięcie dla Polski (czas letni/zimowy)
-function getPolandOffset(date: Date): number {
-	const january = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
-	const july = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
-	const isDST = date.getTimezoneOffset() < Math.max(january, july);
-	return isDST ? -120 : -60; // -120 minut (UTC+2) dla czasu letniego, -60 (UTC+1) dla standardowego
-}
+
 function generateRecurringEvents(group: any, term: any): any[] {
 	const startDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
 	const endDate = parse(group.lastLesson, "dd-MM-yyyy", new Date());
