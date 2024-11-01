@@ -7,6 +7,7 @@ import { getUserById } from "./server/authorize";
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	adapter: PrismaAdapter(prisma) as any,
 	session: { strategy: "jwt" },
+	trustHost: true,
 	callbacks: {
 		/*async signIn({ user }) {
 		//sprawdzenie jeśli nie zweryfikowany email to nie pozwól się zalogować

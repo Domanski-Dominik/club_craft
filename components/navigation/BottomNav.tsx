@@ -41,7 +41,6 @@ export default function BottomNav() {
 			router.push(`/${newValue}`);
 		}
 	};
-
 	return (
 		<>
 			<BottomNavigation

@@ -7,6 +7,7 @@ import ThemeRegistry from "@/theme/ThemeRegistry";
 import { Container, useMediaQuery } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { Analytics } from "@vercel/analytics/react";
+import { auth } from "@/auth";
 
 const APP_NAME = "ClubCraft";
 const APP_DEFAULT_TITLE = "ClubCraft";
@@ -60,11 +61,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
 	themeColor: "#FFFFFF",
 };
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children?: React.ReactNode;
 }) {
+	const session = await auth();
 	//if (status==="loading") return <div>Loading...</div>;
 	return (
 		<html lang='en'>
@@ -75,7 +77,7 @@ export default function RootLayout({
 				/>
 				<meta
 					name='viewport'
-					content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
+					content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=0, viewport-fit=cover'
 				/>
 				<meta
 					name='apple-mobile-web-app-capable'
@@ -153,7 +155,7 @@ export default function RootLayout({
 				<body>
 					<Provider>
 						<AppRouterCacheProvider>
-							<TopNav />
+							<TopNav session={session} />
 							<Container
 								component='main'
 								sx={{
@@ -174,7 +176,7 @@ export default function RootLayout({
 								}}>
 								{children}
 							</Container>
-							<BottomNav />
+							{session && <BottomNav />}
 						</AppRouterCacheProvider>
 					</Provider>
 					<Analytics />

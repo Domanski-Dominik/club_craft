@@ -25,7 +25,11 @@ import { useRouter } from "next/navigation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Session } from "next-auth";
 
+interface Props {
+	session: Session | null;
+}
 const drawerWidth = 240;
 const navItems = [
 	{
@@ -46,9 +50,8 @@ const navItems = [
 	//{ name: "Informacje", icon: <InfoIcon />, link: "/home/info" },
 ];
 
-export default function TopNav() {
+export default function TopNav(props: Props) {
 	const router = useRouter();
-	const { data: session, status } = useSession();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -124,7 +127,7 @@ export default function TopNav() {
 							</Button>
 						))}
 					</Box>
-					{session?.user ? (
+					{props.session?.user ? (
 						<div>
 							<IconButton
 								size='large'
