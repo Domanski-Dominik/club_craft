@@ -6,8 +6,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import plLocale from "@fullcalendar/core/locales/pl";
-import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
 import { formatISO, addWeeks, parse } from "date-fns";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
@@ -31,16 +29,60 @@ interface CalendarProps {
 	iOS: boolean;
 	locs: any;
 }
+function calculateEventDate(
+	date: Date,
+	dayOfWeek: number,
+	time: string
+): string {
+	const eventDate = new Date(date);
+
+	// Przesuń datę do odpowiedniego dnia tygodnia
+	eventDate.setDate(
+		eventDate.getDate() + ((dayOfWeek + 6 - eventDate.getDay()) % 7)
+	);
+
+	// Ustaw godzinę
+	const [hours, minutes] = time.split(":").map(Number);
+	eventDate.setHours(hours, minutes, 0, 0);
+
+	return formatISO(eventDate);
+}
+function generateRecurringEvents(group: any, term: any): any[] {
+	const startDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
+	const endDate = parse(group.lastLesson, "dd-MM-yyyy", new Date());
+	const events = [];
+
+	let currentDate = startDate;
+	while (currentDate <= endDate) {
+		const event = {
+			id: `${group.id}-${formatISO(currentDate, {
+				representation: "date",
+			})}`,
+			title: `${group.name} ${term.location.name}`,
+			start: calculateEventDate(currentDate, term.dayOfWeek + 1, term.timeS),
+			end: calculateEventDate(currentDate, term.dayOfWeek + 1, term.timeE),
+			color: group.color,
+			groupId: term.locationId,
+			url: `/group/${group.id}`,
+		};
+		events.push(event);
+		currentDate = addWeeks(currentDate, 1); // Increment by one week
+	}
+	return events;
+}
 
 const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 	const theme = useTheme();
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 	const [drawer, setDrawer] = useState(false);
 	const [selectedLocation, setSelectedLocation] = useState<string>("all");
+	const formattedEvents = events.flatMap((group: any) =>
+		group.terms.flatMap((term: any) => generateRecurringEvents(group, term))
+	);
 	const filteredEvents =
 		selectedLocation === "all"
-			? events
-			: events.filter(
+			? formattedEvents
+			: formattedEvents.filter(
 					(event: any) => event.groupId === parseInt(selectedLocation, 10)
 			  );
 	return (
