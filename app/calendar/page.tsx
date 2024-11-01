@@ -12,9 +12,7 @@ function calculateEventDate(
 	dayOfWeek: number,
 	time: string
 ): string {
-	// Oblicz przesunięcie czasu dla polskiej strefy
-	const isDST = isDaylightSavingTime(baseDate);
-	const timeZoneOffset = isDST ? "+02:00" : "+01:00";
+	const timeZone = "Europe/Warsaw";
 
 	// Obliczenie nowej daty, przesuwając do odpowiedniego dnia tygodnia
 	const dayDifference = (dayOfWeek + 7 - baseDate.getDay()) % 7;
@@ -31,12 +29,8 @@ function calculateEventDate(
 	targetDate.setSeconds(0);
 	targetDate.setMilliseconds(0);
 
-	// Formatowanie daty z ręcznym przesunięciem czasowym
-	return formatInTimeZone(
-		targetDate,
-		timeZoneOffset,
-		"yyyy-MM-dd'T'HH:mm:ssXXX"
-	);
+	// Formatowanie daty w polskiej strefie czasowej
+	return formatInTimeZone(targetDate, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
 }
 // Funkcja sprawdzająca, czy data przypada na czas letni w Polsce
 function isDaylightSavingTime(date: Date): boolean {
