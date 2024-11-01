@@ -5,7 +5,7 @@ import StandardError from "@/components/errors/Standard";
 import { handleResult } from "@/functions/promiseResults";
 import { auth } from "@/auth";
 import { unstable_cache } from "next/cache";
-import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, toZonedTime, toDate } from "date-fns-tz";
 
 function calculateEventDate(
 	baseDate: Date,
@@ -37,8 +37,13 @@ function calculateEventDate(
 }
 
 function generateRecurringEvents(group: any, term: any): any[] {
-	const startDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
-	const endDate = parse(group.lastLesson, "dd-MM-yyyy", new Date());
+	const timeZone = "Europe/Warsaw";
+	const startDate = toDate(parse(group.firstLesson, "dd-MM-yyyy", new Date()), {
+		timeZone,
+	});
+	const endDate = toDate(parse(group.lastLesson, "dd-MM-yyyy", new Date()), {
+		timeZone,
+	});
 	const events = [];
 
 	let currentDate = startDate;
