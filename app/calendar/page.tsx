@@ -8,30 +8,42 @@ import { unstable_cache } from "next/cache";
 import { formatInTimeZone } from "date-fns-tz";
 
 function calculateEventDate(
-	date: Date,
+	baseDate: Date,
 	dayOfWeek: number,
 	time: string
 ): string {
-	const timeZone = "Europe/Warsaw";
-	const eventDate = new Date(date);
+	// Oblicz przesunięcie czasu dla polskiej strefy
+	const isDST = isDaylightSavingTime(baseDate);
+	const timeZoneOffset = isDST ? "+02:00" : "+01:00";
 
-	// Przesuń datę do odpowiedniego dnia tygodnia
-	eventDate.setDate(
-		eventDate.getDate() + ((dayOfWeek + 6 - eventDate.getDay()) % 7)
+	// Obliczenie nowej daty, przesuwając do odpowiedniego dnia tygodnia
+	const dayDifference = (dayOfWeek + 7 - baseDate.getDay()) % 7;
+	const targetDate = new Date(
+		baseDate.getFullYear(),
+		baseDate.getMonth(),
+		baseDate.getDate() + dayDifference
 	);
 
-	// Ustaw godzinę
+	// Ustaw godzinę i minuty z ciągu `time`
 	const [hours, minutes] = time.split(":").map(Number);
-	eventDate.setHours(hours, minutes, 0, 0);
-	const formattedDate = formatInTimeZone(
-		eventDate,
-		timeZone,
+	targetDate.setHours(hours);
+	targetDate.setMinutes(minutes);
+	targetDate.setSeconds(0);
+	targetDate.setMilliseconds(0);
+
+	// Formatowanie daty z ręcznym przesunięciem czasowym
+	return formatInTimeZone(
+		targetDate,
+		timeZoneOffset,
 		"yyyy-MM-dd'T'HH:mm:ssXXX"
 	);
-
-	return formattedDate;
 }
-
+// Funkcja sprawdzająca, czy data przypada na czas letni w Polsce
+function isDaylightSavingTime(date: Date): boolean {
+	const january = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
+	const july = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
+	return date.getTimezoneOffset() < Math.max(january, july);
+}
 function generateRecurringEvents(group: any, term: any): any[] {
 	const startDate = parse(group.firstLesson, "dd-MM-yyyy", new Date());
 	const endDate = parse(group.lastLesson, "dd-MM-yyyy", new Date());
