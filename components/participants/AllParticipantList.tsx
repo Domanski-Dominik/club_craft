@@ -1,5 +1,12 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+	useState,
+	useEffect,
+	useRef,
+	useOptimistic,
+	useCallback,
+	startTransition,
+} from "react";
 import {
 	useGridApiContext,
 	GridColDef,
@@ -56,16 +63,15 @@ import PolishDayName from "@/functions/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
 import ExportToExel from "../export/ExportToExel";
 import { sortAll } from "@/functions/sorting";
-import {
-	useDeletePrt,
-	usePayment,
-	useUpdatePrt,
-} from "@/hooks/participantHooks";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { StyledDataGrid } from "../styled/StyledDataGrid";
 import { parse } from "date-fns";
+import { modifyPayment } from "@/server/attendance-payment-actions";
+import {
+	deleteParticipant,
+	updateParticipant,
+} from "@/server/participant-actions";
 
 //TODO: Zmienić na grid2 custom toolbar
 
@@ -133,9 +139,6 @@ const AllParticipantList = ({
 	const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
-	const [rows, setRows] = useState<(Participant | GridValidRowModel)[]>(
-		sortAll(participants)
-	);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
 		useState<GridColumnVisibilityModel>({
@@ -146,12 +149,21 @@ const AllParticipantList = ({
 		AlertProps,
 		"children" | "severity"
 	> | null>(null);
-	const payment = usePayment();
-	const deletePrt = useDeletePrt();
-	const updatePrt = useUpdatePrt();
-	const queryClient = useQueryClient();
 	const handleCloseSnackbar = () => setSnackbar(null);
-
+	const [optimisticParticipants, updateOptymisticParticipants] = useOptimistic(
+		participants,
+		(state, updatedParticipants: Participant[]) => {
+			return updatedParticipants;
+		}
+	);
+	const updateParticipantsOptimisticallyTransition = useCallback(
+		(updatedParticipants: Participant[]) => {
+			startTransition(() => {
+				updateOptymisticParticipants(updatedParticipants);
+			});
+		},
+		[updateOptymisticParticipants]
+	);
 	const hiddenFields = ["num", "actions", "hiddengroups"];
 	const filterTextsRef = useRef([]);
 
@@ -194,15 +206,85 @@ const AllParticipantList = ({
 		//console.log(form, row);
 		setPayDialogOpen(false);
 		if (form !== null && row !== null && action !== null) {
+			let updatedRows = [...optimisticParticipants];
 			try {
 				if (selectedRow) {
 					const data = {
+						...form,
 						participantId: selectedRow.id,
-						form: form,
 						action: action,
 					};
-					const message = await payment.mutateAsync(data);
-					if (!message.error) {
+					if (action === "save") {
+						updatedRows = updatedRows.map((row) => {
+							if (row.id === selectedRow.id && row.payments) {
+								// Sprawdź, czy istnieje płatność dla danego miesiąca
+								const existingPayment = row.payments.find(
+									(payment: Payment) => payment.month === form.selectedMonth
+								);
+								if (existingPayment) {
+									// Jeśli płatność istnieje, zaktualizuj jej dane
+									const updatedPayments = row.payments.map((payment: Payment) =>
+										payment.month === form.selectedMonth
+											? {
+													...payment,
+													amount: Number(form.amount),
+													description: form.description,
+													paymentDate: form.paymentDate,
+													paymentMethod: form.paymentMethod,
+											  }
+											: payment
+									);
+
+									return {
+										...row,
+										payments: updatedPayments,
+									};
+								} else {
+									// Jeśli płatność nie istnieje, dodaj nowy obiekt płatności
+									const newPayment = {
+										id: Math.random(),
+										month: form.selectedMonth,
+										amount: Number(form.amount),
+										description: form.description,
+										paymentDate: form.paymentDate,
+										paymentMethod: form.paymentMethod,
+									};
+
+									return {
+										...row,
+										payments: [...row.payments, newPayment],
+									};
+								}
+							}
+
+							return row;
+						});
+					}
+					if (action === "delete") {
+						updatedRows = updatedRows.map((row) => {
+							if (row.id === selectedRow.id && row.payments) {
+								// Sprawdź, czy istnieje płatność dla danego miesiąca
+								const existingPaymentIndex = row.payments.findIndex(
+									(payment: Payment) => payment.month === form.selectedMonth
+								);
+
+								if (existingPaymentIndex !== -1) {
+									// Usuń płatność, jeśli istnieje
+									const updatedPayments = [...row.payments];
+									updatedPayments.splice(existingPaymentIndex, 1);
+
+									return {
+										...row,
+										payments: updatedPayments,
+									};
+								}
+							}
+							return row;
+						});
+					}
+					updateParticipantsOptimisticallyTransition(updatedRows);
+					const message = await modifyPayment(data);
+					if (!("error" in message)) {
 						//console.log(message);
 						setSnackbar({
 							children:
@@ -211,77 +293,6 @@ const AllParticipantList = ({
 									: "Udało się usunąć płatność",
 							severity: "success",
 						});
-						if (action === "save") {
-							const updatedRows = rows.map((row) => {
-								if (row.id === selectedRow.id) {
-									// Sprawdź, czy istnieje płatność dla danego miesiąca
-									const existingPayment = row.payments.find(
-										(payment: Payment) => payment.month === form.selectedMonth
-									);
-									if (existingPayment) {
-										// Jeśli płatność istnieje, zaktualizuj jej dane
-										const updatedPayments = row.payments.map(
-											(payment: Payment) =>
-												payment.month === form.selectedMonth
-													? {
-															...payment,
-															amount: form.amount,
-															description: form.description,
-															paymentDate: form.paymentDate,
-															paymentMethod: form.paymentMethod,
-													  }
-													: payment
-										);
-
-										return {
-											...row,
-											payments: updatedPayments,
-										};
-									} else {
-										// Jeśli płatność nie istnieje, dodaj nowy obiekt płatności
-										const newPayment = {
-											id: message.id,
-											month: form.selectedMonth,
-											amount: form.amount,
-											description: form.description,
-											paymentDate: form.paymentDate,
-											paymentMethod: form.paymentMethod,
-										};
-
-										return {
-											...row,
-											payments: [...row.payments, newPayment],
-										};
-									}
-								}
-								return row;
-							});
-							setRows(updatedRows);
-						}
-						if (action === "delete") {
-							const updatedRows = rows.map((row) => {
-								if (row.id === selectedRow.id) {
-									// Sprawdź, czy istnieje płatność dla danego miesiąca
-									const existingPaymentIndex = row.payments.findIndex(
-										(payment: Payment) => payment.month === form.selectedMonth
-									);
-
-									if (existingPaymentIndex !== -1) {
-										// Usuń płatność, jeśli istnieje
-										const updatedPayments = [...row.payments];
-										updatedPayments.splice(existingPaymentIndex, 1);
-
-										return {
-											...row,
-											payments: updatedPayments,
-										};
-									}
-								}
-								return row;
-							});
-							//console.log(updatedRows);
-							setRows(updatedRows);
-						}
 					} else {
 						console.log(message);
 						setSnackbar({ children: message.error, severity: "error" });
@@ -293,9 +304,10 @@ const AllParticipantList = ({
 					children: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
+			} finally {
+				setSelectedRow(null);
 			}
 		}
-		setSelectedRow(null);
 	};
 	const handleDeleteClick = (row: GridRowModel) => () => {
 		setSelectedRow(row);
@@ -307,29 +319,17 @@ const AllParticipantList = ({
 		//console.log(value);
 		setDialogOpen(false);
 		if (value === "yes" && selectedRow !== null) {
+			const copyRows = [...participants];
+			const updatedRows = copyRows.filter((row) => row.id !== selectedRow.id);
+			updateParticipantsOptimisticallyTransition(updatedRows);
 			try {
-				const data = {
-					id: selectedRow.id,
-					selectedRow: selectedRow,
-				};
-				const message = await deletePrt.mutateAsync(data);
-				if (!message.error) {
-					console.log(message);
+				const message = await deleteParticipant(selectedRow.id);
+				if (!("error" in message)) {
 					setSnackbar({
 						children: message.message,
 						severity: "success",
 					});
-					setRows(rows.filter((row) => row.id !== selectedRow.id));
-					queryClient.invalidateQueries({
-						queryKey: ["allGroups"],
-						refetchType: "inactive",
-					});
-					queryClient.invalidateQueries({
-						queryKey: ["participants"],
-						refetchType: "inactive",
-					});
 				} else {
-					console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });
 				}
 			} catch (error) {
@@ -337,6 +337,8 @@ const AllParticipantList = ({
 					children: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
+			} finally {
+				setSelectedRow(null);
 			}
 		} else {
 			setSelectedRow(null);
@@ -353,40 +355,31 @@ const AllParticipantList = ({
 		oldRow: GridRowModel
 	) => {
 		const updatedRow = { ...newRow };
-		const updatedRows = rows.map((row) =>
+		const copyRows = [...participants];
+		const updatedRows = copyRows.map((row) =>
 			row.id === newRow.id ? updatedRow : row
 		);
-		//console.log(newRow, oldRow);
-		const findRow = rows.find((row) => row.id === newRow.id);
+		const findRow = updatedRows.find((row) => row.id === newRow.id);
 		if (findRow) {
+			updateParticipantsOptimisticallyTransition(updatedRows as Participant[]);
 			try {
-				const data = {
-					newRowId: newRow.id,
-					updatedRow: updatedRow,
-				};
-				const message = await updatePrt.mutateAsync(data);
-				if (message.message) {
-					//console.log(message);
+				const message = await updateParticipant(updatedRow as Participant);
+				if (!message.error) {
 					setSnackbar({
 						children: message.message,
 						severity: "success",
 					});
-					setRows(sortAll(updatedRows));
-					return updatedRow;
 				} else {
-					//console.log(message);
 					setSnackbar({ children: message.error, severity: "error" });
-					return oldRow;
 				}
 			} catch (error) {
 				setSnackbar({
 					children: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
-				return oldRow;
 			}
+			return newRow;
 		}
-		return oldRow;
 	};
 	const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
 		setRowModesModel(newRowModesModel);
@@ -427,7 +420,7 @@ const AllParticipantList = ({
 									hiddengroups: false,
 								});
 								const newModesModel: GridRowModesModel = {};
-								rows.forEach((row) => {
+								optimisticParticipants.forEach((row) => {
 									newModesModel[row.id] = { mode: GridRowModes.View };
 								});
 								setRowModesModel(newModesModel);
@@ -463,18 +456,22 @@ const AllParticipantList = ({
 		);
 	}
 	function CustomFooter() {
-		const active = rows.filter(
+		const active = optimisticParticipants.filter(
 			(participant) => participant.active === true
 		).length;
+		const totalParticipants = optimisticParticipants.length || 0;
 		return (
 			<GridFooterContainer>
 				<Typography
 					variant='body2'
-					ml={2}>
+					ml={0}>
 					<span style={{ fontWeight: "bold", color: "darkviolet" }}>
-						{active}
+						{isNaN(active) ? 0 : active}
 					</span>{" "}
-					/ <span style={{ fontWeight: "bold" }}>{rows.length}</span>{" "}
+					/{" "}
+					<span style={{ fontWeight: "bold" }}>
+						{isNaN(totalParticipants) ? 0 : totalParticipants}
+					</span>{" "}
 					uczestników
 				</Typography>
 				<GridFooter />
@@ -642,7 +639,7 @@ const AllParticipantList = ({
 				const Payed = paymentPrt.find(
 					(p: any) => p.month === formatDateMonth(date)
 				);
-				return Payed ? Payed.amount : 0; // Return the value used for sorting
+				return Payed && !isNaN(Payed.amount) ? Payed.amount : 0;
 			},
 			renderCell: (params) => {
 				const paymentPrt = params.row.payments;
@@ -662,7 +659,7 @@ const AllParticipantList = ({
 									height: "100%",
 								}}>
 								<Box width={40}>
-									{Payed ? (
+									{Payed && !isNaN(Payed.amount) ? (
 										<Typography
 											variant='body2'
 											fontWeight='bold'>
@@ -818,7 +815,6 @@ const AllParticipantList = ({
 				);
 			},
 		},
-
 		{
 			field: "active",
 			headerName: "Aktywny",
@@ -957,14 +953,15 @@ const AllParticipantList = ({
 					width: "100%",
 					height: "calc(100vh - 75px - 90px)",
 					backgroundColor: "white",
-					p: 2,
+					px: 1,
+					py: 0,
 					borderRadius: 4,
 					mx: 1,
 				}}>
 				<StyledDataGrid
 					apiRef={gridRef}
 					columns={columns}
-					rows={rows}
+					rows={optimisticParticipants}
 					pagination
 					disableColumnMenu
 					density='compact'
@@ -1013,6 +1010,9 @@ const AllParticipantList = ({
 							getTogglableColumns,
 						},
 					}}
+					onProcessRowUpdateError={(error) =>
+						setSnackbar({ children: error as String, severity: "error" })
+					}
 				/>
 			</Box>
 			{!!snackbar && (

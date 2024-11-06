@@ -9,7 +9,7 @@ export const updateAttendance = async (info: any) => {
 		const { date, isChecked, dateToRemove, groupId, participantId } = info;
 		//const groupId = parseInt(params.ids[0], 10);
 		//const participantId = parseInt(params.ids[1], 10);
-		console.log("group: ", groupId, " participant: ", participantId, date);
+		//console.log("group: ", groupId, " participant: ", participantId, date);
 		try {
 			const existingAttendance = await prisma.attendance.findFirst({
 				where: {
@@ -33,7 +33,7 @@ export const updateAttendance = async (info: any) => {
 								belongs: true,
 							},
 						});
-						return Response.json({ message: "Obecny" }, { status: 200 });
+						return { message: "Obecny" };
 					} else {
 						await prisma.attendance.create({
 							data: {
@@ -56,16 +56,13 @@ export const updateAttendance = async (info: any) => {
 									id: existingAttendance?.id,
 								},
 							});
-							return Response.json({ message: "Edytowano" }, { status: 200 });
+							return { message: "Edytowano" };
 						} else {
-							return Response.json({ message: "Obrabia" }, { status: 200 });
+							return { message: "Obrabia" };
 						}
 					}
 				} else {
-					return Response.json(
-						{ error: "Błąd w logice systemu przy dodawaniu obecności" },
-						{ status: 400 }
-					);
+					return { error: "Błąd w logice systemu przy dodawaniu obecności" };
 				}
 			}
 			if (!isChecked && existingAttendance) {
@@ -75,15 +72,14 @@ export const updateAttendance = async (info: any) => {
 						id: existingAttendance.id,
 					},
 				});
-				return Response.json({ message: "Nie obecny" }, { status: 200 });
+				return { message: "Nie obecny" };
 			} else {
-				return Response.json(
-					{ error: "Błąd w logice systemu przy usuwaniu obecności" },
-					{ status: 400 }
-				);
+				return { error: "Błąd w logice systemu przy usuwaniu obecności" };
 			}
 		} catch (error: any) {
-			return Response.json({ error: error.message }, { status: error.code });
+			return { error: error.message };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -235,6 +231,8 @@ export const modifyPayment = async (info: any) => {
 			}
 		} catch (error: any) {
 			return { error: "Błąd przy manipulacją płatności" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };

@@ -6,7 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 export const updateClubInfo = async (info: any) => {
 	const session = await auth();
 	if (session) {
-		console.log(info);
+		//console.log(info);
 		const updateData: any = {};
 
 		if ("optionGroup" in info) updateData.optionGroup = info.optionGroup;
@@ -49,6 +49,8 @@ export const updateClubInfo = async (info: any) => {
 		} catch (error) {
 			console.error("Błąd podczas aktualizacji klubu:", error);
 			return { error: "Błąd podczas aktualizacji klubu" };
+		} finally {
+			revalidateTag("club");
 		}
 	} else {
 		return { error: "Musisz być zalogowany!" };

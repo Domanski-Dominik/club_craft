@@ -1,11 +1,8 @@
 "use server";
 
-import { DEAFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import { prisma } from "@/prisma/prisma";
-
-export const register = async (formData: any) => {};
 
 interface LoginForm {
 	email: string;

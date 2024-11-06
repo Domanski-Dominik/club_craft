@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { constants } from "@/constants/constants";
+import { revalidateTag } from "next/cache";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 	apiVersion: "2024-06-20",
@@ -71,6 +72,8 @@ export async function POST(req: Request) {
 		}
 	} catch (error: any) {
 		return NextResponse.json({ error: error.message }, { status: 500 });
+	} finally {
+		revalidateTag("club");
 	}
 }
 

@@ -29,7 +29,7 @@ export const sortAndAddNumbers = (
 	return [];
 };
 
-export const sortAll = (rows: (Participant | GridValidRowModel)[]) => {
+export const sortAll = (rows: Participant[]) => {
 	const sortedRows = [...rows];
 	sortedRows.sort((a, b) => {
 		if (a.lastName === b.lastName) {
@@ -38,12 +38,11 @@ export const sortAll = (rows: (Participant | GridValidRowModel)[]) => {
 		return a.lastName.localeCompare(b.lastName);
 	});
 
-	// Dodaj numery do posortowanych uczestników
 	const addHiddenGroups = sortedRows.map((row) => {
 		return {
 			...row,
 			hiddengroups:
-				row.participantgroup.length > 0
+				row.participantgroup && row.participantgroup.length > 0
 					? row.participantgroup
 							.map(
 								(g: any) =>

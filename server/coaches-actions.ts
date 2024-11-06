@@ -46,11 +46,12 @@ export const addCoachGroup = async (info: any) => {
 			if (!addedGroup)
 				return { error: "Nie udało się uzyskać informacji o dodanej grupie" };
 			//console.log(formatGroup);
-			revalidateTag("coaches");
 			return addedGroup;
 		} catch (error) {
 			console.error("Błąd podczas dodawania grup do trenera:", error);
 			return { error: "Błąd podczas dodawania grup do trenera" };
+		} finally {
+			revalidateTag("coaches");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -69,11 +70,12 @@ export const deleteCoachGroup = async (info: any) => {
 				},
 			});
 			if (!deleteGroup) return { error: "Nie udało się usunąć grupy" };
-			revalidateTag("coaches");
 			return deleteGroup;
 		} catch (error) {
 			console.error("Błąd podczas usuwania grup trenera:", error);
 			return { error: "Błąd podczas usuwania grup trenera" };
+		} finally {
+			revalidateTag("coaches");
 		}
 	} else {
 		return { error: "Musisz być zalogowany!" };
@@ -127,12 +129,13 @@ export const updateCoachGroup = async (info: any) => {
 			});
 			if (!addedGroup)
 				return { error: "Nie udało się uzyskać informacji o dodanej grupie" };
-			revalidateTag("coaches");
 			//console.log(formatGroup);
 			return addedGroup;
 		} catch (error) {
 			console.error("Błąd podczas usuwania grup trenera:", error);
 			return { error: "Błąd podczas usuwania grup trenera" };
+		} finally {
+			revalidateTag("coaches");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -153,11 +156,12 @@ export const changeRole = async (info: any) => {
 				},
 			});
 			if (!changeRole) return { error: "Nie udało się zmienić uprawnień" };
-			revalidateTag("coaches");
 			return changeRole;
 		} catch (error) {
 			console.error("Błąd podczas zmiany ról prowadzącego:", error);
 			return { error: "Błąd podczas zmiany ról prowadzącego" };
+		} finally {
+			revalidateTag("coaches");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };

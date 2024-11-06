@@ -3,6 +3,7 @@ import { prisma } from "@/prisma/prisma";
 import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Session } from "next-auth";
+import { Participant } from "@/types/type";
 
 interface Add {
 	email: string;
@@ -72,7 +73,7 @@ export const addParticipant = async (info: Add) => {
 		return { error: "Musisz być zalogowany" };
 	}
 };
-export const updateParticipant = async (info: Add) => {
+export const updateParticipant = async (info: Participant) => {
 	const session = await auth();
 	if (session) {
 		try {
@@ -91,12 +92,12 @@ export const updateParticipant = async (info: Add) => {
 			});
 			if (!update) return { error: "Nie udało się zaktualizować uczestnika" };
 
-			revalidateTag("participants");
-			//console.log(update);
 			return { message: "Udało się zaktualizować uczestnika" };
 		} catch (error) {
 			console.error("Błąd podczas pobierania lokalizacji:", error);
 			return { error: "Nie udało sie dodać uczestnika" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -129,7 +130,6 @@ export const deleteParticipant = async (id: number) => {
 				});
 				if (!deletePrt) return { error: "Nie udało się usunąć uczestnika" };
 
-				revalidateTag("participants");
 				return { message: "Udało się usunąć uczestnika" };
 			} else {
 				return { error: "Błąd podczas usuwania uczestnika, nie posiada Id" };
@@ -137,6 +137,8 @@ export const deleteParticipant = async (id: number) => {
 		} catch (error) {
 			console.error("Błąd podczas pobierania lokalizacji:", error);
 			return { error: "Nie udało sie usunąć uczestnika" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -257,13 +259,14 @@ export const addParticipantGroup = async (info: any) => {
 				});
 				if (!addedGroup)
 					return { error: "Nie udało się uzyskać informacji o dodanej grupie" };
-				revalidateTag("participants");
 				//console.log(formatGroup);
 				return addedGroup;
 			}
 		} catch (error) {
 			console.error("Błąd przy dopisywaniu uczestnika do grupy:", error);
 			return { error: "Błąd przy dopisywaniu uczestnika do grupy" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany!" };
@@ -319,12 +322,13 @@ export const updateParticipantGroup = async (info: any) => {
 			});
 			if (!addedGroup)
 				return { error: "Nie udało się uzyskać informacji o dodanej grupie" };
-			revalidateTag("participants");
 			//console.log(formatGroup);
 			return addedGroup;
 		} catch (error) {
 			console.error("Błąd przy edycji grup uczestnika", error);
 			return { error: "Błąd przy przepisywaniu uczestnika do innej grupy" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany!" };
@@ -343,11 +347,12 @@ export const deleteParticipantGroup = async (info: any) => {
 				},
 			});
 			if (!deleteGroup) return { error: "Nie udało się usunąć grupy" };
-			revalidateTag("participants");
 			return deleteGroup;
 		} catch (error) {
 			console.error("Błąd przy usuwaniu grup uczestnika", error);
 			return { error: "Błąd przy usuwaniu uczestnika z grupy" };
+		} finally {
+			revalidateTag("participants");
 		}
 	} else {
 		return { error: "Musisz być zalogowany!" };

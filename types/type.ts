@@ -52,12 +52,16 @@ export interface Participant {
 	phoneNumber?: string;
 	note?: string;
 	regulamin?: boolean;
-	attendance?: [Attendance];
-	payments?: [Payment];
+	attendance?: Attendance[];
+	payments?: Payment[];
 	participantgroup?: [];
 	status?: string;
 	active?: boolean;
 	attendanceDate?: string;
+	contactWithParent: boolean;
+	parentFirstName: string;
+	parentLastName: string;
+	birthday: string;
 }
 export interface Payment {
 	id: number;

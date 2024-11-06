@@ -99,11 +99,13 @@ export const addGroup = async (info: any) => {
 				});
 				if (!coach) return { error: "Nie udało się przypisać prowadzącego" };
 			}
-			revalidateTag("groups");
 			return newGroup;
 		} catch (error: any) {
 			console.error("Błąd przy komunikacji z bazą danych:  ", error);
 			return { error: "Wystąpił błąd przy komunikacji z bazą danych" };
+		} finally {
+			revalidateTag("groups");
+			revalidateTag("locs");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -217,12 +219,13 @@ export const updateGroup = async (info: any) => {
 
 				return updatedGroup;
 			});
-
-			revalidateTag("groups");
 			return updatedGroup;
 		} catch (error: any) {
 			console.error("Błąd podczas aktualizacji danych: ", error);
 			return { error: "Wystąpił błąd podczas aktualizacji danych grupy" };
+		} finally {
+			revalidateTag("groups");
+			revalidateTag("locs");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -276,8 +279,6 @@ export const deleteGroup = async (id: number) => {
 					});
 
 					if (!deleteGroup) return { error: "Nie udało się usunąć grupy" };
-
-					revalidateTag("groups");
 					return deleteGroup;
 				} else {
 					return {
@@ -293,6 +294,9 @@ export const deleteGroup = async (id: number) => {
 		} catch (error: any) {
 			console.error("Błąd podczas usuwania grupy:", error);
 			return { error: "Błąd podczas usuwania grupy" };
+		} finally {
+			revalidateTag("groups");
+			revalidateTag("locs");
 		}
 	} else {
 		return { error: "Wystąpił błąd podczas aktualizacji danych" };

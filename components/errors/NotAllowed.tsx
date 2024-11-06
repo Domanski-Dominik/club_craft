@@ -1,3 +1,4 @@
+"use client";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import DoNotTouchIcon from "@mui/icons-material/DoNotTouch";
 import { Typography, Fab, Box } from "@mui/material";

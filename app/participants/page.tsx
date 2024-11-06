@@ -1,10 +1,5 @@
 import AllParticipantList from "@/components/participants/AllParticipantList";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/context/Loading";
-import { useSession } from "next-auth/react";
 import React from "react";
-import { redirect } from "next/navigation";
-import type { Participant, LocWithGroups } from "@/types/type";
 import StandardError from "@/components/errors/Standard";
 import { auth } from "@/auth";
 import {
@@ -14,6 +9,7 @@ import {
 } from "@/server/get-actions";
 import { unstable_cache } from "next/cache";
 import { handleResult } from "@/functions/promiseResults";
+import { sortAll } from "@/functions/sorting";
 
 const getCachedLocsWithGroups = unstable_cache(
 	async (session) => getLocsWithGroups(session),
@@ -24,7 +20,7 @@ const getCachedLocsWithGroups = unstable_cache(
 );
 const getCachedClubInfo = unstable_cache(
 	async (session) => getClubInfo(session),
-	["participants-all-groups"],
+	["participants-all-club"],
 	{
 		tags: ["club"],
 	}
@@ -55,15 +51,16 @@ const Participants = async () => {
 				addParticipants={false}
 			/>
 		);
-
-	return (
-		<AllParticipantList
-			participants={participants}
-			locWithGroups={locsWithGroups}
-			isOwner={session?.user.role === "owner"}
-			clubInfo={clubInfo}
-		/>
-	);
+	const sortedParticipants = sortAll(participants);
+	if (session)
+		return (
+			<AllParticipantList
+				participants={sortedParticipants}
+				locWithGroups={locsWithGroups}
+				isOwner={session?.user.role === "owner"}
+				clubInfo={clubInfo}
+			/>
+		);
 };
 
 export default Participants;
