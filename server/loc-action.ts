@@ -20,12 +20,13 @@ export const addLoc = async (info: any) => {
 				},
 			});
 			if (!newLoc) return { error: "Nie udało się zapisać lokalizacji" };
-			revalidateTag("locs");
-			revalidateTag("locsWithGroups");
 			return newLoc;
 		} catch (error) {
 			console.error("Błąd podczas zapisywania lokalizacji:", error);
 			return { error: "Błąd podczas zapisywania lokalizacji:" };
+		} finally {
+			revalidateTag("locs");
+			revalidateTag("locsWithGroups");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -62,12 +63,13 @@ export const updateLoc = async (info: any) => {
 			});
 			if (!updateLoc)
 				return { error: "Nie udało się zaktualiozwać lokalizacji" };
-			revalidateTag("locs");
-			revalidateTag("locsWithGroups");
 			return updateLoc;
 		} catch (error) {
 			console.error("Błąd podczas zapisywania lokalizacji:", error);
 			return { error: "Błąd podczas zapisywania lokalizacji:" };
+		} finally {
+			revalidateTag("locs");
+			revalidateTag("locsWithGroups");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -100,12 +102,13 @@ export const deleteLoc = async (id: number) => {
 			});
 			if (!deleteLoc) return { error: "Nie udało się usunąć lokalizacji" };
 
-			revalidateTag("locs");
-			revalidateTag("locsWithGroups");
 			return deleteLoc;
 		} catch (error) {
 			console.error("Błąd podczas usuwania lokalizacji:", error);
 			return { error: "Błąd podczas usuwania lokalizacji:" };
+		} finally {
+			revalidateTag("locs");
+			revalidateTag("locsWithGroups");
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };

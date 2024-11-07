@@ -1071,14 +1071,6 @@ const ParticipantList = ({
 				editMode='row'
 				slots={{ toolbar: CustomToolbar, footer: CustomFooter }}
 				columnVisibilityModel={columnVisibilityModel}
-				onCellDoubleClick={() => {
-					if (isOwner || clubInfo.coachEditPrt) {
-						setEdit(true);
-						setColumnVisibilityModel({
-							actions: true,
-						});
-					}
-				}}
 				initialState={{
 					columns: {
 						columnVisibilityModel: {
@@ -1147,13 +1139,13 @@ const ParticipantList = ({
 
 export default ParticipantList;
 
-/*
-			
-			
-			onCellDoubleClick={() => {
-					setEdit(true);
-					gridRef.current.scroll({ left: 0 });
-					setColumnVisibilityModel({
-						actions: true,
-					});
-				}}*/
+/*		
+	onCellDoubleClick={() => {
+		if (isOwner || clubInfo.coachEditPrt) {
+			setEdit(true);
+			setColumnVisibilityModel({
+				actions: true,
+			});
+		}
+	}}
+*/
