@@ -2,7 +2,7 @@
  * Tu są dostępne ściezki bez zalogowania się
  * @type {string[]}
  */
-export const publicRoutes = ["/"];
+export const publicRoutes = ["/", "/api/botpress"];
 /**
  * Te ścieżki używane są do autoryzacji
  * @type {string[]}
