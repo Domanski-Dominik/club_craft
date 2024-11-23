@@ -30,7 +30,9 @@ export async function GET(req: Request) {
 			};
 		});
 		// Zwrócenie grup w odpowiedzi JSON
-		return NextResponse.json(mappedGroups);
+		return new Response(JSON.stringify({ groups: mappedGroups }), {
+			headers: { "Content-Type": "application/json" },
+		});
 	} catch (error: any) {
 		// Obsługa błędów
 		return NextResponse.json(
