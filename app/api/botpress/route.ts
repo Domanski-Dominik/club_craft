@@ -20,6 +20,7 @@ export async function GET(req: Request) {
 		});
 		const mappedGroups = groups.map((group) => {
 			return {
+				id: group.id,
 				name: group.name,
 				terms: group.terms,
 				firstLesson: group.firstLesson,
