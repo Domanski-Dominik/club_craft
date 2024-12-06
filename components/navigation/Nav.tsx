@@ -71,14 +71,15 @@ export default function TopNav(props: Props) {
 			</Typography>
 			<Divider />
 			<List>
-				{navItems.map((item) => (
-					<ListItem
-						key={item.name}
-						onClick={() => router.push(item.link)}>
-						<ListItemIcon>{item.icon}</ListItemIcon>
-						<ListItemText primary={item.name} />
-					</ListItem>
-				))}
+				{props.session?.user &&
+					navItems.map((item) => (
+						<ListItem
+							key={item.name}
+							onClick={() => router.push(item.link)}>
+							<ListItemIcon>{item.icon}</ListItemIcon>
+							<ListItemText primary={item.name} />
+						</ListItem>
+					))}
 			</List>
 		</Box>
 	);
@@ -115,18 +116,22 @@ export default function TopNav(props: Props) {
 						sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
 						Club Craft
 					</Typography>
+					{props.session?.user ? (
+						<Box sx={{ display: { xs: "none", sm: "block" } }}>
+							{navItems.map((item) => (
+								<Button
+									startIcon={item.icon}
+									key={item.name}
+									sx={{ color: "#fff" }}
+									onClick={() => router.push(item.link)}>
+									{item.name}
+								</Button>
+							))}
+						</Box>
+					) : (
+						"Twój system do zarządzania klubem!"
+					)}
 
-					<Box sx={{ display: { xs: "none", sm: "block" } }}>
-						{navItems.map((item) => (
-							<Button
-								startIcon={item.icon}
-								key={item.name}
-								sx={{ color: "#fff" }}
-								onClick={() => router.push(item.link)}>
-								{item.name}
-							</Button>
-						))}
-					</Box>
 					{props.session?.user ? (
 						<div>
 							<IconButton

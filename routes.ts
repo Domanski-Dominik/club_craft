@@ -4,6 +4,10 @@
  */
 export const publicRoutes = ["/", "/api/botpress"];
 /**
+ * To prefix od ścieżki zapisów
+ */
+export const signinPrefix = "/zapisy";
+/**
  * Te ścieżki używane są do autoryzacji
  * @type {string[]}
  */

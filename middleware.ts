@@ -5,6 +5,7 @@ import {
 	apiAuthPrefix,
 	authRoutes,
 	publicRoutes,
+	signinPrefix,
 } from "@/routes";
 
 const { auth } = NextAuth(authConfig);
@@ -13,9 +14,13 @@ export default auth(async function middleware(req) {
 	const isLoggedIn = !!req.auth;
 
 	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+	const isSigning = nextUrl.pathname.startsWith(signinPrefix);
 	const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 	const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
+	if (isSigning) {
+		return;
+	}
 	if (isApiAuthRoute) {
 		return;
 	}
