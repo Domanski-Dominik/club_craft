@@ -98,11 +98,13 @@ const Group = async ({ params }: Props) => {
 		return (
 			<Box
 				sx={{
-					height: "calc(100vh - 180px)",
-					width: "calc(100% - 10px)",
+					height: {
+						xs: "calc(100vh - 75px - 100px)",
+						sm: "calc(100vh - 90px - 20px)",
+					},
+					width: "100%",
 					backgroundColor: "white",
 					borderRadius: 4,
-					mb: 1,
 					px: 1,
 				}}>
 				<ParticipantList

@@ -7,15 +7,7 @@ import {
 	GridFooterContainer,
 	GridPagination,
 } from "@mui/x-data-grid";
-import {
-	AlertProps,
-	Alert,
-	Snackbar,
-	Typography,
-	Accordion,
-	Stack,
-	Button,
-} from "@mui/material";
+import { Typography, Accordion, Stack, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -26,15 +18,19 @@ import { Location } from "@/types/type";
 import DialogDeleteLoc from "@/components/dialogs/DialogDeleteLoc";
 import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
 import { deleteLoc } from "@/server/loc-action";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 
 const LocsDataGrid = (locs: any) => {
 	const [dialogLocOpen, setDialogLocOpen] = useState(false);
 	const [deleteLocation, setDeleteLocation] = useState<Location | null>(null);
-	const [snackbar, setSnackbar] = useState<Pick<
-		AlertProps,
-		"children" | "severity"
-	> | null>(null);
-	const handleCloseSnackbar = () => setSnackbar(null);
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 	const router = useRouter();
 
 	const handleChoice = async (value: string) => {
@@ -43,13 +39,14 @@ const LocsDataGrid = (locs: any) => {
 			if (!("error" in message)) {
 				//console.log(message);
 				setSnackbar({
-					children: "Udało się usunąć lokalizacje",
+					open: true,
+					message: "Udało się usunąć lokalizacje",
 					severity: "success",
 				});
 				//TODO: zaktualizować dane
 			} else {
 				//console.log(message);
-				setSnackbar({ children: message.error, severity: "error" });
+				setSnackbar({ open: true, message: message.error, severity: "error" });
 			}
 		} else {
 			setDeleteLocation(null);
@@ -163,19 +160,12 @@ const LocsDataGrid = (locs: any) => {
 					open={dialogLocOpen}
 				/>
 			)}
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={2000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 		</>
 	);
 };

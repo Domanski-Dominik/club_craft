@@ -72,6 +72,7 @@ import {
 	deleteParticipant,
 	updateParticipant,
 } from "@/server/participant-actions";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 
 //TODO: Zmienić na grid2 custom toolbar
 
@@ -145,11 +146,14 @@ const AllParticipantList = ({
 			actions: false,
 			hiddengroups: false,
 		});
-	const [snackbar, setSnackbar] = useState<Pick<
-		AlertProps,
-		"children" | "severity"
-	> | null>(null);
-	const handleCloseSnackbar = () => setSnackbar(null);
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 	const [optimisticParticipants, updateOptymisticParticipants] = useOptimistic(
 		participants,
 		(state, updatedParticipants: Participant[]) => {
@@ -287,7 +291,8 @@ const AllParticipantList = ({
 					if (!("error" in message)) {
 						//console.log(message);
 						setSnackbar({
-							children:
+							open: true,
+							message:
 								action === "save"
 									? "Udało się dodać płatność"
 									: "Udało się usunąć płatność",
@@ -295,13 +300,18 @@ const AllParticipantList = ({
 						});
 					} else {
 						console.log(message);
-						setSnackbar({ children: message.error, severity: "error" });
+						setSnackbar({
+							open: true,
+							message: message.error,
+							severity: "error",
+						});
 					}
 				}
 			} catch (error) {
 				console.error("Błąd podczas aktualizacji płatności:", error);
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					open: true,
+					message: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
 			} finally {
@@ -326,15 +336,21 @@ const AllParticipantList = ({
 				const message = await deleteParticipant(selectedRow.id);
 				if (!("error" in message)) {
 					setSnackbar({
-						children: message.message,
+						open: true,
+						message: message.message,
 						severity: "success",
 					});
 				} else {
-					setSnackbar({ children: message.error, severity: "error" });
+					setSnackbar({
+						open: true,
+						message: `${message.error}`,
+						severity: "error",
+					});
 				}
 			} catch (error) {
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					open: true,
+					message: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
 			} finally {
@@ -366,15 +382,21 @@ const AllParticipantList = ({
 				const message = await updateParticipant(updatedRow as Participant);
 				if (!message.error) {
 					setSnackbar({
-						children: message.message,
+						open: true,
+						message: `${message.message}`,
 						severity: "success",
 					});
 				} else {
-					setSnackbar({ children: message.error, severity: "error" });
+					setSnackbar({
+						open: true,
+						message: message.error,
+						severity: "error",
+					});
 				}
 			} catch (error) {
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					open: true,
+					message: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
 			}
@@ -951,7 +973,10 @@ const AllParticipantList = ({
 			<Box
 				sx={{
 					width: "100%",
-					height: "calc(100vh - 75px - 90px)",
+					height: {
+						xs: "calc(100vh - 75px - 100px )",
+						sm: "calc(100vh - 90px - 20px)",
+					},
 					backgroundColor: "white",
 					px: 1,
 					py: 0,
@@ -1011,23 +1036,20 @@ const AllParticipantList = ({
 						},
 					}}
 					onProcessRowUpdateError={(error) =>
-						setSnackbar({ children: error as String, severity: "error" })
+						setSnackbar({
+							open: true,
+							message: `${error as String}`,
+							severity: "error",
+						})
 					}
 				/>
 			</Box>
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={3000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 			{selectedRow && (
 				<DialogDelete
 					open={dialogOpen}

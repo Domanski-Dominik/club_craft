@@ -35,6 +35,7 @@ import Loading from "@/context/Loading";
 import { StyledDataGrid } from "@/components/styled/StyledComponents";
 import { Session } from "next-auth";
 import { sort } from "@/functions/sorting";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 
 interface Props {
 	coaches: any;
@@ -44,19 +45,28 @@ interface Props {
 
 const CoachDataGrid = (props: Props) => {
 	const [showlink, setShowLink] = useState(false);
-	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [selectedRow, setSelectedRow] = useState<GridRowModel | null>(null);
 	const addCoach = () => {
 		setShowLink(true);
+	};
+
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
 	};
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(
 			`clubcraft.pl/register/${props.session.user.club}`
 		);
-		setOpenSnackbar(true);
-	};
-	const handleCloseSnackbar = () => {
-		setOpenSnackbar(false);
+		setSnackbar({
+			open: true,
+			message: `Skopiowano do schowka!`,
+			severity: "success",
+		});
 	};
 	const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
 	const [adminDialogOpen, setAdminDialogOpen] = useState(false);
@@ -245,12 +255,10 @@ const CoachDataGrid = (props: Props) => {
 			<Box
 				sx={{
 					width: "100%",
-					mt: 3,
 					backgroundColor: "white",
 					borderRadius: 4,
 					p: 2,
 				}}>
-				<MobileNavigation pages={pages} />
 				<StyledDataGrid
 					rows={sort(props.coaches)}
 					columns={columns}
@@ -304,8 +312,7 @@ const CoachDataGrid = (props: Props) => {
 				sx={{
 					display: "flex",
 					justifyContent: "center",
-					mt: 3,
-					mb: 3,
+					mt: 2,
 				}}>
 				<Fab
 					size='large'
@@ -316,18 +323,12 @@ const CoachDataGrid = (props: Props) => {
 					Dodaj trenera
 				</Fab>
 			</Box>
-			<Snackbar
-				open={openSnackbar}
-				autoHideDuration={3000}
+			<ResponsiveSnackbar
+				open={snackbar.open}
 				onClose={handleCloseSnackbar}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-				sx={{ position: "absolute", bottom: 90 }}>
-				<Alert
-					onClose={handleCloseSnackbar}
-					severity='success'>
-					Skopiowano!
-				</Alert>
-			</Snackbar>
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 		</>
 	);
 };

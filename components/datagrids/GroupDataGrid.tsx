@@ -17,19 +17,24 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
 	StyledAccordionDetails,
 	StyledAccordionSummary,
+	StyledSwitch,
 } from "@/components/styled/StyledComponents";
 import { Group } from "@/types/type";
 import DialogDeleteGroup from "@/components/dialogs/DialogDeleteGroup";
 import { StyledDataGrid } from "@/components/styled/StyledDataGrid";
 import PolishDayName, { ColorName } from "@/functions/PolishDayName";
-import { deleteGroup } from "@/server/group-actions";
+import { deleteGroup, updateGroupSignIn } from "@/server/group-actions";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 
 const GroupDataGrid = (groups: any) => {
-	const [snackbar, setSnackbar] = useState<Pick<
-		AlertProps,
-		"children" | "severity"
-	> | null>(null);
-	const handleCloseSnackbar = () => setSnackbar(null);
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 	const router = useRouter();
 	const [deletedGroup, setDeletedGroup] = useState<Group | null>(null);
 	const [dialogGroupOpen, setDialogGroupOpen] = useState(false);
@@ -38,17 +43,47 @@ const GroupDataGrid = (groups: any) => {
 			const message = await deleteGroup(deletedGroup.id);
 			if (!("error" in message)) {
 				setSnackbar({
-					children: `Udało się usunąć grupę ${message.name}`,
+					open: true,
+					message: `Udało się usunąć grupę ${message.name}`,
 					severity: "success",
 				});
 			} else {
-				setSnackbar({ children: message.error, severity: "error" });
+				setSnackbar({ open: true, message: message.error, severity: "error" });
 			}
 		} else {
 			setDeletedGroup(null);
 		}
 		setDialogGroupOpen(false);
 		setDeletedGroup(null);
+	};
+	const handleSwitchChange = async (groupId: string, newValue: boolean) => {
+		try {
+			// Wywołanie funkcji serwerowej do aktualizacji
+			const response = await updateGroupSignIn({
+				id: groupId,
+				signin: newValue,
+			});
+
+			if (!("error" in response)) {
+				setSnackbar({
+					open: true,
+					message: `${response.message}`,
+					severity: "success",
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					message: `${response.error}`,
+					severity: "error",
+				});
+			}
+		} catch (error) {
+			setSnackbar({
+				open: true,
+				message: "Wystąpił błąd podczas aktualizacji zapisów.",
+				severity: "error",
+			});
+		}
 	};
 	const colsGroup: GridColDef[] = [
 		{
@@ -133,6 +168,29 @@ const GroupDataGrid = (groups: any) => {
 			},
 		},
 		{
+			field: "signin",
+			headerName: "Zapisy",
+			flex: 2,
+			minWidth: 100,
+			renderCell: (params) => {
+				const { id, signin } = params.row;
+				return (
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							height: "100%",
+						}}>
+						<StyledSwitch
+							checked={signin}
+							onChange={(e) => handleSwitchChange(id, e.target.checked)}
+							sx={{ ml: -2 }}
+						/>
+					</Box>
+				);
+			},
+		},
+		{
 			field: "participantgroup",
 			headerName: "Uczestnicy",
 			flex: 2,
@@ -167,7 +225,7 @@ const GroupDataGrid = (groups: any) => {
 							}}>
 							{sorted.map((p: any, index: number) => (
 								<div key={index}>
-									{p.lastName} {p.firstName}
+									{index + 1}.{p.lastName} {p.firstName}
 								</div>
 							))}
 						</Box>
@@ -299,19 +357,12 @@ const GroupDataGrid = (groups: any) => {
 					open={dialogGroupOpen}
 				/>
 			)}
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={2000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 		</>
 	);
 };

@@ -189,14 +189,14 @@ export const User = ({ id }: Props) => {
 								</ListItemText>
 							</ListItem>
 						</List>
-						<Fab
+						{/*<Fab
 							variant='extended'
 							disabled
 							size='small'
 							color='primary'>
 							<EditIcon sx={{ mr: 1 }} />
 							Edytuj Profil
-						</Fab>
+						</Fab>*/}
 					</Box>
 				)}
 				{!!snackbar && (

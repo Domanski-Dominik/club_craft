@@ -57,6 +57,7 @@ model group {
   clientsPay       String       @default("co miesiąc")
   signInfo         String       @default("")
   type             String       @default("group")
+  signin           Boolean      @default(true)
   breaks           Break[]
   terms            Term[]
   locationschedule locationschedule[]

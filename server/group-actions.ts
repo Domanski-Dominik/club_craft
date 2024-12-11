@@ -299,6 +299,30 @@ export const deleteGroup = async (id: number) => {
 			revalidateTag("locs");
 		}
 	} else {
-		return { error: "Wystąpił błąd podczas aktualizacji danych" };
+		return { error: "Musisz być zalogowany" };
+	}
+};
+export const updateGroupSignIn = async (info: any) => {
+	const session = await auth();
+	if (session) {
+		try {
+			const updateSignin = await prisma.group.update({
+				where: { id: info.id },
+				data: {
+					signin: info.signin,
+				},
+			});
+			if (!updateSignin)
+				return { error: "Wystąpił błąd podczas aktualizowanie inofrmacji" };
+			return { message: "Udało się zaktualizować informacje" };
+		} catch (error) {
+			console.error(error);
+			return { error: "Wystąpił błąd podczas aktualizacji danych grupy" };
+		} finally {
+			revalidateTag("groups");
+			revalidateTag("locs");
+		}
+	} else {
+		return { error: "Musisz być zalogowany" };
 	}
 };

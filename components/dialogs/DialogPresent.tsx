@@ -11,7 +11,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useAttendance } from "@/hooks/participantHooks";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { pl } from "date-fns/locale/pl";
@@ -31,9 +30,16 @@ import {
 	List,
 	ListItem,
 	ListItemText,
-	ListSubheader,
 	IconButton,
+	Chip,
+	Divider,
 } from "@mui/material";
+import { getAllParticipantsWorkout } from "@/server/get-actions";
+import {
+	getWorkingOutParticipants,
+	updateAttendance,
+} from "@/server/attendance-payment-actions";
+import Loading from "@/context/Loading";
 
 interface Option {
 	label: string;
@@ -56,26 +62,27 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 	const [changeDate, setChangeDate] = useState<Date>(new Date());
 	const [addDate, setAddDate] = useState<Date>(new Date());
 	const [editDate, setEditDate] = useState<Date>(new Date());
+
 	const shouldDisableDay = (date: Date) => {
 		return getShouldDisableDate(date, group.terms);
 	};
+
 	const { data: session } = useSession({
 		required: true,
 		onUnauthenticated() {
 			redirect("/login");
 		},
 	});
+
 	const allPrt = useQuery({
 		queryKey: ["allParticipants"],
-		queryFn: () =>
-			fetch(`/api/participant/all/owner/${session?.user.club}`).then((res) =>
-				res.json()
-			),
+		queryFn: () => getAllParticipantsWorkout(session),
+		enabled: !!session,
 	});
+
 	const workOutPrt = useQuery({
 		queryKey: ["workout", groupId],
-		queryFn: () =>
-			fetch(`/api/participant/presence/${groupId}`).then((res) => res.json()),
+		queryFn: () => getWorkingOutParticipants(groupId),
 		select: (data) => {
 			if (Array.isArray(data) && data.length !== 0) {
 				const filtered: Participant[] = data.flatMap((participant) =>
@@ -102,16 +109,14 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 					{}
 				);
 
-				// Sortowanie dat w porządku malejącym
 				const sortedDates = Object.keys(grouped).sort((a, b) => {
 					const [dayA, monthA, yearA] = a.split("-").map(Number);
 					const [dayB, monthB, yearB] = b.split("-").map(Number);
 					const dateA = new Date(yearA, monthA - 1, dayA);
 					const dateB = new Date(yearB, monthB - 1, dayB);
-					return dateB.getTime() - dateA.getTime(); // Odwrócenie porządku do malejącego
+					return dateB.getTime() - dateA.getTime();
 				});
 
-				// Zwrócenie posortowanego obiektu
 				const sortedGrouped = sortedDates.reduce<Record<string, Participant[]>>(
 					(acc, date) => {
 						acc[date] = grouped[date];
@@ -126,20 +131,15 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			}
 		},
 	});
-	const updateAttendance = useAttendance();
+	console.log(session, allPrt.data);
 	const handleClose = () => {
 		onClose(null);
 	};
-	const handleOptionClick = (value: string) => {
-		if (value === "yes") {
-		} else {
-			onClose(null);
-		}
-	};
+
 	const handleAutocompleteChange = (event: any, newValue: Option | null) => {
 		setSelected(newValue);
-		//console.log(selected);
 	};
+
 	const handleAddClick = async () => {
 		const info = {
 			groupId: groupId,
@@ -147,7 +147,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			date: formatDate(addDate),
 			isChecked: true,
 		};
-		const message = await updateAttendance.mutateAsync(info);
+		const message = await updateAttendance(info);
 		if (message.error) {
 			setError(message.error);
 		} else {
@@ -156,6 +156,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 		workOutPrt.refetch();
 		setIsAdding((prev) => !prev);
 	};
+
 	const handleSaveClick = async (
 		participantId: number,
 		dateToRemove: string
@@ -167,7 +168,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			isChecked: true,
 			dateToRemove: dateToRemove,
 		};
-		const message = await updateAttendance.mutateAsync(info);
+		const message = await updateAttendance(info);
 		if (!message.error) {
 			setError(message.error);
 		} else {
@@ -185,7 +186,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			date: formatDate(editDate),
 			isChecked: false,
 		};
-		const message = await updateAttendance.mutateAsync(info);
+		const message = await updateAttendance(info);
 		if (!message.error) {
 			setError(message.error);
 		} else {
@@ -195,6 +196,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 		setEditMode(null);
 		setEditDate(new Date());
 	};
+
 	const handleCancelClick = (participantId: number) => {
 		setEditMode(null);
 		setEditDate(new Date());
@@ -208,22 +210,19 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			<DialogContent dividers>
 				{error !== "" && <Typography>{error}</Typography>}
 				{isAdding ? (
-					<>
+					<Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 3 }}>
 						<Autocomplete
 							value={selected}
-							//multiple
 							isOptionEqualToValue={(option, value) => option.id === value.id}
 							onChange={handleAutocompleteChange}
 							options={
-								allPrt.isSuccess
+								Array.isArray(allPrt.data)
 									? allPrt.data
-											.map((p: Participant) => {
-												return {
-													label: `${p.lastName} ${p.firstName}`,
-													id: p.id,
-												};
-											})
-											.sort((a: any, b: any) => -b.label.localeCompare(a.label))
+											.map((p) => ({
+												label: `${p.lastName} ${p.firstName}`,
+												id: p.id,
+											}))
+											.sort((a, b) => a.label.localeCompare(b.label))
 									: []
 							}
 							groupBy={(option) => option.label[0]}
@@ -246,12 +245,10 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 								onChange={(value) => {
 									if (value) setAddDate(value);
 								}}
-								sx={{ width: "100%", my: 2 }}
-								//slotProps={{ textField: { size: "small" } }}
 								shouldDisableDate={shouldDisableDay}
 							/>
 						</LocalizationProvider>
-					</>
+					</Box>
 				) : (
 					<List
 						sx={{
@@ -261,24 +258,26 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 							overflow: "auto",
 							maxHeight: 300,
 							"& ul": { padding: 0 },
-						}}
-						subheader={<li />}>
+						}}>
 						{workOutPrt.data &&
-							Object.keys(workOutPrt.data).map((date) => (
-								<React.Fragment key={date}>
-									<ListSubheader color='primary'>{date}</ListSubheader>
+							Object.keys(workOutPrt.data).map((date, index) => (
+								<React.Fragment key={`${date}-${index}`}>
+									<Divider component='li'>
+										<Chip
+											label={date}
+											color='primary'
+											variant='outlined'
+										/>
+									</Divider>
 									{workOutPrt.data[date].map((participant) => (
-										<ListItem key={participant.id}>
+										<ListItem key={`${participant.id}-${date}`}>
 											{editMode === participant.id &&
 											formatDate(editDate) === date ? (
 												<Box
 													display='flex'
 													alignItems='center'
 													width='100%'
-													sx={{
-														flexWrap: "wrap",
-														flexDirection: "column",
-													}}>
+													sx={{ flexWrap: "wrap", flexDirection: "column" }}>
 													<ListItemText
 														primary={`${participant.firstName} ${participant.lastName}`}
 													/>
@@ -288,16 +287,12 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 														<MobileDatePicker
 															label='Wybierz dzień'
 															value={changeDate}
-															//disableFuture
 															onChange={(value) => {
 																if (value) setChangeDate(value);
 															}}
-															sx={{ width: "80%", my: 1 }}
-															slotProps={{ textField: { size: "small" } }}
 															shouldDisableDate={shouldDisableDay}
 														/>
 													</LocalizationProvider>
-
 													<Box>
 														<IconButton
 															edge='end'
@@ -338,7 +333,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 																	"dd-MM-yyyy",
 																	new Date()
 																)
-															); // Ustawienie aktualnej daty
+															);
 														}}>
 														<EditIcon />
 													</IconButton>
@@ -373,11 +368,11 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 							startIcon={<AddIcon />}
 							onClick={() => setIsAdding((prev) => !prev)}
 							variant='contained'>
-							dodaj
+							Dodaj
 						</Button>
 						<Button
 							startIcon={<CloseIcon />}
-							onClick={() => handleOptionClick("no")}
+							onClick={handleClose}
 							variant='outlined'>
 							Zamknij
 						</Button>
@@ -389,75 +384,3 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 };
 
 export default DialogPresent;
-/*
-const groupedParticipants = filterAndGroupParticipants(
-		workOutPrt.data,
-		groupId
-	);
-
-				useEffect(() => {
-		const fetchParticipants = async () => {
-			if (session?.user && status === "authenticated") {
-				const response = await fetch(
-					`/api/participant/all/owner/${session.user.club}`,
-					{
-						method: "GET",
-					}
-				);
-				const data: Participant[] | { error: string } = await response.json();
-
-				if (Array.isArray(data)) {
-					if (data.length > 0) {
-						const opt = data.map((p: Participant) => {
-							return {
-								label: `${p.lastName} ${p.firstName}`,
-								id: p.id,
-							};
-						});
-
-						setOptions(opt);
-						setError("");
-						setParticipants(data);
-					} else {
-						setError("Pobrana tablica jest pusta");
-					}
-				} else {
-					setError(data.error);
-				}
-			}
-		};
-		fetchParticipants();
-	}, [session]);useEffect(() => {
-		const fetchParticipants = async () => {
-			if (session?.user && status === "authenticated") {
-				const response = await fetch(
-					`/api/participant/all/owner/${session.user.club}`,
-					{
-						method: "GET",
-					}
-				);
-				const data: Participant[] | { error: string } = await response.json();
-
-				if (Array.isArray(data)) {
-					if (data.length > 0) {
-						const opt = data.map((p: Participant) => {
-							return {
-								label: `${p.lastName} ${p.firstName}`,
-								id: p.id,
-							};
-						});
-
-						setOptions(opt);
-						setError("");
-						setParticipants(data);
-					} else {
-						setError("Pobrana tablica jest pusta");
-					}
-				} else {
-					setError(data.error);
-				}
-			}
-		};
-		fetchParticipants();
-	}, [session]);
-*/

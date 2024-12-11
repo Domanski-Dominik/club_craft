@@ -49,6 +49,7 @@ import PaymentCard from "@/components/cards/PaymentCard";
 import { constants } from "@/constants/constants";
 import { updateClubInfo } from "@/server/club-actions";
 import { club } from "@prisma/client";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 interface Club {
 	[key: string]: any; // Dodanie tego indeksu
 	id: number;
@@ -120,11 +121,14 @@ const SettingsTabs = (props: Props) => {
 			redirect(`/login`);
 		},
 	});
-	const [snackbar, setSnackbar] = useState<Pick<
-		AlertProps,
-		"children" | "severity"
-	> | null>(null);
-	const handleCloseSnackbar = () => setSnackbar(null);
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 
 	useEffect(() => {
 		if (props.clubInfo) {
@@ -162,13 +166,15 @@ const SettingsTabs = (props: Props) => {
 		const message = await updateClubInfo(info);
 		if (!("error" in message)) {
 			setSnackbar({
-				children: "Udało się zaktualizować dane!",
+				open: true,
+				message: "Udało się zaktualizować dane!",
 				severity: "success",
 			});
 		} else {
 			console.error(message.error);
 			setSnackbar({
-				children: "Nie udało się zaktualizować danych!",
+				open: true,
+				message: "Nie udało się zaktualizować danych!",
 				severity: "error",
 			});
 		}
@@ -184,13 +190,15 @@ const SettingsTabs = (props: Props) => {
 		const message = await updateClubInfo(info);
 		if (!("error" in message)) {
 			setSnackbar({
-				children: "Udało się zaktualizować dane!",
+				open: true,
+				message: "Udało się zaktualizować dane!",
 				severity: "success",
 			});
 		} else {
 			console.error(message.error);
 			setSnackbar({
-				children: "Nie udało się zaktualizować danych!",
+				open: true,
+				message: "Nie udało się zaktualizować danych!",
 				severity: "error",
 			});
 		}
@@ -203,7 +211,13 @@ const SettingsTabs = (props: Props) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 	return (
-		<Box sx={{ width: "calc(100% - 20px)", position: "absolute", top: 80 }}>
+		<Box
+			sx={{
+				width: "100%",
+				minHeight: "100%",
+				display: "flex",
+				flexDirection: "column",
+			}}>
 			<Box
 				sx={{
 					width: "100%",
@@ -756,19 +770,12 @@ const SettingsTabs = (props: Props) => {
 					</Grid2>
 				</Box>
 			</CustomTabPanel>
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={2000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 		</Box>
 	);
 };

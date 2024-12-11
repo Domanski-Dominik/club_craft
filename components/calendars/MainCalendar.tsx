@@ -93,8 +93,11 @@ const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 				minWidth: "350px",
 				px: 1,
 				borderColor: "#ffffff",
-				height: isSmallScreen ? "calc(100vh - 180px)" : "calc(100vh - 180px)",
-				minHeight: "500px",
+				height: {
+					xs: "calc(100vh - 75px - 100px)",
+					sm: "calc(100vh - 90px - 20px)",
+				},
+				minHeight: "400px",
 				backgroundColor: "white",
 				p: 2,
 				borderRadius: 4,

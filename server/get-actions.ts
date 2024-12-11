@@ -544,7 +544,7 @@ export const getAllParticipants = async (
 			}
 		} catch (error) {
 			console.error("Błąd podczas pobierania danych:", error);
-			return { error: "Błą podczas pobierania uczestników" };
+			return { error: "Błąd podczas pobierania uczestników" };
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
@@ -646,5 +646,72 @@ export const getLocsForSignIn = async (clubName: string) => {
 	} catch (error) {
 		console.error("Błąd podczas pobierania lokalizacji:", error);
 		return { error: "Nie znaleziono lokalizacji" };
+	}
+};
+export const getAllParticipantsWorkout = async (session: Session | null) => {
+	if (session) {
+		try {
+			const allParticipants = await prisma.participant.findMany({
+				where: {
+					club: session.user.club,
+				},
+				include: {
+					attendance: true,
+					participantgroup: {
+						include: {
+							group: {
+								include: {
+									locationschedule: {
+										include: {
+											locations: {
+												select: { name: true },
+											},
+										},
+									},
+									terms: {
+										include: { location: { select: { name: true } } },
+									},
+									breaks: true,
+								},
+							},
+						},
+					},
+					payments: {
+						include: {
+							payment: true,
+						},
+					},
+				},
+			});
+			if (!allParticipants) return { error: "Nie znaleziono uczestników" };
+
+			const participants = allParticipants.map((object) => {
+				const paymentsArray = object.payments.map((paymentParticipant) => ({
+					id: paymentParticipant.payment.id,
+					amount: paymentParticipant.payment.amount,
+					description: paymentParticipant.payment.description,
+					paymentDate: paymentParticipant.payment.paymentDate,
+					paymentMethod: paymentParticipant.payment.paymentMethod,
+					month: paymentParticipant.payment.month,
+				}));
+				const groups = object.participantgroup.map((gr) => {
+					return {
+						...gr.group,
+					};
+				});
+				return {
+					...object,
+					payments: paymentsArray,
+					participantgroup: groups,
+				};
+			});
+
+			return participants;
+		} catch (error) {
+			console.error("Błąd podczas pobierania danych:", error);
+			return { error: "Błąd podczas pobierania uczestników" };
+		}
+	} else {
+		return { error: "Musisz być zalogowany" };
 	}
 };

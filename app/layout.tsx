@@ -4,7 +4,7 @@ import TopNav from "@/components/navigation/Nav";
 import Provider from "@/context/Provider";
 import BottomNav from "@/components/navigation/BottomNav";
 import ThemeRegistry from "@/theme/ThemeRegistry";
-import { Container, useMediaQuery } from "@mui/material";
+import { Container, useMediaQuery, Box } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { Analytics } from "@vercel/analytics/react";
 import { auth } from "@/auth";
@@ -155,30 +155,43 @@ export default async function RootLayout({
 				<body>
 					<Provider>
 						<AppRouterCacheProvider>
+							{/* Top Navigation */}
 							<TopNav session={session} />
-							<Container
-								component='main'
+							{/* Layout Box */}
+							<Box
 								sx={{
-									position: "relative",
-									zIndex: "10",
 									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
 									flexDirection: "column",
-									marginLeft: "auto",
-									marginRight: "auto",
-									paddingLeft: "2px",
-									paddingRight: "2px",
-									paddingTop: "75px",
-									paddingBottom: "90px",
 									minHeight: "100vh",
-									maxWidth: "64rem",
+									m: 0,
 								}}>
-								{children}
-							</Container>
+								{/* Main Content */}
+								<Container
+									component='main'
+									sx={{
+										flexGrow: 1,
+										width: "100%",
+										minWidth: "100%",
+										height: "100%",
+										px: { xs: 1 },
+										paddingLeft: { sm: `260px` },
+										paddingRight: { sm: "20px" }, // Uwzględnij Drawer na desktopie
+										display: "flex",
+										flexDirection: "column",
+										justifyContent: "center",
+										alignItems: "center",
+										paddingTop: { xs: "75px", sm: "90px" }, // Odstęp od góry
+										paddingBottom: { xs: "100px", sm: "20px" }, // Odstęp od dołu tylko na telefonach
+									}}>
+									{children}
+								</Container>
+							</Box>
+							{/* Bottom Navigation */}
 							{session?.user && <BottomNav />}
 						</AppRouterCacheProvider>
 					</Provider>
+					{/* Snackbar Portal */}
+					<div id='snackbar-root'></div>
 					<Analytics />
 				</body>
 			</ThemeRegistry>

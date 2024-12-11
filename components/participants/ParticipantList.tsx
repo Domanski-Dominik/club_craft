@@ -71,6 +71,7 @@ import {
 	deleteParticipant,
 	updateParticipant,
 } from "@/server/participant-actions";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
 type Props = {
 	participants: Participant[];
 	groupId: number;
@@ -159,10 +160,14 @@ const ParticipantList = ({
 			parentLastName: false,
 			move: false,
 		});
-	const [snackbar, setSnackbar] = useState<Pick<
-		AlertProps,
-		"children" | "severity"
-	> | null>(null);
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 	const [optimisticParticipants, updateOptymisticParticipants] = useOptimistic(
 		participants,
 		(state, updatedParticipants: Participant[]) => {
@@ -178,7 +183,6 @@ const ParticipantList = ({
 		[updateOptymisticParticipants]
 	);
 
-	const handleCloseSnackbar = () => setSnackbar(null);
 	const shouldDisableDay = (date: Date) => {
 		return getShouldDisableDate(date, group.terms);
 	};
@@ -381,19 +385,25 @@ const ParticipantList = ({
 					if (!("error" in message)) {
 						//console.log(message);
 						setSnackbar({
-							children:
+							open: true,
+							message:
 								action === "save"
 									? "Udało się dodać płatność"
 									: "Udało się usunąć płatność",
 							severity: "success",
 						});
 					} else {
-						setSnackbar({ children: message.error, severity: "error" });
+						setSnackbar({
+							open: true,
+							message: message.error,
+							severity: "error",
+						});
 					}
 				} catch (error) {
 					console.error("Błąd podczas aktualizacji płatności:", error);
 					setSnackbar({
-						children: "Wystąpił bład podczas komunikacją z bazą danych",
+						open: true,
+						message: "Wystąpił bład podczas komunikacją z bazą danych",
 						severity: "error",
 					});
 				} finally {
@@ -419,15 +429,21 @@ const ParticipantList = ({
 				const message = await deleteParticipant(selectedRow.id);
 				if (!("error" in message)) {
 					setSnackbar({
-						children: message.message,
+						open: true,
+						message: message.message,
 						severity: "success",
 					});
 				} else {
-					setSnackbar({ children: message.error, severity: "error" });
+					setSnackbar({
+						open: true,
+						message: `${message.error}`,
+						severity: "error",
+					});
 				}
 			} catch (error) {
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					open: true,
+					message: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
 			}
@@ -457,15 +473,21 @@ const ParticipantList = ({
 				const message = await updateParticipant(updatedRow as Participant);
 				if (!message.error) {
 					setSnackbar({
-						children: message.message,
+						open: true,
+						message: `${message.message}`,
 						severity: "success",
 					});
 				} else {
-					setSnackbar({ children: message.error, severity: "error" });
+					setSnackbar({
+						open: true,
+						message: message.error,
+						severity: "error",
+					});
 				}
 			} catch (error) {
 				setSnackbar({
-					children: "Wystąpił bład podczas komunikacją z bazą danych",
+					open: true,
+					message: "Wystąpił bład podczas komunikacją z bazą danych",
 					severity: "error",
 				});
 			}
@@ -823,14 +845,23 @@ const ParticipantList = ({
 							updateParticipantsOptimisticallyTransition(updatedRows);
 							const message = await updateAttendance(data);
 							if (!("error" in message)) {
-								setSnackbar({ children: message.message, severity: "success" });
+								/*setSnackbar({
+									open: true,
+									message: message.message,
+									severity: "success",
+								});*/
 							} else {
-								setSnackbar({ children: message.error, severity: "error" });
+								setSnackbar({
+									open: true,
+									message: message.error,
+									severity: "error",
+								});
 							}
 						} catch (error) {
 							console.error("Błąd podczas aktualizacji danych:", error);
 							setSnackbar({
-								children: "Wystąpił bład podczas komunikacją z bazą danych",
+								open: true,
+								message: "Wystąpił bład podczas komunikacją z bazą danych",
 								severity: "error",
 							});
 						}
@@ -1091,19 +1122,12 @@ const ParticipantList = ({
 				onRowEditStop={handleRowEditStop}
 				//getRowClassName={(params) => `row-${params.row.status}`}
 			/>
-			{!!snackbar && (
-				<Snackbar
-					open
-					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					autoHideDuration={2000}
-					sx={{ position: "absolute", bottom: 90, zIndex: 20 }}
-					onClose={handleCloseSnackbar}>
-					<Alert
-						{...snackbar}
-						onClose={handleCloseSnackbar}
-					/>
-				</Snackbar>
-			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 			{selectedRow && (
 				<DialogMoveToGroup
 					open={dialogsOpen.move}
