@@ -170,6 +170,20 @@ export const TextFieldStack = styled((props: TextFieldProps) => (
 	/>
 ))({
 	width: "50%",
+	"& .MuiInputBase-input": {
+		fontSize: "16px",
+	},
+});
+export const TextFieldDialog = styled((props: TextFieldProps) => (
+	<TextField
+		{...props}
+		size='small'
+		autoComplete='off'
+	/>
+))({
+	"& .MuiInputBase-input": {
+		fontSize: "16px",
+	},
 });
 
 export const InputLabelStack = styled((props: InputLabelProps) => (

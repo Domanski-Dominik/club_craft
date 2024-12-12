@@ -15,6 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 import {
 	Stack2,
 	StyledDialogTitle,
+	TextFieldStack,
 	TypographyStack,
 } from "../styled/StyledComponents";
 import { addLoc } from "@/server/loc-action";
@@ -117,9 +118,8 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 				<Typography color='red'>{errors.server}</Typography>
 				<Stack2>
 					<TypographyStack>Nazwa:</TypographyStack>
-					<TextField
+					<TextFieldStack
 						required
-						sx={{ width: "50%" }}
 						autoComplete='off'
 						id='name'
 						label='Nazwa'
@@ -131,8 +131,7 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 				<Divider variant='middle' />
 				<Stack2>
 					<TypographyStack>Ulica:</TypographyStack>
-					<TextField
-						sx={{ width: "50%" }}
+					<TextFieldStack
 						autoComplete='off'
 						id='street'
 						label='Ulica'
@@ -143,8 +142,7 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 				<Divider variant='middle' />
 				<Stack2>
 					<TypographyStack>Numer:</TypographyStack>
-					<TextField
-						sx={{ width: "50%" }}
+					<TextFieldStack
 						autoComplete='off'
 						id='streetNr'
 						label='Numer'
@@ -155,8 +153,7 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 				<Divider variant='middle' />
 				<Stack2>
 					<TypographyStack>Miasto:</TypographyStack>
-					<TextField
-						sx={{ width: "50%" }}
+					<TextFieldStack
 						autoComplete='off'
 						id='city'
 						label='Miasto'
@@ -167,8 +164,7 @@ const DialogLoc: React.FC<DialogLocType> = ({ onClose, open, club }) => {
 				<Divider variant='middle' />
 				<Stack2>
 					<TypographyStack>Kod pocztowy:</TypographyStack>
-					<TextField
-						sx={{ width: "50%" }}
+					<TextFieldStack
 						autoComplete='off'
 						id='postalCode'
 						label='Kod pocztowy'

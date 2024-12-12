@@ -527,7 +527,7 @@ const GroupForm = ({ clubInfo, user, locs, groupInfo, edit }: Props) => {
 							label='Liczba miejsc'
 							name='prtCount'
 							value={formData.prtCount}
-							inputProps={{ min: 0 }}
+							//inputProps={{ min: 0 }}
 							onKeyDown={(e) => {
 								if (e.key === "-" || e.key === "e" || e.key === "+") {
 									e.preventDefault();

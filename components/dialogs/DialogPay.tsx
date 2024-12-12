@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { DialogPayType, Payment } from "@/types/type";
+import { TextFieldDialog } from "../styled/StyledComponents";
 
 const formatDate = (date: Date) => {
 	return format(date, "dd-MM-yyyy");
@@ -182,7 +183,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 						columnSpacing={1}
 						rowSpacing={1.5}>
 						<Grid size={6}>
-							<TextField
+							<TextFieldDialog
 								label='Kwota'
 								type='number'
 								value={paymentData.amount}
@@ -200,7 +201,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 							<Typography color='error'>{errors.amount}</Typography>
 						</Grid>
 						<Grid size={6}>
-							<TextField
+							<TextFieldDialog
 								label='Opis'
 								value={paymentData.description}
 								onChange={handleChange("description")}
@@ -212,6 +213,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 								<InputLabel>Metoda płatności</InputLabel>
 								<Select
 									label='Metoda płatności'
+									size='small'
 									value={paymentData.paymentMethod}
 									onChange={handleSelectChange("paymentMethod")}
 									required>
@@ -229,6 +231,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 									value={paymentData.selectedMonth}
 									onChange={handleDateChange}
 									views={["month", "year"]}
+									slotProps={{ textField: { size: "small" } }}
 									sx={{ width: "100%" }}
 								/>
 							</LocalizationProvider>

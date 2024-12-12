@@ -46,6 +46,7 @@ import {
 	TypographySwitch,
 	BoxSwitch,
 	TypographyStack,
+	TextFieldStack,
 } from "../styled/StyledComponents";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useQueryClient } from "@tanstack/react-query";
@@ -347,16 +348,10 @@ const ParticipantForm = (props: Props) => {
 							<Typography color='error'>{errors.serverError}</Typography>
 							<Stack2>
 								<TypographyStack>Imię:</TypographyStack>
-								<TextField
+								<TextFieldStack
 									name='firstName'
 									required
 									autoComplete='off'
-									sx={{
-										width: "50%",
-										"& .MuiInputBase-input": {
-											fontSize: "16px",
-										},
-									}}
 									id='firstName'
 									label='Imię'
 									onChange={handleInputChange}
@@ -366,9 +361,8 @@ const ParticipantForm = (props: Props) => {
 							<Divider variant='middle' />
 							<Stack2>
 								<TypographyStack>Nazwisko:</TypographyStack>
-								<TextField
+								<TextFieldStack
 									required
-									sx={{ width: "50%" }}
 									autoComplete='off'
 									id='lastName'
 									label='Nazwisko'
@@ -387,6 +381,7 @@ const ParticipantForm = (props: Props) => {
 										<DatePicker
 											label='Data urodzenia'
 											value={formData.birthday}
+											slotProps={{ textField: { size: "small" } }}
 											onChange={(newValue) => {
 												if (newValue)
 													setFormData({ ...formData, birthday: newValue });
@@ -414,8 +409,7 @@ const ParticipantForm = (props: Props) => {
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Telefon:</TypographyStack>
-									<TextField
-										sx={{ width: "50%" }}
+									<TextFieldStack
 										autoComplete='off'
 										id='phoneNumber'
 										label='Numer telefonu'
@@ -427,8 +421,7 @@ const ParticipantForm = (props: Props) => {
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Email:</TypographyStack>
-									<TextField
-										sx={{ width: "50%" }}
+									<TextFieldStack
 										autoComplete='off'
 										id='email'
 										label='Adres Email'
@@ -452,10 +445,9 @@ const ParticipantForm = (props: Props) => {
 							<StyledAccordionDetails>
 								<Stack2>
 									<TypographyStack>Imię:</TypographyStack>
-									<TextField
+									<TextFieldStack
 										name='parentFirstName'
 										required
-										sx={{ width: "50%" }}
 										autoComplete='off'
 										id='name'
 										label='Imię opiekuna'
@@ -466,10 +458,9 @@ const ParticipantForm = (props: Props) => {
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Nazwisko:</TypographyStack>
-									<TextField
+									<TextFieldStack
 										name='parentLastName'
 										required
-										sx={{ width: "50%" }}
 										autoComplete='off'
 										id='name'
 										label='Nazwisko opiekuna'
@@ -480,8 +471,7 @@ const ParticipantForm = (props: Props) => {
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Telefony:</TypographyStack>
-									<TextField
-										sx={{ width: "50%" }}
+									<TextFieldStack
 										autoComplete='off'
 										id='phoneNumber'
 										label='Numer telefonu'
@@ -493,8 +483,7 @@ const ParticipantForm = (props: Props) => {
 								<Divider variant='middle' />
 								<Stack2>
 									<TypographyStack>Email:</TypographyStack>
-									<TextField
-										sx={{ width: "50%" }}
+									<TextFieldStack
 										autoComplete='off'
 										id='email'
 										label='Adres Email'
@@ -517,8 +506,7 @@ const ParticipantForm = (props: Props) => {
 						<StyledAccordionDetails>
 							<Stack2>
 								<TypographyStack>Notatka:</TypographyStack>
-								<TextField
-									sx={{ width: "50%" }}
+								<TextFieldStack
 									autoComplete='off'
 									id='note'
 									label='Notatka'

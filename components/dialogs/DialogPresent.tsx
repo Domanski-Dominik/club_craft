@@ -40,6 +40,7 @@ import {
 	updateAttendance,
 } from "@/server/attendance-payment-actions";
 import Loading from "@/context/Loading";
+import { TextFieldDialog } from "../styled/StyledComponents";
 
 interface Option {
 	label: string;
@@ -131,13 +132,8 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 			}
 		},
 	});
-	console.log(session, allPrt.data);
 	const handleClose = () => {
 		onClose(null);
-	};
-
-	const handleAutocompleteChange = (event: any, newValue: Option | null) => {
-		setSelected(newValue);
 	};
 
 	const handleAddClick = async () => {
@@ -214,7 +210,9 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 						<Autocomplete
 							value={selected}
 							isOptionEqualToValue={(option, value) => option.id === value.id}
-							onChange={handleAutocompleteChange}
+							onChange={(event, newValue) => {
+								if (newValue) setSelected(newValue);
+							}}
 							options={
 								Array.isArray(allPrt.data)
 									? allPrt.data
@@ -228,7 +226,7 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 							groupBy={(option) => option.label[0]}
 							getOptionLabel={(option) => option.label}
 							renderInput={(params) => (
-								<TextField
+								<TextFieldDialog
 									{...params}
 									label='Uczestnicy'
 								/>
@@ -270,7 +268,8 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 										/>
 									</Divider>
 									{workOutPrt.data[date].map((participant) => (
-										<ListItem key={`${participant.id}-${date}`}>
+										<ListItem
+											key={`${participant.id}-${date}-${Math.random()}`}>
 											{editMode === participant.id &&
 											formatDate(editDate) === date ? (
 												<Box
