@@ -410,7 +410,14 @@ const AllParticipantList = ({
 		return (
 			<GridToolbarContainer
 				sx={{ display: "flex", mt: 1, justifyContent: "space-around" }}>
-				<GridToolbarQuickFilter sx={{ width: 150 }} />
+				<GridToolbarQuickFilter
+					sx={{
+						width: 150,
+						"& .MuiInputBase-input": {
+							fontSize: "16px",
+						},
+					}}
+				/>
 
 				<LocalizationProvider
 					dateAdapter={AdapterDateFns}
