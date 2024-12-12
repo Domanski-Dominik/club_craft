@@ -174,7 +174,7 @@ export default async function RootLayout({
 										minWidth: "100%",
 										height: "100%",
 										px: { xs: 1 },
-										paddingLeft: { sm: `260px` },
+										paddingLeft: { sm: session?.user ? `260px` : "20px" },
 										paddingRight: { sm: "20px" }, // Uwzględnij Drawer na desktopie
 										display: "flex",
 										flexDirection: "column",
