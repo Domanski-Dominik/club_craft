@@ -350,8 +350,13 @@ const ParticipantForm = (props: Props) => {
 								<TextField
 									name='firstName'
 									required
-									sx={{ width: "50%" }}
 									autoComplete='off'
+									sx={{
+										width: "50%",
+										"& .MuiInputBase-input": {
+											fontSize: "16px",
+										},
+									}}
 									id='firstName'
 									label='Imię'
 									onChange={handleInputChange}
