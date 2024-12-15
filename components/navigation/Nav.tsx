@@ -37,6 +37,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 
 interface Props {
 	session: Session | null;
@@ -174,6 +175,16 @@ export default function TopNav(props: Props) {
 			{/* Stałe elementy nawigacji */}
 			<Divider />
 			<List>
+				{props.session?.user.role === "owner" && (
+					<ListItem disablePadding>
+						<ListItemButton
+							onClick={() => router.push("/balance")}
+							selected={isActive("/balance")}>
+							<ListItemIcon>{<ManageSearchIcon />}</ListItemIcon>
+							<ListItemText primary={"Zaległości"} />
+						</ListItemButton>
+					</ListItem>
+				)}
 				{navItems.map((item) => (
 					<ListItem
 						key={item.name}

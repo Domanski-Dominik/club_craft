@@ -428,7 +428,7 @@ const AllParticipantList = ({
 						onChange={(newDate) => {
 							if (newDate) {
 								setDate(newDate);
-								console.log(newDate);
+								//console.log(newDate);
 							}
 						}}
 						views={["month", "year"]}
@@ -819,6 +819,7 @@ const AllParticipantList = ({
 							display: "flex",
 							justifyContent: "space-between",
 							alignItems: "center",
+							height: "100%",
 						}}>
 						<Box
 							sx={{
@@ -868,6 +869,7 @@ const AllParticipantList = ({
 						justifyContent: "center",
 						alignItems: "center",
 						height: "100%",
+						py: 1,
 					}}>
 					{params.value}
 				</Box>
@@ -1069,6 +1071,7 @@ const AllParticipantList = ({
 					open={payDialogOpen}
 					row={selectedRow}
 					onClose={handlePayment}
+					date={date}
 				/>
 			)}
 			{selectedRow && (

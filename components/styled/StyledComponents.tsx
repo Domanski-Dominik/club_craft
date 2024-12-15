@@ -151,6 +151,19 @@ export const BoxSwitch = styled(Box)(({ theme }) => ({
 		width: "50%",
 	},
 }));
+export const WhiteBox = styled(Box)(({ theme }) => ({
+	width: "100%",
+	[theme.breakpoints.down("sm")]: {
+		height: "calc(100vh - 75px - 100px )",
+	},
+	[theme.breakpoints.up("sm")]: {
+		height: "calc(100vh - 90px - 20px)",
+	},
+	backgroundColor: "white",
+	p: 1,
+	borderRadius: "16px",
+	mx: 1,
+}));
 
 export const TypographyStack = styled((props: TypographyProps) => (
 	<Typography

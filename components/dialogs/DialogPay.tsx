@@ -2,7 +2,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { pl } from "date-fns/locale/pl";
 import { format } from "date-fns/format";
 import { MobileDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
 	Select,
@@ -33,7 +33,7 @@ const formatDate = (date: Date) => {
 const formatDateMonth = (date: Date) => {
 	return format(date, "MM-yyyy");
 };
-const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
+const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose, date }) => {
 	if (row === null) {
 		return null;
 	}
@@ -43,18 +43,26 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 		amount: "",
 		description: "",
 		paymentMethod: "cash",
-		selectedMonth: new Date(),
+		selectedMonth: date ? date : new Date(),
 		paymentDate: formatDate(new Date()),
 	});
 	const [errors, setErrors] = useState({
 		amount: "",
 	});
+	useEffect(() => {
+		console.log("Received date:", date);
+		if (date) {
+			setPaymentData((prev) => ({
+				...prev,
+				selectedMonth: date,
+			}));
+		}
+	}, [date]);
 
 	const validateForm = () => {
 		let valid = true;
 		const newErrors = { ...errors };
 
-		// Walidacja pola powtórz hasło
 		if (paymentData.amount.startsWith("0")) {
 			newErrors.amount = "Nie może zaczynać się od zera";
 			valid = false;
@@ -144,7 +152,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 			const [month, year] = payment.month.split("-");
 			const date = new Date(`${year}-${month}-01`);
 			setPaymentData({
-				amount: payment.amount,
+				amount: `${payment?.amount}` || "",
 				description: payment.description,
 				selectedMonth: date,
 				paymentDate: payment.paymentDate,
@@ -163,7 +171,7 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose }) => {
 			amount: "",
 			description: "",
 			paymentMethod: "cash",
-			selectedMonth: new Date(),
+			selectedMonth: date ? date : new Date(),
 			paymentDate: formatDate(new Date()),
 		});
 	};

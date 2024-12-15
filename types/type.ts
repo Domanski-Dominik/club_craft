@@ -98,6 +98,7 @@ export interface DialogPayType extends Dialog {
 		row: GridRowModel | null,
 		action: "save" | "delete" | null
 	) => void;
+	date?: Date | null;
 }
 export interface DialogDeleteType extends Dialog {
 	row: GridRowModel | null;
