@@ -4,14 +4,14 @@ import { Button, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 interface Props {
-	params: {
+	params: Promise<{
 		token: string;
-	};
+	}>;
 }
 import React, { useEffect } from "react";
 
-const VerifyEmail = ({ params }: Props) => {
-	const vtoken = params.token;
+const VerifyEmail = async ({ params }: Props) => {
+	const vtoken = (await params).token;
 	const router = useRouter();
 	const [success, setSuccess] = useState(false);
 	const [loading, setLoading] = useState(true);

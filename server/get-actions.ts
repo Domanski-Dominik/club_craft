@@ -606,7 +606,7 @@ export const getGroupById = async (id: number, session: Session | null) => {
 export const getSignInGroups = async (clubName: string) => {
 	try {
 		const groups = await prisma.group.findMany({
-			where: { club: clubName },
+			where: { club: clubName, signin: true },
 			include: {
 				locationschedule: { include: { locations: true } },
 				terms: { include: { location: true } },
@@ -713,5 +713,93 @@ export const getAllParticipantsWorkout = async (session: Session | null) => {
 		}
 	} else {
 		return { error: "Musisz być zalogowany" };
+	}
+};
+export const getClubInfoSignin = async (club: string) => {
+	try {
+		const clubInfo = await prisma.club.findUnique({
+			where: {
+				name: club,
+			},
+		});
+		if (!clubInfo) return { error: "Nie udało się pobrać informacji o klubie" };
+		return clubInfo;
+	} catch (error) {
+		console.error("Błąd podczas pobierania informacji o klubie:", error);
+		return { error: "Błąd podczas pobierania informacji o klubie" };
+	}
+};
+export const getAwaitingParticipants = async (session: Session | null) => {
+	if (session) {
+		try {
+			if (session.user.role === "owner") {
+				const awaitingPrt = await prisma.awaitingparticipant.findMany({
+					where: {
+						club: session.user.club,
+					},
+				});
+				if (!awaitingPrt)
+					return { error: "Błąd przy wyszukiwaniu oczekujących uczestników" };
+
+				return awaitingPrt;
+			} else {
+				return { error: "Brak uprawnień do tej strony" };
+			}
+		} catch (error) {
+			console.error("Błąd podczas pobierania danych:", error);
+			return { error: "Błąd podczas pobierania uczestników" };
+		}
+	} else {
+		return { error: "Musisz być zalogowany" };
+	}
+};
+
+export const getRejectedSignInGroups = async (id: number) => {
+	try {
+		const prt = await prisma.awaitingparticipant.findUnique({
+			where: { id: id },
+		});
+		if (!prt) return { error: "Nie znaleziono oczekującego uczestnika" };
+
+		const groups = await prisma.group.findMany({
+			where: { club: prt.club, signin: true },
+			include: {
+				locationschedule: { include: { locations: true } },
+				terms: { include: { location: true } },
+				breaks: true,
+				participantgroup: { include: { participant: true } },
+				coaches: { include: { user: true } },
+			},
+		});
+		if (!groups) return { error: "Nie udało się pobrać danych" };
+
+		const formatedgroups = groups.map((g) => {
+			const participants = g.participantgroup.map((p) => p.participant);
+			const coachesformat = g.coaches.map((c) => c.user);
+			return {
+				...g,
+				participantgroup: participants,
+				coaches: coachesformat,
+			};
+		});
+		return formatedgroups;
+	} catch (error) {
+		console.error("Błąd podczas pobierania danych:", error);
+		return { error: "Nie znaleziono danych" };
+	}
+};
+export const getAwaitinParticipantById = async (id: number) => {
+	try {
+		const participant = await prisma.awaitingparticipant.findUnique({
+			where: {
+				id: id,
+			},
+		});
+		if (!participant)
+			return { error: "Nie udało się znaleźć oczekującego uczestnika" };
+		return participant;
+	} catch (error) {
+		console.error("Błąd podczas pobierania informacji o klubie:", error);
+		return { error: "Błąd podczas pobierania informacji o klubie" };
 	}
 };

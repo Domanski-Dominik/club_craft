@@ -15,12 +15,15 @@ import { Group } from "@/types/type";
 import { Stack2, TypographyStack } from "../styled/StyledComponents";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import { keyframes } from "@mui/system";
+import ResponsiveSnackbar from "../Snackbars/Snackbar";
+import { format } from "date-fns";
+import { addAwaitingParticipant } from "@/server/participant-actions";
 
 interface Props {
 	clubName: string;
 	groups: any;
 	iOS: boolean;
-	locs: any;
+	clubInfo: any;
 }
 const zoomAndRotate = keyframes`
   0% {
@@ -52,6 +55,7 @@ const SignInForm = (props: Props) => {
 		email: string;
 		phone: string;
 		birthDate: Date | null;
+		regulamin: boolean;
 	}>({
 		childFirstName: "",
 		childLastName: "",
@@ -60,8 +64,16 @@ const SignInForm = (props: Props) => {
 		email: "",
 		phone: "",
 		birthDate: null,
+		regulamin: false,
 	});
-
+	const [snackbar, setSnackbar] = useState<{
+		open: boolean;
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}>({ open: false, message: "", severity: "info" });
+	const handleCloseSnackbar = () => {
+		setSnackbar((prev) => ({ ...prev, open: false }));
+	};
 	const handleNext = () => {
 		setActiveStep((prevStep) => prevStep + 1);
 	};
@@ -79,7 +91,34 @@ const SignInForm = (props: Props) => {
 		setFormData(newFormData);
 		handleNext();
 	};
-
+	const handleSubmit = async () => {
+		try {
+			const finalForm = {
+				...formData,
+				birthDate: format(
+					formData.birthDate ? formData.birthDate : new Date(),
+					"dd-MM-yyyy"
+				),
+				groupId: Number(selectedGroup?.id),
+				club: props.clubInfo.name,
+			};
+			const message = await addAwaitingParticipant(finalForm);
+			if ("error" in message) {
+				setSnackbar({
+					open: true,
+					message: `${message.error}`,
+					severity: "error",
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					message: `${message.message}`,
+					severity: "success",
+				});
+				handleNext();
+			}
+		} catch (error) {}
+	};
 	return (
 		<Box
 			sx={{
@@ -117,6 +156,7 @@ const SignInForm = (props: Props) => {
 					formData={formData}
 					onChange={handleFormChange}
 					onBack={handleBack}
+					clubInfo={props.clubInfo}
 				/>
 			)}
 			{activeStep === 2 && (
@@ -179,7 +219,7 @@ const SignInForm = (props: Props) => {
 						<Button
 							variant='contained'
 							color='primary'
-							onClick={handleNext}>
+							onClick={handleSubmit}>
 							Zatwierdź
 						</Button>
 					</Box>
@@ -223,6 +263,7 @@ const SignInForm = (props: Props) => {
 								email: "",
 								phone: "",
 								birthDate: null,
+								regulamin: false,
 							});
 							setSelectedGroup(null);
 							setActiveStep(0); // Powrót do pierwszego kroku
@@ -231,6 +272,12 @@ const SignInForm = (props: Props) => {
 					</Button>
 				</Box>
 			)}
+			<ResponsiveSnackbar
+				open={snackbar.open}
+				onClose={handleCloseSnackbar}
+				message={snackbar.message}
+				severity={snackbar.severity}
+			/>
 		</Box>
 	);
 };

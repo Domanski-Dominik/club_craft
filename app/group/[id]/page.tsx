@@ -16,9 +16,9 @@ import { getParticipantsByGroupId } from "@/server/participant-actions";
 import { Session } from "next-auth";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 const getCachedLocsWithGroups = unstable_cache(
 	async (session) => getLocsWithGroups(session),
@@ -56,7 +56,7 @@ const createGetCachedGroup = (groupId: number, session: Session | null) =>
 	);
 const Group = async ({ params }: Props) => {
 	const session = await auth();
-	const groupId = parseInt(params.id, 10); // Zakładam, że `params.groupId` jest stringiem
+	const groupId = parseInt((await params).id, 10); // Zakładam, że `params.groupId` jest stringiem
 	const getCachedParticipants = createGetCachedParticipants(groupId, session);
 	const getCachedGroup = createGetCachedGroup(groupId, session);
 	const [
@@ -89,18 +89,14 @@ const Group = async ({ params }: Props) => {
 				addParticipants={false}
 			/>
 		);
-	const formattedparticipants = sortAndAddNumbers(
-		participants,
-		params.id,
-		"normal"
-	);
+
 	if (session)
 		return (
 			<Box
 				sx={{
 					height: {
 						xs: "calc(100vh - 75px - 100px)",
-						sm: "calc(100vh - 90px - 20px)",
+						sm: "calc(100vh - 90px - 25px)",
 					},
 					width: "100%",
 					backgroundColor: "white",
@@ -108,7 +104,7 @@ const Group = async ({ params }: Props) => {
 					px: 1,
 				}}>
 				<ParticipantList
-					participants={formattedparticipants}
+					participants={participants}
 					groupId={groupId}
 					group={group}
 					clubInfo={club}
@@ -120,3 +116,10 @@ const Group = async ({ params }: Props) => {
 };
 
 export default Group;
+/*
+const formattedparticipants = sortAndAddNumbers(
+		participants,
+		params.id,
+		"normal"
+	);
+*/

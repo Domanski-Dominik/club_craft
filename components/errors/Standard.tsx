@@ -43,15 +43,17 @@ const StandardError = (props: Props) => {
 				<CachedIcon sx={{ mr: 1 }} />
 				Odśwież stronę
 			</Fab>
-			<Fab
-				sx={{ m: 2 }}
-				size='large'
-				variant='extended'
-				color='primary'
-				onClick={() => router.push(`/add`)}>
-				<AddIcon sx={{ mr: 1 }} />
-				Dodaj uczestników
-			</Fab>
+			{props.addParticipants && (
+				<Fab
+					sx={{ m: 2 }}
+					size='large'
+					variant='extended'
+					color='primary'
+					onClick={() => router.push(`/add`)}>
+					<AddIcon sx={{ mr: 1 }} />
+					Dodaj uczestników
+				</Fab>
+			)}
 		</Box>
 	);
 };

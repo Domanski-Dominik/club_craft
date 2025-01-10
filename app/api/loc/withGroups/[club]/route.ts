@@ -1,12 +1,12 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
-		club: string;
-	};
+	params: Promise<{
+		club: [string, string, string];
+	}>;
 }
 export const GET = async (req: Request, { params }: Props) => {
-	const club = params.club;
+	const club = (await params).club[0];
 	try {
 		const groups = await prisma.group.findMany({
 			where: {

@@ -3,13 +3,13 @@ import StandardError from "@/components/errors/Standard";
 import { getSpecificLoc } from "@/server/loc-action";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 
 const EditLoc = async ({ params }: Props) => {
-	const loc = await getSpecificLoc(parseInt(params.id, 10));
+	const loc = await getSpecificLoc(parseInt((await params).id, 10));
 	if (!loc || "error" in loc)
 		return (
 			<StandardError

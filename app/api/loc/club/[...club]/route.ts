@@ -1,15 +1,15 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		club: [string, string, string];
-	};
+	}>;
 }
 
 export const GET = async (req: Request, { params }: Props) => {
-	const club = params.club[0];
-	const role = params.club[1];
-	const coachId = params.club[2];
+	const club = (await params).club[0];
+	const role = (await params).club[1];
+	const coachId = (await params).club[2];
 	//console.log("To jest nazwa klubu: ", club);
 	if (role === "owner") {
 		try {

@@ -1,12 +1,12 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		token: string;
-	};
+	}>;
 }
 export async function GET(req: Request, { params }: Props) {
-	const tokenId = params.token;
+	const tokenId = (await params).token;
 	try {
 		const user = await prisma.user.findUnique({
 			where: {

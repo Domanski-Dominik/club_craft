@@ -4,15 +4,14 @@ import { useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
 import ChangePassword from "@/components/forms/ChangePassword";
 import { Typography, Button } from "@mui/material";
-
 interface Props {
-	params: {
+	params: Promise<{
 		token: string;
-	};
+	}>;
 }
 
-const ResetPasswordtoken = ({ params }: Props) => {
-	const rtoken = params.token;
+const ResetPasswordtoken = async ({ params }: Props) => {
+	const rtoken = (await params).token;
 	const router = useRouter();
 	const [success, setSuccess] = useState(false);
 	const [loading, setLoading] = useState(true);

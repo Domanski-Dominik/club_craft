@@ -1,13 +1,13 @@
 import Register from "@/context/Register";
 
 interface Props {
-	params: {
+	params: Promise<{
 		club: string;
-	};
+	}>;
 }
 
-const page = ({ params }: Props) => {
-	return <Register club={params.club} />;
+const page = async ({ params }: Props) => {
+	return <Register club={(await params).club} />;
 };
 
 export default page;

@@ -37,9 +37,9 @@ const tdStyleLastRight = {
 	margin: 0,
 };
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 const getCachedClubInfo = unstable_cache(
 	async (sesssion) => getClubInfo(sesssion),
@@ -52,7 +52,7 @@ const ParticipantInfo = async ({ params }: Props) => {
 	const session = await auth();
 	const [clubInfoResult, participantResult] = await Promise.allSettled([
 		getCachedClubInfo(session),
-		getParticipantById(parseInt(params.id, 10)),
+		getParticipantById(parseInt((await params).id, 10)),
 	]);
 	const clubInfo = handleResult(clubInfoResult, "clubInfo");
 	const participant = handleResult(participantResult, "particiapnt");

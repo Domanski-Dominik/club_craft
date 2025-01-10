@@ -1,13 +1,13 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 export const GET = async (req: Request, { params }: Props) => {
 	//console.log("Wszedłem do funkcji", params);
-	const groupId = params.id;
+	const groupId = (await params).id;
 	const groupIdNum = parseInt(groupId, 10);
 	//console.log("Id Groupy to " + groupIdNum);
 

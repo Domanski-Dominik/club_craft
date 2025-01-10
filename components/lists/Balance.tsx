@@ -24,7 +24,6 @@ import {
 } from "../styled/StyledComponents";
 import { pl } from "date-fns/locale/pl";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { format, parse } from "date-fns";
@@ -40,6 +39,8 @@ import type {
 import ResponsiveSnackbar from "../Snackbars/Snackbar";
 import { modifyPayment } from "@/server/attendance-payment-actions";
 import { GridValidRowModel } from "@mui/x-data-grid";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useRouter } from "next/navigation";
 
 type Props = {
 	participants: Participant[];
@@ -59,6 +60,7 @@ const Balance = ({ participants }: Props) => {
 		message: string;
 		severity: "error" | "warning" | "info" | "success";
 	}>({ open: false, message: "", severity: "info" });
+	const router = useRouter();
 	const handleCloseSnackbar = () => {
 		setSnackbar((prev) => ({ ...prev, open: false }));
 	};
@@ -354,6 +356,7 @@ const Balance = ({ participants }: Props) => {
 										alignItems: "center",
 										height: "100%",
 										width: "100%",
+										px: 1,
 									}}>
 									<Box
 										key={participant.id}
@@ -373,10 +376,15 @@ const Balance = ({ participants }: Props) => {
 												.join(", ")}
 										</Typography>
 									</Box>
-									<Box
-										mr={1}
-										onClick={handlePayDialogOpen(participant)}>
-										<AddCardIcon />
+
+									<Box>
+										<InfoOutlinedIcon
+											onClick={() =>
+												router.push(`/participant/${participant.id}`)
+											}
+											sx={{ mr: 2 }}
+										/>
+										<AddCardIcon onClick={handlePayDialogOpen(participant)} />
 									</Box>
 								</Box>
 								<Divider variant='middle' />

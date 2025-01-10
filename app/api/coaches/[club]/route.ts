@@ -1,13 +1,13 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		club: string;
-	};
+	}>;
 }
 
 export const GET = async (req: Request, { params }: Props) => {
-	const club = params.club;
+	const club = (await params).club;
 	//console.log("To jest nazwa klubu: ", club);
 	try {
 		const coaches = await prisma.user.findMany({

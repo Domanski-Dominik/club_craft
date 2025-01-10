@@ -18,7 +18,7 @@ interface Body {
 		newClub: boolean;
 	};
 }
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
 	try {
 		const body: Body = await req.json();
 		//console.log(body);

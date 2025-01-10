@@ -1,15 +1,15 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		info: [string, string, string];
-	};
+	}>;
 }
 
 export const GET = async (req: Request, { params }: Props) => {
-	const role = params.info[0];
-	const club = params.info[1];
-	const coachId = params.info[2];
+	const role = (await params).info[0];
+	const club = (await params).info[1];
+	const coachId = (await params).info[2];
 	try {
 		if (role === "owner") {
 			const allParticipants = await prisma.participant.findMany({

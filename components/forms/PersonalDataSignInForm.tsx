@@ -1,20 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography, Grid2 } from "@mui/material";
+import {
+	Box,
+	Button,
+	TextField,
+	Typography,
+	Grid2,
+	Checkbox,
+} from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { pl } from "date-fns/locale";
 import { differenceInYears } from "date-fns";
+import DialogRegulamin from "../dialogs/DialogRegulamin";
 
 interface Props {
 	formData: any;
+	clubInfo: any;
 	onChange: (formData: any) => void;
 	onBack: () => void;
 }
 
-const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
+const PersonalDataForm = ({ formData, onChange, onBack, clubInfo }: Props) => {
 	const [localFormData, setLocalFormData] = useState(formData);
 	const [isFormValid, setIsFormValid] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false);
 	const [touched, setTouched] = useState({
 		childFirstName: false,
 		childLastName: false,
@@ -23,6 +33,7 @@ const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
 		email: false,
 		phone: false,
 		birthDate: false,
+		regulamin: false,
 	});
 	const [errors, setErrors] = useState({
 		childFirstName: false,
@@ -32,6 +43,7 @@ const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
 		email: false,
 		phone: false,
 		birthDate: false,
+		regulamin: false,
 	});
 
 	const validateForm = () => {
@@ -45,6 +57,7 @@ const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
 			birthDate:
 				!localFormData.birthDate ||
 				differenceInYears(new Date(), localFormData.birthDate) < 3,
+			regulamin: clubInfo.regulamin && localFormData.regulamin === false,
 		};
 
 		setErrors(newErrors);
@@ -203,8 +216,32 @@ const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
 						/>
 					</LocalizationProvider>
 				</Grid2>
-			</Grid2>
+				{clubInfo.regulamin && (
+					<Grid2
+						size={12}
+						sx={{ display: "flex", alignItems: "center" }}>
+						<Checkbox
+							value={localFormData.regulamin}
+							checked={localFormData.regulamin}
+							onChange={(e) => {
+								setLocalFormData({
+									...localFormData,
+									regulamin: e.target.checked,
+								});
+								setTouched((prev) => ({ ...prev, regulamin: true }));
+							}}
+						/>{" "}
+						<Typography>Akceptuję regulamin</Typography>
+						<Button onClick={() => setDialogOpen(true)}>Pokaż</Button>
+					</Grid2>
+				)}
 
+				{clubInfo.regulamin && errors.regulamin && touched.regulamin && (
+					<Typography color='red'>
+						Proszę zaakceptować regulamin klubu
+					</Typography>
+				)}
+			</Grid2>
 			<Box
 				display='flex'
 				justifyContent='space-between'
@@ -222,6 +259,11 @@ const PersonalDataForm = ({ formData, onChange, onBack }: Props) => {
 					Dalej
 				</Button>
 			</Box>
+			<DialogRegulamin
+				onClose={() => setDialogOpen(false)}
+				open={dialogOpen}
+				clubInfo={clubInfo}
+			/>
 		</Box>
 	);
 };

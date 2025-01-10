@@ -2,14 +2,14 @@ import { prisma } from "@/prisma/prisma";
 import { NextResponse } from "next/server";
 
 interface Props {
-	params: {
+	params: Promise<{
 		ids: [string, string];
-	};
+	}>;
 }
 export const PUT = async (req: Request, { params }: Props) => {
 	const { date, isChecked, dateToRemove } = await req.json();
-	const groupId = parseInt(params.ids[0], 10);
-	const participantId = parseInt(params.ids[1], 10);
+	const groupId = parseInt((await params).ids[0], 10);
+	const participantId = parseInt((await params).ids[1], 10);
 	//console.log("group: ", groupId, " participant: ", participantId, date);
 	try {
 		const existingAttendance = await prisma.attendance.findFirst({
@@ -88,7 +88,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 	}
 };
 export const GET = async (req: Request, { params }: Props) => {
-	const groupId = parseInt(params.ids[0], 10);
+	const groupId = parseInt((await params).ids[0], 10);
 	try {
 		const existingAttendance = await prisma.attendance.findMany({
 			where: {

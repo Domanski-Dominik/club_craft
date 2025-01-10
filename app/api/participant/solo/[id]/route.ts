@@ -1,13 +1,13 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 export const GET = async (req: Request, { params }: Props) => {
 	//console.log("Wszedłem do funkcji", params);
-	const participantId = parseInt(params.id, 10);
+	const participantId = parseInt((await params).id, 10);
 	//console.log("Id Groupy to ", groupIdNum);
 	try {
 		const participant = await prisma.participant.findUnique({

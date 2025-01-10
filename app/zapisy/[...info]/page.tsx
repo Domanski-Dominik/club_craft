@@ -1,40 +1,46 @@
 import SignInForm from "@/components/forms/SignInForm";
-import { getLocsForSignIn, getSignInGroups } from "@/server/get-actions";
+import {
+	getClubInfoSignin,
+	getLocsForSignIn,
+	getSignInGroups,
+} from "@/server/get-actions";
 import { unstable_cache } from "next/cache";
 import { handleResult } from "@/functions/promiseResults";
 import StandardError from "@/components/errors/Standard";
 import React from "react";
 interface Props {
-	params: {
+	params: Promise<{
 		info: [string, string, string];
-	};
+	}>;
 }
-const getCachedLocs = unstable_cache(
-	async (clubName) => getLocsForSignIn(clubName),
-	["calendar-locs"],
+const getCachedClubInfo = unstable_cache(
+	async (clubName) => getClubInfoSignin(clubName),
+	["signin-clubInfo"],
 	{
-		tags: ["locs"],
+		tags: ["club"],
 	}
 );
 const getCachedCalendarGroups = unstable_cache(
 	async (clubName) => getSignInGroups(clubName),
-	["calendar-groups"],
+	["signin-groups"],
 	{
 		tags: ["groups"],
 	}
 );
 const SignInPage = async ({ params }: Props) => {
-	const clubName = params.info[0];
-	const [groupsResult, locsResult] = await Promise.allSettled([
+	const clubName = (await params).info[0];
+	const [groupsResult, clubResults] = await Promise.allSettled([
 		getCachedCalendarGroups(clubName),
-		getCachedLocs(clubName),
+		getCachedClubInfo(clubName),
 	]);
 	const groups = handleResult(groupsResult, "Groups");
-	const locs = handleResult(locsResult, "Locations");
-	if (!groups || !locs) {
+	const clubInfo = handleResult(clubResults, "ClubInfo");
+	if (!groups || !clubInfo) {
 		return (
 			<StandardError
-				message={`Nie udało się pobrać ${!groups ? "grup" : "lokalizacji"}`}
+				message={`Nie udało się pobrać ${
+					!groups ? "grup" : "Informacji o klubie"
+				}`}
 				addParticipants={false}
 			/>
 		);
@@ -46,7 +52,7 @@ const SignInPage = async ({ params }: Props) => {
 		<SignInForm
 			clubName={clubName}
 			groups={groups}
-			locs={locs}
+			clubInfo={clubInfo}
 			iOS={iOS}
 		/>
 	);

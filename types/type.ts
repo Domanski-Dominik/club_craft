@@ -104,6 +104,10 @@ export interface DialogDeleteType extends Dialog {
 	row: GridRowModel | null;
 	onClose: (value: string) => void;
 }
+export interface DialogRegulaminType extends Dialog {
+	onClose: () => void;
+	clubInfo: any;
+}
 export interface DialogPresentType {
 	open: boolean;
 	onClose: (participant: Participant | null) => void;

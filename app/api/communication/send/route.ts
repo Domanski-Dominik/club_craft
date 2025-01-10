@@ -9,7 +9,11 @@ export async function POST() {
 			from: "Club Craft <weryfikacja@clubcraft.pl>",
 			to: ["domanbuty@gmail.com"],
 			subject: "Hello world",
-			react: EmailTemplate({ firstName: "Dominik" }) as React.ReactElement,
+			react: EmailTemplate({
+				firstName: "Dominik",
+				lastName: "xd",
+				clubName: "xxxd",
+			}) as React.ReactElement,
 		});
 
 		if (error) {

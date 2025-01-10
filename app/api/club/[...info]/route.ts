@@ -1,13 +1,13 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		info: [string, string, string];
-	};
+	}>;
 }
 
 export const GET = async (req: Request, { params }: Props) => {
-	const userId = params.info[0];
+	const userId = (await params).info[0];
 	try {
 		const userInfo = await prisma.user.findUnique({
 			where: {
@@ -47,7 +47,7 @@ export const GET = async (req: Request, { params }: Props) => {
 };
 export const PUT = async (req: Request, { params }: Props) => {
 	const body = await req.json();
-	const clubId = parseInt(params.info[1], 10);
+	const clubId = parseInt((await params).info[1], 10);
 	console.log(body);
 	const updateData: any = {};
 

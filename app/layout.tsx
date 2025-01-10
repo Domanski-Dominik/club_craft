@@ -181,7 +181,10 @@ export default async function RootLayout({
 										justifyContent: "center",
 										alignItems: "center",
 										paddingTop: { xs: "75px", sm: "90px" }, // Odstęp od góry
-										paddingBottom: { xs: "100px", sm: "20px" }, // Odstęp od dołu tylko na telefonach
+										paddingBottom: {
+											xs: session?.user ? "100px" : "20px",
+											sm: "20px",
+										}, // Odstęp od dołu tylko na telefonach
 									}}>
 									{children}
 								</Container>

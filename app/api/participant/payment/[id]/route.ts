@@ -1,9 +1,9 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 export const PUT = async (req: Request, { params }: Props) => {
 	const body = await req.json();
@@ -11,7 +11,7 @@ export const PUT = async (req: Request, { params }: Props) => {
 		body.form;
 	const action = body.action;
 	//console.log(action);
-	const participantId = parseInt(params.id, 10);
+	const participantId = parseInt((await params).id, 10);
 	/*console.log(
 		" participant: ",
 		participantId,

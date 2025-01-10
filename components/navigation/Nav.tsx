@@ -25,7 +25,7 @@ import { usePathname, useRouter } from "next/navigation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import { Session } from "next-auth";
-import { useMediaQuery, Theme } from "@mui/material";
+import { useMediaQuery, Theme, Badge } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HowToRegSharpIcon from "@mui/icons-material/HowToRegSharp";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
@@ -38,6 +38,9 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import { CountAwaitingParticipants } from "@/server/participant-actions";
+import { isNumber } from "@mui/x-data-grid/internals";
 
 interface Props {
 	session: Session | null;
@@ -68,6 +71,7 @@ export default function TopNav(props: Props) {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [isAddOpen, setIsAddOpen] = React.useState(false); // Kontrola rozwinięcia opcji "Dodaj"
+	const [awaitingCount, setAwaitingCount] = React.useState(10);
 
 	const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
@@ -176,14 +180,37 @@ export default function TopNav(props: Props) {
 			<Divider />
 			<List>
 				{props.session?.user.role === "owner" && (
-					<ListItem disablePadding>
-						<ListItemButton
-							onClick={() => router.push("/balance")}
-							selected={isActive("/balance")}>
-							<ListItemIcon>{<ManageSearchIcon />}</ListItemIcon>
-							<ListItemText primary={"Zaległości"} />
-						</ListItemButton>
-					</ListItem>
+					<>
+						<ListItem disablePadding>
+							<ListItemButton
+								onClick={() => router.push("/balance")}
+								selected={isActive("/balance")}>
+								<ListItemIcon>
+									<ManageSearchIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Zaległości"} />
+							</ListItemButton>
+						</ListItem>
+						<ListItem disablePadding>
+							<ListItemButton
+								onClick={() => router.push("/awaiting")}
+								selected={isActive("/awaiting")}>
+								<ListItemIcon>
+									{" "}
+									<Badge
+										badgeContent={awaitingCount}
+										color='error'
+										anchorOrigin={{
+											vertical: "bottom",
+											horizontal: "right",
+										}}>
+										<PendingActionsIcon />
+									</Badge>
+								</ListItemIcon>
+								<ListItemText primary={"Oczekujący"} />
+							</ListItemButton>
+						</ListItem>
+					</>
 				)}
 				{navItems.map((item) => (
 					<ListItem
@@ -200,6 +227,25 @@ export default function TopNav(props: Props) {
 			</List>
 		</Box>
 	);
+	React.useEffect(() => {
+		const fetchAwaitingCount = async () => {
+			try {
+				const response = await CountAwaitingParticipants(
+					`${props.session?.user.club}`
+				); // Upewnij się, że masz odpowiedni endpoint API
+				if (isNumber(response)) {
+					setAwaitingCount(response);
+				}
+			} catch (error) {
+				console.error(
+					"Błąd podczas pobierania liczby oczekujących uczestników:",
+					error
+				);
+			}
+		};
+
+		fetchAwaitingCount();
+	}, []);
 
 	return (
 		<Box sx={{ display: "flex" }}>
@@ -227,6 +273,17 @@ export default function TopNav(props: Props) {
 						}}>
 						Club Craft
 					</Typography>
+					{!props.session?.user && (
+						<Typography
+							variant='h6'
+							sx={{
+								flexGrow: 1,
+								textAlign: "center",
+								display: { xs: "none", sm: "block" },
+							}}>
+							Club Craft
+						</Typography>
+					)}
 					{/* Menu użytkownika */}
 					{props.session?.user && (
 						<>

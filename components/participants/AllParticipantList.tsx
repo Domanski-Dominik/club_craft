@@ -32,9 +32,6 @@ import {
 import {
 	Box,
 	Button,
-	Alert,
-	AlertProps,
-	Snackbar,
 	Typography,
 } from "@mui/material";
 import type {
@@ -62,7 +59,6 @@ import DialogDelete from "../dialogs/DialogDelete";
 import PolishDayName from "@/functions/PolishDayName";
 import DialogGroups from "../dialogs/DialogGroups";
 import ExportToExel from "../export/ExportToExel";
-import { sortAll } from "@/functions/sorting";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRouter } from "next/navigation";
 import { StyledDataGrid } from "../styled/StyledDataGrid";

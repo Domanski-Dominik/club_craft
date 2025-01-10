@@ -1,13 +1,13 @@
 import { prisma } from "@/prisma/prisma";
 
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 
 export const GET = async (req: Request, { params }: Props) => {
-	const coachId = params.id;
+	const coachId = (await params).id;
 
 	try {
 		const groupIds = await prisma.groupcoach.findMany({

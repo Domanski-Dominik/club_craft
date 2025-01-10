@@ -6,9 +6,9 @@ import { handleResult } from "@/functions/promiseResults";
 import StandardError from "@/components/errors/Standard";
 import { getGroupById } from "@/server/get-actions";
 interface Props {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 const getCachedLocs = unstable_cache(
 	async (session) => getLocs(session),
@@ -32,7 +32,7 @@ const AddClassClone = async ({ params }: Props) => {
 	]);
 	const club = handleResult(clubInfoResults, "clubs");
 	const locs = handleResult(locsResults, "locations");
-	const group = await getGroupById(parseInt(params.id), session);
+	const group = await getGroupById(parseInt((await params).id), session);
 	if (!locs || !club || !group)
 		return (
 			<StandardError
