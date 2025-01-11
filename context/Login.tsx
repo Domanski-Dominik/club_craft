@@ -28,11 +28,21 @@ const Login = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await login(data);
-			if ("error" in response) setError(`${response.error?.message}`);
-			console.log(response);
+			const result = await signIn("credentials", {
+				email: data.email,
+				password: data.password,
+				redirect: false, // Brak automatycznego przekierowania
+			});
+
+			if (result?.error) {
+				setError(result.error); // Wyświetlenie komunikatu błędu
+				return;
+			}
+
+			// Sukces logowania
+			console.log("Zalogowano pomyślnie");
 		} catch (error: any) {
-			setError(error.error?.message); // Ustaw błąd, jeśli wystąpił podczas logowania
+			setError("Wystąpił problem podczas logowania. Spróbuj ponownie.");
 		}
 	};
 
