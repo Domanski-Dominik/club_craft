@@ -8,25 +8,26 @@ interface LoginForm {
 	email: string;
 	password: string;
 }
+interface SignInResult {
+	error?: string; // Zawiera opis błędu, jeśli wystąpi
+	ok?: boolean; // Informuje, czy logowanie powiodło się
+	status?: number; // Kod statusu HTTP
+}
 export const login = async (formData: LoginForm) => {
 	try {
 		await signIn("credentials", {
 			...formData,
-			//redirectTo: DEAFAULT_LOGIN_REDIRECT,
 		});
-		return { succes: true };
+
+		return { success: true };
 	} catch (error: any) {
+		// Dodatkowa obsługa błędów w przypadku innych wyjątków
 		if (error instanceof AuthError) {
-			switch (error.type) {
-				case "CredentialsSignin":
-					return { message: "Niepoprawne dane!" };
-				default:
-					return {
-						message: "Coś poszło nie tak, spróbuj zweryfikować swój email!",
-					};
-			}
+			return { error: error.cause?.err };
 		}
-		throw error;
+
+		// Obsługa nieprzewidzianych błędów
+		throw new Error(error.message || "Wystąpił nieoczekiwany błąd.");
 	}
 };
 

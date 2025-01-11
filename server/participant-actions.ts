@@ -521,8 +521,8 @@ export const updateAwaitingParticipantGroup = async (info: any) => {
 					clubName: row.club,
 					groupName: groupName,
 					terms: terms,
-					acceptLink: `http://localhost:3000/awaiting/accept/${participantId}`,
-					rejectLink: `http://localhost:3000/awaiting/reject/${participantId}`,
+					acceptLink: `https://clubcrafts.pl/awaiting/accept/${participantId}`,
+					rejectLink: `https://clubcrafts.pl/awaiting/reject/${participantId}`,
 				}) as React.ReactElement,
 			});
 			if (error) return { error: "Błąd podczas wysyłania maila zwrotnego" };
@@ -612,11 +612,11 @@ export const NewGroupAwaitingParticipant = async ({
 					"Nie znaleziono grupy oczekującego uczestnika, skontaktój sie z klubem",
 			};
 		const participant = {
-			firstName: "Dominik",
-			lastName: "Domański",
-			club: "flipkids",
-			parentFirstName: "Dominik",
-			parentLastName: "Domański",
+			firstName: findPrt.firstName,
+			lastName: findPrt.lastName,
+			club: findPrt.club,
+			parentFirstName: findPrt.parentFirstName,
+			parentLastName: findPrt.parentLastName,
 			groupName: findGroup.name,
 			terms: findGroup.terms,
 		};

@@ -28,11 +28,14 @@ const Login = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			login(data);
+			const response = await login(data);
+			if ("error" in response) setError(`${response.error?.message}`);
+			console.log(response);
 		} catch (error: any) {
-			setError(error.message); // Ustaw błąd, jeśli wystąpił podczas logowania
+			setError(error.error?.message); // Ustaw błąd, jeśli wystąpił podczas logowania
 		}
 	};
+
 	return (
 		<Container
 			component='main'

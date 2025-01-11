@@ -5,6 +5,7 @@ import {
 	apiAuthPrefix,
 	authRoutes,
 	publicRoutes,
+	resetPrefix,
 	signinPrefix,
 } from "@/routes";
 
@@ -17,7 +18,11 @@ export default auth(async function middleware(req) {
 	const isSigning = nextUrl.pathname.startsWith(signinPrefix);
 	const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 	const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+	const isReset = nextUrl.pathname.startsWith(resetPrefix);
 
+	if (isReset) {
+		return;
+	}
 	if (isSigning) {
 		return;
 	}
