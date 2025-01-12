@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 
 interface Props {
 	message: string;
-	addParticipants: boolean;
+	addParticipants?: boolean;
+	redirectLink?: string;
+	redirectText?: string;
 }
 const StandardError = (props: Props) => {
 	const router = useRouter();
@@ -52,6 +54,16 @@ const StandardError = (props: Props) => {
 					onClick={() => router.push(`/add`)}>
 					<AddIcon sx={{ mr: 1 }} />
 					Dodaj uczestników
+				</Fab>
+			)}
+			{props.redirectLink && props.redirectText && (
+				<Fab
+					sx={{ m: 2 }}
+					variant='extended'
+					size='large'
+					color='primary'
+					onClick={() => router.push(`${props.redirectLink}`)}>
+					{props.redirectText}
 				</Fab>
 			)}
 		</Box>

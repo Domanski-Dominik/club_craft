@@ -1,9 +1,10 @@
-"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Loading from "@/context/Loading";
 import ChangePassword from "@/components/forms/ChangePassword";
 import { Typography, Button } from "@mui/material";
+import { checkResetToken } from "@/server/authorize";
+import StandardError from "@/components/errors/Standard";
+
 interface Props {
 	params: Promise<{
 		token: string;
@@ -12,29 +13,25 @@ interface Props {
 
 const ResetPasswordtoken = async ({ params }: Props) => {
 	const rtoken = (await params).token;
-	const router = useRouter();
-	const [success, setSuccess] = useState(false);
-	const [loading, setLoading] = useState(true);
-	const [data, setData] = useState<any>({});
-	useEffect(() => {
-		const VerifyUser = async () => {
-			const response = await fetch(`/api/user/resetPassword/${rtoken}`);
-			const data = await response.json();
-			if (!data.error) {
-				setSuccess(true);
-				setLoading(false);
-				setData(data);
-			} else {
-				setLoading(false);
-				setData(data);
-			}
-		};
-		VerifyUser();
-	}, [rtoken]);
-	if (loading) return <Loading />;
-	return (
-		<>
-			{success ? (
+	const data = await checkResetToken(rtoken);
+
+	if ("error" in data)
+		return (
+			<>
+				<StandardError
+					message={data.error}
+					redirectLink='/reset'
+					redirectText='Zacznij od nowa'
+				/>
+			</>
+		);
+
+	return <ChangePassword user={data} />;
+};
+
+export default ResetPasswordtoken;
+/*
+{success ? (
 				<ChangePassword user={data} />
 			) : (
 				<>
@@ -54,8 +51,4 @@ const ResetPasswordtoken = async ({ params }: Props) => {
 					</Button>
 				</>
 			)}
-		</>
-	);
-};
-
-export default ResetPasswordtoken;
+*/

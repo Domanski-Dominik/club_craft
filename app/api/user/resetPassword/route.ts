@@ -11,7 +11,13 @@ export async function POST(req: Request) {
 	try {
 		const user = await prisma.user.findUnique({ where: { email: body.email } });
 		if (!user) {
-			return Response.json({ error: "Nie znaleziono konta o podanym mailu" });
+			return new Response(
+				JSON.stringify({ error: "Nie znaleziono konta o podanym mailu" }),
+				{
+					status: 404,
+					headers: { "Content-Type": "application/json" },
+				}
+			);
 		}
 
 		const resetPasswordToken = randomBytes(16).toString("base64url");
@@ -37,15 +43,21 @@ export async function POST(req: Request) {
 				resetPasswordToken,
 			}) as React.ReactElement,
 		});
-		return Response.json(
-			{ message: "Wysłano wiadmość na podany mail" },
-			{ status: 200 }
+		return new Response(
+			JSON.stringify({ message: "Wysłano wiadmość na podany mail" }),
+			{
+				status: 200,
+				headers: { "Content-Type": "application/json" },
+			}
 		);
 	} catch (error) {
 		console.error(error);
-		return Response.json(
-			{ error: "Nie udało się wysłać wiadomości" },
-			{ status: 500 }
+		return new Response(
+			JSON.stringify({ error: "Nie udało się wysłać wiadomości" }),
+			{
+				status: 500,
+				headers: { "Content-Type": "application/json" },
+			}
 		);
 	}
 }

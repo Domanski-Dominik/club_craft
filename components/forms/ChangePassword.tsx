@@ -6,22 +6,16 @@ import {
 	TextField,
 	Typography,
 	Avatar,
+	Stack,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import { useRouter } from "next/navigation";
+import { passwordChange } from "@/server/authorize";
 
-interface ChangePasswordProps {
-	user: {
-		id: string;
-		email: string;
-		resetPasswordToken: string;
-	};
-}
-
-const ChangePassword = ({ user }: ChangePasswordProps) => {
+const ChangePassword = ({ user }: any) => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const router = useRouter();
@@ -55,23 +49,29 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 
 	const handleSubmit = async () => {
 		if (validateForm()) {
-			const response = await fetch("/api/user/password", {
-				method: "PUT",
-				body: JSON.stringify({
-					password: password,
-					resetpasswordtoken: user.resetPasswordToken,
-				}),
+			const response = await passwordChange({
+				password: password,
+				resetPasswordToken: user.resetPasswordToken,
 			});
-			const message = await response.json();
-			if (!message.error) {
+			if (!("error" in response)) {
 				setSuccess(true);
 			} else {
-				setErrors({ ...errors, serverError: message.error });
+				setErrors({ ...errors, serverError: `${response.error}` });
 			}
 		}
 	};
 	return (
-		<>
+		<Box
+			sx={{
+				marginTop: 1,
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				backgroundColor: "white",
+				borderRadius: 4,
+				p: 3,
+				maxWidth: "400px",
+			}}>
 			{success ? (
 				<Box
 					textAlign='center'
@@ -97,108 +97,70 @@ const ChangePassword = ({ user }: ChangePasswordProps) => {
 					</Button>
 				</Box>
 			) : (
-				<Box
-					sx={{
-						marginTop: 1,
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						width: "90%",
-					}}>
+				<>
 					<Avatar sx={{ m: 2, bgcolor: "secondary.main" }}>
 						<LockOutlinedIcon />
 					</Avatar>
-					<Typography
-						variant='h5'
-						mb={3}
-						align='center'>
-						Zmieniasz hasło dla{" "}
-						<span style={{ fontWeight: "bold" }}>{user.email}</span>
-					</Typography>
-					<Grid
-						container
-						component={"form"}
-						spacing={2}>
-						<Grid
-							size={{
-								xs: 12,
-								sm: 12,
-								md: 6,
-								lg: 3,
-								xl: 3,
-							}}>
-							<FormControl fullWidth>
-								<TextField
-									id={"outlined-basic"}
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									label='hasło'
-									variant='outlined'
-									required
-									type='password'
-									autoComplete='off'
-								/>
-							</FormControl>
-							<Typography color='error'>{errors.password}</Typography>
-						</Grid>
-						<Grid
-							size={{
-								xs: 12,
-								sm: 12,
-								md: 6,
-								lg: 3,
-								xl: 3,
-							}}>
-							<FormControl fullWidth>
-								<TextField
-									id={"outlined-basic"}
-									value={confirmPassword}
-									onChange={(e) => setConfirmPassword(e.target.value)}
-									label='Powtórz hasło'
-									variant='outlined'
-									required
-									type='password'
-									autoComplete='off'
-								/>
-							</FormControl>
-							<Typography color='error'>{errors.confirmPassword}</Typography>
-						</Grid>
-						<Grid
-							size={{
-								xs: 6,
-								sm: 6,
-								md: 6,
-								lg: 3,
-								xl: 3,
-							}}>
+					<Stack
+						direction='column'
+						gap={1}>
+						<Typography
+							variant='h5'
+							mb={1}
+							align='center'>
+							Zmieniasz hasło dla{" "}
+							<span style={{ fontWeight: "bold" }}>{user.email}</span>
+						</Typography>
+						<FormControl fullWidth>
+							<TextField
+								id={"outlined-basic"}
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								label='hasło'
+								variant='outlined'
+								required
+								type='password'
+								autoComplete='off'
+							/>
+						</FormControl>
+						<Typography color='error'>{errors.password}</Typography>
+
+						<FormControl fullWidth>
+							<TextField
+								id={"outlined-basic"}
+								value={confirmPassword}
+								onChange={(e) => setConfirmPassword(e.target.value)}
+								label='Powtórz hasło'
+								variant='outlined'
+								required
+								type='password'
+								autoComplete='off'
+							/>
+						</FormControl>
+						<Typography color='error'>{errors.confirmPassword}</Typography>
+						<Stack
+							direction='row'
+							gap={2}>
 							<Button
 								fullWidth
 								variant='outlined'
 								onClick={() => router.push("/login")}>
 								strona logowania
 							</Button>
-						</Grid>
-						<Grid
-							size={{
-								xs: 6,
-								sm: 6,
-								md: 6,
-								lg: 3,
-								xl: 3,
-							}}>
+
 							<Button
 								fullWidth
 								variant='contained'
 								onClick={handleSubmit}>
 								Zapisz nowe hasło
 							</Button>
+						</Stack>
 
-							<Typography color='error'>{errors.serverError}</Typography>
-						</Grid>
-					</Grid>
-				</Box>
+						<Typography color='error'>{errors.serverError}</Typography>
+					</Stack>
+				</>
 			)}
-		</>
+		</Box>
 	);
 };
 

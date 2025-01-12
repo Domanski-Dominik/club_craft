@@ -71,7 +71,7 @@ export default function TopNav(props: Props) {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const [isAddOpen, setIsAddOpen] = React.useState(false); // Kontrola rozwinięcia opcji "Dodaj"
-	const [awaitingCount, setAwaitingCount] = React.useState(10);
+	const [awaitingCount, setAwaitingCount] = React.useState(0);
 
 	const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) =>

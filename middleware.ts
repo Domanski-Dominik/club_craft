@@ -12,7 +12,7 @@ import {
 const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(req) {
 	const { nextUrl } = req;
-	const isLoggedIn = !!req.auth;
+	const isLoggedIn = !!req.auth?.user;
 
 	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 	const isSigning = nextUrl.pathname.startsWith(signinPrefix);
@@ -20,15 +20,10 @@ export default auth(async function middleware(req) {
 	const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 	const isReset = nextUrl.pathname.startsWith(resetPrefix);
 
-	if (isReset) {
-		return;
+	if (isReset || isSigning || isApiAuthRoute) {
+		return; // Pozwól na dostęp do tych ścieżek
 	}
-	if (isSigning) {
-		return;
-	}
-	if (isApiAuthRoute) {
-		return;
-	}
+
 	if (isAuthRoute) {
 		if (isLoggedIn) {
 			return Response.redirect(new URL(DEAFAULT_LOGIN_REDIRECT, nextUrl));

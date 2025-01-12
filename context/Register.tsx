@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/server/authorize";
 
 interface Props {
 	club: string | null;
@@ -106,37 +107,24 @@ const Register = ({ club }: Props) => {
 		console.log(formData);
 		if (validateForm()) {
 			try {
-				const response = await fetch("/api/user/register", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ formData }),
-				});
+				const response = await registerUser(formData);
 				console.log(response);
-				//const userInfo = await response.json();
-				const errorData = await response.json();
-				console.log(errorData);
-				if (!response.ok) {
-					setErrors({
-						...errors,
-						serverError: `${errorData.error}`,
-					});
+				if ("error" in response) {
+					setErrors((prevErrors) => ({
+						...prevErrors,
+						serverError: `${response.error}`,
+					}));
 				} else {
 					setSucces(true);
 				}
 			} catch (error) {
 				console.error(error);
-				setErrors({
-					...errors,
+				setErrors((prevErrors) => ({
+					...prevErrors,
 					serverError: "Wystąpił błąd podczas rejestracji",
-				});
+				}));
 			}
-		} else {
-			console.log("Formularz zawiera błędy, proszę poprawić dane");
 		}
-
-		//router.push("/login");
 	};
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -145,8 +133,8 @@ const Register = ({ club }: Props) => {
 	return (
 		<Container
 			component='main'
-			maxWidth='xs'>
-			<CssBaseline />
+			maxWidth='xs'
+			sx={{ backgroundColor: "white", borderRadius: 4, py: 3 }}>
 			{succes === false && (
 				<Fade
 					in={!succes}

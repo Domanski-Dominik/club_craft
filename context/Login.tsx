@@ -31,17 +31,18 @@ const Login = () => {
 			const result = await signIn("credentials", {
 				email: data.email,
 				password: data.password,
-				redirect: false, // Brak automatycznego przekierowania
+				redirect: true, // Brak automatycznego przekierowania
 			});
-
-			if (result?.error) {
+			console.log(result);
+			/*if ("error" in result) {
 				setError(result.error); // Wyświetlenie komunikatu błędu
 				return;
-			}
+			}*/
 
 			// Sukces logowania
 			console.log("Zalogowano pomyślnie");
 		} catch (error: any) {
+			console.log(error);
 			setError("Wystąpił problem podczas logowania. Spróbuj ponownie.");
 		}
 	};

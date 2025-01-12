@@ -11,6 +11,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import { useRouter } from "next/navigation";
+import { sendResetEmail } from "@/server/authorize";
 
 const ResetPasswordForm = () => {
 	const [email, setEmail] = useState<string>("");
@@ -18,22 +19,26 @@ const ResetPasswordForm = () => {
 	const [success, setSuccess] = useState(false);
 	const router = useRouter();
 	const handleSubmit = async () => {
-		const response = await fetch("/api/user/resetPassword", {
-			method: "POST",
-			body: JSON.stringify({ email }),
-		});
-		const info = await response.json();
-		if (!info.error) {
+		const response = await sendResetEmail(email);
+		console.log(response);
+		if (!("error" in response)) {
 			setSuccess(true);
 			setError("");
 		} else {
-			setError(info.error);
+			setError(`${response.error}`);
 		}
 	};
 	return (
 		<>
 			{success ? (
 				<Box
+					maxWidth='xs'
+					sx={{
+						backgroundColor: "white",
+						borderRadius: 4,
+						p: 3,
+						maxWidth: "400px",
+					}}
 					textAlign='center'
 					width={"90%"}>
 					<CelebrationIcon
@@ -64,6 +69,10 @@ const ResetPasswordForm = () => {
 						flexDirection: "column",
 						alignItems: "center",
 						width: "90%",
+						backgroundColor: "white",
+						borderRadius: 4,
+						p: 3,
+						maxWidth: "400px",
 					}}>
 					<Avatar sx={{ m: 2, bgcolor: "secondary.main" }}>
 						<LockOutlinedIcon />
@@ -74,7 +83,11 @@ const ResetPasswordForm = () => {
 						align='center'>
 						Wpisz swój email
 					</Typography>
-					<Typography>{error !== "" && error}</Typography>
+					<Typography
+						color='error'
+						mb={2}>
+						{error !== "" && error}
+					</Typography>
 					<FormControl fullWidth>
 						<TextField
 							id={"outlined-basic"}
