@@ -451,6 +451,19 @@ export const addAwaitingParticipant = async (info: AwaitinPrt) => {
 		//console.log(exist);
 		if (exist)
 			return { error: "Uczestnik o danym nazwisku i imieniu już istnieje" };
+		const awaitingExist = await prisma.awaitingparticipant.findFirst({
+			where: {
+				firstName: info.childFirstName,
+				lastName: info.childLastName,
+				club: info.club,
+				parentFirstName: info.parentFirstName,
+				email: info.email,
+			},
+		});
+		if (awaitingExist)
+			return {
+				error: "Zgłoszenie uczestnika o danym nazwisku i imieniu już istnieje",
+			};
 		const newParticipant = await prisma.awaitingparticipant.create({
 			data: {
 				firstName: info.childFirstName,
@@ -470,12 +483,13 @@ export const addAwaitingParticipant = async (info: AwaitinPrt) => {
 			return { error: "Błąd podczas zapisywania uczestnika" };
 
 		const { error } = await resend.emails.send({
-			from: "Club Craft <zapisy@clubcraft.pl>",
+			from: "Club Craft <zapisy@clubcrafts.pl>",
 			to: [info.email],
-			subject: `Zapisy na zjęcia w ${info.club}`,
+			subject: `Zapisy na zajęcia w ${info.club}`,
 			react: EmailTemplate({
 				firstName: info.parentFirstName,
 				lastName: info.parentFirstName,
+
 				clubName: info.club,
 			}) as React.ReactElement,
 		});
@@ -499,18 +513,8 @@ export const updateAwaitingParticipantGroup = async (info: any) => {
 				},
 			});
 			if (exist !== null) return { error: "Uczestnik już należy do tej grupy" };
-
-			const newGroup = await prisma.awaitingparticipant.update({
-				where: { id: participantId },
-				data: {
-					groupId: groupIdToAdd,
-					edit: true,
-				},
-			});
-			if (!newGroup) return { error: "Nie udało się zmienić grupy" };
-
 			const { error } = await resend.emails.send({
-				from: "Club Craft <zapisy@clubcraft.pl>",
+				from: "Club Craft <zapisy@clubcrafts.pl>",
 				to: [row.email],
 				subject: "Zaktualizowano Twoją grupę zajęć",
 				react: MoveToGroupEmailTemplate({
@@ -521,11 +525,21 @@ export const updateAwaitingParticipantGroup = async (info: any) => {
 					clubName: row.club,
 					groupName: groupName,
 					terms: terms,
-					acceptLink: `https://clubcrafts.pl/awaiting/accept/${participantId}`,
-					rejectLink: `https://clubcrafts.pl/awaiting/reject/${participantId}`,
+					acceptLink: `https://clubcrafts.pl/zapisy/accept/${participantId}`,
+					rejectLink: `https://clubcrafts.pl/zapisy/reject/${participantId}`,
 				}) as React.ReactElement,
 			});
+
 			if (error) return { error: "Błąd podczas wysyłania maila zwrotnego" };
+			const newGroup = await prisma.awaitingparticipant.update({
+				where: { id: participantId },
+				data: {
+					groupId: groupIdToAdd,
+					edit: true,
+				},
+			});
+			if (!newGroup) return { error: "Nie udało się zmienić grupy" };
+
 			//console.log(formatGroup);
 			return {
 				message:

@@ -277,6 +277,7 @@ const SignInForm = (props: Props) => {
 				onClose={handleCloseSnackbar}
 				message={snackbar.message}
 				severity={snackbar.severity}
+				autoHide={7000}
 			/>
 		</Box>
 	);

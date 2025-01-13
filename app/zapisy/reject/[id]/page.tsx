@@ -24,24 +24,15 @@ const RejectMoveToGroup = async ({ params }: Props) => {
 
 	if ("error" in groups || "error" in participant) {
 		return (
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					height: "100vh",
-					fontFamily: "Arial, sans-serif",
-				}}>
-				<Typography
-					variant='h6'
-					color='error'>
-					{"error" in groups
+			<StandardError
+				message={
+					"error" in groups
 						? groups.error
 						: "error" in participant
 						? participant.error
-						: "Nieznany błąd "}
-				</Typography>
-			</Box>
+						: "Wystąpił nieznany błąd"
+				}
+			/>
 		);
 	}
 	if (participant.edit === false)

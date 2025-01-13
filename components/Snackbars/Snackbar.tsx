@@ -6,6 +6,7 @@ interface ResponsiveSnackbarProps {
 	onClose: () => void;
 	message: string;
 	severity?: "error" | "warning" | "info" | "success";
+	autoHide?: number;
 }
 
 const ResponsiveSnackbar: React.FC<ResponsiveSnackbarProps> = ({
@@ -13,6 +14,7 @@ const ResponsiveSnackbar: React.FC<ResponsiveSnackbarProps> = ({
 	onClose,
 	message,
 	severity,
+	autoHide,
 }) => {
 	const isMobile = useMediaQuery((theme: Theme) =>
 		theme.breakpoints.down("sm")
@@ -25,7 +27,7 @@ const ResponsiveSnackbar: React.FC<ResponsiveSnackbarProps> = ({
 	return ReactDOM.createPortal(
 		<Snackbar
 			open={open}
-			autoHideDuration={4000}
+			autoHideDuration={autoHide ? autoHide : 4000}
 			onClose={onClose}
 			anchorOrigin={{
 				vertical: isMobile ? "bottom" : "top",

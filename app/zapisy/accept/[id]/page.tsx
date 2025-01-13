@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, List, ListItem, Divider } from "@mui/material";
 import PolishDayName from "@/functions/PolishDayName";
 import { AcceptAwaitingParticipant } from "@/server/participant-actions";
+import StandardError from "@/components/errors/Standard";
 
 interface Props {
 	params: Promise<{
@@ -14,22 +15,7 @@ const AcceptMoveToGroup = async ({ params }: Props) => {
 	const participant = await AcceptAwaitingParticipant(id);
 
 	if ("error" in participant) {
-		return (
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					height: "100vh",
-					fontFamily: "Arial, sans-serif",
-				}}>
-				<Typography
-					variant='h6'
-					color='error'>
-					{participant.error}
-				</Typography>
-			</Box>
-		);
+		return <StandardError message={participant.error} />;
 	}
 
 	return (

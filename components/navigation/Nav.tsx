@@ -87,6 +87,25 @@ export default function TopNav(props: Props) {
 		if (link === "/calendar" && pathname.startsWith("/group")) return true;
 		return pathname === link; // Sprawdza dokładne dopasowanie
 	};
+	React.useEffect(() => {
+		const fetchAwaitingCount = async () => {
+			try {
+				const response = await CountAwaitingParticipants(
+					`${props.session?.user.club}`
+				); // Upewnij się, że masz odpowiedni endpoint API
+				if (isNumber(response)) {
+					setAwaitingCount(response);
+				}
+			} catch (error) {
+				console.error(
+					"Błąd podczas pobierania liczby oczekujących uczestników:",
+					error
+				);
+			}
+		};
+
+		fetchAwaitingCount();
+	}, []);
 
 	// Elementy BottomNav dostępne tylko na urządzeniach mobilnych
 	const mobileNavItems = [
@@ -227,25 +246,6 @@ export default function TopNav(props: Props) {
 			</List>
 		</Box>
 	);
-	React.useEffect(() => {
-		const fetchAwaitingCount = async () => {
-			try {
-				const response = await CountAwaitingParticipants(
-					`${props.session?.user.club}`
-				); // Upewnij się, że masz odpowiedni endpoint API
-				if (isNumber(response)) {
-					setAwaitingCount(response);
-				}
-			} catch (error) {
-				console.error(
-					"Błąd podczas pobierania liczby oczekujących uczestników:",
-					error
-				);
-			}
-		};
-
-		fetchAwaitingCount();
-	}, []);
 
 	return (
 		<Box sx={{ display: "flex" }}>
