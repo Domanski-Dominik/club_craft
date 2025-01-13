@@ -9,8 +9,9 @@ export default function manifest(): MetadataRoute.Manifest {
 		description: "Zarządzaj swoim klubem!",
 		display: "standalone",
 		background_color: "#E3CBE7",
+		orientation: "portrait",
 		theme_color: "#FFFFFF",
-		display_override: ["window-controls-overlay"],
+		display_override: ["window-controls-overlay", "standalone"],
 		categories: ["finance", "productivity"],
 		icons: [
 			{
@@ -44,12 +45,31 @@ export default function manifest(): MetadataRoute.Manifest {
 			},
 			{
 				src: "/favicon512x512.png",
+				sizes: "512x512",
+				type: "image/png",
+				purpose: "maskable",
+			},
+			{
+				src: "/favicon512x512.png",
 				sizes: "any",
 				type: "image/png",
 				purpose: "any",
 			},
 		],
-		screenshots: [{ src: "/home.png" }],
+		screenshots: [
+			{
+				src: "/home.png",
+				type: "image/png",
+				sizes: "375x667",
+				platform: "android",
+			},
+			{
+				src: "/home.png",
+				type: "image/png",
+				sizes: "375x667",
+				platform: "ios",
+			},
+		],
 		shortcuts: [
 			{
 				name: "Zaloguj się",
