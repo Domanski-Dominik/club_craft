@@ -1,14 +1,15 @@
 {
-	"id": "/",
+	"id": "1",
 	"name": "ClubCraft",
 	"short_name": "ClubCraft",
 	"description": "Zarządzaj swoim klubem!",
-	"start_url": "/",
+	"start_url": "https://www.clubcrafts.pl",
 	"display": "standalone",
-	"background_color": "#161549",
-	"theme_color": "white",
+	"background_color": "#e3cbe7",
+	"theme_color": "#ffffff",
 	"orientation": "portrait",
 	"display_override": ["window-controls-overlay"],
+	"categories": ["finance", "productivity"],
 	"icons": [
 		{
 			"src": "/favicon192x192.png",
@@ -43,7 +44,23 @@
 			"src": "/favicon512x512.png",
 			"sizes": "any",
 			"type": "image/png",
-			"purpose": "any "
+			"purpose": "any maskable"
 		}
-	]
+	],
+	"screenshots": [{ "src": "/home.png" }],
+	"shortcuts": [
+		{
+			"name": "Zaloguj się",
+			"url": "/login",
+			"description": "Strona logowania",
+			"icons": [
+				{
+					"src": "/favicon512x512.png",
+					"type": "image/png",
+					"sizes": "512x512"
+				}
+			]
+		}
+	],
+	"protocol_handlers": [{}]
 }
