@@ -175,6 +175,11 @@ const Register = ({ club }: Props) => {
 										id='name'
 										label='Imię'
 										onChange={handleInputChange}
+										sx={{
+											"& .MuiInputBase-input": {
+												fontSize: "16px",
+											},
+										}}
 									/>
 									<Typography color='error'>{errors.name}</Typography>
 								</Grid>
@@ -190,6 +195,11 @@ const Register = ({ club }: Props) => {
 										name='surname'
 										autoComplete='family-name'
 										onChange={handleInputChange}
+										sx={{
+											"& .MuiInputBase-input": {
+												fontSize: "16px",
+											},
+										}}
 									/>
 									<Typography color='error'>{errors.surname}</Typography>
 								</Grid>
@@ -206,6 +216,11 @@ const Register = ({ club }: Props) => {
 											id='club'
 											label='Nazwa klubu'
 											onChange={handleInputChange}
+											sx={{
+												"& .MuiInputBase-input": {
+													fontSize: "16px",
+												},
+											}}
 										/>
 										<Typography color='error'>{errors.club}</Typography>
 									</Grid>
@@ -222,6 +237,11 @@ const Register = ({ club }: Props) => {
 										name='email'
 										autoComplete='email'
 										onChange={handleInputChange}
+										sx={{
+											"& .MuiInputBase-input": {
+												fontSize: "16px",
+											},
+										}}
 									/>
 									<Typography color='error'>{errors.email}</Typography>
 								</Grid>
@@ -237,6 +257,11 @@ const Register = ({ club }: Props) => {
 										id='password'
 										autoComplete='new-password'
 										onChange={handleInputChange}
+										sx={{
+											"& .MuiInputBase-input": {
+												fontSize: "16px",
+											},
+										}}
 									/>
 									<Typography color='error'>{errors.password}</Typography>
 								</Grid>
@@ -251,6 +276,11 @@ const Register = ({ club }: Props) => {
 										type='password'
 										id='confirmPassword'
 										onChange={handleInputChange}
+										sx={{
+											"& .MuiInputBase-input": {
+												fontSize: "16px",
+											},
+										}}
 									/>
 									<Typography color='error'>
 										{errors.confirmPassword}

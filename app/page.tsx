@@ -18,7 +18,7 @@ const Home = () => {
 		"standalone" in window.navigator && (window.navigator as any).standalone;
 
 	useEffect(() => {
-		if (isIos() && !isInStandaloneMode()) {
+		if (isIos() && !isInStandaloneMode() && status === "authenticated") {
 			setShowInstallMessage(true);
 		}
 	}, []);

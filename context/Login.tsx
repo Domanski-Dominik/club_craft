@@ -92,6 +92,11 @@ const Login = () => {
 						name='email'
 						autoComplete='email'
 						onChange={(e) => setData({ ...data, email: e.target.value })}
+						sx={{
+							"& .MuiInputBase-input": {
+								fontSize: "16px",
+							},
+						}}
 					/>
 					<TextField
 						margin='normal'
@@ -103,6 +108,11 @@ const Login = () => {
 						id='password'
 						autoComplete='current-password'
 						onChange={(e) => setData({ ...data, password: e.target.value })}
+						sx={{
+							"& .MuiInputBase-input": {
+								fontSize: "16px",
+							},
+						}}
 					/>
 					{error && <Typography color='error'>{error}</Typography>}
 					{/*<FormControlLabel
