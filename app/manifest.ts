@@ -3,24 +3,65 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
 	return {
 		id: "1",
-		name: "Next.js PWA",
-		short_name: "NextPWA",
-		description: "A Progressive Web App built with Next.js",
-		start_url: "/",
+		name: "ClubCraft",
+		short_name: "ClubCraft",
+		start_url: "https://www.clubcrafts.pl",
+		description: "Zarządzaj swoim klubem!",
 		display: "standalone",
-		background_color: "",
-		theme_color: "",
-
+		background_color: "#E3CBE7",
+		theme_color: "#FFFFFF",
+		display_override: ["window-controls-overlay"],
+		categories: ["finance", "productivity"],
 		icons: [
 			{
-				src: "/icon-192x192.png",
+				src: "/favicon192x192.png",
 				sizes: "192x192",
 				type: "image/png",
 			},
 			{
-				src: "/icon-512x512.png",
-				sizes: "512x512",
+				src: "/favicon384x384.png",
+				sizes: "384x384",
 				type: "image/png",
+			},
+			{
+				src: "/favicon.ico",
+				sizes: "any",
+			},
+			{
+				src: "/favicon16x16.png",
+				sizes: "16x16",
+				type: "image/png",
+			},
+			{
+				src: "/favicon32x32.png",
+				sizes: "32x32",
+				type: "image/png",
+			},
+			{
+				src: "/favicon180x180.png",
+				sizes: "180x180",
+				type: "image/png",
+			},
+			{
+				src: "/favicon512x512.png",
+				sizes: "any",
+				type: "image/png",
+				purpose: "any",
+			},
+		],
+		screenshots: [{ src: "/home.png" }],
+		shortcuts: [
+			{
+				name: "Zaloguj się",
+				url: "/login",
+				description: "Strona logowania",
+				icons: [
+					{
+						src: "/favicon512x512.png",
+						type: "image/png",
+						sizes: "512x512",
+					},
+				],
 			},
 		],
 	};
