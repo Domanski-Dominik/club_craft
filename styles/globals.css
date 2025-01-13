@@ -202,3 +202,49 @@ body {
 	--fc-button-hover-bg-color: #6d1b7b;
 	--fc-button-hover-border-color: #6d1b7b;
 }
+
+.install-banner {
+	position: fixed;
+	bottom: calc(env(safe-area-inset-bottom) + 80px);
+	left: 0;
+	width: 100%;
+	background-color: #f4f4f4;
+	color: #333;
+	text-align: center;
+	padding: 20px;
+	border-top: 1px solid #ccc;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+	font-family: Arial, sans-serif;
+	z-index: 1000;
+}
+
+.install-banner p {
+	margin: 0;
+	font-size: 16px;
+}
+
+.install-banner button {
+	margin-top: 10px;
+	padding: 10px 20px;
+	font-size: 14px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.install-banner button:hover {
+	background-color: #0056b3;
+}
+@media (max-width: 600px) {
+	.install-banner {
+		font-size: 14px;
+		padding: 15px;
+	}
+
+	.install-banner button {
+		font-size: 12px;
+		padding: 8px 15px;
+	}
+}
