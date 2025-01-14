@@ -21,6 +21,6 @@ export const apiAuthPrefix = "/api/auth";
  * Przekierowanie po zalogowaniu
  * @type {string}
  */
-export const DEAFAULT_LOGIN_REDIRECT = "/home";
+export const DEAFAULT_LOGIN_REDIRECT = "/calendar";
 
 export const resetPrefix = "/reset";

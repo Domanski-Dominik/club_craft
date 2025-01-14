@@ -46,9 +46,9 @@ const Home = () => {
 			)}
 			{status === "authenticated" ? (
 				<Button
-					onClick={() => router.push("/home")}
+					onClick={() => router.push("/calendar")}
 					variant='contained'>
-					Przejdź do klubu
+					Przejdź do kalendarza
 				</Button>
 			) : (
 				<Button

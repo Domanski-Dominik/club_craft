@@ -23,7 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { usePathname, useRouter } from "next/navigation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-
+import SportsIcon from "@mui/icons-material/Sports";
 import { Session } from "next-auth";
 import { useMediaQuery, Theme, Badge } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -39,6 +39,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import GroupsIcon from "@mui/icons-material/Groups";
 import { CountAwaitingParticipants } from "@/server/participant-actions";
 import { isNumber } from "@mui/x-data-grid/internals";
 
@@ -86,6 +87,12 @@ export default function TopNav(props: Props) {
 	const isActive = (link: string) => {
 		if (link === "/calendar" && pathname.startsWith("/group")) return true;
 		return pathname === link; // Sprawdza dokładne dopasowanie
+	};
+	const pushTo = (link: string) => {
+		if (isMobile) {
+			setMobileOpen(false);
+		}
+		router.push(link);
 	};
 	React.useEffect(() => {
 		const fetchAwaitingCount = async () => {
@@ -184,7 +191,7 @@ export default function TopNav(props: Props) {
 									key={item.value}
 									disablePadding>
 									<ListItemButton
-										onClick={() => router.push(`/${item.value}`)}
+										onClick={() => pushTo(`/${item.value}`)}
 										selected={isActive(`/${item.value}`)}>
 										<ListItemIcon>{item.icon}</ListItemIcon>
 										<ListItemText primary={item.label} />
@@ -202,7 +209,7 @@ export default function TopNav(props: Props) {
 					<>
 						<ListItem disablePadding>
 							<ListItemButton
-								onClick={() => router.push("/balance")}
+								onClick={() => pushTo("/balance")}
 								selected={isActive("/balance")}>
 								<ListItemIcon>
 									<ManageSearchIcon />
@@ -212,7 +219,7 @@ export default function TopNav(props: Props) {
 						</ListItem>
 						<ListItem disablePadding>
 							<ListItemButton
-								onClick={() => router.push("/awaiting")}
+								onClick={() => pushTo("/awaiting")}
 								selected={isActive("/awaiting")}>
 								<ListItemIcon>
 									{" "}
@@ -229,6 +236,16 @@ export default function TopNav(props: Props) {
 								<ListItemText primary={"Oczekujący"} />
 							</ListItemButton>
 						</ListItem>
+						<ListItem disablePadding>
+							<ListItemButton
+								onClick={() => pushTo("/home/coaches")}
+								selected={isActive("/home/coaches")}>
+								<ListItemIcon>
+									<SportsIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Prowadzący"} />
+							</ListItemButton>
+						</ListItem>
 					</>
 				)}
 				{navItems.map((item) => (
@@ -236,7 +253,7 @@ export default function TopNav(props: Props) {
 						key={item.name}
 						disablePadding>
 						<ListItemButton
-							onClick={() => router.push(item.link)}
+							onClick={() => pushTo(item.link)}
 							selected={isActive(item.link)}>
 							<ListItemIcon>{item.icon}</ListItemIcon>
 							<ListItemText primary={item.name} />

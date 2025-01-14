@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import ParticipantList from "@/components/participants/ParticipantList";
-import { sortAndAddNumbers } from "@/functions/sorting";
+import { sort, sortPrt } from "@/functions/sorting";
 import StandardError from "@/components/errors/Standard";
 import { LocWithGroups } from "@/types/type";
 import { auth } from "@/auth";
@@ -14,6 +14,7 @@ import { unstable_cache } from "next/cache";
 import { handleResult } from "@/functions/promiseResults";
 import { getParticipantsByGroupId } from "@/server/participant-actions";
 import { Session } from "next-auth";
+import { GridValidRowModel } from "@mui/x-data-grid";
 
 interface Props {
 	params: Promise<{
@@ -89,7 +90,7 @@ const Group = async ({ params }: Props) => {
 				addParticipants={false}
 			/>
 		);
-
+	const sortedPrt = sortPrt(participants);
 	if (session)
 		return (
 			<Box
@@ -104,7 +105,7 @@ const Group = async ({ params }: Props) => {
 					px: 1,
 				}}>
 				<ParticipantList
-					participants={participants}
+					participants={sortedPrt}
 					groupId={groupId}
 					group={group}
 					clubInfo={club}

@@ -70,3 +70,16 @@ export const sort = (rows: GridValidRowModel[]) => {
 	});
 	return sortedRows;
 };
+export const sortPrt = (data: any) => {
+	if (data && data.length > 0) {
+		const sorted = data.sort((a: any, b: any) => {
+			if (a.lastName === b.lastName) {
+				return a.firstName.localeCompare(b.firstName);
+			}
+			return a.lastName.localeCompare(b.lastName);
+		});
+		return sorted;
+		//}
+	}
+	return [];
+};

@@ -191,6 +191,7 @@ const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 									<InputLabel id='location'>Lokalizacja</InputLabel>
 									<Select
 										defaultValue='all'
+										label='Lokalizacja'
 										value={selectedLocation}
 										onChange={(e) =>
 											setSelectedLocation(e.target.value as string | "all")
@@ -212,7 +213,9 @@ const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 							<Box width='50%'>
 								<FormControl fullWidth>
 									<InputLabel id='classType'>Typ zajęć</InputLabel>
-									<Select defaultValue='all'>
+									<Select
+										defaultValue='all'
+										label='Typ zajeć'>
 										<MenuItem value='all'>Wszystkie</MenuItem>
 									</Select>
 								</FormControl>
