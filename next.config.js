@@ -7,6 +7,10 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 	workboxOptions: {
 		mode: "production",
 	},
+	cacheStartUrl: true,
+	dynamicStartUrl: true,
+	dynamicStartUrlRedirect: true,
+	reloadOnOnline: true,
 });
 
 module.exports = withPWA(nextConfig);

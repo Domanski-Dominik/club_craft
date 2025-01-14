@@ -7,12 +7,19 @@ export default function manifest(): MetadataRoute.Manifest {
 		short_name: "ClubCraft",
 		start_url: "https://www.clubcrafts.pl",
 		description: "Zarządzaj swoim klubem!",
+		scope: "/",
 		display: "standalone",
 		background_color: "#E3CBE7",
 		orientation: "portrait",
 		theme_color: "#FFFFFF",
 		display_override: ["window-controls-overlay", "standalone"],
 		categories: ["finance", "productivity"],
+		launch_handler: {
+			client_mode: ["navigate-existing", "auto"],
+		},
+		dir: "auto",
+		lang: "pl",
+		prefer_related_applications: false,
 		icons: [
 			{
 				src: "/favicon192x192.png",
@@ -75,6 +82,30 @@ export default function manifest(): MetadataRoute.Manifest {
 				name: "Zaloguj się",
 				url: "/login",
 				description: "Strona logowania",
+				icons: [
+					{
+						src: "/favicon512x512.png",
+						type: "image/png",
+						sizes: "512x512",
+					},
+				],
+			},
+			{
+				name: "Wszyscy uczestnicy",
+				url: "/participants",
+				description: "Lista wszystkich uczestników",
+				icons: [
+					{
+						src: "/favicon512x512.png",
+						type: "image/png",
+						sizes: "512x512",
+					},
+				],
+			},
+			{
+				name: "Oczekujący",
+				url: "/awaiting",
+				description: "Lista oczekujących uczestników",
 				icons: [
 					{
 						src: "/favicon512x512.png",

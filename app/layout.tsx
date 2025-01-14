@@ -60,6 +60,8 @@ export const metadata: Metadata = {
 };
 export const viewport: Viewport = {
 	themeColor: "#FFFFFF",
+	maximumScale: 1,
+	userScalable: false,
 };
 export default async function RootLayout({
 	children,
@@ -101,18 +103,6 @@ export default async function RootLayout({
 					rel='icon'
 					href='/favicon.ico'
 					sizes='any'
-				/>
-				<link
-					rel='apple-touch-icon'
-					href='/apple-icon?<generated>'
-					type='image/<generated>'
-					sizes='<generated>'
-				/>
-				<link
-					rel='icon'
-					href='/icon?<generated>'
-					type='image/<generated>'
-					sizes='<generated>'
 				/>
 
 				<link
