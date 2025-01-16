@@ -50,6 +50,7 @@ import { constants } from "@/constants/constants";
 import { updateClubInfo } from "@/server/club-actions";
 import { club } from "@prisma/client";
 import ResponsiveSnackbar from "../Snackbars/Snackbar";
+import DialogRegulamin from "../dialogs/DialogRegulamin";
 interface Club {
 	[key: string]: any; // Dodanie tego indeksu
 	id: number;
@@ -64,6 +65,7 @@ interface Club {
 	switchSolo: boolean;
 	// Dodaj tutaj inne pola
 	customerEmail: string | null;
+	regulamin?: string;
 }
 
 type Props = {
@@ -114,6 +116,7 @@ const BoxInput = styled(Box)({
 const SettingsTabs = (props: Props) => {
 	const [value, setValue] = useState(0);
 	const [editField, setEditField] = useState<string | null>(null);
+	const [openDialog, setOpenDialog] = useState(false);
 	const [formData, setFormData] = useState<{ [key: string]: any }>({});
 	const { status, data: session } = useSession({
 		required: true,
@@ -129,7 +132,20 @@ const SettingsTabs = (props: Props) => {
 	const handleCloseSnackbar = () => {
 		setSnackbar((prev) => ({ ...prev, open: false }));
 	};
-
+	const handleSaveSuccess = ({
+		message,
+		severity,
+	}: {
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}) => {
+		setSnackbar({
+			open: true,
+			message,
+			severity,
+		});
+		setOpenDialog(false); // Zamknij dialog po zapisaniu
+	};
 	useEffect(() => {
 		if (props.clubInfo) {
 			setFormData({
@@ -260,12 +276,12 @@ const SettingsTabs = (props: Props) => {
 					</StyledAccordionSummary>
 					<StyledAccordionDetails>
 						<Stack2>
-							<TypographyStack>Nazwa</TypographyStack>
+							<TypographyStack>Nazwa:</TypographyStack>
 							<Typography width='50%'>{props.clubInfo.name}</Typography>
 						</Stack2>
 						<Divider variant='middle' />
 						<Stack2>
-							<TypographyStack>Email</TypographyStack>
+							<TypographyStack>Email:</TypographyStack>
 							<Typography
 								width='50%'
 								sx={{
@@ -280,7 +296,7 @@ const SettingsTabs = (props: Props) => {
 						</Stack2>
 						<Divider variant='middle' />
 						<Stack2>
-							<TypographyStack>Numer Telefonu</TypographyStack>
+							<TypographyStack>Numer Telefonu:</TypographyStack>
 							{editField === "phoneNumber" ? (
 								<BoxInput width='50%'>
 									<TextField
@@ -314,6 +330,16 @@ const SettingsTabs = (props: Props) => {
 									/>
 								</BoxInput>
 							)}
+						</Stack2>
+						<Divider variant='middle' />
+						<Stack2>
+							<TypographyStack>Regulamin:</TypographyStack>
+							<Button
+								variant='contained'
+								size='small'
+								onClick={() => setOpenDialog(true)}>
+								Pokaż regulamin
+							</Button>
 						</Stack2>
 					</StyledAccordionDetails>
 				</Accordion>
@@ -770,6 +796,13 @@ const SettingsTabs = (props: Props) => {
 					</Grid2>
 				</Box>
 			</CustomTabPanel>
+			<DialogRegulamin
+				open={openDialog}
+				onClose={() => setOpenDialog((prev) => !prev)}
+				clubInfo={props.clubInfo}
+				settings={true}
+				onSaveSuccess={handleSaveSuccess} // Przekazanie callbacka
+			/>
 			<ResponsiveSnackbar
 				open={snackbar.open}
 				onClose={handleCloseSnackbar}

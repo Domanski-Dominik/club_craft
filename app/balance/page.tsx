@@ -30,12 +30,7 @@ const BalancePage = async () => {
 	const participants = handleResult(participantsResult, "participants");
 	const locs = handleResult(locsResult, "Locations");
 	if (!participants)
-		return (
-			<StandardError
-				message='Błąd przy pobieraniu danych'
-				addParticipants={false}
-			/>
-		);
+		return <StandardError message='Błąd przy pobieraniu danych' />;
 	return <Balance participants={participants} />;
 };
 

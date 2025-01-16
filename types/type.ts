@@ -106,7 +106,12 @@ export interface DialogDeleteType extends Dialog {
 }
 export interface DialogRegulaminType extends Dialog {
 	onClose: () => void;
+	onSaveSuccess: (data: {
+		message: string;
+		severity: "error" | "warning" | "info" | "success";
+	}) => void; // Callback z informacją o wyniku zapisu
 	clubInfo: any;
+	settings?: boolean;
 }
 export interface DialogPresentType {
 	open: boolean;

@@ -160,13 +160,15 @@ const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 				//eventClick={handleEventClick}
 			/>
 			<SwipeableDrawer
-				anchor='bottom'
+				anchor={isSmallScreen ? "bottom" : "left"}
 				open={drawer}
 				onClose={() => setDrawer((prev) => !prev)}
 				onOpen={() => setDrawer((prev) => !prev)}
 				disableBackdropTransition={!iOS}
 				disableDiscovery={iOS}>
-				<Box height={300}>
+				<Box
+					height={350}
+					width={isSmallScreen ? "100%" : "30vw"}>
 					<Typography
 						align='center'
 						variant='h4'
@@ -195,7 +197,24 @@ const MainCalendar = ({ events, iOS, locs }: CalendarProps) => {
 										value={selectedLocation}
 										onChange={(e) =>
 											setSelectedLocation(e.target.value as string | "all")
-										}>
+										}
+										MenuProps={{
+											PaperProps: {
+												sx: {
+													maxHeight: isSmallScreen ? 200 : 400, // Maksymalna wysokość listy
+													overflowY: "auto",
+												},
+											},
+
+											anchorOrigin: {
+												vertical: "top",
+												horizontal: "left",
+											},
+											transformOrigin: {
+												vertical: "top",
+												horizontal: "left",
+											},
+										}}>
 										<MenuItem value='all'>Wszystkie</MenuItem>
 										{locs.map((l: Location, index: number) => (
 											<MenuItem

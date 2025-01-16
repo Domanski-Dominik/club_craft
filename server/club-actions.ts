@@ -31,6 +31,7 @@ export const updateClubInfo = async (info: any) => {
 			updateData.coachEditPrt = Boolean(info.coachEditPrt);
 		if ("coachNewPrt" in info)
 			updateData.coachNewPrt = Boolean(info.coachNewPrt);
+		if ("regulamin" in info) updateData.regulamin = info.regulamin;
 
 		try {
 			const exist = await prisma.club.findUnique({
