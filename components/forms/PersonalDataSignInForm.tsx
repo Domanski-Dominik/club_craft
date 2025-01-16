@@ -260,6 +260,7 @@ const PersonalDataForm = ({ formData, onChange, onBack, clubInfo }: Props) => {
 				</Button>
 			</Box>
 			<DialogRegulamin
+				onSaveSuccess={() => {}}
 				onClose={() => setDialogOpen(false)}
 				open={dialogOpen}
 				clubInfo={clubInfo}
