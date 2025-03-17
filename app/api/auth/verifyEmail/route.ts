@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 			}) as React.ReactElement,
 		});
 		return Response.json(
-			{ message: "Wysłano wiadmość na podany mail" },
+			{ message: "Wysłano wiadomość na podany email" },
 			{ status: 200 }
 		);
 	} catch (error) {

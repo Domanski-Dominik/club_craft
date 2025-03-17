@@ -4,6 +4,7 @@ import { saveAs } from "file-saver";
 import { format } from "date-fns/format";
 import { Participant } from "@/types/type";
 import PolishDayName from "@/functions/PolishDayName";
+import { headers } from "next/headers";
 interface Props {
 	data: (GridValidRowModel | Participant)[];
 	date: any;
@@ -26,7 +27,11 @@ function ExportToExel({ data, date }: Props) {
 		{ header: "Nazwisko", key: "lastName", width: 20, bold: true },
 		{ header: "Imię", key: "firstName", width: 20, bold: true },
 		{ header: "Telefon", key: "phoneNumber", width: 20, bold: true },
+		{ headers: "Urodziny", key: "birthday", width: 20 },
 		{ header: "Umowa", key: "regulamin", width: 10 },
+		{ header: "Nazwisko Rodzica", key: "parentLastName", width: 20 },
+		{ header: "Imię Rodzica", key: "parentFirstName", width: 20 },
+		{ header: "Notatka", key: "note", width: 20 },
 		{ header: "Grupy", key: "groups", width: 60 },
 		{ header: "Kwota", key: "amount", width: 10 },
 		{ header: `${formatDateMonth(date)}`, key: "info", width: 60 },
@@ -46,7 +51,11 @@ function ExportToExel({ data, date }: Props) {
 			lastName: prt.lastName,
 			firstName: prt.firstName,
 			phoneNumber: prt.phoneNumber,
+			birthday: prt.birthday,
 			regulamin: prt.regulamin ? "Tak" : "Nie",
+			parentLastName: prt.parentLastName,
+			parentFirstName: prt.parentFirstName,
+			note: prt.note,
 			groups: prt.participantgroup
 				.map((g: any) => {
 					const groupName = g.name;
