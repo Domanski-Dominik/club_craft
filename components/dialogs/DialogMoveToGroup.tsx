@@ -2,6 +2,7 @@ import PolishDayName, { ReversePolishName } from "@/functions/PolishDayName";
 import React, { useEffect, useState } from "react";
 import { DialogGroupsType } from "@/types/type";
 import Grid from "@mui/material/Grid2";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
 	Button,
 	Dialog,
@@ -32,7 +33,10 @@ import {
 } from "@/hooks/participantHooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { Stack2, TypographyStack } from "../styled/StyledComponents";
-import { updateParticipantGroup } from "@/server/participant-actions";
+import {
+	deleteParticipantGroup,
+	updateParticipantGroup,
+} from "@/server/participant-actions";
 
 const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 	onClose,
@@ -153,6 +157,19 @@ const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 			setError(message.error);
 		}
 	};
+	const handleDeleteFromGroup = async () => {
+		const info = {
+			participantId: row.id,
+			groupId: groupId,
+		};
+		const message = await deleteParticipantGroup(info);
+		if (!("error" in message)) {
+			setError("");
+			onClose(String(row.id));
+		} else {
+			setError(message.error);
+		}
+	};
 	return (
 		<Dialog
 			open={open}
@@ -190,9 +207,7 @@ const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 							MenuProps={{
 								slotProps: {
 									paper: {
-										style: {
-											maxHeight: 350,
-										},
+										sx: { maxHeight: { xs: 150, sm: 300 } },
 									},
 								},
 							}}
@@ -223,9 +238,7 @@ const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 							MenuProps={{
 								slotProps: {
 									paper: {
-										style: {
-											maxHeight: 350,
-										},
+										sx: { maxHeight: { xs: 150, sm: 300 } },
 									},
 								},
 							}}
@@ -269,6 +282,13 @@ const DialogMoveToGroup: React.FC<DialogMoveToGroupType> = ({
 					variant='outlined'
 					startIcon={<CloseIcon />}>
 					Anuluj
+				</Button>
+				<Button
+					onClick={handleDeleteFromGroup}
+					color='error'
+					variant='outlined'
+					startIcon={<DeleteOutlineIcon />}>
+					Wypisz
 				</Button>
 				<Button
 					onClick={handleMoveToGroup}

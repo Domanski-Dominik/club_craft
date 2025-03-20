@@ -30,7 +30,7 @@ const navItems = [
 
 export default function BottomNav() {
 	const theme = useTheme();
-	const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Sprawdza czy jest widok telefonu
+	const isMobile = useMediaQuery(theme.breakpoints.down("md")); // Sprawdza czy jest widok telefonu
 	const router = useRouter();
 	const pathname = usePathname();
 	const pathParts = pathname.split("/");

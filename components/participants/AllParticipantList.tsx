@@ -29,11 +29,7 @@ import {
 	GridRenderCellParams,
 	GridValueGetter,
 } from "@mui/x-data-grid";
-import {
-	Box,
-	Button,
-	Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import type {
 	Participant,
 	Payment,
@@ -980,7 +976,8 @@ const AllParticipantList = ({
 					width: "100%",
 					height: {
 						xs: "calc(100vh - 75px - 100px )",
-						sm: "calc(100vh - 90px - 20px)",
+						sm: "calc(100vh - 75px - 100px)",
+						md: "calc(100vh - 90px - 20px)",
 					},
 					backgroundColor: "white",
 					px: 1,

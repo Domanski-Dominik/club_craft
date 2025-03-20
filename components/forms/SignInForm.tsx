@@ -18,6 +18,7 @@ import { keyframes } from "@mui/system";
 import ResponsiveSnackbar from "../Snackbars/Snackbar";
 import { format } from "date-fns";
 import { addAwaitingParticipant } from "@/server/participant-actions";
+import PolishDayName from "@/functions/PolishDayName";
 
 interface Props {
 	clubName: string;
@@ -171,6 +172,17 @@ const SignInForm = (props: Props) => {
 					<Stack2>
 						<TypographyStack>Wybrana grupa:</TypographyStack>
 						<Typography>{selectedGroup?.name}</Typography>
+					</Stack2>
+					<Divider />
+					<Stack2>
+						<TypographyStack>Terminy zajęć</TypographyStack>
+						<Box>
+							{selectedGroup?.terms.map((t) => (
+								<Typography>
+									{PolishDayName(t.dayOfWeek)} {t.timeS}-{t.timeE}
+								</Typography>
+							))}
+						</Box>
 					</Stack2>
 					<Divider />
 					<Stack2>

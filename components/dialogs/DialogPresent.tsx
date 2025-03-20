@@ -213,6 +213,11 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 							onChange={(event, newValue) => {
 								if (newValue) setSelected(newValue);
 							}}
+							slotProps={{
+								paper: {
+									sx: { maxHeight: { xs: 250, sm: 500 } },
+								},
+							}}
 							options={
 								Array.isArray(allPrt.data)
 									? allPrt.data
@@ -278,12 +283,14 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 													width='100%'
 													sx={{ flexWrap: "wrap", flexDirection: "column" }}>
 													<ListItemText
+														sx={{ my: 2 }}
 														primary={`${participant.firstName} ${participant.lastName}`}
 													/>
 													<LocalizationProvider
 														dateAdapter={AdapterDateFns}
 														adapterLocale={pl}>
 														<MobileDatePicker
+															sx={{ mt: 2 }}
 															label='Wybierz dzień'
 															value={changeDate}
 															onChange={(value) => {
@@ -292,27 +299,31 @@ const DialogPresent: React.FC<DialogPresentType> = ({
 															shouldDisableDate={shouldDisableDay}
 														/>
 													</LocalizationProvider>
-													<Box>
+													<Box
+														sx={{
+															my: 2,
+															display: "flex",
+															justifyContent: "space-between",
+															alignItems: "center",
+															width: "100%",
+														}}>
 														<IconButton
 															edge='end'
 															color='success'
 															onClick={() =>
 																handleSaveClick(participant.id, date)
-															}
-															sx={{ mr: 1 }}>
+															}>
 															<CheckIcon />
 														</IconButton>
 														<IconButton
 															edge='end'
 															color='error'
-															onClick={() => handleDeleteClick(participant.id)}
-															sx={{ mr: 1 }}>
+															onClick={() => handleDeleteClick(participant.id)}>
 															<DeleteIcon />
 														</IconButton>
 														<IconButton
 															edge='end'
-															onClick={() => handleCancelClick(participant.id)}
-															sx={{ mr: 1 }}>
+															onClick={() => handleCancelClick(participant.id)}>
 															<CloseIcon />
 														</IconButton>
 													</Box>

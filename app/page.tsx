@@ -1,6 +1,7 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -24,9 +25,30 @@ const Home = () => {
 	}, []);
 	return (
 		<>
-			<Box sx={{ textAlign: "center", marginBottom: "2.5rem" }}>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					mb: 2,
+				}}>
+				<Image
+					src={"/faviconTransparent.png"}
+					width={200}
+					height={200}
+					alt='logo'
+				/>
 				<Typography
+					ml={4}
+					sx={{ display: { xs: "none", sm: "block" } }}
 					variant='h1'
+					color='secondary'>
+					Club Craft
+				</Typography>
+			</Box>
+			<Box sx={{ textAlign: "center", marginBottom: "3rem" }}>
+				<Typography
+					variant='h2'
 					color='secondary'>
 					Witaj w systemie!
 				</Typography>

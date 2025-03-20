@@ -69,14 +69,19 @@ const PaymentCard = ({
 	return (
 		<Box
 			sx={{
-				padding: "2px", // Daje miejsce na ramkę
+				padding: "3px", // Daje miejsce na ramkę
 				background: active
 					? "linear-gradient(45deg, #ffb326, #bb15ed)"
 					: "divider", // Gradient
-				borderRadius: "6px", // Zaokrąglone rogi dla efektu karty
+				borderRadius: "16px", // Zaokrąglone rogi dla efektu karty
 			}}>
-			<Card>
-				<CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+			<Card sx={{ borderRadius: "16px" }}>
+				<CardContent
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 2,
+					}}>
 					<Typography
 						align='center'
 						variant='h6'>

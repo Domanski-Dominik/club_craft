@@ -82,7 +82,7 @@ export default function TopNav(props: Props) {
 
 	// Dodajemy media query, aby określić, czy jesteśmy na urządzeniu mobilnym
 	const isMobile = useMediaQuery((theme: Theme) =>
-		theme.breakpoints.down("sm")
+		theme.breakpoints.down("md")
 	);
 	const isActive = (link: string) => {
 		if (link === "/calendar" && pathname.startsWith("/group")) return true;
@@ -276,7 +276,7 @@ export default function TopNav(props: Props) {
 							aria-label='open drawer'
 							edge='start'
 							onClick={handleDrawerToggle}
-							sx={{ display: { xs: "block", sm: "none" } }}>
+							sx={{ display: { xs: "block", sm: "block", md: "none" } }}>
 							<MenuIcon />
 						</IconButton>
 					)}
@@ -286,7 +286,7 @@ export default function TopNav(props: Props) {
 						sx={{
 							flexGrow: 1,
 							textAlign: "center",
-							display: { xs: "block", sm: "none" },
+							display: { xs: "block", sm: "block", md: "none" },
 						}}>
 						Club Craft
 					</Typography>
@@ -357,7 +357,7 @@ export default function TopNav(props: Props) {
 					variant='persistent'
 					open
 					sx={{
-						display: { xs: "none", sm: "block" },
+						display: { xs: "none", sm: "none", md: "block" },
 						width: drawerWidth,
 						flexShrink: 0,
 						"& .MuiDrawer-paper": {
@@ -375,7 +375,7 @@ export default function TopNav(props: Props) {
 					open={mobileOpen}
 					onClose={handleDrawerToggle}
 					sx={{
-						display: { xs: "block", sm: "none" },
+						display: { sm: "block", md: "none" },
 						"& .MuiDrawer-paper": { width: drawerWidth },
 					}}>
 					{drawer}

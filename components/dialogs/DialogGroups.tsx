@@ -61,7 +61,22 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 		);
 		if (loc) setSelectedLocation(loc);
 		const groupsInLoc = loc?.groups;
-		setGroups(groupsInLoc);
+		if (groupsInLoc) {
+			const sortedGroups = groupsInLoc.sort((a, b) => {
+				// Sprawdź, czy grupy mają przypisane terminy (zakładam, że każda grupa ma przynajmniej jeden termin)
+				const dayOfWeekA = a.terms?.[0]?.dayOfWeek || 0; // Jeśli brak terminu, domyślnie ustaw na 0 (np. niedziela)
+				const dayOfWeekB = b.terms?.[0]?.dayOfWeek || 0;
+
+				// Jeśli dni tygodnia są różne, sortuj według dnia tygodnia
+				if (dayOfWeekA !== dayOfWeekB) {
+					return dayOfWeekA - dayOfWeekB;
+				}
+
+				// Jeśli dni tygodnia są takie same, sortuj według nazwy grupy
+				return a.name.localeCompare(b.name);
+			});
+			setGroups(sortedGroups);
+		}
 		setSelectedGroupId(groupId);
 	};
 
@@ -220,9 +235,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 									MenuProps={{
 										slotProps: {
 											paper: {
-												style: {
-													maxHeight: 350,
-												},
+												sx: { maxHeight: { xs: 150, sm: 300 } },
 											},
 										},
 									}}
@@ -251,9 +264,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 									MenuProps={{
 										slotProps: {
 											paper: {
-												style: {
-													maxHeight: 350,
-												},
+												sx: { maxHeight: { xs: 150, sm: 300 } },
 											},
 										},
 									}}
@@ -339,9 +350,7 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 											MenuProps={{
 												slotProps: {
 													paper: {
-														style: {
-															maxHeight: 350,
-														},
+														sx: { maxHeight: { xs: 150, sm: 300 } },
 													},
 												},
 											}}
@@ -372,10 +381,12 @@ const DialogGroups: React.FC<DialogGroupsType> = ({
 											MenuProps={{
 												slotProps: {
 													paper: {
-														style: {
-															maxHeight: 350,
-														},
+														sx: { maxHeight: { xs: 150, sm: 300 } },
 													},
+												},
+												anchorOrigin: {
+													vertical: "bottom",
+													horizontal: "center",
 												},
 											}}
 											value={selectedGroupId || ""}

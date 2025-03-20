@@ -96,9 +96,11 @@ const Group = async ({ params }: Props) => {
 			<Box
 				sx={{
 					height: {
-						xs: "calc(100vh - 75px - 100px)",
-						sm: "calc(100vh - 90px - 25px)",
+						xs: "calc(100dvh - 75px - 100px)",
+						sm: "calc(100dvh - 75px - 100px)",
+						md: "calc(100dvh - 90px - 25px)",
 					},
+
 					width: "100%",
 					backgroundColor: "white",
 					borderRadius: 4,

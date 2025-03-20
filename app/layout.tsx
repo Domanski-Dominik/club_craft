@@ -164,16 +164,17 @@ export default async function RootLayout({
 										minWidth: "100%",
 										height: "100%",
 										px: { xs: 1 },
-										paddingLeft: { sm: session?.user ? `260px` : "20px" },
-										paddingRight: { sm: "20px" }, // Uwzględnij Drawer na desktopie
+										paddingLeft: { md: session?.user ? `260px` : "20px" },
+										paddingRight: { md: "20px" }, // Uwzględnij Drawer na desktopie
 										display: "flex",
 										flexDirection: "column",
 										justifyContent: "center",
 										alignItems: "center",
-										paddingTop: { xs: "75px", sm: "90px" }, // Odstęp od góry
+										paddingTop: { xs: "75px", sm: "75px", md: "90px" }, // Odstęp od góry
 										paddingBottom: {
 											xs: session?.user ? "100px" : "20px",
-											sm: "20px",
+											sm: session?.user ? "100px" : "20px",
+											md: "20px",
 										}, // Odstęp od dołu tylko na telefonach
 									}}>
 									{children}

@@ -671,15 +671,17 @@ const SettingsTabs = (props: Props) => {
 					sx={{
 						width: "100%",
 						height: "100%",
-						backgroundColor: "white",
+
 						borderRadius: 3,
 						p: 3,
 					}}>
 					<Grid2
 						container
 						spacing={2}>
-						<Grid2 size={{ xs: 12, md: 6, lg: 4, xl: 3 }}>
-							<Card>
+						<Grid2
+							size={{ xs: 12, md: 6, lg: 4, xl: 3 }}
+							sx={{ p: "3px" }}>
+							<Card sx={{ borderRadius: "16px" }}>
 								<CardContent
 									sx={{
 										display: "flex",
@@ -688,18 +690,28 @@ const SettingsTabs = (props: Props) => {
 										gap: 2,
 										height: "290px",
 									}}>
-									<Typography
-										variant='h4'
-										align='center'>
-										Zarządzaj
-									</Typography>
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "space-evenly",
+											gap: 2,
+											height: "290px",
+										}}>
+										<Typography
+											variant='h4'
+											align='center'>
+											Zarządzaj
+										</Typography>
 
-									<Typography
-										variant='h4'
-										align='center'>
-										subskrybcją
-									</Typography>
-									<Divider variant='middle' />
+										<Typography
+											variant='h4'
+											align='center'>
+											subskrybcją
+										</Typography>
+										<Divider variant='middle' />
+									</Box>
+
 									<Button
 										variant='contained'
 										href={constants.customerBillingManage}>
