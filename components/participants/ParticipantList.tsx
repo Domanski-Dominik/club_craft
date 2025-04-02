@@ -146,6 +146,7 @@ const ParticipantList = ({
 	const [edit, setEdit] = useState(false);
 	const [more, setMore] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
+	const [isDateManuallySet, setIsDateManuallySet] = useState(false);
 	const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 	const [columnVisibilityModel, setColumnVisibilityModel] =
 		useState<GridColumnVisibilityModel>({
@@ -187,7 +188,11 @@ const ParticipantList = ({
 		return getShouldDisableDate(date, group.terms);
 	};
 	useEffect(() => {
-		if (!group || !group.terms || !group.firstLesson) {
+		// resetuj flagę gdy zmieni się ID grupy
+		setIsDateManuallySet(false);
+	}, [group.id]);
+	useEffect(() => {
+		if (!group || !group.terms || !group.firstLesson || isDateManuallySet) {
 			return;
 		}
 
@@ -251,7 +256,7 @@ const ParticipantList = ({
 		};
 
 		setNearestPreviousDayOfWeek(group.terms);
-	}, [group]);
+	}, [group, isDateManuallySet]);
 
 	const handleRowEditStop: GridEventListener<"rowEditStop"> = (
 		params,
@@ -556,6 +561,7 @@ const ParticipantList = ({
 									minDate={parse(group.firstLesson, "dd-MM-yyyy", new Date())}
 									maxDate={parse(group.lastLesson, "dd-MM-yyyy", new Date())}
 									onChange={(value) => {
+										setIsDateManuallySet(true); // << użytkownik wybrał datę
 										if (value) setDate(value);
 									}}
 									sx={{ width: "100%" }}
