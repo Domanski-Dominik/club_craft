@@ -18,6 +18,7 @@ import {
 	SelectChangeEvent,
 	Typography,
 	InputAdornment,
+	Divider,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CloseIcon from "@mui/icons-material/Close";
@@ -183,7 +184,12 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose, date }) => {
 			<DialogTitle>
 				Płatność {row.firstName} {row.lastName}
 			</DialogTitle>
-			<DialogContent dividers>
+			<DialogContent
+				dividers
+				sx={{
+					maxHeight: "50vh", // lub inna wysokość, np. 80vh
+					overflowY: "auto",
+				}}>
 				{addingPayment && (
 					<Grid
 						sx={{ marginTop: 0.1, marginBottom: 1 }}
@@ -264,132 +270,140 @@ const DialogPay: React.FC<DialogPayType> = ({ open, row, onClose, date }) => {
 						</Grid>
 					</Grid>
 				)}
-				{row.payments.map((payment: any) => (
-					<div
-						key={payment.id}
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-						}}>
-						{editedPaymentId === payment.id ? (
-							<Grid
-								sx={{ marginTop: 0.1, marginBottom: 1, marginRight: 2 }}
-								container
-								columnSpacing={2}
-								rowSpacing={1.5}>
-								<Grid size={12}>
-									<TextField
-										label='Kwota'
-										type='number'
-										size='small'
-										value={paymentData.amount}
-										onChange={handleChange("amount")}
-										required
-										fullWidth
-										slotProps={{
-											input: {
-												endAdornment: (
-													<InputAdornment position='end'>zł</InputAdornment>
-												),
-											},
-										}}
-									/>
-									<Typography color='error'>{errors.amount}</Typography>
-								</Grid>
-								<Grid size={12}>
-									<LocalizationProvider
-										dateAdapter={AdapterDateFns}
-										adapterLocale={pl}>
-										<MobileDatePicker
-											label='Miesiąc'
-											value={paymentData.selectedMonth}
-											onChange={handleDateChange}
-											views={["month", "year"]}
-											slotProps={{ textField: { size: "small" } }}
-											sx={{ width: "100%" }}
-										/>
-									</LocalizationProvider>
-								</Grid>
-								<Grid size={12}>
-									<FormControl fullWidth>
-										<InputLabel>Metoda płatności</InputLabel>
-										<Select
-											size='small'
-											label='Metoda płatności'
-											value={paymentData.paymentMethod}
-											onChange={handleSelectChange("paymentMethod")}
-											required>
-											<MenuItem value='cash'>Gotówka</MenuItem>
-											<MenuItem value='transfer'>Przelew</MenuItem>
-										</Select>
-									</FormControl>
-								</Grid>
-								<Grid size={12}>
-									<TextField
-										label='Opis'
-										size='small'
-										value={paymentData.description}
-										onChange={handleChange("description")}
-										fullWidth
-									/>
-								</Grid>
-							</Grid>
-						) : (
-							<Typography variant='body1'>
-								Kwota:{" "}
-								<span style={{ fontWeight: "bold" }}>{payment.amount}</span> zł,{" "}
-								<br />
-								Miesiąc:{" "}
-								<span style={{ fontWeight: "bold" }}>{payment.month}</span>
-							</Typography>
-						)}
-						{editedPaymentId === payment.id ? (
+				{row.payments
+					.slice()
+					.reverse()
+					.map((payment: any) => (
+						<div key={payment.id}>
 							<div
 								style={{
 									display: "flex",
-									flexDirection: "column",
-									justifyContent: "flex-end",
+									justifyContent: "space-between",
 									alignItems: "center",
 								}}>
-								<Button
-									fullWidth
-									variant='outlined'
-									onClick={handleCancelClick}
-									sx={{ marginBottom: 2 }}
-									endIcon={<CloseIcon />}>
-									Anuluj
-								</Button>
-								<Button
-									fullWidth
-									variant='outlined'
-									color='error'
-									onClick={handleDelete}
-									endIcon={<DeleteIcon />}
-									sx={{ marginBottom: 2 }}>
-									Usuń
-								</Button>
-								<Button
-									fullWidth
-									onClick={handleSubmit}
-									endIcon={<SaveIcon />}
-									variant='contained'>
-									Zapisz
-								</Button>
+								{editedPaymentId === payment.id ? (
+									<Grid
+										sx={{ marginTop: 0.1, marginBottom: 1, marginRight: 2 }}
+										container
+										columnSpacing={2}
+										rowSpacing={1.5}>
+										<Grid size={12}>
+											<TextField
+												label='Kwota'
+												type='number'
+												size='small'
+												value={paymentData.amount}
+												onChange={handleChange("amount")}
+												required
+												fullWidth
+												slotProps={{
+													input: {
+														endAdornment: (
+															<InputAdornment position='end'>zł</InputAdornment>
+														),
+													},
+												}}
+											/>
+											<Typography color='error'>{errors.amount}</Typography>
+										</Grid>
+										<Grid size={12}>
+											<LocalizationProvider
+												dateAdapter={AdapterDateFns}
+												adapterLocale={pl}>
+												<MobileDatePicker
+													label='Miesiąc'
+													value={paymentData.selectedMonth}
+													onChange={handleDateChange}
+													views={["month", "year"]}
+													slotProps={{ textField: { size: "small" } }}
+													sx={{ width: "100%" }}
+												/>
+											</LocalizationProvider>
+										</Grid>
+										<Grid size={12}>
+											<FormControl fullWidth>
+												<InputLabel>Metoda płatności</InputLabel>
+												<Select
+													size='small'
+													label='Metoda płatności'
+													value={paymentData.paymentMethod}
+													onChange={handleSelectChange("paymentMethod")}
+													required>
+													<MenuItem value='cash'>Gotówka</MenuItem>
+													<MenuItem value='transfer'>Przelew</MenuItem>
+												</Select>
+											</FormControl>
+										</Grid>
+										<Grid size={12}>
+											<TextField
+												label='Opis'
+												size='small'
+												value={paymentData.description}
+												onChange={handleChange("description")}
+												fullWidth
+											/>
+										</Grid>
+									</Grid>
+								) : (
+									<Typography variant='body1'>
+										Kwota:{" "}
+										<span style={{ fontWeight: "bold" }}>{payment.amount}</span>{" "}
+										zł, <br />
+										Miesiąc:{" "}
+										<span style={{ fontWeight: "bold" }}>{payment.month}</span>
+									</Typography>
+								)}
+								{editedPaymentId === payment.id ? (
+									<div
+										style={{
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "flex-end",
+											alignItems: "center",
+										}}>
+										<Button
+											fullWidth
+											variant='outlined'
+											onClick={handleCancelClick}
+											sx={{ marginBottom: 2 }}
+											endIcon={<CloseIcon />}>
+											Anuluj
+										</Button>
+										<Button
+											fullWidth
+											variant='outlined'
+											color='error'
+											onClick={handleDelete}
+											endIcon={<DeleteIcon />}
+											sx={{ marginBottom: 2 }}>
+											Usuń
+										</Button>
+										<Button
+											fullWidth
+											onClick={handleSubmit}
+											endIcon={<SaveIcon />}
+											variant='contained'>
+											Zapisz
+										</Button>
+									</div>
+								) : (
+									<div style={{ marginLeft: 24 }}>
+										<Button
+											fullWidth
+											onClick={() => handleEditClick(payment.id)}
+											variant='outlined'
+											endIcon={<EditIcon />}>
+											Edytuj
+										</Button>
+									</div>
+								)}
 							</div>
-						) : (
-							<div style={{ marginLeft: 6 }}>
-								<Button
-									fullWidth
-									onClick={() => handleEditClick(payment.id)}
-									variant='outlined'
-									endIcon={<EditIcon />}>
-									Edytuj
-								</Button>
-							</div>
-						)}
-					</div>
-				))}
+							<Divider
+								variant='middle'
+								sx={{ my: 2 }}
+							/>
+						</div>
+					))}
 			</DialogContent>
 			<DialogActions>
 				<Grid
